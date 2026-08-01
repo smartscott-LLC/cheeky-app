@@ -30,7 +30,7 @@ export default async function ThreadPage({
       ? conversation.user_id_b
       : conversation.user_id_a;
 
-  const [{ data: otherProfile }, { data: messages }, { data: myBlocks }] =
+  const [{ data: otherProfile }, { data: messages }, { data: myBlocks }, { data: match }] =
     await Promise.all([
       supabase
         .from('profiles')
@@ -47,8 +47,24 @@ export default async function ThreadPage({
         .from('blocks')
         .select('id')
         .eq('blocker_id', user.id)
-        .eq('blocked_id', otherId)
+        .eq('blocked_id', otherId),
+      supabase
+        .from('matches')
+        .select('id, source, status, created_at')
+        .or(
+          `and(user_id_a.eq.${user.id},user_id_b.eq.${otherId}),and(user_id_a.eq.${otherId},user_id_b.eq.${user.id})`
+        )
+        .maybeSingle()
     ]);
+
+  const songEndsAt = match?.created_at
+    ? new Date(match.created_at).getTime() + 3 * 60 * 1000
+    : null;
+  const songMode =
+    match?.source === 'dance_floor' &&
+    match?.status === 'active' &&
+    songEndsAt !== null &&
+    songEndsAt > Date.now();
 
   const primaryPhoto =
     otherProfile?.photos?.find((p) => p.is_primary)?.storage_path ??
@@ -73,6 +89,10 @@ export default async function ThreadPage({
             created_at: m.created_at
           }))}
           blocked={(myBlocks ?? []).length > 0}
+          songMode={songMode}
+          matchId={match?.id ?? null}
+          songEndsAt={songEndsAt}
+          declined={match?.status === 'declined'}
           photoBase={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`}
           currentUserId={user.id}
         />

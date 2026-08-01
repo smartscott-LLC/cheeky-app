@@ -3,7 +3,13 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
-import { blockUser, reportUser, sendMessage } from '@/app/messages/actions';
+import {
+  blockUser,
+  reportUser,
+  resolveSong,
+  sendEventMessage,
+  sendMessage
+} from '@/app/messages/actions';
 
 interface Message {
   id: number;
@@ -22,6 +28,10 @@ interface MessageThreadProps {
   };
   initialMessages: Message[];
   blocked: boolean;
+  songMode?: boolean;
+  matchId?: string | null;
+  songEndsAt?: number | null;
+  declined?: boolean;
   photoBase: string;
   currentUserId: string;
 }
@@ -34,6 +44,18 @@ const REPORT_REASONS = [
   'Something else'
 ];
 
+const ICEBREAKERS = [
+  'Go-to dance move?',
+  'What song are you hoping for right now?',
+  'Two truths and a lie — go.',
+  'Best date you have ever been on?',
+  'Coffee or cocktails?',
+  'What is your go-to karaoke pick?',
+  'Something you are weirdly good at?'
+];
+
+const SONG_SECONDS = 180;
+
 function describeError(code: string): string {
   switch (code) {
     case 'daily_message_limit':
@@ -42,6 +64,8 @@ function describeError(code: string): string {
       return "You've reached your new-conversation limit for today. Your matches are always open.";
     case 'blocked':
       return 'This conversation is blocked.';
+    case 'conversation_closed':
+      return 'This conversation is closed. No follow-ups — respect the floor.';
     case 'not_a_participant':
       return 'You are not part of this conversation.';
     default:
@@ -54,6 +78,10 @@ export default function MessageThread({
   other,
   initialMessages,
   blocked: initiallyBlocked,
+  songMode: initialSongMode = false,
+  matchId = null,
+  songEndsAt = null,
+  declined: initiallyDeclined = false,
   photoBase,
   currentUserId
 }: MessageThreadProps) {
@@ -62,8 +90,14 @@ export default function MessageThread({
   const [input, setInput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [blocked, setBlocked] = useState(initiallyBlocked);
+  const [songMode, setSongMode] = useState(initialSongMode);
+  const [songOver, setSongOver] = useState(false);
+  const [declined, setDeclined] = useState(initiallyDeclined);
   const [reportOpen, setReportOpen] = useState(false);
   const [reported, setReported] = useState(false);
+  const [promptIdx, setPromptIdx] = useState(0);
+  const [now, setNow] = useState(Date.now());
+  const [busy, setBusy] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const refresh = async () => {
@@ -86,17 +120,55 @@ export default function MessageThread({
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Song countdown.
+  useEffect(() => {
+    if (!songMode || !songEndsAt) return;
+    const tick = setInterval(() => {
+      const left = Math.max(0, Math.floor((songEndsAt - Date.now()) / 1000));
+      setNow(Date.now());
+      if (left === 0) {
+        setSongMode(false);
+        setSongOver(true);
+        clearInterval(tick);
+      }
+    }, 1000);
+    return () => clearInterval(tick);
+  }, [songMode, songEndsAt]);
+
+  const songLeft = songEndsAt
+    ? Math.max(0, Math.floor((songEndsAt - now) / 1000))
+    : 0;
+
   const handleSend = async () => {
     const body = input.trim();
     if (!body) return;
     setError(null);
-    const res = await sendMessage(conversationId, body);
+    const res = songMode
+      ? await sendEventMessage(conversationId, body)
+      : await sendMessage(conversationId, body);
     if (res.error) {
       setError(describeError(res.error));
       return;
     }
     setInput('');
     await refresh();
+  };
+
+  const handleResolve = async (keepGoing: boolean) => {
+    if (!matchId) return;
+    setBusy(true);
+    const res = await resolveSong(matchId, keepGoing);
+    setBusy(false);
+    if (res.error) {
+      setError(describeError(res.error));
+      return;
+    }
+    if (keepGoing) {
+      setSongOver(false);
+      setError(null);
+    } else {
+      setDeclined(true);
+    }
   };
 
   return (
@@ -131,10 +203,19 @@ export default function MessageThread({
                 Verified
               </p>
             )}
+            {songMode && (
+              <p className="text-xs font-bold text-club">
+                🎵 Dancing — {Math.floor(songLeft / 60)}:
+                {String(songLeft % 60).padStart(2, '0')}
+              </p>
+            )}
+            {declined && (
+              <p className="text-xs text-zinc-500">Song over — chat closed</p>
+            )}
           </div>
         </div>
         <div className="flex gap-2">
-          {!blocked && (
+          {!blocked && !declined && (
             <button
               onClick={() => setReportOpen((v) => !v)}
               className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-zinc-300 hover:border-zinc-500"
@@ -142,10 +223,14 @@ export default function MessageThread({
               Report
             </button>
           )}
-          {!blocked && (
+          {!blocked && !declined && (
             <button
               onClick={async () => {
-                if (confirm(`Block ${other.display_name}? You'll stop seeing each other.`)) {
+                if (
+                  confirm(
+                    `Block ${other.display_name}? You'll stop seeing each other.`
+                  )
+                ) {
                   await blockUser(other.id);
                   setBlocked(true);
                 }
@@ -158,7 +243,54 @@ export default function MessageThread({
         </div>
       </div>
 
-      {reportOpen && !blocked && (
+      {/* Icebreakers during the song */}
+      {songMode && (
+        <div className="flex items-center gap-3 border-b border-zinc-800 bg-club/10 px-4 py-2">
+          <p className="text-sm font-semibold text-club">
+            💬 {ICEBREAKERS[promptIdx]}
+          </p>
+          <button
+            onClick={() => setPromptIdx((i) => (i + 1) % ICEBREAKERS.length)}
+            className="ml-auto rounded-full border border-zinc-700 px-3 py-1 text-xs text-zinc-300 hover:border-club hover:text-club"
+          >
+            Another
+          </button>
+        </div>
+      )}
+
+      {/* Post-song decision */}
+      {songOver && !declined && !blocked && (
+        <div className="border-b border-zinc-800 bg-zinc-900 p-4 text-center">
+          <p className="text-sm font-bold">
+            The song&apos;s over. What now?
+          </p>
+          <div className="mt-3 flex justify-center gap-3">
+            <button
+              onClick={() => handleResolve(true)}
+              disabled={busy}
+              className="rounded-lg bg-club px-5 py-2 text-sm font-bold text-white transition hover:bg-club-cotton"
+            >
+              Keep dancing — it&apos;s a match
+            </button>
+            <button
+              onClick={() => handleResolve(false)}
+              disabled={busy}
+              className="rounded-lg border border-zinc-700 px-5 py-2 text-sm font-semibold text-zinc-300 hover:border-zinc-500"
+            >
+              Move on — close it
+            </button>
+          </div>
+        </div>
+      )}
+
+      {declined && (
+        <p className="border-b border-zinc-800 px-4 py-2 text-center text-xs text-zinc-500">
+          The song is over and the chat is closed. No follow-ups — that&apos;s the
+          rule of the floor.
+        </p>
+      )}
+
+      {reportOpen && !blocked && !declined && (
         <div className="border-b border-zinc-800 bg-zinc-900 p-4">
           <p className="mb-2 text-sm font-bold">Report {other.display_name}</p>
           <div className="flex flex-wrap gap-2">
@@ -191,7 +323,9 @@ export default function MessageThread({
           <p className="pt-10 text-center text-zinc-500">
             {blocked
               ? 'This conversation is blocked.'
-              : 'The floor is yours. Say something.'}
+              : songMode
+                ? 'The song is yours. Say something.'
+                : 'The floor is yours. Say something.'}
           </p>
         )}
         {messages.map((m) => {
@@ -203,9 +337,7 @@ export default function MessageThread({
             >
               <div
                 className={`max-w-[75%] rounded-2xl px-4 py-2 text-sm ${
-                  mine
-                    ? 'bg-club text-white'
-                    : 'bg-zinc-800 text-zinc-100'
+                  mine ? 'bg-club text-white' : 'bg-zinc-800 text-zinc-100'
                 }`}
               >
                 <p>{m.body}</p>
@@ -231,13 +363,20 @@ export default function MessageThread({
         {error && <p className="mb-2 text-xs text-club">{error}</p>}
         {blocked ? (
           <p className="text-sm text-zinc-500">Blocked. No more messages.</p>
+        ) : declined ? (
+          <Link
+            href="/events"
+            className="inline-block rounded-lg bg-club px-5 py-2 text-sm font-bold text-white transition hover:bg-club-cotton"
+          >
+            Back to the Dance Floor
+          </Link>
         ) : (
           <div className="flex gap-2">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Say something…"
+              placeholder={songMode ? 'Say it while the song plays…' : 'Say something…'}
               className="flex-1 rounded-lg bg-zinc-800 p-3 text-sm text-white outline-none ring-club/50 focus:ring-2"
             />
             <button

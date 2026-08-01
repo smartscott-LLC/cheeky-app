@@ -631,6 +631,13 @@ export type Database = {
           match_id: string
         }[]
       }
+      resolve_song: {
+        Args: {
+          p_match_id: string
+          p_continue: boolean
+        }
+        Returns: undefined
+      }
       send_event_message: {
         Args: {
           p_conversation_id: string

@@ -90,3 +90,37 @@ export async function blockUser(
   }
   return {};
 }
+
+/** Song chat: event messages travel outside daily messaging caps. */
+export async function sendEventMessage(
+  conversationId: string,
+  body: string
+): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc('send_event_message', {
+    p_conversation_id: conversationId,
+    p_body: body
+  });
+  if (error) {
+    console.error('sendEventMessage failed:', error.message);
+    return { error: error.message };
+  }
+  return {};
+}
+
+/** Post-song decision: continue the match or close it (no follow-ups). */
+export async function resolveSong(
+  matchId: string,
+  keepGoing: boolean
+): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc('resolve_song', {
+    p_match_id: matchId,
+    p_continue: keepGoing
+  });
+  if (error) {
+    console.error('resolveSong failed:', error.message);
+    return { error: error.message };
+  }
+  return {};
+}
