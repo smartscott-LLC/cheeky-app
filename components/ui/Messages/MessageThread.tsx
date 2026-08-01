@@ -10,6 +10,11 @@ import {
   sendEventMessage,
   sendMessage
 } from '@/app/messages/actions';
+import {
+  startDJ,
+  toggleDJ,
+  unlockDJ
+} from '@/utils/audio/dj';
 
 interface Message {
   id: number;
@@ -98,6 +103,7 @@ export default function MessageThread({
   const [promptIdx, setPromptIdx] = useState(0);
   const [now, setNow] = useState(Date.now());
   const [busy, setBusy] = useState(false);
+  const [djMuted, setDjMuted] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const refresh = async () => {
@@ -119,6 +125,15 @@ export default function MessageThread({
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // The DJ keeps spinning through the song.
+  useEffect(() => {
+    if (songMode) {
+      unlockDJ();
+      startDJ();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [songMode]);
 
   // Song countdown.
   useEffect(() => {
@@ -215,6 +230,15 @@ export default function MessageThread({
           </div>
         </div>
         <div className="flex gap-2">
+          {songMode && (
+            <button
+              onClick={() => setDjMuted(toggleDJ())}
+              title="DJ"
+              className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-zinc-300 hover:border-zinc-500"
+            >
+              {djMuted ? '🔇' : '🎧'}
+            </button>
+          )}
           {!blocked && !declined && (
             <button
               onClick={() => setReportOpen((v) => !v)}

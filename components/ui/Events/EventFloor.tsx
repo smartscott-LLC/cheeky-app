@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { joinEvent, leaveEvent, pickOnFloor } from '@/app/events/actions';
+import MatchedOverlay from '@/components/ui/Events/MatchedOverlay';
 
 interface Participant {
   userId: string;
@@ -65,6 +66,7 @@ export default function EventFloor({
   const [now, setNow] = useState(Date.now());
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [match, setMatch] = useState<{ convId: string | null } | null>(null);
 
   const refresh = async () => {
     const [{ data: ev }, { data: entries }, { data: picks }] =
@@ -176,7 +178,7 @@ export default function EventFloor({
       return;
     }
     if (res.matched) {
-      // Find the song-chat conversation and jump in.
+      // Find the song-chat conversation, then hit the MATCHED moment.
       const { data: conv } = await supabase
         .from('conversations')
         .select('id')
@@ -184,7 +186,7 @@ export default function EventFloor({
           `and(user_id_a.eq.${myUserId},user_id_b.eq.${userId}),and(user_id_a.eq.${userId},user_id_b.eq.${myUserId})`
         )
         .maybeSingle();
-      router.push(`/messages/${conv?.id ?? ''}`);
+      setMatch({ convId: conv?.id ?? null });
       return;
     }
     await refresh();
@@ -218,6 +220,14 @@ export default function EventFloor({
 
   return (
     <div className="mx-auto max-w-4xl">
+      {match && (
+        <MatchedOverlay
+          onDone={() =>
+            router.push(match.convId ? `/messages/${match.convId}` : '/messages')
+          }
+        />
+      )}
+
       {/* Banner */}
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
         <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
