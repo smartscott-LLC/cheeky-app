@@ -161,7 +161,7 @@ layer, not from process separation.
 
 1. Exact click budget (10 is a starting default) and grid min-fill threshold.
 2. Do Guests appear in event grids (blurred) or are they invisible? (Blurred = FOMO; invisible = clean.) 
-3. Launch strategy — which city/cities seed the first 1,000 verified users, and how?
+3. **Launch strategy** — **Resolved (founder):** giveaways seed the club. First 30 days after launch: **100 Gold + 50 Platinum + 10 Diamond complimentary memberships** + influencer founder-invites (FTC-disclosed). Purpose: seed premium density so free users experience upper-floor engagement from day one. Mechanics require a **complimentary-grant path** in Phase 3 entitlements (no payment). Compliance: posted giveaway rules (no-purchase-necessary), influencer disclosure required.
 4. ~~Verification provider choice & per-verify cost ceiling~~ **Resolved:** Stripe Identity, ID-number lookup (name + DOB + government ID, US SSN currently), ~$1.50/verify; selfie method (~$0.50) available to flip on for international coverage.
 5. Headliner event cadence once Gold+ lands (daily? themed by weekday?).
 6. Gem scarcity model — how many of each, how they're earned vs bought.
@@ -184,5 +184,5 @@ layer, not from process separation.
 | 2 — Event Engine | Dance Floor: scheduling, grid, pairing, song chat, token wallet + refunds | ✅ Engine built (tag `v0.1-dance-floor`) — live validation this hour |
 | 3 — Entitlements | Subscription-gated floors at the data layer, guest passes | ⏳ |
 | 4 — The Floors | Gold/Platinum/Diamond events, themed nights, Speed Dating, rooftop, visibility boosts | ⏳ |
-| 5 — Economy+ | Gems/collectibles, gifts, giveaways, referral dashboard | ⏳ |
+| 5 — Economy+ | Gems/collectibles (incl. achievement badges — e.g. 30-day streak pearl badge — and founder/collector skins), gifts, giveaways, referral dashboard | ⏳ |
 | 6 — Mobile | iOS/Android from the desktop-proven product | ⏳ |
