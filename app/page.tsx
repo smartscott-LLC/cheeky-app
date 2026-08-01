@@ -50,20 +50,32 @@ export default async function LandingPage() {
             A dating app built like a nightclub
           </p>
           <h1 className="mx-auto mt-6 max-w-3xl text-5xl font-extrabold leading-tight sm:text-7xl">
-            Everyone&apos;s a VIP
-            <br />
-            <span className="text-club">with an ID.</span>
+            Looking for your next crush?
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-zinc-300 sm:text-xl">
-            Get your free Silver card. Work the room. Catch the Dance Floor —
-            every hour, on the hour. No $20-a-week nonsense. Ever.
+          <p className="mx-auto mt-4 max-w-2xl text-xl text-zinc-300 sm:text-2xl">
+            Find your next date in our virtual nightclub.
+          </p>
+          <p className="mt-10 text-2xl font-extrabold sm:text-3xl">
+            At Cheeky&apos;s,{' '}
+            <span className="text-club">you are the VIP.</span>
+          </p>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-zinc-400">
+            Everyone with an ID starts their very own VIP adventure. Spend $80 a
+            month somewhere else — or hit the Dance Floor and find your arm
+            candy right here.
+          </p>
+          <p className="mt-8 text-lg font-bold text-club">
+            The Dance Floor opens once an hour — every hour.
+          </p>
+          <p className="mx-auto mt-3 max-w-2xl text-lg text-zinc-400">
+            What are you waiting for? It&apos;s free to get your groove on.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
               href="/signin/signup"
-              className="rounded-lg bg-club px-8 py-4 text-lg font-semibold text-white transition hover:bg-club-cotton"
+              className="rounded-lg bg-club px-10 py-4 text-lg font-bold text-white transition hover:bg-club-cotton"
             >
-              Get your card
+              Enter
             </a>
             <a
               href="#membership"
