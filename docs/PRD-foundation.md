@@ -73,6 +73,33 @@ The **Dance Floor is the reference event**; every floor reskins it with a pricie
 
 The club's rules are written before the code (see `docs/Governance/`): 18+ gate, verification-as-door-check, consent, report/block/ban, the no-follow-up rule, retention/deletion, refunds. All governance surfaces speak the club's voice — the bouncer, not the paperwork. Drafts require legal review before public launch.
 
+### Architecture — one engine, modular floors
+
+The club is **one Next.js app** with a core and per-floor modules — not N
+separate apps/PWAs. Isolation comes from entitlements + RLS at the data
+layer, not from process separation.
+
+- **The core (the hub):** auth, identity (Brutus), wallet (`token_ledger`),
+  entitlements (subscription → floor access), governance (consents, reports,
+  blocks), and the **promotion engine** (what's available to the member and
+  how the next perk is surfaced — value-first, never dark patterns). Lives in
+  `utils/` + core routes (account, verify, messages, browse).
+- **Floor modules (the spokes):** `app/(floors)/gold|platinum|diamond` — each
+  a *folder* (not a single file) with its own layout (importing the base
+  floor layout), skin (palette from `styles/palettes/`), entitlements,
+  pricing, and rooms. The first floor (Silver/club) is the base itself.
+- **Base floor layout + config:** `layouts/floor-base.tsx` +
+  `config/floors.ts` (palette, access, pricing, rooms). Add a room to the
+  base and every floor gets it, themed by its config.
+- **Access hierarchy (free security):** higher floors can reach lower floors;
+  lower floors can never reach higher. Enforced by RLS + entitlements at the
+  data layer — never just hidden UI.
+- **Component reuse:** `components/ui/*` are shared; floors theme them via
+  floor tokens (CSS variables). One component can serve many floors with
+  different skins without entangling.
+- **Guest passes:** a member's pass lets a Guest temporarily experience a
+  floor; routing still goes through the core.
+
 ## 6. User Experience — Key Flows
 
 1. **Signup → Guest:** email signup, up to 3 photos, birthday, terms. Land on the street: marquee for the next event, blurred grid, ticker of live matches. Browse, swipe, match, chat with other Guests. The upgrade banner: *"Your ID gets you through the door. Get your Silver card — it's free."*
