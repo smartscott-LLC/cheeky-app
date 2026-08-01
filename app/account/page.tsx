@@ -1,6 +1,7 @@
 import CustomerPortalForm from '@/components/ui/AccountForms/CustomerPortalForm';
 import EmailForm from '@/components/ui/AccountForms/EmailForm';
 import NameForm from '@/components/ui/AccountForms/NameForm';
+import ProfileForm from '@/components/ui/AccountForms/ProfileForm';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
@@ -24,9 +25,14 @@ export default async function Account() {
     return redirect('/signin');
   }
 
-  const [profile, tokenBalance] = await Promise.all([
+  const [profile, tokenBalance, photos] = await Promise.all([
     getProfile(supabase, user.id),
-    getTokenBalance(supabase)
+    getTokenBalance(supabase),
+    supabase
+      .from('photos')
+      .select('id, storage_path, is_primary, position')
+      .eq('user_id', user.id)
+      .order('position', { ascending: true })
   ]);
 
   return (
@@ -66,6 +72,20 @@ export default async function Account() {
               )}
             </div>
           </div>
+        </div>
+        <div className="mb-6">
+          <ProfileForm
+            userId={user.id}
+            displayName={profile?.display_name ?? ''}
+            bio={profile?.bio ?? ''}
+            photos={(photos?.data ?? []).map((p) => ({
+              id: p.id,
+              storage_path: p.storage_path,
+              is_primary: p.is_primary,
+              position: p.position
+            }))}
+            photoBase={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`}
+          />
         </div>
         <CustomerPortalForm subscription={subscription} />
         <NameForm userName={userDetails?.full_name ?? ''} />

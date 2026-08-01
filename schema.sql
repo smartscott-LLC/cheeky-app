@@ -445,3 +445,26 @@ begin
 end;
 $$;
 grant execute on function send_message(uuid, text) to authenticated;
+
+-- Profile photos (mirrors supabase/migrations/20260801173355_profile_photos.sql)
+create or replace function enforce_photo_limit()
+returns trigger as $$
+declare v_count int;
+begin
+  select count(*) into v_count from photos where user_id = new.user_id;
+  if v_count >= 3 then raise exception 'photo_limit_reached'; end if;
+  return new;
+end;
+$$ language plpgsql security definer set search_path = public;
+create trigger photos_limit_before_insert
+  before insert on photos
+  for each row execute procedure enforce_photo_limit();
+
+create policy "Read profile photos" on storage.objects for select
+  using (bucket_id = 'profiles');
+create policy "Upload your own profile photos" on storage.objects for insert
+  with check (bucket_id = 'profiles' and (storage.foldername(name))[1] = auth.uid()::text);
+create policy "Update your own profile photos" on storage.objects for update
+  using (bucket_id = 'profiles' and (storage.foldername(name))[1] = auth.uid()::text);
+create policy "Delete your own profile photos" on storage.objects for delete
+  using (bucket_id = 'profiles' and (storage.foldername(name))[1] = auth.uid()::text);
