@@ -15,13 +15,20 @@ sweat, you're a VIP.
 - **Guests** (unverified) may browse the street level: real profiles, real
   matches, real chat. They see the club through the window (event marquee,
   blurred grid, ticker) — but no events and no tokens until they check in.
-- **The check:** government ID + selfie via Stripe Identity.
-  - The provider processes the ID/selfie. **We store only the result +
-    timestamp + provider reference.** Raw ID and selfie material is never
-    stored by us.
+- **The check (current):** ID number verification via Stripe Identity — the
+  member keys in name, date of birth, and government ID number; the provider
+  validates against government and third-party databases.
+  - Currently available for **US social security numbers**; broader coverage
+    as the provider expands.
+  - The provider runs the lookup. **We store only the result + timestamp +
+    provider reference.** The ID number itself is never stored by us.
+  - The DOB match doubles as the **18+ enforcement** at the door.
   - Success → Silver card + VIP badge + **20 tokens, instantly**.
   - Failure → explainable, retryable. Repeated fraud attempts → bounced.
-- **Consent:** a dedicated checkbox for verification/biometric processing —
+- **The selfie check** (document + selfie via Stripe Identity, lower per-check
+  cost) is available as an alternative method for broader international
+  coverage — flip it on when we expand beyond the US.
+- **Consent:** a dedicated checkbox for verification processing —
   separate from ToS, shown before the check runs.
 - **One identity per account.** Verification is per-person; trading, lending,
   or faking an identity is a bouncing offense.
@@ -31,7 +38,8 @@ sweat, you're a VIP.
 1. Signup asks for birthday. Under 18 → friendly bounce at the door.
 2. "Get your card" → Brutus introduces himself, explains the check in one
    sentence, asks for consent.
-3. ID + selfie (Stripe Identity, ~60 seconds).
+3. Brutus runs the check: name + date of birth + government ID number
+   (Stripe Identity ID number verification, ~60 seconds).
 4. Instant result: badge + 20 tokens + "You're in. The Dance Floor opens in
    [X] minutes."
 

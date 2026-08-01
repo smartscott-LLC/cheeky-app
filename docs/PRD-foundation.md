@@ -76,7 +76,10 @@ The club's rules are written before the code (see `docs/Governance/`): 18+ gate,
 ## 6. User Experience — Key Flows
 
 1. **Signup → Guest:** email signup, up to 3 photos, birthday, terms. Land on the street: marquee for the next event, blurred grid, ticker of live matches. Browse, swipe, match, chat with other Guests. The upgrade banner: *"Your ID gets you through the door. Get your Silver card — it's free."*
-2. **Verify → Silver:** Brutus the Bouncer conducts the check — ID + selfie (Stripe Identity), ~60 seconds, **20 tokens land instantly** → join the next Dance Floor within the hour.
+2. **Verify → Silver:** Brutus the Bouncer conducts the check — name + date of
+   birth + government ID number via Stripe Identity (US SSN currently; selfie
+   check available for international coverage), ~60 seconds, **20 tokens land
+   instantly** → join the next Dance Floor within the hour.
 3. **Dance Floor:** join with 3 tokens → grid → 2 min to pick → mutual click = "You're dancing with X" + announcement hype → one song → continue (match + badge) or decline (closed, no follow-ups).
 4. **Climb:** upgrade to Gold/Platinum/Diamond anytime from the floors page; entitlements apply instantly.
 5. **Guest pass:** a member invites a Guest up for 24h; Guest gets the tour and a reason to verify.
@@ -85,6 +88,7 @@ The club's rules are written before the code (see `docs/Governance/`): 18+ gate,
 
 - Guest can complete signup with email + 3 photos + birthday and reach Club Floor in < 60 seconds.
 - Matched chats are unlimited and free at every tier; unmatched outbound is 5/day for Guests and Silver.
+- Guests and Silver post up to **3 photos** and can view up to **3 of another member's photos** (primary + 2); paid floors post and view more (Gold 6 / Platinum 8 / Diamond 10 — configurable per floor).
 - Message retention is member-chosen (3 days–3 months) at profile creation and enforced by purge; the stricter participant's window applies to shared conversations.
 - Verification issues Silver card + VIP badge + 20 tokens instantly on success; failures are explainable and retryable.
 - Dance Floor runs on schedule; entry, click budget, instant mutual-match, lock-out, song chat, refunds, and post-song continue/decline all behave per spec.
@@ -113,7 +117,9 @@ The club's rules are written before the code (see `docs/Governance/`): 18+ gate,
 
 ## 10. Assumptions
 
-- Stripe Identity (or equivalent) cost stays under ~$1/verify at launch volumes. **(High confidence)**
+- Stripe Identity ID number verification costs ~$1.50/verify at launch
+  volumes (US SSN only; selfie method ~$0.50 when enabled for international).
+  **(Confirmed by founder — watch as a per-user CAC metric.)**
 - Hourly Dance Floor can fill ≥ 20 participants once a metro area has ~1,000 verified users. **(Medium — needs a seed test)**
 - The "silent loss" design (private refunds) actually reduces churn vs. visible rejection. **(Medium — validate in beta)**
 - Referrals (+20 tokens) will be the primary earned-token driver; giveaways are a marketing lever, not a liability. **(High)**

@@ -38,7 +38,7 @@ schema or flow is locked here and enforced in Phase 1+.
 | Decision | Policy |
 |---|---|
 | Age | 18+ hard gate at signup. Birthday collected. No minors, period. |
-| Verification data | We never store the ID docs or selfies. Stripe Identity processes them; we store `verified_at` + provider reference + result only. Raw biometric material is not retained by us. |
+| Verification data | We never store the ID docs, selfies, or ID numbers. Stripe Identity runs the check (ID number lookup — US SSN currently; selfie method available for international coverage). We store `verified_at` + provider reference + result only. Raw biometric material is not retained by us. |
 | Consent | Explicit, separate checkbox for verification/biometric processing — never buried in ToS. |
 | Account deletion | In-app. Profile PII wiped/de-identified. A de-identified fraud/ban flag may remain. |
 | Cancellation | One-click cancel from Account, always visible, no confirmation-begging. (FTC Click-to-Cancel compliant.) |

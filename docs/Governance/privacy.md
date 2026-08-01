@@ -9,8 +9,8 @@
 - **Profile:** photos, name, bio, preferences. Visible to other members by
   design — it's a club, not a vault.
 - **Verification result:** *result + timestamp + provider reference only*.
-  The ID documents and selfies are processed by our verification provider
-  (Stripe Identity) and are **never stored by us**.
+  The ID documents, selfies, and ID numbers are processed by our verification
+  provider (Stripe Identity) and are **never stored by us**.
 - **Messages:** stored to deliver and to keep the floor safe (see
   `community-safety.md`).
 - **Token ledger:** every earn, spend, and refund. This is financial data.
