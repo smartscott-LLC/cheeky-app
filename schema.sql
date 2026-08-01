@@ -236,14 +236,35 @@ create trigger profiles_set_updated_at
   before update on profiles
   for each row execute procedure set_updated_at();
 
--- Auto-create profile rows on signup (birthday passed via raw_user_meta_data)
-create function handle_new_profile()
+-- Auto-create profile rows on signup (birthday, retention, consents via raw_user_meta_data)
+create or replace function handle_new_profile()
 returns trigger as $$
+declare
+  bday date := nullif(new.raw_user_meta_data->>'birthday', '')::date;
+  retention int := nullif(new.raw_user_meta_data->>'message_retention_days', '')::int;
+  terms_v text := new.raw_user_meta_data->>'terms_version';
+  privacy_v text := new.raw_user_meta_data->>'privacy_version';
 begin
-  insert into profiles (id)
-  values (new.id);
+  insert into profiles (id, message_retention_days)
+  values (new.id, coalesce(greatest(3, least(90, retention)), 90))
+  on conflict (id) do nothing;
+
   insert into profile_private (id, birthday)
-  values (new.id, nullif(new.raw_user_meta_data->>'birthday', '')::date);
+  values (new.id, bday)
+  on conflict (id) do nothing;
+
+  if terms_v is not null then
+    insert into consents (user_id, consent_type, version)
+    values (new.id, 'terms', terms_v)
+    on conflict (user_id, consent_type) do nothing;
+  end if;
+
+  if privacy_v is not null then
+    insert into consents (user_id, consent_type, version)
+    values (new.id, 'privacy', privacy_v)
+    on conflict (user_id, consent_type) do nothing;
+  end if;
+
   return new;
 end;
 $$ language plpgsql security definer;

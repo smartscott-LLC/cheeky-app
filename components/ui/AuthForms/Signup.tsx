@@ -53,6 +53,53 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               autoComplete="current-password"
               className="w-full p-3 rounded-md bg-zinc-800"
             />
+            <label htmlFor="birthday">Date of birth</label>
+            <input
+              id="birthday"
+              type="date"
+              name="birthday"
+              required
+              className="w-full p-3 rounded-md bg-zinc-800 [color-scheme:dark]"
+            />
+            <p className="text-xs text-zinc-500">
+              You must be 18 or older. Brutus double-checks it at the door.
+            </p>
+            <label htmlFor="messageRetentionDays">
+              How long should we keep your conversations?
+            </label>
+            <select
+              id="messageRetentionDays"
+              name="messageRetentionDays"
+              className="w-full p-3 rounded-md bg-zinc-800"
+              defaultValue="90"
+            >
+              <option value="7">7 days</option>
+              <option value="14">14 days</option>
+              <option value="30">30 days</option>
+              <option value="90">90 days</option>
+            </select>
+            <p className="text-xs text-zinc-500">
+              Messages are purged after your window. In a chat, the stricter
+              window wins.
+            </p>
+            <label className="mt-2 flex items-start gap-3 text-sm text-zinc-300">
+              <input
+                type="checkbox"
+                name="termsConsent"
+                required
+                className="mt-1 h-4 w-4 accent-club"
+              />
+              <span>I agree to the Rules of the Club (Terms) v1.</span>
+            </label>
+            <label className="flex items-start gap-3 text-sm text-zinc-300">
+              <input
+                type="checkbox"
+                name="privacyConsent"
+                required
+                className="mt-1 h-4 w-4 accent-club"
+              />
+              <span>I&apos;ve read What the Bouncer Knows (Privacy) v1.</span>
+            </label>
           </div>
           <Button
             variant="slim"

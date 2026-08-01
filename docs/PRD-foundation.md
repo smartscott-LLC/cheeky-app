@@ -126,12 +126,12 @@ The club's rules are written before the code (see `docs/Governance/`): 18+ gate,
 
 ## 11. Roadmap
 
-| Phase | Ships |
-|---|---|
-| 0 — Foundation | Rebrand off the template, docs (this PRD + AGENTS.md), infra in place |
-| 1 — Club Floor | Profiles, verification (Stripe Identity), browse, match, chat, free-tier limits |
-| 2 — Event Engine | Dance Floor: scheduling, grid, pairing, song chat, token wallet + refunds |
-| 3 — Entitlements | Subscription-gated floors at the data layer, guest passes |
-| 4 — The Floors | Gold/Platinum/Diamond events, themed nights, Speed Dating, rooftop, visibility boosts |
-| 5 — Economy+ | Gems/collectibles, gifts, giveaways, referral dashboard |
-| 6 — Mobile | iOS/Android from the desktop-proven product |
+| Phase | Ships | Status |
+|---|---|---|
+| 0 — Foundation | Rebrand off the template, docs (this PRD + AGENTS.md), infra in place | ✅ Done (tag `v0.1-door-open` at 1B) |
+| 1 — Club Floor | Profiles, verification (Stripe Identity), browse, match, chat, free-tier limits | 🔨 In progress — verification + tokens live |
+| 2 — Event Engine | Dance Floor: scheduling, grid, pairing, song chat, token wallet + refunds | ⏳ Next |
+| 3 — Entitlements | Subscription-gated floors at the data layer, guest passes | ⏳ |
+| 4 — The Floors | Gold/Platinum/Diamond events, themed nights, Speed Dating, rooftop, visibility boosts | ⏳ |
+| 5 — Economy+ | Gems/collectibles, gifts, giveaways, referral dashboard | ⏳ |
+| 6 — Mobile | iOS/Android from the desktop-proven product | ⏳ |

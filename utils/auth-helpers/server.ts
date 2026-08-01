@@ -168,7 +168,40 @@ export async function signUp(formData: FormData) {
 
   const email = String(formData.get('email')).trim();
   const password = String(formData.get('password')).trim();
+  const birthday = String(formData.get('birthday') ?? '').trim();
+  const retention = Number(formData.get('messageRetentionDays') ?? 90);
+  const termsConsent = formData.get('termsConsent') === 'on';
+  const privacyConsent = formData.get('privacyConsent') === 'on';
   let redirectPath: string;
+
+  if (!termsConsent || !privacyConsent) {
+    redirectPath = getErrorRedirect(
+      '/signin/signup',
+      'Almost there.',
+      'Please accept the Rules of the Club and the Privacy Policy to enter.'
+    );
+    return redirectPath;
+  }
+
+  if (birthday) {
+    const dob = new Date(birthday);
+    const today = new Date();
+    const age =
+      today.getFullYear() -
+      dob.getFullYear() -
+      (today <
+      new Date(today.getFullYear(), dob.getMonth(), dob.getDate())
+        ? 1
+        : 0);
+    if (isNaN(dob.getTime()) || age < 18) {
+      redirectPath = getErrorRedirect(
+        '/signin/signup',
+        'Not tonight.',
+        'You must be 18 or older to enter the club.'
+      );
+      return redirectPath;
+    }
+  }
 
   if (!isValidEmail(email)) {
     redirectPath = getErrorRedirect(
@@ -183,7 +216,13 @@ export async function signUp(formData: FormData) {
     email,
     password,
     options: {
-      emailRedirectTo: callbackURL
+      emailRedirectTo: callbackURL,
+      data: {
+        birthday: birthday || undefined,
+        message_retention_days: Math.min(90, Math.max(3, retention)),
+        terms_version: 'v1',
+        privacy_version: 'v1'
+      }
     }
   });
 
