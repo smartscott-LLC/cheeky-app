@@ -85,6 +85,7 @@ The club's rules are written before the code (see `docs/Governance/`): 18+ gate,
 
 - Guest can complete signup with email + 3 photos + birthday and reach Club Floor in < 60 seconds.
 - Matched chats are unlimited and free at every tier; unmatched outbound is 5/day for Guests and Silver.
+- Message retention is member-chosen (3 days–3 months) at profile creation and enforced by purge; the stricter participant's window applies to shared conversations.
 - Verification issues Silver card + VIP badge + 20 tokens instantly on success; failures are explainable and retryable.
 - Dance Floor runs on schedule; entry, click budget, instant mutual-match, lock-out, song chat, refunds, and post-song continue/decline all behave per spec.
 - Floors are enforced at the **data layer** (RLS/entitlements), not just hidden in UI.

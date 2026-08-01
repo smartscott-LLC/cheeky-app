@@ -38,10 +38,11 @@ consecutive events, no workarounds.** Enforced in code, not just policy.
 ## Bouncing (moderation ladder)
 
 1. **Warning** — first offense, minor.
-2. **Timeout** — temporary, proportionate.
-3. **Permanent bounce** — serious or repeated offenses.
-4. **Appeals** — anyone can appeal to a human via support. No secret bans, no
-   permanent decisions without a human in the loop.
+2. **Temporary ban** — second offense.
+3. **Permanent removal** — third offense, or a serious enough first offense to
+   skip steps at human discretion.
+4. **Appeals** — every appeal is taken and decided **case by case, fairness
+   first**. No automatic bans without a human in the loop; no secret bans.
 
 ## Escalations
 

@@ -45,6 +45,8 @@ impersonation. Violations escalate: warning → timeout → permanent bounce.
   loss, public win.
 - **Event canceled for low fill = automatic refund.**
 - Token pack purchases follow Stripe's refund process.
+- **Monetary disputes are handled by Stripe** — we intervene only when a
+  situation escalates beyond them.
 
 ## 7. Liability
 

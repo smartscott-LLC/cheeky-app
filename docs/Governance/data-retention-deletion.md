@@ -13,11 +13,20 @@ back whenever you want.
 | Data | Kept while | After that |
 |---|---|---|
 | Profile (photos, bio, name) | Account active | Deleted on account deletion |
-| Messages | Account active + 90 days | Deleted/purged |
+| Messages | **Member-chosen retention (3 days–3 months), set at profile creation** | Purged per the stricter participant's window (v1) |
 | Token ledger | 7 years (financial records) | Archived per law |
 | Verification result | Account active | De-identified flag may remain for fraud/ban records |
 | Raw ID docs / selfies | Never stored by us | Provider processes and discards per their policy |
 | Reports / bans | As needed for safety | Reviewed for purge |
+
+## Chat retention is your choice
+
+Members pick their message retention at profile creation — anywhere from
+**3 days to 3 months**. A purge job enforces it automatically.
+
+In a shared conversation, the **stricter of the two participants' settings
+applies** (v1). If members want fully independent windows later, we can move
+from shared rows to per-participant copies.
 
 ## Account deletion (in-app)
 

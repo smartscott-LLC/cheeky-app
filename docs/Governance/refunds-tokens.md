@@ -40,6 +40,12 @@ on the surface.
 - The 20/3 remainder is intentional: six free events, then you top up or earn.
   No 2-token events. Ever.
 
+## Money disputes are Stripe's (we opted in)
+
+Stripe owns refunds and payment customer relations. We step in only when a
+situation escalates beyond the payment processor (fraud rings, disputes tied
+to account-level issues, etc.).
+
 ## The no-match loop (Dance Floor)
 
 Entry: 3 tokens → selection round → mutual pick = instant match (tokens

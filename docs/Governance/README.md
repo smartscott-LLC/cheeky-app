@@ -42,9 +42,9 @@ schema or flow is locked here and enforced in Phase 1+.
 | Consent | Explicit, separate checkbox for verification/biometric processing — never buried in ToS. |
 | Account deletion | In-app. Profile PII wiped/de-identified. A de-identified fraud/ban flag may remain. |
 | Cancellation | One-click cancel from Account, always visible, no confirmation-begging. (FTC Click-to-Cancel compliant.) |
-| Refunds | No-match events auto-refund tokens, privately. Event canceled for low fill = auto-refund. Token packs follow Stripe's refund process. |
-| Retention | Chats: account-active + 90 days. Token ledger: 7 years (financial records floor). Verification result: retained for fraud prevention, de-identified on deletion. |
-| Bouncing | Warning → timeout → permanent. Human review. Appeals via support. No secret bans. |
+| Refunds | No-match events auto-refund tokens, privately. Event canceled for low fill = auto-refund. Token packs follow Stripe's process; monetary disputes are Stripe's, we intervene on escalations. |
+| Retention | Chats: member-chosen (3 days–3 months), set at profile creation; stricter participant's window applies to shared conversations (v1). Token ledger: 7 years (financial records floor). Verification result: retained for fraud prevention, de-identified on deletion. |
+| Bouncing | Warning → temporary ban → permanent removal. All appeals decided case-by-case, fairness first. Human in the loop, no secret bans. |
 | No-follow-up rule | A decline closes the chat. No re-messaging, no re-pairing in consecutive rounds. Enforced in code. |
 
 ## How it's enforced
