@@ -1,5 +1,6 @@
 import CustomerPortalForm from '@/components/ui/AccountForms/CustomerPortalForm';
 import EmailForm from '@/components/ui/AccountForms/EmailForm';
+import GuestPassForm from '@/components/ui/AccountForms/GuestPassForm';
 import NameForm from '@/components/ui/AccountForms/NameForm';
 import ProfileForm from '@/components/ui/AccountForms/ProfileForm';
 import { redirect } from 'next/navigation';
@@ -25,15 +26,31 @@ export default async function Account() {
     return redirect('/signin');
   }
 
-  const [profile, tokenBalance, photos] = await Promise.all([
-    getProfile(supabase, user.id),
-    getTokenBalance(supabase),
-    supabase
-      .from('photos')
-      .select('id, storage_path, is_primary, position')
-      .eq('user_id', user.id)
-      .order('position', { ascending: true })
-  ]);
+  const [profile, tokenBalance, photos, tierData, grants, passes] =
+    await Promise.all([
+      getProfile(supabase, user.id),
+      getTokenBalance(supabase),
+      supabase
+        .from('photos')
+        .select('id, storage_path, is_primary, position')
+        .eq('user_id', user.id)
+        .order('position', { ascending: true }),
+      supabase.rpc('current_tier', { p_user: user.id }),
+      supabase
+        .from('entitlement_grants')
+        .select('tier, reason, expires_at')
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('guest_passes')
+        .select('tier, expires_at')
+        .order('created_at', { ascending: false })
+    ]);
+
+  const tier = (tierData?.data as string) ?? 'standard';
+  const tierLabel =
+    tier === 'gold' ? 'Gold' : tier === 'platinum' ? 'Platinum' : tier === 'diamond' ? 'Diamond' : 'Silver';
+  const photoLimit =
+    tier === 'gold' ? 6 : tier === 'platinum' ? 8 : tier === 'diamond' ? 10 : 3;
 
   return (
     <section className="mb-32 bg-black">
@@ -73,6 +90,32 @@ export default async function Account() {
             </div>
           </div>
         </div>
+        <div className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
+          <h2 className="text-xl font-bold">Your floor</h2>
+          <p className="mt-1 text-zinc-400">
+            Current floor:{' '}
+            <span className="font-bold text-club">{tierLabel}</span>
+            {tier !== 'standard' &&
+              (grants?.data?.[0] || passes?.data?.[0]) && (
+                <span className="ml-2 text-sm text-zinc-500">
+                  (
+                  {grants?.data?.[0]
+                    ? `grant — expires ${new Date(
+                        grants.data[0].expires_at
+                      ).toLocaleDateString()}`
+                    : `guest pass — expires ${new Date(
+                        passes!.data![0].expires_at
+                      ).toLocaleDateString()}`}
+                  )
+                </span>
+              )}
+          </p>
+          {tier !== 'standard' && (
+            <div className="mt-4">
+              <GuestPassForm />
+            </div>
+          )}
+        </div>
         <div className="mb-6">
           <ProfileForm
             userId={user.id}
@@ -84,6 +127,7 @@ export default async function Account() {
               is_primary: p.is_primary,
               position: p.position
             }))}
+            photoLimit={photoLimit}
             photoBase={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`}
           />
         </div>

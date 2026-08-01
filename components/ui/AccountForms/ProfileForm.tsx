@@ -17,6 +17,7 @@ interface ProfileFormProps {
   bio: string;
   photos: ProfilePhoto[];
   photoBase: string;
+  photoLimit?: number;
 }
 
 const MAX_PHOTOS = 3;
@@ -26,7 +27,8 @@ export default function ProfileForm({
   displayName,
   bio,
   photos: initialPhotos,
-  photoBase
+  photoBase,
+  photoLimit = MAX_PHOTOS
 }: ProfileFormProps) {
   const supabase = createClient();
   const [name, setName] = useState(displayName);
@@ -39,8 +41,8 @@ export default function ProfileForm({
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleUpload = async (file: File) => {
-    if (photos.length >= MAX_PHOTOS) {
-      setError(`Max ${MAX_PHOTOS} photos on this floor.`);
+    if (photos.length >= photoLimit) {
+      setError(`Max ${photoLimit} photos on this floor.`);
       return;
     }
     setError(null);
@@ -127,7 +129,7 @@ export default function ProfileForm({
     <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
       <h2 className="text-xl font-bold">Your profile</h2>
       <p className="mt-1 text-sm text-zinc-400">
-        Up to {MAX_PHOTOS} photos on this floor. This is what the club sees.
+        Up to {photoLimit} photos on this floor. This is what the club sees.
       </p>
 
       <div className="mt-5 grid grid-cols-3 gap-3">
@@ -165,7 +167,7 @@ export default function ProfileForm({
             </div>
           </div>
         ))}
-        {photos.length < MAX_PHOTOS && (
+        {photos.length < photoLimit && (
           <button
             onClick={() => fileRef.current?.click()}
             disabled={uploading}

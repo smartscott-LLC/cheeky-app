@@ -17,6 +17,8 @@ const supabaseAdmin = createClient<Database>(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
+export { supabaseAdmin };
+
 const upsertProductRecord = async (product: Stripe.Product) => {
   const productData: Product = {
     id: product.id,

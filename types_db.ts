@@ -90,6 +90,36 @@ export type Database = {
         }
         Relationships: []
       }
+      entitlement_grants: {
+        Row: {
+          created_at: string
+          expires_at: string
+          granted_by: string | null
+          id: string
+          reason: string
+          tier: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          granted_by?: string | null
+          id?: string
+          reason?: string
+          tier: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          granted_by?: string | null
+          id?: string
+          reason?: string
+          tier?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       event_entries: {
         Row: {
           created_at: string
@@ -184,6 +214,33 @@ export type Database = {
           starts_at?: string
           status?: string
           token_cost?: number
+        }
+        Relationships: []
+      }
+      guest_passes: {
+        Row: {
+          created_at: string
+          expires_at: string
+          guest_id: string
+          host_id: string
+          id: string
+          tier: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          guest_id: string
+          host_id: string
+          id?: string
+          tier: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          guest_id?: string
+          host_id?: string
+          id?: string
+          tier?: string
         }
         Relationships: []
       }
@@ -593,6 +650,12 @@ export type Database = {
           match_id: string
         }[]
       }
+      current_tier: {
+        Args: {
+          p_user: string
+        }
+        Returns: string
+      }
       ensure_events: {
         Args: {
           p_hours?: number
@@ -645,10 +708,22 @@ export type Database = {
         }
         Returns: number
       }
+      send_guest_pass: {
+        Args: {
+          p_guest: string
+        }
+        Returns: string
+      }
       send_message: {
         Args: {
           p_conversation_id: string
           p_body: string
+        }
+        Returns: number
+      }
+      tier_rank: {
+        Args: {
+          p_tier: string
         }
         Returns: number
       }
