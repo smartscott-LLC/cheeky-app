@@ -69,10 +69,14 @@ The **Dance Floor is the reference event**; every floor reskins it with a pricie
 - **Spend:** events priced per floor. Token *price* scales steeply (3 → 5 → 25 → 40) while real *money* per event stays roughly flat — status costs what it looks like it costs. Spenders want to feel like spenders; whales and $10 spenders look the same on the surface — no pay-to-win feel.
 - **Design rule:** the 20/3 remainder trap is intentional (6 free events, then 2 tokens that can't buy anything). No 2-token events. Ever.
 
+### Governance layer — "Brutus the Bouncer"
+
+The club's rules are written before the code (see `docs/Governance/`): 18+ gate, verification-as-door-check, consent, report/block/ban, the no-follow-up rule, retention/deletion, refunds. All governance surfaces speak the club's voice — the bouncer, not the paperwork. Drafts require legal review before public launch.
+
 ## 6. User Experience — Key Flows
 
 1. **Signup → Guest:** email signup, up to 3 photos, birthday, terms. Land on the street: marquee for the next event, blurred grid, ticker of live matches. Browse, swipe, match, chat with other Guests. The upgrade banner: *"Your ID gets you through the door. Get your Silver card — it's free."*
-2. **Verify → Silver:** ID + selfie (Stripe Identity), ~1 minute, **20 tokens land instantly** → join the next Dance Floor within the hour.
+2. **Verify → Silver:** Brutus the Bouncer conducts the check — ID + selfie (Stripe Identity), ~60 seconds, **20 tokens land instantly** → join the next Dance Floor within the hour.
 3. **Dance Floor:** join with 3 tokens → grid → 2 min to pick → mutual click = "You're dancing with X" + announcement hype → one song → continue (match + badge) or decline (closed, no follow-ups).
 4. **Climb:** upgrade to Gold/Platinum/Diamond anytime from the floors page; entitlements apply instantly.
 5. **Guest pass:** a member invites a Guest up for 24h; Guest gets the tour and a reason to verify.
