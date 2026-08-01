@@ -62,6 +62,29 @@ The **Dance Floor is the reference event**; every floor reskins it with a pricie
 - Minimum fill (e.g., 20) or the event cancels with refunds.
 - Scheduling: hourly Dance Floor + later, daily/weekly **headliner** events on Gold+ and rare exclusive events (fewer, pricier, status).
 
+**Event Kinds (mechanics per event type — the engine is a platform):**
+
+The engine (events, entries + token holds, the minute-hand cron, matches,
+conversations, song chat, block/report, no-follow-up) is shared by every
+event kind. What differs per kind is a **mechanics config**:
+
+| Mechanic | Dance Floor (Silver, 3) | Speed Dating (Platinum, 25) |
+|---|---|---|
+| Round structure | 2-min open grid, parallel | Groups ≤ 10 by orientation preference; rotated 1:1 sessions, 1.5 min each (≈ 7.5 min round) |
+| Pairing | First mutual click, live, grid-wide | Rotation schedule by group |
+| Selection | 10-pick budget during round | **Ranked at the end**: top choice + one alternate |
+| Match trigger | Mutual pick = instant | Mutual top-choice → notified |
+| Reward | Match + "Met on the Dance Floor" badge | Match + **Speed Dating certificate** → decorated private chat + special-interests list |
+
+Mechanics config fields: `round_type` (grid / rotation / …),
+`selection_model` (live_mutual / ranked / …), timing params (round length,
+pair length, group size), min_fill, token cost, reward. Future kinds (themed
+nights, rooftop pool party, Ruby-exclusive invites) slot into the same table.
+
+New profile field required by rotation kinds: `interested_in` (orientation
+preference) — used only for group assignment, never displayed publicly.
+Certificates are a small reward entity on top of matches/conversations.
+
 ### Pillar 3: The Token Economy
 
 - **Earn:** +20 on verification (one-time), +20 per verified referral, giveaways (we'll do lots — tokens cost nothing and drive the economy).
