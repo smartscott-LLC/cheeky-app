@@ -64,6 +64,7 @@ app/            Next.js routes: / (landing), /signin, /account, /api
 components/     ui primitives + feature components (icons/, ui/)
 utils/          supabase clients + queries, stripe client/server, auth helpers
 supabase/       local config + migrations
+scripts/        dev utilities (migrate-hosted, backfill-profiles)
 styles/         global css (main.css) + floor palettes (styles/palettes/*.scss)
 docs/           PRD-foundation.md + Governance/ policies + future feature PRDs
 fixtures/       Stripe fixture JSON for bootstrapping products/prices
