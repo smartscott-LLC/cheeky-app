@@ -15,6 +15,23 @@ if (!url) {
 const sql = postgres(url, { max: 1, ssl: 'require' });
 
 try {
+  // Backfill public.users for every auth user (the trigger only fires on
+  // new signups).
+  const missingUsers = await sql`
+    select id
+    from auth.users
+    where id not in (select id from public.users)
+  `;
+  if (missingUsers.length > 0) {
+    for (const { id } of missingUsers) {
+      await sql`
+        insert into public.users (id) values (${id})
+        on conflict (id) do nothing
+      `;
+    }
+    console.log(`Backfilled ${missingUsers.length} user row(s).`);
+  }
+
   const missing = await sql`
     select id
     from auth.users
@@ -22,9 +39,9 @@ try {
   `;
 
   if (missing.length === 0) {
-    console.log('No users need backfill — all have profile rows.');
+    console.log('No profiles need backfill.');
   } else {
-    console.log(`Backfilling ${missing.length} user(s)...`);
+    console.log(`Backfilling ${missing.length} profile(s)...`);
     for (const { id } of missing) {
       await sql`
         insert into public.profiles (id) values (${id})
@@ -35,7 +52,7 @@ try {
         on conflict (id) do nothing
       `;
     }
-    console.log('Backfill complete.');
+    console.log('Profile backfill complete.');
   }
 } finally {
   await sql.end();

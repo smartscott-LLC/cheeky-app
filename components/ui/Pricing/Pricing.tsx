@@ -3,13 +3,11 @@
 import Button from '@/components/ui/Button';
 import LogoCloud from '@/components/ui/LogoCloud';
 import type { Tables } from '@/types_db';
-import { getStripe } from '@/utils/stripe/client';
-import { checkoutWithStripe } from '@/utils/stripe/server';
-import { getErrorRedirect } from '@/utils/helpers';
 import { User } from '@supabase/supabase-js';
 import cn from 'classnames';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Checkout from '@/components/checkout';
 
 type Subscription = Tables<'subscriptions'>;
 type Product = Tables<'products'>;
@@ -43,42 +41,13 @@ export default function Pricing({ user, products, subscription }: Props) {
   const router = useRouter();
   const [billingInterval, setBillingInterval] =
     useState<BillingInterval>('month');
-  const [priceIdLoading, setPriceIdLoading] = useState<string>();
-  const currentPath = usePathname();
+  const [selectedPrice, setSelectedPrice] = useState<Price | null>(null);
 
-  const handleStripeCheckout = async (price: Price) => {
-    setPriceIdLoading(price.id);
-
+  const handleSelect = (price: Price) => {
     if (!user) {
-      setPriceIdLoading(undefined);
       return router.push('/signin/signup');
     }
-
-    const { errorRedirect, sessionId } = await checkoutWithStripe(
-      price,
-      currentPath
-    );
-
-    if (errorRedirect) {
-      setPriceIdLoading(undefined);
-      return router.push(errorRedirect);
-    }
-
-    if (!sessionId) {
-      setPriceIdLoading(undefined);
-      return router.push(
-        getErrorRedirect(
-          currentPath,
-          'An unknown error occurred.',
-          'Please try again later or contact a system administrator.'
-        )
-      );
-    }
-
-    const stripe = await getStripe();
-    stripe?.redirectToCheckout({ sessionId });
-
-    setPriceIdLoading(undefined);
+    setSelectedPrice(price);
   };
 
   if (!products.length) {
@@ -185,8 +154,9 @@ export default function Pricing({ user, products, subscription }: Props) {
                     <Button
                       variant="slim"
                       type="button"
-                      loading={priceIdLoading === price.id}
-                      onClick={() => handleStripeCheckout(price)}
+                      onClick={() =>
+                        subscription ? router.push('/account') : handleSelect(price)
+                      }
                       className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
                     >
                       {subscription
@@ -200,6 +170,28 @@ export default function Pricing({ user, products, subscription }: Props) {
               );
             })}
           </div>
+          {selectedPrice && (
+            <div className="mx-auto mt-12 max-w-2xl">
+              <div className="mb-4 flex items-center justify-between">
+                <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
+                  Checkout
+                </p>
+                <button
+                  onClick={() => setSelectedPrice(null)}
+                  className="text-sm text-zinc-400 hover:text-white"
+                >
+                  Cancel
+                </button>
+              </div>
+              <Checkout
+                priceId={selectedPrice.id}
+                onComplete={() => {
+                  setSelectedPrice(null);
+                  router.refresh();
+                }}
+              />
+            </div>
+          )}
           <LogoCloud />
         </div>
       </section>

@@ -1,31 +1,54 @@
-'use server'
+'use server';
 
-import { headers } from 'next/headers'
-import { stripe } from '@/lib/stripe'
+import { stripe } from '@/lib/stripe';
+import { createClient } from '@/utils/supabase/server';
+import { createOrRetrieveCustomer } from '@/utils/supabase/admin';
 
-export async function startCheckoutSession(productId: string) {
-  // Implement your product catalog lookup.
-  const product = await getProduct(productId)
+/**
+ * Creates an embedded Checkout Session for a real price from our synced
+ * catalog (never fabricated price_data — Stripe's rule). Handles both
+ * subscriptions (memberships) and one-time purchases (token packs).
+ */
+export async function startCheckoutSession(
+  priceId: string
+): Promise<{ clientSecret?: string; error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: 'not signed in' };
+  }
 
-  // Create Checkout Sessions from body params.
+  // The real price from the DB (synced from Stripe via webhook).
+  const { data: price } = await supabase
+    .from('prices')
+    .select('id, type')
+    .eq('id', priceId)
+    .maybeSingle();
+  if (!price) {
+    return { error: 'price not found' };
+  }
+
+  let customer: string;
+  try {
+    customer = await createOrRetrieveCustomer({
+      uuid: user.id,
+      email: user.email || ''
+    });
+  } catch (err) {
+    console.error(err);
+    return { error: 'unable to access customer record' };
+  }
+
   const session = await stripe.checkout.sessions.create({
     ui_mode: 'embedded',
     redirect_on_completion: 'never',
-    line_items: [
-      {
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: product.name,
-            description: product.description,
-          },
-          unit_amount: product.priceInCents,
-        },
-        quantity: 1,
-      },
-    ],
-    mode: 'payment',
-  })
+    customer,
+    line_items: [{ price: price.id, quantity: 1 }],
+    mode: price.type === 'recurring' ? 'subscription' : 'payment',
+    allow_promotion_codes: true
+  });
 
-  return session.client_secret
+  return { clientSecret: session.client_secret ?? undefined };
 }
