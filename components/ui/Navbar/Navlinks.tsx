@@ -32,6 +32,9 @@ export default function Navlinks({ user }: NavlinksProps) {
               <Link href="/browse" className={s.link}>
                 Browse
               </Link>
+              <Link href="/events" className={s.link}>
+                Dance Floor
+              </Link>
               <Link href="/messages" className={s.link}>
                 Messages
               </Link>

@@ -158,7 +158,7 @@ layer, not from process separation.
 |---|---|---|
 | 0 — Foundation | Rebrand off the template, docs (this PRD + AGENTS.md), infra in place | ✅ Done (tag `v0.1-door-open` at 1B) |
 | 1 — Club Floor | Profiles, verification (Stripe Identity), browse, match, chat, free-tier limits | ✅ Done (tag `v0.1-floor-1-locked`) |
-| 2 — Event Engine | Dance Floor: scheduling, grid, pairing, song chat, token wallet + refunds | ⏳ Next |
+| 2 — Event Engine | Dance Floor: scheduling, grid, pairing, song chat, token wallet + refunds | 🔨 In progress (`feat/event-engine`) — schedule, holds, grid, instant pairing live |
 | 3 — Entitlements | Subscription-gated floors at the data layer, guest passes | ⏳ |
 | 4 — The Floors | Gold/Platinum/Diamond events, themed nights, Speed Dating, rooftop, visibility boosts | ⏳ |
 | 5 — Economy+ | Gems/collectibles, gifts, giveaways, referral dashboard | ⏳ |

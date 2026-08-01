@@ -90,6 +90,103 @@ export type Database = {
         }
         Relationships: []
       }
+      event_entries: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_entries_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_picks: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: number
+          pickee_id: string
+          picker_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: never
+          pickee_id: string
+          picker_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: never
+          pickee_id?: string
+          picker_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_picks_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          created_at: string
+          floor: string
+          id: string
+          kind: string
+          min_fill: number
+          starts_at: string
+          status: string
+          token_cost: number
+        }
+        Insert: {
+          created_at?: string
+          floor?: string
+          id?: string
+          kind?: string
+          min_fill?: number
+          starts_at: string
+          status?: string
+          token_cost?: number
+        }
+        Update: {
+          created_at?: string
+          floor?: string
+          id?: string
+          kind?: string
+          min_fill?: number
+          starts_at?: string
+          status?: string
+          token_cost?: number
+        }
+        Relationships: []
+      }
       likes: {
         Row: {
           created_at: string
@@ -496,11 +593,50 @@ export type Database = {
           match_id: string
         }[]
       }
+      ensure_events: {
+        Args: {
+          p_hours?: number
+        }
+        Returns: undefined
+      }
+      finalize_events: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       get_or_create_conversation: {
         Args: {
           p_other: string
         }
         Returns: string
+      }
+      join_event: {
+        Args: {
+          p_event_id: string
+        }
+        Returns: string
+      }
+      leave_event: {
+        Args: {
+          p_event_id: string
+        }
+        Returns: undefined
+      }
+      pick_on_floor: {
+        Args: {
+          p_event_id: string
+          p_pickee: string
+        }
+        Returns: {
+          matched: boolean
+          match_id: string
+        }[]
+      }
+      send_event_message: {
+        Args: {
+          p_conversation_id: string
+          p_body: string
+        }
+        Returns: number
       }
       send_message: {
         Args: {
