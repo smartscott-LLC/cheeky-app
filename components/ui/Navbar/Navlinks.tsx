@@ -28,9 +28,14 @@ export default function Navlinks({ user }: NavlinksProps) {
             Membership
           </Link>
           {user && (
-            <Link href="/account" className={s.link}>
-              Account
-            </Link>
+            <>
+              <Link href="/browse" className={s.link}>
+                Browse
+              </Link>
+              <Link href="/account" className={s.link}>
+                Account
+              </Link>
+            </>
           )}
         </nav>
       </div>

@@ -48,6 +48,54 @@ export type Database = {
         }
         Relationships: []
       }
+      likes: {
+        Row: {
+          created_at: string
+          id: number
+          likee_id: string
+          liker_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          likee_id: string
+          liker_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          likee_id?: string
+          liker_id?: string
+        }
+        Relationships: []
+      }
+      matches: {
+        Row: {
+          created_at: string
+          id: string
+          source: string
+          status: string
+          user_id_a: string
+          user_id_b: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          source?: string
+          status?: string
+          user_id_a: string
+          user_id_b: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          source?: string
+          status?: string
+          user_id_a?: string
+          user_id_b?: string
+        }
+        Relationships: []
+      }
       photos: {
         Row: {
           created_at: string
@@ -324,7 +372,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_like: {
+        Args: {
+          p_likee: string
+        }
+        Returns: {
+          match_id: string
+        }[]
+      }
     }
     Enums: {
       consent_type: "terms" | "privacy" | "verification"

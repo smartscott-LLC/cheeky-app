@@ -272,3 +272,54 @@ $$ language plpgsql security definer;
 create trigger on_auth_user_created_profile
   after insert on auth.users
   for each row execute procedure handle_new_profile();
+
+-- Browse & match (mirrors supabase/migrations/20260801170946_browse_match.sql)
+create table likes (
+  id bigint generated always as identity primary key,
+  liker_id uuid references auth.users on delete cascade not null,
+  likee_id uuid references auth.users on delete cascade not null,
+  created_at timestamptz not null default now(),
+  unique (liker_id, likee_id),
+  check (liker_id <> likee_id)
+);
+alter table likes enable row level security;
+create policy "Read likes you sent or received" on likes for select
+  using (liker_id = auth.uid() or likee_id = auth.uid());
+
+create table matches (
+  id uuid primary key default gen_random_uuid(),
+  user_id_a uuid references auth.users on delete cascade not null,
+  user_id_b uuid references auth.users on delete cascade not null,
+  source text not null default 'browse',
+  status text not null default 'active',
+  created_at timestamptz not null default now(),
+  check (user_id_a < user_id_b),
+  unique (user_id_a, user_id_b)
+);
+alter table matches enable row level security;
+create policy "Read matches you are part of" on matches for select
+  using (user_id_a = auth.uid() or user_id_b = auth.uid());
+
+create or replace function create_like(p_likee uuid)
+returns table (match_id uuid)
+language plpgsql security definer
+set search_path = public
+as $$
+declare
+  v_liker uuid := auth.uid();
+  v_match uuid;
+begin
+  if v_liker is null then raise exception 'not_authenticated'; end if;
+  if v_liker = p_likee then raise exception 'cannot_like_self'; end if;
+  insert into likes (liker_id, likee_id) values (v_liker, p_likee)
+  on conflict (liker_id, likee_id) do nothing;
+  if exists (select 1 from likes where liker_id = p_likee and likee_id = v_liker) then
+    insert into matches (user_id_a, user_id_b, source)
+    values (least(v_liker, p_likee), greatest(v_liker, p_likee), 'browse')
+    on conflict (user_id_a, user_id_b) do nothing
+    returning id into v_match;
+  end if;
+  return query select v_match;
+end;
+$$;
+grant execute on function create_like(uuid) to authenticated;
