@@ -111,7 +111,7 @@ The club's rules are written before the code (see `docs/Governance/`): 18+ gate,
 1. Exact click budget (10 is a starting default) and grid min-fill threshold.
 2. Do Guests appear in event grids (blurred) or are they invisible? (Blurred = FOMO; invisible = clean.) 
 3. Launch strategy — which city/cities seed the first 1,000 verified users, and how?
-4. Verification provider choice & per-verify cost ceiling (Stripe Identity is the leading candidate — keeps the stack unified).
+4. ~~Verification provider choice & per-verify cost ceiling~~ **Resolved:** Stripe Identity, ID-number lookup (name + DOB + government ID, US SSN currently), ~$1.50/verify; selfie method (~$0.50) available to flip on for international coverage.
 5. Headliner event cadence once Gold+ lands (daily? themed by weekday?).
 6. Gem scarcity model — how many of each, how they're earned vs bought.
 

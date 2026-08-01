@@ -85,6 +85,50 @@ const deleteProductRecord = async (product: Stripe.Product) => {
   console.log(`Product deleted: ${product.id}`);
 };
 
+/**
+ * Applies a successful Stripe Identity verification:
+ * marks the profile verified, records the provider reference, and grants
+ * the one-time +20 token bonus (idempotent). Service-role only.
+ */
+const applyVerificationResult = async (userId: string, sessionId: string) => {
+  const { data: existing } = await supabaseAdmin
+    .from('token_ledger')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('reason', 'verification_bonus')
+    .maybeSingle();
+
+  if (!existing) {
+    const { error: grantError } = await supabaseAdmin
+      .from('token_ledger')
+      .insert({
+        user_id: userId,
+        delta: 20,
+        reason: 'verification_bonus',
+        ref: sessionId
+      });
+    if (grantError)
+      throw new Error(`Verification token grant failed: ${grantError.message}`);
+  }
+
+  const { error: profileError } = await supabaseAdmin
+    .from('profiles')
+    .update({ verified_at: new Date().toISOString() })
+    .eq('id', userId);
+  if (profileError)
+    throw new Error(`Profile verification update failed: ${profileError.message}`);
+
+  const { error: privateError } = await supabaseAdmin
+    .from('profile_private')
+    .upsert({
+      id: userId,
+      verification_provider: 'stripe_identity',
+      verification_ref: sessionId
+    });
+  if (privateError)
+    throw new Error(`Verification record failed: ${privateError.message}`);
+};
+
 const deletePriceRecord = async (price: Stripe.Price) => {
   const { error: deletionError } = await supabaseAdmin
     .from('prices')
@@ -290,5 +334,6 @@ export {
   deleteProductRecord,
   deletePriceRecord,
   createOrRetrieveCustomer,
-  manageSubscriptionStatusChange
+  manageSubscriptionStatusChange,
+  applyVerificationResult
 };

@@ -40,3 +40,17 @@ export const getUserDetails = cache(async (supabase: Client) => {
     .single();
   return userDetails;
 });
+
+export const getProfile = cache(async (supabase: Client, userId: string) => {
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .maybeSingle();
+  return profile;
+});
+
+export const getTokenBalance = cache(async (supabase: Client) => {
+  const { data: rows } = await supabase.from('token_ledger').select('delta');
+  return (rows ?? []).reduce((sum, row) => sum + (row.delta ?? 0), 0);
+});

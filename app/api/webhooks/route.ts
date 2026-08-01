@@ -5,7 +5,8 @@ import {
   upsertPriceRecord,
   manageSubscriptionStatusChange,
   deleteProductRecord,
-  deletePriceRecord
+  deletePriceRecord,
+  applyVerificationResult
 } from '@/utils/supabase/admin';
 
 const relevantEvents = new Set([
@@ -18,7 +19,8 @@ const relevantEvents = new Set([
   'checkout.session.completed',
   'customer.subscription.created',
   'customer.subscription.updated',
-  'customer.subscription.deleted'
+  'customer.subscription.deleted',
+  'identity.verification_session.verified'
 ]);
 
 export async function POST(req: Request) {
@@ -75,6 +77,18 @@ export async function POST(req: Request) {
             );
           }
           break;
+        case 'identity.verification_session.verified':
+          const verificationSession =
+            event.data.object as Stripe.Identity.VerificationSession;
+          const userId = verificationSession.metadata?.supabaseUUID;
+          if (userId) {
+            await applyVerificationResult(userId, verificationSession.id);
+          } else {
+            console.log(
+              'Verification session without supabaseUUID (created outside the app) — ignoring.'
+            );
+          }
+          break;
         default:
           throw new Error('Unhandled relevant event!');
       }
@@ -88,9 +102,9 @@ export async function POST(req: Request) {
       );
     }
   } else {
-    return new Response(`Unsupported event type: ${event.type}`, {
-      status: 400
-    });
+    // Acknowledge everything else — Stripe retries only non-2xx responses,
+    // and unhandled events (e.g. other identity.session states) are normal.
+    console.log(`ℹ️  Unhandled event acknowledged: ${event.type}`);
   }
   return new Response(JSON.stringify({ received: true }));
 }
