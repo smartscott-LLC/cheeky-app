@@ -171,7 +171,7 @@ export default function ProfileForm({
           <button
             onClick={() => fileRef.current?.click()}
             disabled={uploading}
-            className="flex aspect-square items-center justify-center rounded-lg border-2 border-dashed border-zinc-700 text-3xl text-zinc-500 transition hover:border-club hover:text-club"
+            className="flex aspect-square items-center justify-center rounded-lg border-2 border-dashed border-club/60 bg-club/5 text-3xl font-bold text-club transition hover:border-club hover:bg-club/10"
           >
             {uploading ? '…' : '+'}
           </button>
