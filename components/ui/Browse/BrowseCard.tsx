@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { likeUser } from '@/app/browse/actions';
+import { openConversation } from '@/app/messages/actions';
 
 export interface BrowsePerson {
   id: string;
@@ -37,20 +38,23 @@ export default function BrowseCard({ people, photoBase }: BrowseCardProps) {
           </span>{' '}
           picked each other. Instant.
         </p>
-        <div className="mt-8 flex justify-center gap-4">
+        <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <button
+            onClick={() => openConversation(matched.id)}
+            className="rounded-lg bg-club px-6 py-3 font-bold text-white transition hover:bg-club-cotton"
+          >
+            Start chatting
+          </button>
           <button
             onClick={() => {
               setMatched(null);
               setIndex((i) => i + 1);
             }}
-            className="rounded-lg bg-club px-6 py-3 font-bold text-white transition hover:bg-club-cotton"
+            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-zinc-200 transition hover:border-zinc-500 hover:text-white"
           >
             Keep browsing
           </button>
         </div>
-        <p className="mt-4 text-sm text-zinc-500">
-          Chat unlocks in the next loop of the build.
-        </p>
       </div>
     );
   }
@@ -101,6 +105,12 @@ export default function BrowseCard({ people, photoBase }: BrowseCardProps) {
         </p>
       </div>
       <div className="flex gap-3 p-6 pt-0">
+        <button
+          onClick={() => openConversation(person.id)}
+          className="rounded-lg border border-zinc-700 px-3 py-3 text-sm font-semibold text-zinc-300 transition hover:border-zinc-500 hover:text-white"
+        >
+          Message
+        </button>
         <button
           onClick={() => setIndex((i) => i + 1)}
           disabled={busy}

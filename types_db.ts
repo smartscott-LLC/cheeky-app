@@ -9,6 +9,27 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      blocks: {
+        Row: {
+          blocked_id: string
+          blocker_id: string
+          created_at: string
+          id: number
+        }
+        Insert: {
+          blocked_id: string
+          blocker_id: string
+          created_at?: string
+          id?: never
+        }
+        Update: {
+          blocked_id?: string
+          blocker_id?: string
+          created_at?: string
+          id?: never
+        }
+        Relationships: []
+      }
       consents: {
         Row: {
           accepted_at: string
@@ -30,6 +51,27 @@ export type Database = {
           id?: never
           user_id?: string
           version?: string
+        }
+        Relationships: []
+      }
+      conversations: {
+        Row: {
+          created_at: string
+          id: string
+          user_id_a: string
+          user_id_b: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          user_id_a: string
+          user_id_b: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          user_id_a?: string
+          user_id_b?: string
         }
         Relationships: []
       }
@@ -95,6 +137,38 @@ export type Database = {
           user_id_b?: string
         }
         Relationships: []
+      }
+      messages: {
+        Row: {
+          body: string
+          conversation_id: string
+          created_at: string
+          id: number
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          conversation_id: string
+          created_at?: string
+          id?: never
+          sender_id: string
+        }
+        Update: {
+          body?: string
+          conversation_id?: string
+          created_at?: string
+          id?: never
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       photos: {
         Row: {
@@ -254,6 +328,33 @@ export type Database = {
         }
         Relationships: []
       }
+      reports: {
+        Row: {
+          context: string | null
+          created_at: string
+          id: number
+          reason: string
+          reported_id: string
+          reporter_id: string
+        }
+        Insert: {
+          context?: string | null
+          created_at?: string
+          id?: never
+          reason: string
+          reported_id: string
+          reporter_id: string
+        }
+        Update: {
+          context?: string | null
+          created_at?: string
+          id?: never
+          reason?: string
+          reported_id?: string
+          reporter_id?: string
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           cancel_at: string | null
@@ -379,6 +480,19 @@ export type Database = {
         Returns: {
           match_id: string
         }[]
+      }
+      get_or_create_conversation: {
+        Args: {
+          p_other: string
+        }
+        Returns: string
+      }
+      send_message: {
+        Args: {
+          p_conversation_id: string
+          p_body: string
+        }
+        Returns: number
       }
     }
     Enums: {
