@@ -36,7 +36,8 @@ A dating app built like a nightclub. Three pillars:
 - **PRD first.** Product decisions land in `docs/PRD-foundation.md` (or a feature PRD) before code. If a decision changes, update the doc and the code together.
 - **Surgical changes.** In existing code, do exactly what the task asks — no opportunistic refactors, no renamed files/variables unless the task calls for it.
 - **Ask when it's ambiguous.** When a product decision is unclear, ask rather than inventing an answer that contradicts the PRD.
-- **Branch + PR per feature** (`feat/` branches). Commit messages describe *what and why*. No commits to main directly.
+- **Build on main during construction.** We're in build-out: `main` is always current and every push auto-deploys to Vercel (`smartscott.online`). The safety valve is git history + milestone tags, not a stale main — when a floor/area is fluid and testable, tag it (e.g. `v0.1-floor-1-locked`) as a save spot, then cut per-area branches (`feat/floor-1`) for the next area and merge back when fluid. No PR ceremony until there are real users on the app.
+- **Commit messages describe *what and why*.** Never push a broken build — `pnpm lint` + `pnpm build` pass before pushing, because a bad push goes live on production.
 - **Validate before saying done.** `pnpm lint`, `pnpm build`, and a manual pass of the affected flow (auth / checkout / event).
 
 ## Engineering conventions
