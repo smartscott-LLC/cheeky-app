@@ -32,8 +32,9 @@ on the surface.
 
 ## Refunds
 
-- **No-match on an event = automatic, private token refund.** Silent loss,
-  public win. Nobody sees who didn't get picked.
+- **The Dance Floor reserves 3 tokens at entry** (a hold, not a debit): no
+  match or timeout → the hold is released; a match → the hold converts to
+  spend. Same silent-loss outcome, no refund race.
 - **Event canceled for low fill = automatic refund.**
 - **Token pack purchases** follow Stripe's refund process; disputes are final
   through the payment processor.

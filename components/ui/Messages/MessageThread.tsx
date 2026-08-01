@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { blockUser, reportUser, sendMessage } from '@/app/messages/actions';
 
@@ -36,7 +37,9 @@ const REPORT_REASONS = [
 function describeError(code: string): string {
   switch (code) {
     case 'daily_message_limit':
-      return "You've used your free messages for today. Matched chats are unlimited — find your match.";
+      return "You've used your 30 free messages for today — Gold gets 75, Platinum and Diamond are unlimited.";
+    case 'daily_people_limit':
+      return "You've reached your new-conversation limit for today. Your matches are always open.";
     case 'blocked':
       return 'This conversation is blocked.';
     case 'not_a_participant':
@@ -101,6 +104,12 @@ export default function MessageThread({
       {/* Header */}
       <div className="flex items-center justify-between border-b border-zinc-800 p-4">
         <div className="flex items-center gap-3">
+          <Link
+            href="/browse"
+            className="text-xs font-semibold text-zinc-500 hover:text-white"
+          >
+            ← The floor
+          </Link>
           <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-zinc-800">
             {other.primaryPhoto ? (
               // eslint-disable-next-line @next/next/no-img-element

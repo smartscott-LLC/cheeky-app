@@ -53,7 +53,7 @@ The **Dance Floor is the reference event**; every floor reskins it with a pricie
 
 **Dance Floor spec (locked):**
 - Runs **every hour on the hour** — appointment commerce; timezone-proof; "next one in 40 minutes" keeps people idling in the club.
-- Entry: **3 tokens**. No match → **token refunded, privately** (silent loss, public win).
+- Entry: **reserve 3 tokens** (a hold, not a debit). Balance is pre-checked before reserving; insufficient → top-up path (buy a pack or earn via referral). No match or timeout → **hold released**; match → **hold converts to spend**. No refund race, no double-writes.
 - Grid: up to **10×10** of participant photos, badges visible (VIP, floors). 2-minute selection round.
 - **Click budget** (~10 favorites/round): scarce clicks make a match meaningful, prevent lottery degeneracy.
 - **First mutual click wins — instant match.** No post-round resolution. Once matched, both are locked out of the round and shown as *dancing* live in the grid — the pool thins, FOMO rises, the round gets hotter.
@@ -114,7 +114,8 @@ layer, not from process separation.
 ## 7. Requirements (acceptance criteria)
 
 - Guest can complete signup with email + 3 photos + birthday and reach Club Floor in < 60 seconds.
-- Matched chats are unlimited and free at every tier; unmatched outbound is 5/day for Guests and Silver.
+- Matched conversations are always reachable; messaging caps are generous, not walls: **Free/Silver 30 msgs/day + 5 new conversations; Gold 75 + 15; Platinum unlimited + 40; Diamond unlimited + 100** (enforced server-side by tier).
+- Tokens are spent **only on events and specialties** — never on messaging. Event song chats do not count against daily messaging limits.
 - Guests and Silver post up to **3 photos** and can view up to **3 of another member's photos** (primary + 2); paid floors post and view more (Gold 6 / Platinum 8 / Diamond 10 — configurable per floor).
 - Message retention is member-chosen (3 days–3 months) at profile creation and enforced by purge; the stricter participant's window applies to shared conversations.
 - Verification issues Silver card + VIP badge + 20 tokens instantly on success; failures are explainable and retryable.

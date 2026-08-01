@@ -279,6 +279,8 @@ export type Database = {
           birthday: string | null
           id: string
           updated_at: string
+          verification_attempts: number
+          verification_escalated_at: string | null
           verification_provider: string | null
           verification_ref: string | null
         }
@@ -286,6 +288,8 @@ export type Database = {
           birthday?: string | null
           id: string
           updated_at?: string
+          verification_attempts?: number
+          verification_escalated_at?: string | null
           verification_provider?: string | null
           verification_ref?: string | null
         }
@@ -293,6 +297,8 @@ export type Database = {
           birthday?: string | null
           id?: string
           updated_at?: string
+          verification_attempts?: number
+          verification_escalated_at?: string | null
           verification_provider?: string | null
           verification_ref?: string | null
         }
@@ -333,25 +339,34 @@ export type Database = {
           context: string | null
           created_at: string
           id: number
+          outcome: string | null
           reason: string
           reported_id: string
           reporter_id: string
+          resolved_at: string | null
+          status: string
         }
         Insert: {
           context?: string | null
           created_at?: string
           id?: never
+          outcome?: string | null
           reason: string
           reported_id: string
           reporter_id: string
+          resolved_at?: string | null
+          status?: string
         }
         Update: {
           context?: string | null
           created_at?: string
           id?: never
+          outcome?: string | null
           reason?: string
           reported_id?: string
           reporter_id?: string
+          resolved_at?: string | null
+          status?: string
         }
         Relationships: []
       }

@@ -1,6 +1,7 @@
 'use client';
 
 import { startVerification } from '@/app/verify/actions';
+import Link from 'next/link';
 import type { Tables } from '@/types_db';
 
 type Profile = Tables<'profiles'>;
@@ -9,32 +10,57 @@ interface VerificationPanelProps {
   profile: Profile | null;
   tokenBalance: number;
   error?: string;
+  verificationAttempts: number;
+  escalated: boolean;
 }
 
 export default function VerificationPanel({
   profile,
   tokenBalance,
-  error
+  error,
+  verificationAttempts,
+  escalated
 }: VerificationPanelProps) {
   const verified = Boolean(profile?.verified_at);
 
   if (verified) {
     return (
-      <div className="mx-auto max-w-xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-club text-3xl">
-          ✓
-        </div>
-        <h2 className="mt-6 text-3xl font-extrabold">You&apos;re in.</h2>
+      <div className="mx-auto max-w-xl rounded-xl border border-club/60 bg-zinc-900/50 p-8 text-center">
+        <div className="text-5xl">🎉</div>
+        <h2 className="mt-4 text-3xl font-extrabold">You&apos;re inside!</h2>
         <p className="mt-3 text-zinc-400">
-          Brutus cleared you. Your Silver card is live — VIP badge active, and
-          your welcome tokens are on your tab.
+          Brutus cleared you. Silver card live — VIP badge active, and your
+          welcome tokens are on your tab.
         </p>
         <p className="mt-6 rounded-lg bg-zinc-900 px-4 py-3 text-xl font-bold text-club">
           {tokenBalance} tokens
         </p>
         <p className="mt-4 text-sm text-zinc-500">
-          The Dance Floor opens every hour on the hour. It&apos;s a 3-token
-          entry — don&apos;t sleep on the next one.
+          The Dance Floor opens every hour on the hour — 3 tokens, one song.
+        </p>
+        <Link
+          href="/browse"
+          className="mt-6 inline-block rounded-lg bg-club px-8 py-3 text-lg font-bold text-white transition hover:bg-club-cotton"
+        >
+          Step onto the floor
+        </Link>
+      </div>
+    );
+  }
+
+  if (escalated) {
+    return (
+      <div className="mx-auto max-w-xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-center">
+        <div className="text-5xl">🧑‍💼</div>
+        <h2 className="mt-4 text-2xl font-extrabold">
+          Brutus needs a human.
+        </h2>
+        <p className="mt-3 text-zinc-400">
+          Three checks didn&apos;t pass, so the door is taking this one upstairs.
+          Our support team will sort your ID check personally — no more loops.
+        </p>
+        <p className="mt-4 text-sm text-zinc-500">
+          Contact support with your email and we&apos;ll get you through.
         </p>
       </div>
     );
@@ -65,6 +91,13 @@ export default function VerificationPanel({
       {error === 'consent' && (
         <p className="mt-4 rounded-md border border-club/50 bg-club/10 px-3 py-2 text-sm text-club">
           Brutus needs your OK before he checks your ID. Check the box below.
+        </p>
+      )}
+
+      {verificationAttempts > 0 && (
+        <p className="mt-4 text-xs text-zinc-500">
+          Attempts so far: {verificationAttempts} of 3. After three, a human
+          bouncer takes over.
         </p>
       )}
 

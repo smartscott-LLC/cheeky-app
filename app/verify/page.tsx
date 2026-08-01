@@ -19,9 +19,14 @@ export default async function VerifyPage({
   }
 
   const { error } = await searchParams;
-  const [profile, tokenBalance] = await Promise.all([
+  const [profile, tokenBalance, privateData] = await Promise.all([
     getProfile(supabase, user.id),
-    getTokenBalance(supabase)
+    getTokenBalance(supabase),
+    supabase
+      .from('profile_private')
+      .select('verification_attempts, verification_escalated_at')
+      .eq('id', user.id)
+      .maybeSingle()
   ]);
 
   return (
@@ -38,6 +43,10 @@ export default async function VerifyPage({
             profile={profile}
             tokenBalance={tokenBalance}
             error={error}
+            verificationAttempts={
+              privateData?.data?.verification_attempts ?? 0
+            }
+            escalated={Boolean(privateData?.data?.verification_escalated_at)}
           />
         </div>
       </div>

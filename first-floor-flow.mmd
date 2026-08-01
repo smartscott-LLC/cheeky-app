@@ -13,26 +13,51 @@ flowchart TD
   K -->|No| L[Verify page: consent required]
   K -->|Yes| M[Stripe Identity hosted check]
   M --> N{Verified?}
-  N -->|Failed, retryable| J
+  N -->|Failed, retryable| N2{Less than 3 retries?}
+  N2 -->|Yes| J
+  N2 -->|No| N3[Escalate to Support]
   N -->|Yes| O[VIP badge + 20 tokens]
-  O --> P[Profile setup: 3 photos, name, bio]
-  P --> Q[Browse the floor]
+  O --> P[Profile setup: draftable \\(3 photos, name, bio\\)]
+  P --> P1[🎉 Congratulations! You're inside the club]
+  P1 --> Q[Browse the floor]
+
   Q --> R{Browse card actions}
-  R -->|Message cold| S[Thread: 5 msgs/day cap]
+  R -->|Message cold| S{User Tier?}
+  S -->|Free| S1[Thread: 30 msgs/day cap]
+  S -->|Gold| S2[Thread: 75 msgs/day cap]
+  S -->|Premium| S3[Thread: Unlimited]
+  S1 --> Q
+  S2 --> Q
+  S3 --> Q
   R -->|Pass| Q
   R -->|Like| T{Mutual pick?}
   T -->|No| Q
-  T -->|Yes| U[Its a match]
-  U --> V[Chat thread: unlimited]
+  T -->|Yes| U[It's a match]
+  U --> V[Chat thread: tier limits apply]
+  V --> Q
   V --> W[Report or Block]
-  S --> W
+  S1 --> W
+  S2 --> W
+  S3 --> W
   W --> X[Moderation review]
+  X --> X1{Outcome}
+  X1 -->|Content removed / Warning| X2[Action taken]
+  X1 -->|Account suspended| X3[Account suspended]
+  X1 -->|No action| X4[No action]
+  X2 --> Q
+  X3 --> Q
+  X4 --> Q
+
   Q --> Y[Dance Floor - Phase 2]
-  Y --> Z[3 tokens entry]
+  Y --> Y1{Sufficient tokens?}
+  Y1 -->|No| Y2[Purchase / Top-up tokens] --> Y1
+  Y1 -->|Yes| Z[Reserve 3 tokens entry]
   Z --> AA[Grid: 2-min selection, 10 picks]
-  AA --> AB{First mutual click?}
-  AB -->|No match| AC[Private token refund]
+  AA --> AA1{Timeout?}
+  AA1 -->|Yes| AC[Release token hold] --> Q
+  AA1 -->|No| AB{First mutual click?}
+  AB -->|No match| AC
   AB -->|Match| AD[One-song chat: 3 min]
   AD --> AE{Continue?}
-  AE -->|Yes| AF[Match + badge]
-  AE -->|Decline| AG[Chat closes, no follow-up]
+  AE -->|Yes| AF[Match + badge \\(Tokens spent\\)] --> Q
+  AE -->|Decline| AG[Chat closes, hold released] --> Q

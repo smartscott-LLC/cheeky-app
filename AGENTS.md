@@ -25,7 +25,7 @@ A dating app built like a nightclub. Three pillars:
 
 ## Mission guardrails (non-negotiable)
 
-- **The free tier must stay genuinely free and fun.** Never gate core match + matched chat behind payment. The 5 unmatched-messages/day limit is the free-tier cap — do not shrink it to drive upgrades.
+- **The free tier must stay genuinely free and fun.** Matches are always reachable. Free tier: **30 messages/day + 5 new conversations/day** — generous on purpose, never shrunk to drive upgrades without a PRD change. Gold: 75 msgs + 15 new people. Platinum/Diamond: unlimited messages, 40/100 new people. Tokens are spent on events only — never on messaging.
 - **No dark patterns.** No fake likes, no artificial scarcity messaging, no surprise charges, no hiding the cancel button.
 - **Anti-gouging is the brand.** $9.99–$29.99/month is the ceiling by design. Any pricing change goes through the PRD first.
 - **Silent loss, public win.** Rejection is always private (refunds, no match announcements). Wins are announced and celebrated.

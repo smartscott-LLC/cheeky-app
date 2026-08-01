@@ -171,6 +171,8 @@ create table profile_private (
   birthday date,
   verification_provider text,
   verification_ref text,
+  verification_attempts int not null default 0,
+  verification_escalated_at timestamptz,
   updated_at timestamptz not null default now()
 );
 alter table profile_private enable row level security;
@@ -370,6 +372,11 @@ create table reports (
   reported_id uuid references auth.users on delete cascade not null,
   reason text not null,
   context text,
+  status text not null default 'pending'
+    check (status in ('pending', 'reviewed')),
+  outcome text
+    check (outcome is null or outcome in ('action_taken', 'suspended', 'no_action')),
+  resolved_at timestamptz,
   created_at timestamptz not null default now()
 );
 alter table reports enable row level security;
@@ -409,8 +416,12 @@ as $$
 declare
   v_sender uuid := auth.uid();
   v_other uuid;
+  v_tier text;
+  v_msg_limit int;
+  v_people_limit int;
+  v_msg_today int;
+  v_people_today int;
   v_matched boolean;
-  v_sent_today int;
   v_msg bigint;
 begin
   if v_sender is null then raise exception 'not_authenticated'; end if;
@@ -423,20 +434,35 @@ begin
                 or (blocker_id = v_other and blocked_id = v_sender)) then
     raise exception 'blocked';
   end if;
+  select coalesce(p.name, 'Standard Membership') into v_tier
+  from subscriptions s
+  join prices pr on pr.id = s.price_id
+  join products p on p.id = pr.product_id
+  where s.user_id = v_sender and s.status in ('active', 'trialing')
+  order by s.created_at desc limit 1;
+  v_msg_limit := case v_tier when 'Gold Membership' then 75 else 30 end;
+  v_people_limit := case v_tier
+    when 'Gold Membership' then 15
+    when 'Platinum Membership' then 40
+    when 'Diamond Club' then 100
+    else 5 end;
+  select count(*) into v_msg_today from messages m
+  where m.sender_id = v_sender and m.created_at >= date_trunc('day', now());
+  if v_msg_today >= v_msg_limit then raise exception 'daily_message_limit'; end if;
   select exists (select 1 from matches
                  where user_id_a = least(v_sender, v_other)
                    and user_id_b = greatest(v_sender, v_other)
                    and status = 'active') into v_matched;
   if not v_matched then
-    select count(*) into v_sent_today
-    from messages m
-    join conversations c on c.id = m.conversation_id
+    select count(distinct case when c.user_id_a = v_sender then c.user_id_b else c.user_id_a end)
+      into v_people_today
+    from messages m join conversations c on c.id = m.conversation_id
     where m.sender_id = v_sender
       and m.created_at >= date_trunc('day', now())
       and not exists (select 1 from matches mt
         where mt.user_id_a = least(v_sender, case when c.user_id_a = v_sender then c.user_id_b else c.user_id_a end)
           and mt.user_id_b = greatest(v_sender, case when c.user_id_a = v_sender then c.user_id_b else c.user_id_a end));
-    if v_sent_today >= 5 then raise exception 'daily_message_limit'; end if;
+    if v_people_today >= v_people_limit then raise exception 'daily_people_limit'; end if;
   end if;
   insert into messages (conversation_id, sender_id, body)
   values (p_conversation_id, v_sender, p_body)

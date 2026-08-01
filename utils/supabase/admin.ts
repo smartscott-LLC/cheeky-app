@@ -129,6 +129,32 @@ const applyVerificationResult = async (userId: string, sessionId: string) => {
     throw new Error(`Verification record failed: ${privateError.message}`);
 };
 
+/**
+ * Records a failed verification attempt. After 3 attempts the member is
+ * escalated to human support instead of looping on Stripe.
+ */
+const handleVerificationFailure = async (userId: string) => {
+  const { data: priv } = await supabaseAdmin
+    .from('profile_private')
+    .select('verification_attempts')
+    .eq('id', userId)
+    .maybeSingle();
+
+  const attempts = (priv?.verification_attempts ?? 0) + 1;
+  const escalated = attempts >= 3;
+
+  const { error } = await supabaseAdmin
+    .from('profile_private')
+    .update({
+      verification_attempts: attempts,
+      verification_escalated_at: escalated ? new Date().toISOString() : null
+    })
+    .eq('id', userId);
+
+  if (error)
+    throw new Error(`Verification failure record failed: ${error.message}`);
+};
+
 const deletePriceRecord = async (price: Stripe.Price) => {
   const { error: deletionError } = await supabaseAdmin
     .from('prices')
@@ -335,5 +361,6 @@ export {
   deletePriceRecord,
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
-  applyVerificationResult
+  applyVerificationResult,
+  handleVerificationFailure
 };

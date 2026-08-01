@@ -6,7 +6,8 @@ import {
   manageSubscriptionStatusChange,
   deleteProductRecord,
   deletePriceRecord,
-  applyVerificationResult
+  applyVerificationResult,
+  handleVerificationFailure
 } from '@/utils/supabase/admin';
 
 const relevantEvents = new Set([
@@ -20,7 +21,9 @@ const relevantEvents = new Set([
   'customer.subscription.created',
   'customer.subscription.updated',
   'customer.subscription.deleted',
-  'identity.verification_session.verified'
+  'identity.verification_session.verified',
+  'identity.verification_session.requires_input',
+  'identity.verification_session.canceled'
 ]);
 
 export async function POST(req: Request) {
@@ -89,6 +92,16 @@ export async function POST(req: Request) {
             );
           }
           break;
+        case 'identity.verification_session.requires_input':
+        case 'identity.verification_session.canceled': {
+          const failedSession =
+            event.data.object as Stripe.Identity.VerificationSession;
+          const failedUserId = failedSession.metadata?.supabaseUUID;
+          if (failedUserId) {
+            await handleVerificationFailure(failedUserId);
+          }
+          break;
+        }
         default:
           throw new Error('Unhandled relevant event!');
       }

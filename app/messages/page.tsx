@@ -55,6 +55,14 @@ export default async function MessagesPage() {
     <div className="bg-black">
       <div className="mx-auto max-w-2xl px-6 py-16">
         <h1 className="text-3xl font-extrabold sm:text-4xl">Messages</h1>
+        <p className="mt-2">
+          <Link
+            href="/browse"
+            className="text-sm font-semibold text-zinc-500 hover:text-white"
+          >
+            ← Back to the floor
+          </Link>
+        </p>
         {convs.length === 0 ? (
           <div className="mt-10 rounded-xl border border-zinc-800 bg-zinc-900/50 p-10 text-center">
             <h2 className="text-xl font-bold">No conversations yet.</h2>
