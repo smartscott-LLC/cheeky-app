@@ -212,7 +212,7 @@ create table token_ledger (
   user_id uuid references auth.users on delete cascade not null,
   delta integer not null check (delta <> 0),
   reason text not null,
-  ref uuid,
+  ref text,
   created_at timestamptz not null default now()
 );
 alter table token_ledger enable row level security;
