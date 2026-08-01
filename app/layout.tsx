@@ -6,8 +6,9 @@ import { PropsWithChildren, Suspense } from 'react';
 import { getURL } from '@/utils/helpers';
 import 'styles/main.css';
 
-const title = 'Next.js Subscription Starter';
-const description = 'Brought to you by Vercel, Stripe, and Supabase.';
+const title = 'Cheeky — The Club for Real Connections';
+const description =
+  'A dating app built like a nightclub. Get in free with a verified ID. Live events, real matches, no gouging.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(getURL()),

@@ -20,6 +20,34 @@ module.exports = {
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans]
       },
+      // Floor palettes — source of truth: styles/palettes/*.scss
+      colors: {
+        club: {
+          DEFAULT: '#F605BA', // shocking pink
+          pink: '#F605BA',
+          cotton: '#FF56D5',
+          indigo: '#6C089B',
+          canary: '#F1F15E'
+        },
+        gold: {
+          DEFAULT: '#D29436', // harvest gold
+          royal: '#E9CD42',
+          graphite: '#434041',
+          mocha: '#3E2E33'
+        },
+        platinum: {
+          DEFAULT: '#C7C7C7', // silver
+          alice: '#D8EEFF',
+          navy: '#310A9C',
+          smoke: '#F4F3F2'
+        },
+        diamond: {
+          DEFAULT: '#FB035C', // hot fuchsia
+          raspberry: '#85054C',
+          mist: '#F0FFFF',
+          taupe: '#55484C'
+        }
+      },
       keyframes: {
         'accordion-down': {
           from: { height: 0 },
