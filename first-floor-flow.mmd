@@ -1,0 +1,38 @@
+flowchart TD
+  A[Landing page] --> B{Have an account?}
+  B -->|No| C[Sign up]
+  B -->|Yes| D[Sign in]
+  C --> E{18+ and consents?}
+  E -->|Under 18| F[Bounced at the door]
+  E -->|Missing consents| G[Error: accept terms + privacy]
+  E -->|OK| H[Account created]
+  D --> H
+  H --> I[Account: card status, tokens, profile]
+  I --> J[Get your card, verify]
+  J --> K{Brutus consent?}
+  K -->|No| L[Verify page: consent required]
+  K -->|Yes| M[Stripe Identity hosted check]
+  M --> N{Verified?}
+  N -->|Failed, retryable| J
+  N -->|Yes| O[VIP badge + 20 tokens]
+  O --> P[Profile setup: 3 photos, name, bio]
+  P --> Q[Browse the floor]
+  Q --> R{Browse card actions}
+  R -->|Message cold| S[Thread: 5 msgs/day cap]
+  R -->|Pass| Q
+  R -->|Like| T{Mutual pick?}
+  T -->|No| Q
+  T -->|Yes| U[Its a match]
+  U --> V[Chat thread: unlimited]
+  V --> W[Report or Block]
+  S --> W
+  W --> X[Moderation review]
+  Q --> Y[Dance Floor - Phase 2]
+  Y --> Z[3 tokens entry]
+  Z --> AA[Grid: 2-min selection, 10 picks]
+  AA --> AB{First mutual click?}
+  AB -->|No match| AC[Private token refund]
+  AB -->|Match| AD[One-song chat: 3 min]
+  AD --> AE{Continue?}
+  AE -->|Yes| AF[Match + badge]
+  AE -->|Decline| AG[Chat closes, no follow-up]
