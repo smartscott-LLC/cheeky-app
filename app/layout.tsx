@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
 import { Toaster } from '@/components/ui/Toasts/toaster';
+import Concierge from '@/components/ui/Agent/Concierge';
 import { PropsWithChildren, Suspense } from 'react';
 import { getURL } from '@/utils/helpers';
 import 'styles/main.css';
@@ -34,6 +35,9 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         <Footer />
         <Suspense>
           <Toaster />
+        </Suspense>
+        <Suspense>
+          <Concierge />
         </Suspense>
       </body>
     </html>

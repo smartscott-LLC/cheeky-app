@@ -160,6 +160,23 @@ collectible relationships over time. The game side keeps non-daters coming back.
   announcements). No NPC-driven fake engagement, no fake likes from
   characters. Scripted fun is honest fun.
 
+### 5.5 The AI layer — the Cast goes live (shipped 2026-08-02)
+
+- **The Concierge**: a floating 🎭 button on every page opens a chat with the
+  cast — pick a character, talk in-character. DeepSeek (`deepseek-chat`)
+  backbone with each persona's `persona_prompt` as its system prompt, loaded
+  live from the DB (update a persona = update the character instantly).
+- **Grounded + real tools**: the agent receives the member's private context
+  (floor, tokens, verification) and can call `get_next_events` to recommend
+  real rooms. No invented matches, likes, prices, or events — ever (House
+  Rules in the system prompt; the Three Principles enforced in code).
+- **One backbone, N personas**: per-request routing costs nothing idle and
+  scales by adding personas, not servers. The multi-agent orchestrator
+  (Surgical Weave, memory substrate) from the synthesis report remains
+  future work.
+- **Cost guards**: history capped, `max_tokens` capped, one tool round-trip.
+- Requires `DEEPSEEK_API_KEY` (Vercel connector + `.env.local`).
+
 ### 5.4 Asset contract (founder → app)
 
 - **One character = one folder:** `public/personas/{slug}/` (e.g.
