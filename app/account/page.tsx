@@ -121,6 +121,10 @@ export default async function Account() {
             userId={user.id}
             displayName={profile?.display_name ?? ''}
             bio={profile?.bio ?? ''}
+            interestedIn={
+              (profile?.interested_in as 'women' | 'men' | 'everyone') ??
+              'everyone'
+            }
             photos={(photos?.data ?? []).map((p) => ({
               id: p.id,
               storage_path: p.storage_path,
