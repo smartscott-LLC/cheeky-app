@@ -109,24 +109,31 @@ const deleteProductRecord = async (product: Stripe.Product) => {
  * the one-time +20 token bonus (idempotent). Service-role only.
  */
 const applyVerificationResult = async (userId: string, sessionId: string) => {
-  const { data: existing } = await supabaseAdmin
-    .from('token_ledger')
-    .select('id')
-    .eq('user_id', userId)
-    .eq('reason', 'verification_bonus')
-    .maybeSingle();
+  // Use a security-definer RPC to perform idempotent token grants server-side.
+  try {
+    const { data: rpcData, error: rpcError } = await supabaseAdmin.rpc('add_token_delta', {
+      p_user: userId,
+      p_delta: 20,
+      p_reason: 'verification_bonus',
+      p_ref: sessionId
+    });
 
-  if (!existing) {
-    const { error: grantError } = await supabaseAdmin
-      .from('token_ledger')
-      .insert({
-        user_id: userId,
-        delta: 20,
-        reason: 'verification_bonus',
-        ref: sessionId
-      });
-    if (grantError)
-      throw new Error(`Verification token grant failed: ${grantError.message}`);
+    if (rpcError) {
+      throw new Error(`Verification token grant RPC failed: ${rpcError.message}`);
+    }
+
+    // rpcData may come back in various shapes depending on the Postgres client.
+    // If rpcData is an array and first element is null, the grant was skipped due to existing record.
+    const granted = Array.isArray(rpcData)
+      ? !(rpcData.length && (rpcData[0] === null || Object.values(rpcData[0])[0] === null))
+      : Boolean(rpcData);
+
+    if (!granted) {
+      // No-op – grant already exists (idempotent)
+      console.log(`Verification token grant skipped (already granted) for user ${userId}`);
+    }
+  } catch (err: any) {
+    throw new Error(`Verification token grant failed: ${err.message}`);
   }
 
   const { error: profileError } = await supabaseAdmin
