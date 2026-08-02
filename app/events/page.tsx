@@ -12,6 +12,7 @@ const KIND_META: Record<
     emoji: string;
     tagline: string;
     accent: string;
+    image: string;
   }
 > = {
   dance_floor: {
@@ -19,28 +20,32 @@ const KIND_META: Record<
     floor: 'Silver',
     emoji: '🕺',
     tagline: 'Hourly. 2 minutes to pick. One song to make it count.',
-    accent: 'text-club border-club/40'
+    accent: 'text-club border-club/40',
+    image: '/floors/silver.png'
   },
   themed_night: {
     name: 'Themed Night',
     floor: 'Gold',
     emoji: '🎭',
     tagline: 'The floor, dressed up. A pricier ticket, a deeper crowd.',
-    accent: 'text-gold border-gold/40'
+    accent: 'text-gold border-gold/40',
+    image: '/floors/gold.png'
   },
   speed_dating: {
     name: 'Speed Dating',
     floor: 'Platinum',
     emoji: '💘',
     tagline: 'Rotations. Ranked picks. A certificate for the ones that click.',
-    accent: 'text-platinum border-platinum/40'
+    accent: 'text-platinum border-platinum/40',
+    image: '/floors/platinum.png'
   },
   rooftop: {
     name: 'The Rooftop',
     floor: 'Diamond',
     emoji: '🌇',
     tagline: 'The penthouse pool. Closer, higher, fewer.',
-    accent: 'text-diamond border-diamond/40'
+    accent: 'text-diamond border-diamond/40',
+    image: '/floors/diamond.png'
   }
 };
 
@@ -200,37 +205,45 @@ export default async function EventsPage() {
             return (
               <div
                 key={e.id}
-                className={`rounded-xl border bg-zinc-900/50 p-5 ${
+                className={`overflow-hidden rounded-xl border bg-zinc-900/50 ${
                   isSpeed ? 'border-platinum/40' : meta.accent.split(' ')[1]
                 }`}
               >
-                <div className="flex items-center justify-between">
-                  <span className={`text-lg font-extrabold ${meta.accent.split(' ')[0]}`}>
-                    {meta.emoji}
-                  </span>
-                  <span className="text-xs font-bold uppercase tracking-wide text-zinc-500">
-                    {timeLabel(e.starts_at)}
-                  </span>
-                </div>
-                <h3 className="mt-2 text-lg font-bold">{meta.name}</h3>
-                <p className="text-xs text-zinc-500">
-                  {meta.floor} · {e.token_cost} tokens
-                </p>
-                <p className="mt-2 text-xs text-zinc-400">{meta.tagline}</p>
-                <div className="mt-3 flex items-center justify-between">
-                  <span className="rounded-full border border-zinc-700 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-zinc-400">
-                    {e.status}
-                  </span>
-                  {isSpeed ? (
-                    <Link
-                      href="/events/speed"
-                      className="rounded-md bg-platinum px-3 py-1 text-xs font-bold text-platinum-navy transition hover:bg-platinum-alice"
-                    >
-                      Enter
-                    </Link>
-                  ) : (
-                    <span className="text-xs text-zinc-600">On this page</span>
-                  )}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={meta.image}
+                  alt={meta.name}
+                  className="h-24 w-full object-cover"
+                />
+                <div className="p-5">
+                  <div className="flex items-center justify-between">
+                    <span className={`text-lg font-extrabold ${meta.accent.split(' ')[0]}`}>
+                      {meta.emoji}
+                    </span>
+                    <span className="text-xs font-bold uppercase tracking-wide text-zinc-500">
+                      {timeLabel(e.starts_at)}
+                    </span>
+                  </div>
+                  <h3 className="mt-2 text-lg font-bold">{meta.name}</h3>
+                  <p className="text-xs text-zinc-500">
+                    {meta.floor} · {e.token_cost} tokens
+                  </p>
+                  <p className="mt-2 text-xs text-zinc-400">{meta.tagline}</p>
+                  <div className="mt-3 flex items-center justify-between">
+                    <span className="rounded-full border border-zinc-700 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-zinc-400">
+                      {e.status}
+                    </span>
+                    {isSpeed ? (
+                      <Link
+                        href="/events/speed"
+                        className="rounded-md bg-platinum px-3 py-1 text-xs font-bold text-platinum-navy transition hover:bg-platinum-alice"
+                      >
+                        Enter
+                      </Link>
+                    ) : (
+                      <span className="text-xs text-zinc-600">On this page</span>
+                    )}
+                  </div>
                 </div>
               </div>
             );

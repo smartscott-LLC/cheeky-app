@@ -12,24 +12,28 @@ const floors = [
     name: 'Silver',
     price: 'Free',
     color: 'bg-zinc-300',
+    image: '/floors/silver.png',
     perks: ['Verified with ID', '20 tokens on entry', 'Hourly Dance Floor']
   },
   {
     name: 'Gold',
     price: '$9.99/mo',
     color: 'bg-gold',
+    image: '/floors/gold.png',
     perks: ['Themed nights', 'More events', 'Message down to Silver']
   },
   {
     name: 'Platinum',
     price: '$19.99/mo',
     color: 'bg-platinum-navy',
+    image: '/floors/platinum.png',
     perks: ['Speed Dating', 'Upper floors', 'Message everyone below']
   },
   {
     name: 'Diamond',
     price: '$29.99/mo',
     color: 'bg-diamond',
+    image: '/floors/diamond.png',
     perks: ['The Penthouse', 'Rooftop pool', 'Whole-building access']
   }
 ];
@@ -160,18 +164,26 @@ export default async function LandingPage() {
             {floors.map((floor) => (
               <div
                 key={floor.name}
-                className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6"
+                className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50"
               >
-                <div className={`h-3 w-3 rounded-full ${floor.color}`} />
-                <h3 className="mt-4 text-xl font-bold">{floor.name}</h3>
-                <p className="mt-1 text-sm font-semibold text-club">
-                  {floor.price}
-                </p>
-                <ul className="mt-4 space-y-2 text-sm text-zinc-400">
-                  {floor.perks.map((perk) => (
-                    <li key={perk}>• {perk}</li>
-                  ))}
-                </ul>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={floor.image}
+                  alt={`The ${floor.name} floor at Club Cheeky`}
+                  className="aspect-video w-full object-cover"
+                />
+                <div className="p-6">
+                  <div className={`h-3 w-3 rounded-full ${floor.color}`} />
+                  <h3 className="mt-4 text-xl font-bold">{floor.name}</h3>
+                  <p className="mt-1 text-sm font-semibold text-club">
+                    {floor.price}
+                  </p>
+                  <ul className="mt-4 space-y-2 text-sm text-zinc-400">
+                    {floor.perks.map((perk) => (
+                      <li key={perk}>• {perk}</li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             ))}
           </div>
