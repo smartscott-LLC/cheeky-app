@@ -1,9 +1,15 @@
-// Direct DeepSeek API client — straight to the provider, no aggregator
-// markup (Baseten/OpenRouter/gateways all add a cut). Streaming via SSE.
-// Model: DEEPSEEK_MODEL (default deepseek-chat; tune to a specific release
-// like deepseek-v4-flash-0731 if that id is live on api.deepseek.com).
+// Direct DeepSeek via the official AI SDK provider — best of both worlds:
+// the `ai` package's machinery (streaming, robust parsing, future tools)
+// pointed straight at api.deepseek.com with your own key. No gateway, no
+// aggregator markup (Baseten/OpenRouter all add a cut).
+//
+// Model: DEEPSEEK_MODEL (default deepseek-chat; deepseek-reasoner for the
+// R1 chain-of-thought mode).
 
-const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions';
+import { createDeepSeek } from '@ai-sdk/deepseek';
+import { streamText } from 'ai';
+
+const DEEPSEEK_BASE = 'https://api.deepseek.com';
 
 export interface DirectMessage {
   role: 'user' | 'assistant';
@@ -12,8 +18,8 @@ export interface DirectMessage {
 
 /**
  * Streams a completion as a web ReadableStream of text chunks.
- * Throws before streaming if the request itself fails (bad key, bad model,
- * no credits) so the caller can return a clean error.
+ * A cheap /models pre-flight makes bad keys and empty wallets surface as
+ * clean errors (401 / 402 / 404) instead of mid-stream failures.
  */
 export async function streamDeepseekDirect(opts: {
   apiKey: string;
@@ -21,63 +27,25 @@ export async function streamDeepseekDirect(opts: {
   system: string;
   messages: DirectMessage[];
 }): Promise<ReadableStream<Uint8Array>> {
-  const res = await fetch(DEEPSEEK_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${opts.apiKey}`
-    },
-    body: JSON.stringify({
-      model: opts.model,
-      messages: [
-        { role: 'system', content: opts.system },
-        ...opts.messages
-      ],
-      max_tokens: 300,
-      stream: true
-    })
+  const probe = await fetch(`${DEEPSEEK_BASE}/models`, {
+    headers: { Authorization: `Bearer ${opts.apiKey}` }
   });
-
-  if (!res.ok) {
-    const detail = await res.text().catch(() => '');
-    const err = new Error(`deepseek_http_${res.status}`);
-    (err as Error & { detail?: string }).detail = detail.slice(0, 300);
-    throw err;
-  }
-  if (!res.body) {
-    throw new Error('deepseek_no_body');
+  if (!probe.ok) {
+    throw new Error(`deepseek_http_${probe.status}`);
   }
 
-  // SSE -> text chunks.
-  const encoder = new TextEncoder();
-  const reader = res.body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = '';
+  const deepseek = createDeepSeek({ apiKey: opts.apiKey });
+  const result = streamText({
+    model: deepseek(opts.model),
+    system: opts.system,
+    messages: opts.messages
+  });
 
   return new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n');
-          buffer = lines.pop() ?? '';
-          for (const line of lines) {
-            const trimmed = line.trim();
-            if (!trimmed.startsWith('data:')) continue;
-            const payload = trimmed.slice(5).trim();
-            if (payload === '[DONE]') continue;
-            try {
-              const json = JSON.parse(payload);
-              const delta = json.choices?.[0]?.delta?.content;
-              if (typeof delta === 'string' && delta.length > 0) {
-                controller.enqueue(encoder.encode(delta));
-              }
-            } catch {
-              // Ignore malformed keep-alive frames.
-            }
-          }
+        for await (const chunk of result.textStream) {
+          controller.enqueue(new TextEncoder().encode(chunk));
         }
         controller.close();
       } catch (err) {

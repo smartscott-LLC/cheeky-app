@@ -175,11 +175,12 @@ collectible relationships over time. The game side keeps non-daters coming back.
   (Surgical Weave, memory substrate) from the synthesis report remains
   future work.
 - **Cost guards**: history capped, replies capped, streaming.
-- **Provider path (cost-first)**: straight to DeepSeek via `DEEPSEEK_API_KEY`
-  (no aggregator markup) with the Vercel AI Gateway as the free fallback
-  when no key is set. Model: `DEEPSEEK_MODEL` (default `deepseek-chat`;
-  e.g. `deepseek-v4-flash-0731` if live on api.deepseek.com) or
-  `AI_MODEL` for the gateway (`deepseek/deepseek-v3` on the free tier).
+- **Provider path (cost-first)**: straight to DeepSeek via the official
+  `@ai-sdk/deepseek` provider (AI SDK DX, direct to `api.deepseek.com`, no
+  aggregator markup) using `DEEPSEEK_API_KEY`; the Vercel AI Gateway is the
+  free fallback when no key is set. Model: `DEEPSEEK_MODEL` (default
+  `deepseek-chat`; `deepseek-reasoner` for R1) or `AI_MODEL` for the
+  gateway (`deepseek/deepseek-v3` on the free tier).
 
 ### 5.4 Asset contract (founder → app)
 
