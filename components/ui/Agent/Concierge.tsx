@@ -88,11 +88,23 @@ export default function Concierge() {
           history: messages
         })
       });
-      const json = await res.json();
-      if (!res.ok) {
+      if (!res.ok || !res.body) {
+        const json = await res.json().catch(() => ({}));
         setError(json.error ?? 'Could not reach the club. Try again.');
-      } else if (json.reply) {
-        setMessages([...history, { role: 'assistant', content: json.reply }]);
+        return;
+      }
+      // Stream the reply chunk by chunk.
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let reply = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        reply += decoder.decode(value, { stream: true });
+        setMessages([...history, { role: 'assistant', content: reply }]);
+      }
+      if (!reply.trim()) {
+        setError('The character said nothing. Try again.');
       }
     } catch {
       setError('The line went dead. Try again.');

@@ -174,8 +174,11 @@ collectible relationships over time. The game side keeps non-daters coming back.
   scales by adding personas, not servers. The multi-agent orchestrator
   (Surgical Weave, memory substrate) from the synthesis report remains
   future work.
-- **Cost guards**: history capped, `max_tokens` capped, one tool round-trip.
-- Requires `DEEPSEEK_API_KEY` (Vercel connector + `.env.local`).
+- **Cost guards**: history capped, replies capped, streaming through the
+  Vercel AI Gateway (`ai` SDK + `VERCEL_OIDC_TOKEN`; model
+  `deepseek/deepseek-v3` on the free tier, override via `AI_MODEL`).
+  `deepseek/deepseek-v4-flash-0731` resolves to a paid provider — unlock via
+  Vercel AI credits when ready.
 
 ### 5.4 Asset contract (founder → app)
 

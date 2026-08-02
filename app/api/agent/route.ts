@@ -1,23 +1,9 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
-import { callDeepSeek, AgentMessage, AgentTool } from '@/utils/agent/deepseek';
+import { streamAgent, GatewayMessage } from '@/utils/agent/gateway';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
-
-// One real tool: the characters can pull the actual event schedule and
-// recommend a room grounded in reality. No invented events, ever.
-const TOOLS: AgentTool[] = [
-  {
-    type: 'function',
-    function: {
-      name: 'get_next_events',
-      description:
-        'Returns the next scheduled Club Cheeky events (room, floor, token cost, start time, status). Use when recommending an event or answering "what is happening next".',
-      parameters: { type: 'object', properties: {} }
-    }
-  }
-];
 
 const HOUSE_RULES = `You are an AI character at Club Cheeky, an in-app dating club. Follow these house rules absolutely:
 1. HONEST: You are clearly an AI character, not a real person. Never claim to be human, never invent matches, likes, messages, users, token balances, prices, or events. If the user asks about specific members, explain you cannot see anyone else's private information — point them to Browse and the events.
@@ -37,10 +23,10 @@ ${HOUSE_RULES}`;
 
 function describeError(err: unknown): string {
   const msg = err instanceof Error ? err.message : '';
-  if (msg === 'deepseek_key_missing')
-    return "The characters are still warming up — the stage lights haven't been switched on yet (DeepSeek key missing). Check back soon.";
-  if (msg.startsWith('deepseek_http_'))
-    return 'The line got crossed. Give it a second and try again.';
+  if (msg.includes('OIDC') || msg.includes('401') || msg.includes('auth'))
+    return "The stage lights aren't on yet (gateway auth). Check VERCEL_OIDC_TOKEN on Vercel.";
+  if (msg.includes('404') || msg.includes('model'))
+    return 'The script called for a model that is not on the list. Check AI_MODEL.';
   return 'Something fizzled in the sound system. Try again.';
 }
 
@@ -53,7 +39,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'not signed in' }, { status: 401 });
   }
 
-  let body: { character?: string; message?: string; history?: AgentMessage[] };
+  let body: { character?: string; message?: string; history?: GatewayMessage[] };
   try {
     body = await req.json();
   } catch {
@@ -66,7 +52,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'character and message required' }, { status: 400 });
   }
 
-  const [{ data: char }, { data: profile }, tierData, ledger] =
+  const [{ data: char }, { data: profile }, tierData, ledger, { data: events }] =
     await Promise.all([
       supabase
         .from('characters')
@@ -80,18 +66,26 @@ export async function POST(req: Request) {
         .eq('id', user.id)
         .maybeSingle(),
       supabase.rpc('current_tier', { p_user: user.id }),
-      supabase.from('token_ledger').select('delta')
+      supabase.from('token_ledger').select('delta'),
+      (async () => {
+        await supabase.rpc('ensure_floor_events', { p_hours: 2 });
+        return supabase
+          .from('events')
+          .select('kind, floor, starts_at, token_cost, status')
+          .gte('starts_at', new Date().toISOString())
+          .order('starts_at')
+          .limit(4);
+      })()
     ]);
-
-  const balance = (ledger?.data ?? []).reduce(
-    (sum, row) => sum + (row.delta ?? 0),
-    0
-  );
 
   if (!char?.persona_prompt) {
     return NextResponse.json({ error: 'character not found' }, { status: 404 });
   }
 
+  const balance = (ledger?.data ?? []).reduce(
+    (sum, row) => sum + (row.delta ?? 0),
+    0
+  );
   const tier = (tierData?.data as string) ?? 'standard';
   const tierLabel =
     tier === 'gold'
@@ -101,58 +95,46 @@ export async function POST(req: Request) {
         : tier === 'diamond'
           ? 'Diamond'
           : 'Silver';
+
+  const schedule = (events ?? [])
+    .map(
+      (e) =>
+        `- ${new Date(e.starts_at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} · ${e.kind.replace(/_/g, ' ')} (${e.floor}, ${e.token_cost} tokens, ${e.status})`
+    )
+    .join('\n');
+
   const context = [
     `Member display name: ${profile?.display_name ?? 'Unknown'}`,
     `Verification: ${profile?.verified_at ? 'verified (VIP badge active)' : 'not yet verified — Brutus is at the door (free, ID check)'}`,
     `Floor: ${tierLabel}`,
     `Token balance: ${balance}`,
-    `Joined the club as: ${new Date(user.created_at).toLocaleDateString()}`
+    `Upcoming events (real):\n${schedule}`
   ].join('\n');
 
   const system = buildSystemPrompt(char.persona_prompt, context);
-  const messages: AgentMessage[] = [
+  const messages: GatewayMessage[] = [
     ...(Array.isArray(body.history) ? body.history.slice(-10) : []),
     { role: 'user', content: message }
   ];
 
   try {
-    // One tool round-trip max — enough for grounded recommendations.
-    const first = await callDeepSeek({ system, messages, tools: TOOLS });
-    if (first.toolCalls?.length) {
-      messages.push({
-        role: 'assistant',
-        content: null,
-        tool_calls: first.toolCalls.map((tc) => ({
-          id: tc.id,
-          type: 'function' as const,
-          function: { name: tc.name, arguments: tc.arguments }
-        }))
-      });
-
-      for (const tc of first.toolCalls) {
-        let result = '{}';
-        if (tc.name === 'get_next_events') {
-          await supabase.rpc('ensure_floor_events', { p_hours: 2 });
-          const { data: events } = await supabase
-            .from('events')
-            .select('kind, floor, starts_at, token_cost, status')
-            .gte('starts_at', new Date().toISOString())
-            .order('starts_at')
-            .limit(4);
-          result = JSON.stringify(events ?? []);
+    const result = streamAgent({ system, messages });
+    // Pump the async text stream into a web ReadableStream.
+    const stream = new ReadableStream<Uint8Array>({
+      async start(controller) {
+        try {
+          for await (const chunk of result.textStream) {
+            controller.enqueue(new TextEncoder().encode(chunk));
+          }
+          controller.close();
+        } catch (err) {
+          controller.error(err);
         }
-        messages.push({
-          role: 'tool',
-          tool_call_id: tc.id,
-          content: result
-        });
       }
-
-      const second = await callDeepSeek({ system, messages });
-      return NextResponse.json({ reply: second.text ?? '' });
-    }
-
-    return NextResponse.json({ reply: first.text ?? '' });
+    });
+    return new NextResponse(stream, {
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+    });
   } catch (err) {
     console.error('agent failed:', err);
     return NextResponse.json({ error: describeError(err) }, { status: 500 });
