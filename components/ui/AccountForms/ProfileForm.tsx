@@ -1,8 +1,12 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { createClient } from '@/utils/supabase/client';
-import { updateProfile } from '@/app/account/actions';
+import {
+  deleteProfilePhoto,
+  setPrimaryPhoto,
+  updateProfile,
+  uploadProfilePhoto
+} from '@/app/account/actions';
 
 export interface ProfilePhoto {
   id: string;
@@ -30,7 +34,6 @@ export default function ProfileForm({
   photoBase,
   photoLimit = MAX_PHOTOS
 }: ProfileFormProps) {
-  const supabase = createClient();
   const [name, setName] = useState(displayName);
   const [bioText, setBioText] = useState(bio);
   const [photos, setPhotos] = useState<ProfilePhoto[]>(initialPhotos);
@@ -48,40 +51,24 @@ export default function ProfileForm({
     setError(null);
     setUploading(true);
 
-    const storagePath = `${userId}/${crypto.randomUUID()}`;
-    const { error: upErr } = await supabase.storage
-      .from('profiles')
-      .upload(storagePath, file);
-    if (upErr) {
-      setError(upErr.message);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('position', String(photos.length));
+    formData.append('isFirst', photos.length === 0 ? 'true' : 'false');
+
+    const res = await uploadProfilePhoto(formData);
+    if (res.error) {
+      setError(res.error);
       setUploading(false);
       return;
     }
 
     const isFirst = photos.length === 0;
-    const { data, error: insErr } = await supabase
-      .from('photos')
-      .insert({
-        user_id: userId,
-        storage_path: storagePath,
-        position: photos.length,
-        is_primary: isFirst
-      })
-      .select('id')
-      .single();
-
-    if (insErr) {
-      await supabase.storage.from('profiles').remove([storagePath]);
-      setError(insErr.message);
-      setUploading(false);
-      return;
-    }
-
     setPhotos([
       ...photos,
       {
-        id: data.id,
-        storage_path: storagePath,
+        id: res.id!,
+        storage_path: res.storagePath!,
         is_primary: isFirst,
         position: photos.length
       }
@@ -91,25 +78,18 @@ export default function ProfileForm({
   };
 
   const handleDelete = async (photo: ProfilePhoto) => {
-    await supabase.from('photos').delete().eq('id', photo.id);
-    await supabase.storage.from('profiles').remove([photo.storage_path]);
+    await deleteProfilePhoto(photo.id, photo.storage_path);
     const next = photos.filter((p) => p.id !== photo.id);
     if (photo.is_primary && next.length > 0) {
-      await supabase.from('photos').update({ is_primary: true }).eq('id', next[0].id);
+      await setPrimaryPhoto(next[0].id);
       next[0] = { ...next[0], is_primary: true };
     }
     setPhotos(next);
   };
 
   const handleSetPrimary = async (photo: ProfilePhoto) => {
-    await supabase
-      .from('photos')
-      .update({ is_primary: false })
-      .eq('user_id', userId);
-    await supabase.from('photos').update({ is_primary: true }).eq('id', photo.id);
-    setPhotos(
-      photos.map((p) => ({ ...p, is_primary: p.id === photo.id }))
-    );
+    await setPrimaryPhoto(photo.id);
+    setPhotos(photos.map((p) => ({ ...p, is_primary: p.id === photo.id })));
   };
 
   const handleSave = async () => {
