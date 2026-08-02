@@ -19,6 +19,7 @@ interface ProfileFormProps {
   userId: string;
   displayName: string;
   bio: string;
+  interestedIn?: 'women' | 'men' | 'everyone';
   photos: ProfilePhoto[];
   photoBase: string;
   photoLimit?: number;
@@ -30,12 +31,14 @@ export default function ProfileForm({
   userId,
   displayName,
   bio,
+  interestedIn = 'everyone',
   photos: initialPhotos,
   photoBase,
   photoLimit = MAX_PHOTOS
 }: ProfileFormProps) {
   const [name, setName] = useState(displayName);
   const [bioText, setBioText] = useState(bio);
+  const [pref, setPref] = useState<'women' | 'men' | 'everyone'>(interestedIn);
   const [photos, setPhotos] = useState<ProfilePhoto[]>(initialPhotos);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -95,7 +98,7 @@ export default function ProfileForm({
   const handleSave = async () => {
     setSaving(true);
     setError(null);
-    const res = await updateProfile(name, bioText);
+    const res = await updateProfile(name, bioText, pref);
     setSaving(false);
     if (res.error) {
       setError(res.error);
@@ -180,6 +183,26 @@ export default function ProfileForm({
             maxLength={50}
             className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
           />
+        </div>
+        <div className="grid gap-1">
+          <label htmlFor="interestedIn" className="text-sm font-semibold">
+            Interested in
+          </label>
+          <select
+            id="interestedIn"
+            value={pref}
+            onChange={(e) =>
+              setPref(e.target.value as 'women' | 'men' | 'everyone')
+            }
+            className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
+          >
+            <option value="everyone">Everyone</option>
+            <option value="women">Women</option>
+            <option value="men">Men</option>
+          </select>
+          <p className="text-xs text-zinc-500">
+            Used for Speed Dating group assignments. Never shown publicly.
+          </p>
         </div>
         <div className="grid gap-1">
           <label htmlFor="bio" className="text-sm font-semibold">

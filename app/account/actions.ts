@@ -5,7 +5,8 @@ import { supabaseAdmin } from '@/utils/supabase/admin';
 
 export async function updateProfile(
   displayName: string,
-  bio: string
+  bio: string,
+  interestedIn?: 'women' | 'men' | 'everyone'
 ): Promise<{ error?: string }> {
   const supabase = await createClient();
   const {
@@ -19,7 +20,8 @@ export async function updateProfile(
     .from('profiles')
     .update({
       display_name: displayName.trim().slice(0, 50),
-      bio: bio.trim().slice(0, 500)
+      bio: bio.trim().slice(0, 500),
+      interested_in: interestedIn ?? 'everyone'
     })
     .eq('id', user.id);
 

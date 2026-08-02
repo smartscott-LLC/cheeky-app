@@ -30,6 +30,38 @@ export type Database = {
         }
         Relationships: []
       }
+      certificates: {
+        Row: {
+          id: string
+          issued_at: string
+          kind: string
+          match_id: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          issued_at?: string
+          kind?: string
+          match_id?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          issued_at?: string
+          kind?: string
+          match_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "certificates_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       consents: {
         Row: {
           accepted_at: string
@@ -124,6 +156,7 @@ export type Database = {
         Row: {
           created_at: string
           event_id: string
+          group_number: number | null
           id: string
           status: string
           user_id: string
@@ -131,6 +164,7 @@ export type Database = {
         Insert: {
           created_at?: string
           event_id: string
+          group_number?: number | null
           id?: string
           status?: string
           user_id: string
@@ -138,6 +172,7 @@ export type Database = {
         Update: {
           created_at?: string
           event_id?: string
+          group_number?: number | null
           id?: string
           status?: string
           user_id?: string
@@ -464,6 +499,7 @@ export type Database = {
           created_at: string
           display_name: string
           id: string
+          interested_in: string
           message_retention_days: number
           updated_at: string
           verified_at: string | null
@@ -473,6 +509,7 @@ export type Database = {
           created_at?: string
           display_name?: string
           id: string
+          interested_in?: string
           message_retention_days?: number
           updated_at?: string
           verified_at?: string | null
@@ -482,6 +519,7 @@ export type Database = {
           created_at?: string
           display_name?: string
           id?: string
+          interested_in?: string
           message_retention_days?: number
           updated_at?: string
           verified_at?: string | null
@@ -523,6 +561,138 @@ export type Database = {
           status?: string
         }
         Relationships: []
+      }
+      special_interests: {
+        Row: {
+          created_at: string
+          id: number
+          interest_user_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          interest_user_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          interest_user_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      speed_selections: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: number
+          pick_rank: number
+          picked_user_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: never
+          pick_rank: number
+          picked_user_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: never
+          pick_rank?: number
+          picked_user_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "speed_selections_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      speed_session_messages: {
+        Row: {
+          body: string
+          created_at: string
+          event_id: string
+          group_number: number
+          id: number
+          sender_id: string
+          slot_index: number
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          event_id: string
+          group_number: number
+          id?: never
+          sender_id: string
+          slot_index: number
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          event_id?: string
+          group_number?: number
+          id?: never
+          sender_id?: string
+          slot_index?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "speed_session_messages_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      speed_sessions: {
+        Row: {
+          created_at: string
+          event_id: string
+          group_number: number
+          id: number
+          slot_index: number
+          user_a: string
+          user_b: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          group_number: number
+          id?: never
+          slot_index: number
+          user_a: string
+          user_b: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          group_number?: number
+          id?: never
+          slot_index?: number
+          user_a?: string
+          user_b?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "speed_sessions_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscriptions: {
         Row: {
@@ -662,6 +832,12 @@ export type Database = {
         }
         Returns: undefined
       }
+      ensure_speed_dating_events: {
+        Args: {
+          p_hours?: number
+        }
+        Returns: undefined
+      }
       finalize_events: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -701,6 +877,20 @@ export type Database = {
         }
         Returns: undefined
       }
+      resolve_speed_dating: {
+        Args: {
+          p_event_id: string
+        }
+        Returns: undefined
+      }
+      select_speed_rank: {
+        Args: {
+          p_event_id: string
+          p_pick_rank: number
+          p_picked: string
+        }
+        Returns: undefined
+      }
       send_event_message: {
         Args: {
           p_conversation_id: string
@@ -720,6 +910,21 @@ export type Database = {
           p_body: string
         }
         Returns: number
+      }
+      send_speed_message: {
+        Args: {
+          p_event_id: string
+          p_group: number
+          p_slot: number
+          p_body: string
+        }
+        Returns: number
+      }
+      setup_speed_dating: {
+        Args: {
+          p_event_id: string
+        }
+        Returns: undefined
       }
       tier_rank: {
         Args: {
