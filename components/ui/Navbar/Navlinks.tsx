@@ -38,6 +38,9 @@ export default function Navlinks({ user }: NavlinksProps) {
               <Link href="/events/speed" className={s.link}>
                 Speed Dating
               </Link>
+              <Link href="/gifts" className={s.link}>
+                Gifts
+              </Link>
               <Link href="/messages" className={s.link}>
                 Messages
               </Link>

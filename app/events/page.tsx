@@ -63,12 +63,19 @@ export default async function EventsPage() {
   // Make sure the next couple of hours of the playlist exist.
   await supabase.rpc('ensure_floor_events', { p_hours: 2 });
 
-  const { data: events } = await supabase
-    .from('events')
-    .select('*')
-    .gte('starts_at', new Date(Date.now() - 3 * 60 * 1000).toISOString())
-    .order('starts_at')
-    .limit(4);
+  const [{ data: events }, { data: announcements }] = await Promise.all([
+    supabase
+      .from('events')
+      .select('*')
+      .gte('starts_at', new Date(Date.now() - 3 * 60 * 1000).toISOString())
+      .order('starts_at')
+      .limit(4),
+    supabase
+      .from('club_announcements')
+      .select('body, created_at')
+      .order('created_at', { ascending: false })
+      .limit(5)
+  ]);
 
   const roomEvent =
     (events ?? []).find((e) => GRID_KINDS.includes(e.kind)) ?? null;
@@ -142,6 +149,38 @@ export default async function EventsPage() {
           Four floors. Four rooms. Every hour, on the quarter — a Diamond
           plays the whole set.
         </p>
+
+        {/* The overhead ticker — anonymous, in-app only. */}
+        {(announcements ?? []).length > 0 && (
+          <div className="mx-auto mt-8 max-w-2xl overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50">
+            <p className="border-b border-zinc-800 px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-club">
+              📢 Over the house speakers
+            </p>
+            <ul className="divide-y divide-zinc-800">
+              {(announcements ?? []).map((a, i) => (
+                <li key={i} className="px-4 py-2 text-sm text-zinc-300">
+                  {a.body}{" "}
+                  <span className="text-xs text-zinc-600">
+                    {new Date(a.created_at).toLocaleTimeString([], {
+                      hour: 'numeric',
+                      minute: '2-digit'
+                    })}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* The Gift Store link */}
+        <div className="mt-8 text-center">
+          <Link
+            href="/gifts"
+            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold text-club transition hover:bg-club/10"
+          >
+            🍾 Pour something at the Gift Store
+          </Link>
+        </div>
 
         {/* The schedule */}
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

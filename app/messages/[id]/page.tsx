@@ -71,22 +71,31 @@ export default async function ThreadPage({
 
   // Certificate room: a Speed Dating match issues one certificate per
   // participant — if I hold one for this match, the chat gets the skin.
-  const [{ data: certificate }, { data: interestRow }] = await Promise.all([
-    match?.id
-      ? supabase
-          .from('certificates')
-          .select('id')
-          .eq('user_id', user.id)
-          .eq('match_id', match.id)
-          .maybeSingle()
-      : Promise.resolve({ data: null }),
-    supabase
-      .from('special_interests')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('interest_user_id', otherId)
-      .maybeSingle()
-  ]);
+  const [{ data: certificate }, { data: interestRow }, { data: dateRoom }] =
+    await Promise.all([
+      match?.id
+        ? supabase
+            .from('certificates')
+            .select('id')
+            .eq('user_id', user.id)
+            .eq('match_id', match.id)
+            .maybeSingle()
+        : Promise.resolve({ data: null }),
+      supabase
+        .from('special_interests')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('interest_user_id', otherId)
+        .maybeSingle(),
+      supabase
+        .from('date_rooms')
+        .select('floor, expires_at')
+        .or(
+          `and(user_id_a.eq.${user.id},user_id_b.eq.${otherId}),and(user_id_a.eq.${otherId},user_id_b.eq.${user.id})`
+        )
+        .gt('expires_at', new Date().toISOString())
+        .maybeSingle()
+    ]);
 
   const primaryPhoto =
     otherProfile?.photos?.find((p) => p.is_primary)?.storage_path ??
@@ -118,6 +127,11 @@ export default async function ThreadPage({
           certificateMode={Boolean(certificate)}
           hasSpecialInterest={Boolean(interestRow)}
           interestUserId={otherId}
+          giftRoomMode={Boolean(dateRoom)}
+          giftFloor={dateRoom?.floor ?? null}
+          giftExpiresAt={
+            dateRoom?.expires_at ? new Date(dateRoom.expires_at).getTime() : null
+          }
           photoBase={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`}
           currentUserId={user.id}
         />

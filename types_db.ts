@@ -145,6 +145,27 @@ export type Database = {
         }
         Relationships: []
       }
+      club_announcements: {
+        Row: {
+          body: string
+          created_at: string
+          id: number
+          kind: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: never
+          kind?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: never
+          kind?: string
+        }
+        Relationships: []
+      }
       consents: {
         Row: {
           accepted_at: string
@@ -204,6 +225,47 @@ export type Database = {
           stripe_customer_id?: string | null
         }
         Relationships: []
+      }
+      date_rooms: {
+        Row: {
+          created_at: string
+          expires_at: string
+          floor: string
+          gift_send_id: string | null
+          id: string
+          source: string
+          user_a: string
+          user_b: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          floor?: string
+          gift_send_id?: string | null
+          id?: string
+          source?: string
+          user_a: string
+          user_b: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          floor?: string
+          gift_send_id?: string | null
+          id?: string
+          source?: string
+          user_a?: string
+          user_b?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "date_rooms_gift_send_id_fkey"
+            columns: ["gift_send_id"]
+            isOneToOne: false
+            referencedRelation: "gift_sends"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       entitlement_grants: {
         Row: {
@@ -334,6 +396,122 @@ export type Database = {
           token_cost?: number
         }
         Relationships: []
+      }
+      gift_catalog: {
+        Row: {
+          active: boolean
+          created_at: string
+          emoji: string
+          floor: string
+          id: string
+          kind: string
+          name: string
+          slug: string
+          token_cost: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          emoji: string
+          floor: string
+          id?: string
+          kind?: string
+          name: string
+          slug: string
+          token_cost: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          emoji?: string
+          floor?: string
+          id?: string
+          kind?: string
+          name?: string
+          slug?: string
+          token_cost?: number
+        }
+        Relationships: []
+      }
+      gift_inventory: {
+        Row: {
+          catalog_id: string
+          created_at: string
+          id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          catalog_id: string
+          created_at?: string
+          id?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          catalog_id?: string
+          created_at?: string
+          id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gift_inventory_catalog_id_fkey"
+            columns: ["catalog_id"]
+            isOneToOne: false
+            referencedRelation: "gift_catalog"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gift_sends: {
+        Row: {
+          catalog_id: string
+          id: string
+          inventory_id: string
+          recipient_id: string
+          responded_at: string | null
+          sender_id: string
+          sent_at: string
+          status: string
+        }
+        Insert: {
+          catalog_id: string
+          id?: string
+          inventory_id: string
+          recipient_id: string
+          responded_at?: string | null
+          sender_id: string
+          sent_at?: string
+          status?: string
+        }
+        Update: {
+          catalog_id?: string
+          id?: string
+          inventory_id?: string
+          recipient_id?: string
+          responded_at?: string | null
+          sender_id?: string
+          sent_at?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gift_sends_catalog_id_fkey"
+            columns: ["catalog_id"]
+            isOneToOne: false
+            referencedRelation: "gift_catalog"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gift_sends_inventory_id_fkey"
+            columns: ["inventory_id"]
+            isOneToOne: true
+            referencedRelation: "gift_inventory"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       guest_passes: {
         Row: {
@@ -904,6 +1082,12 @@ export type Database = {
         }
         Returns: string
       }
+      buy_gift: {
+        Args: {
+          p_slug: string
+        }
+        Returns: string
+      }
       create_like: {
         Args: {
           p_likee: string
@@ -981,6 +1165,13 @@ export type Database = {
         }
         Returns: undefined
       }
+      respond_gift: {
+        Args: {
+          p_send_id: string
+          p_accept: boolean
+        }
+        Returns: undefined
+      }
       select_speed_rank: {
         Args: {
           p_event_id: string
@@ -995,6 +1186,13 @@ export type Database = {
           p_body: string
         }
         Returns: number
+      }
+      send_gift: {
+        Args: {
+          p_gift_id: string
+          p_recipient: string
+        }
+        Returns: undefined
       }
       send_guest_pass: {
         Args: {

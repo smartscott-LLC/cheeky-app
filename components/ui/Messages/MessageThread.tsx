@@ -41,6 +41,9 @@ interface MessageThreadProps {
   certificateMode?: boolean;
   hasSpecialInterest?: boolean;
   interestUserId?: string | null;
+  giftRoomMode?: boolean;
+  giftFloor?: string | null;
+  giftExpiresAt?: number | null;
   photoBase: string;
   currentUserId: string;
 }
@@ -96,6 +99,9 @@ export default function MessageThread({
   certificateMode = false,
   hasSpecialInterest = false,
   interestUserId = null,
+  giftRoomMode = false,
+  giftFloor = null,
+  giftExpiresAt = null,
   photoBase,
   currentUserId
 }: MessageThreadProps) {
@@ -298,6 +304,26 @@ export default function MessageThread({
           )}
         </div>
       </div>
+
+      {/* Gift room — accepted gift = a 2-hour date in a decorated room. */}
+      {giftRoomMode && (
+        <div className="border-b border-gold/20 bg-gradient-to-r from-gold/20 via-zinc-900 to-club/10 px-4 py-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-bold text-gold">🍾 A Gift Date</p>
+              <p className="text-xs text-zinc-400">
+                This room is yours for the next two hours
+                {giftFloor && giftFloor !== 'standard' && giftFloor !== 'silver'
+                  ? ` — explore the ${giftFloor} floor together`
+                  : ' — make it count'}.
+              </p>
+            </div>
+            <span className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs font-semibold text-gold">
+              💝 Special delivery
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Certificate room — the Speed Dating reward skin (permanent). */}
       {certificateMode && (

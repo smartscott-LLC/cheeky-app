@@ -212,6 +212,7 @@ triggers a rescue:
   giveaways, referral dashboard. The Store Wing is Phase 5's anchor.
 - Build order (LOCKED): **Characters schema + asset pipeline** (shipped
    2026-08-02 — tables, seed cast, `public/personas/{slug}/` contract) →
-   **Gift Store** → **Couple Trivia** → **Center Stage rescue**.
+   **Gift Store** (shipped 2026-08-02 — catalog, inventory, sends, ticker,
+   date rooms) → **Couple Trivia** → **Center Stage rescue**.
 - The Hourly Playlist (v0.4) already proves the modular calendar; these
   modules extend it.
