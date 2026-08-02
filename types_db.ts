@@ -1243,6 +1243,27 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_events: {
+        Row: {
+          event_id: string
+          event_type: string
+          payload: Json | null
+          processed_at: string
+        }
+        Insert: {
+          event_id: string
+          event_type: string
+          payload?: Json | null
+          processed_at?: string
+        }
+        Update: {
+          event_id?: string
+          event_type?: string
+          payload?: Json | null
+          processed_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -1327,6 +1348,14 @@ export type Database = {
           p_event_id: string
         }
         Returns: undefined
+      }
+      mark_webhook_processed: {
+        Args: {
+          p_event_id: string
+          p_event_type: string
+          p_payload: Json
+        }
+        Returns: boolean
       }
       pick_on_floor: {
         Args: {

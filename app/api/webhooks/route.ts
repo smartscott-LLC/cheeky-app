@@ -7,7 +7,8 @@ import {
   deleteProductRecord,
   deletePriceRecord,
   applyVerificationResult,
-  handleVerificationFailure
+  handleVerificationFailure,
+  supabaseAdmin
 } from '@/utils/supabase/admin';
 
 const relevantEvents = new Set([
@@ -37,6 +38,33 @@ export async function POST(req: Request) {
       return new Response('Webhook secret not found.', { status: 400 });
     event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
     console.log(`🔔  Webhook received: ${event.type}`);
+
+    // Idempotency guard: mark the event processed atomically in the DB.
+    // mark_webhook_processed returns true on first sight, false on a replay.
+    // Fail closed — if the idempotency store is unreachable, do not process
+    // (a replay must never double-grant).
+    const { data: firstSeen, error: idemError } = await supabaseAdmin.rpc(
+      'mark_webhook_processed',
+      {
+        p_event_id: event.id,
+        p_event_type: event.type,
+        p_payload: event.data.object as any
+      }
+    );
+
+    if (idemError) {
+      console.error('Idempotency store failed:', idemError.message);
+      return new Response('Webhook handler failed (idempotency store).', { status: 500 });
+    }
+    if (firstSeen === false) {
+      console.log(`🔁 Duplicate webhook event ignored: ${event.id}`);
+      return new Response(JSON.stringify({ received: true }));
+    }
+    if (firstSeen !== true) {
+      console.error('Unexpected idempotency response:', firstSeen);
+      return new Response('Webhook handler failed (idempotency store).', { status: 500 });
+    }
+
   } catch (err: any) {
     console.log(`❌ Error message: ${err.message}`);
     return new Response(`Webhook Error: ${err.message}`, { status: 400 });

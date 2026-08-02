@@ -1,3 +1,4 @@
+import 'server-only';
 import { toDateTime } from '@/utils/helpers';
 import { stripe } from '@/utils/stripe/config';
 import { createClient } from '@supabase/supabase-js';
@@ -93,6 +94,9 @@ const deleteProductRecord = async (product: Stripe.Product) => {
  * the one-time +20 token bonus (idempotent). Service-role only.
  */
 const applyVerificationResult = async (userId: string, sessionId: string) => {
+  // Idempotent +20 token bonus. The webhook route's event-level guard
+  // (webhook_events) already blocks duplicate processing; this per-reason
+  // check is a second layer of defense.
   const { data: existing } = await supabaseAdmin
     .from('token_ledger')
     .select('id')

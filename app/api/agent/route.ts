@@ -77,7 +77,7 @@ export async function POST(req: Request) {
         .eq('id', user.id)
         .maybeSingle(),
       supabase.rpc('current_tier', { p_user: user.id }),
-      supabase.from('token_ledger').select('delta'),
+      supabase.from('token_ledger').select('delta').eq('user_id', user.id),
       (async () => {
         await supabase.rpc('ensure_floor_events', { p_hours: 2 });
         return supabase
