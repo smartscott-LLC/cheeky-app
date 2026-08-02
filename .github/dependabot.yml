@@ -1,0 +1,23 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+    open-pull-requests-limit: 5
+    groups:
+      sentry:
+        patterns:
+          - "@sentry/*"
+          - "@sentry/nextjs"
+    ignore:
+      # Deliberately pinned — bumps break the build (handoff constraint).
+      - dependency-name: "@supabase/supabase-js"
+      - dependency-name: "@supabase/ssr"
+      # Major Next.js bumps are high-risk; review manually.
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "stripe"
+        update-types: ["version-update:semver-major"]
