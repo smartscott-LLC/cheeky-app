@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { streamAgent, GatewayMessage } from '@/utils/agent/gateway';
+import {
+  streamDeepseekDirect,
+  DirectMessage
+} from '@/utils/agent/deepseek-direct';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -23,10 +27,17 @@ ${HOUSE_RULES}`;
 
 function describeError(err: unknown): string {
   const msg = err instanceof Error ? err.message : '';
+  const detail = (err as Error & { detail?: string }).detail;
   if (msg.includes('OIDC') || msg.includes('401') || msg.includes('auth'))
-    return "The stage lights aren't on yet (gateway auth). Check VERCEL_OIDC_TOKEN on Vercel.";
-  if (msg.includes('404') || msg.includes('model'))
-    return 'The script called for a model that is not on the list. Check AI_MODEL.';
+    return "The stage lights aren't on yet (auth). Check DEEPSEEK_API_KEY or VERCEL_OIDC_TOKEN.";
+  if (msg.includes('deepseek_http_401'))
+    return 'The bouncer rejected the key — check DEEPSEEK_API_KEY.';
+  if (msg.includes('deepseek_http_402'))
+    return 'DeepSeek is out of credits — top up and we are back on stage.';
+  if (msg.includes('deepseek_http_404') || msg.includes('model'))
+    return 'The script called for a model that does not exist. Check the model id.';
+  if (msg.includes('deepseek_http'))
+    return `DeepSeek said no (${msg.replace('deepseek_http_', '')}${detail ? `: ${detail}` : ''}).`;
   return 'Something fizzled in the sound system. Try again.';
 }
 
@@ -112,12 +123,28 @@ export async function POST(req: Request) {
   ].join('\n');
 
   const system = buildSystemPrompt(char.persona_prompt, context);
-  const messages: GatewayMessage[] = [
-    ...(Array.isArray(body.history) ? body.history.slice(-10) : []),
-    { role: 'user', content: message }
-  ];
 
   try {
+    const messages: DirectMessage[] = [
+      ...(Array.isArray(body.history) ? body.history.slice(-10) : []),
+      { role: 'user', content: message }
+    ];
+
+    // Primary: straight to DeepSeek (cheapest, no middleman). The gateway
+    // is the free fallback when no DEEPSEEK_API_KEY is set.
+    const directKey = process.env.DEEPSEEK_API_KEY;
+    if (directKey) {
+      const stream = await streamDeepseekDirect({
+        apiKey: directKey,
+        model: process.env.DEEPSEEK_MODEL ?? 'deepseek-chat',
+        system,
+        messages
+      });
+      return new NextResponse(stream, {
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+      });
+    }
+
     const result = streamAgent({ system, messages });
     // Pump the async text stream into a web ReadableStream.
     const stream = new ReadableStream<Uint8Array>({

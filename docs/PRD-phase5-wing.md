@@ -174,11 +174,12 @@ collectible relationships over time. The game side keeps non-daters coming back.
   scales by adding personas, not servers. The multi-agent orchestrator
   (Surgical Weave, memory substrate) from the synthesis report remains
   future work.
-- **Cost guards**: history capped, replies capped, streaming through the
-  Vercel AI Gateway (`ai` SDK + `VERCEL_OIDC_TOKEN`; model
-  `deepseek/deepseek-v3` on the free tier, override via `AI_MODEL`).
-  `deepseek/deepseek-v4-flash-0731` resolves to a paid provider — unlock via
-  Vercel AI credits when ready.
+- **Cost guards**: history capped, replies capped, streaming.
+- **Provider path (cost-first)**: straight to DeepSeek via `DEEPSEEK_API_KEY`
+  (no aggregator markup) with the Vercel AI Gateway as the free fallback
+  when no key is set. Model: `DEEPSEEK_MODEL` (default `deepseek-chat`;
+  e.g. `deepseek-v4-flash-0731` if live on api.deepseek.com) or
+  `AI_MODEL` for the gateway (`deepseek/deepseek-v3` on the free tier).
 
 ### 5.4 Asset contract (founder → app)
 
