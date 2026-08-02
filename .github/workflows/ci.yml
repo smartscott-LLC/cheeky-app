@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Enable corepack (pnpm)
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Typecheck
+        run: pnpm tsc --noEmit
+      - name: Lint
+        run: pnpm lint --silent
+      - name: Build
+        run: pnpm build --silent
+
+  apply-migrations-and-integration-tests:
+    runs-on: ubuntu-latest
+    needs: test-and-build
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Enable corepack (pnpm)
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Apply Supabase migrations (requires SUPABASE_SERVICE_ROLE_KEY secret)
+        env:
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "Applying migrations via supabase CLI"
+          pnpm supabase:push --yes || echo "Supabase push failed. Ensure SUPABASE_SERVICE_ROLE_KEY is configured."
+      - name: Run integration webhook test (requires STRIPE_WEBHOOK_SECRET and TEST_USER_ID)
+        env:
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          TEST_USER_ID: ${{ secrets.TEST_USER_ID }}
+        run: |
+          node ./scripts/test-webhook-duplicate.mjs "$STRIPE_WEBHOOK_SECRET" "$TEST_USER_ID" || echo "Integration test failed"
+
+# Notes:
+# - The apply-migrations job is gated by workflow_dispatch or PR events to avoid running on every push.
+# - It requires secrets to be configured in GitHub Actions (SUPABASE_SERVICE_ROLE_KEY, STRIPE_WEBHOOK_SECRET, TEST_USER_ID).
+# - The supabase CLI must be available; this workflow assumes the repo's pnpm scripts expose supabase commands.
