@@ -1,3 +1,4 @@
+import 'server-only';
 import { toDateTime } from '@/utils/helpers';
 import { stripe } from '@/utils/stripe/config';
 import { createClient } from '@supabase/supabase-js';
