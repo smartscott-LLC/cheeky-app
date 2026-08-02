@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
+import { openConversation } from '@/app/messages/actions';
 import { redirect } from 'next/navigation';
 
 export default async function MessagesPage() {
@@ -9,6 +10,32 @@ export default async function MessagesPage() {
   if (!user) {
     return redirect('/signin');
   }
+
+  // Incoming waves — a one-tap "noticed you" waiting for a hello.
+  const { data: waves } = await supabase
+    .from('waves')
+    .select('sender_id, created_at')
+    .eq('recipient_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(5);
+
+  const waveSenders = (waves ?? []).map((w) => w.sender_id);
+  const { data: waveProfiles } =
+    waveSenders.length > 0
+      ? await supabase
+          .from('profiles')
+          .select('id, display_name, photos(storage_path, is_primary)')
+          .in('id', waveSenders)
+      : { data: [] };
+  const wavePhoto = (id: string) => {
+    const p = (waveProfiles ?? []).find((w) => w.id === id);
+    return (
+      p?.photos?.find((ph) => ph.is_primary)?.storage_path ??
+      p?.photos?.[0]?.storage_path ??
+      null
+    );
+  };
+  const photoBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`;
 
   const { data: conversations } = await supabase
     .from('conversations')
@@ -63,6 +90,59 @@ export default async function MessagesPage() {
             ← Back to the floor
           </Link>
         </p>
+
+        {(waves ?? []).length > 0 && (
+          <div className="mt-8 rounded-xl border border-platinum/30 bg-platinum/5 p-5">
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-platinum">
+              👋 Someone waved
+            </p>
+            <div className="mt-3 space-y-3">
+              {(waves ?? []).map((w) => {
+                const profile = (waveProfiles ?? []).find(
+                  (p) => p.id === w.sender_id
+                );
+                const photo = wavePhoto(w.sender_id);
+                return (
+                  <div
+                    key={w.sender_id}
+                    className="flex items-center justify-between gap-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-9 w-9 overflow-hidden rounded-full bg-zinc-800">
+                        {photo ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={`${photoBase}${photo}`}
+                            alt={profile?.display_name || 'Member'}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <span className="flex h-full w-full items-center justify-center font-bold text-zinc-500">
+                            {(profile?.display_name || '?').charAt(0).toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-bold">
+                          {profile?.display_name || 'Member'}
+                        </p>
+                        <p className="text-xs text-zinc-500">waved at you</p>
+                      </div>
+                    </div>
+                    <form action={openConversation.bind(null, w.sender_id)}>
+                      <button
+                        type="submit"
+                        className="rounded-lg bg-platinum px-4 py-2 text-sm font-bold text-platinum-navy transition hover:bg-platinum-alice"
+                      >
+                        Say hi
+                      </button>
+                    </form>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
         {convs.length === 0 ? (
           <div className="mt-10 rounded-xl border border-zinc-800 bg-zinc-900/50 p-10 text-center">
             <h2 className="text-xl font-bold">No conversations yet.</h2>

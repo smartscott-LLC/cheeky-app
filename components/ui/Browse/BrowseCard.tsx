@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { likeUser } from '@/app/browse/actions';
+import { likeUser, waveAt } from '@/app/browse/actions';
 import { openConversation } from '@/app/messages/actions';
 
 export interface BrowsePerson {
@@ -15,12 +15,19 @@ export interface BrowsePerson {
 interface BrowseCardProps {
   people: BrowsePerson[];
   photoBase: string;
+  wavedIds?: string[];
 }
 
-export default function BrowseCard({ people, photoBase }: BrowseCardProps) {
+export default function BrowseCard({
+  people,
+  photoBase,
+  wavedIds = []
+}: BrowseCardProps) {
   const [index, setIndex] = useState(0);
   const [matched, setMatched] = useState<BrowsePerson | null>(null);
   const [busy, setBusy] = useState(false);
+  const [waved, setWaved] = useState<Set<string>>(new Set(wavedIds));
+  const [waveBusy, setWaveBusy] = useState(false);
 
   const person = people[index];
 
@@ -73,6 +80,15 @@ export default function BrowseCard({ people, photoBase }: BrowseCardProps) {
 
   const photo = person.photos.find((p) => p.is_primary) ?? person.photos[0];
 
+  const handleWave = async () => {
+    if (waved.has(person.id) || waveBusy) return;
+    setWaveBusy(true);
+    const res = await waveAt(person.id);
+    setWaveBusy(false);
+    if (res.error) return;
+    setWaved((s) => new Set(s).add(person.id));
+  };
+
   return (
     <div className="mx-auto max-w-xl overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50">
       <div className="flex aspect-[4/3] items-center justify-center bg-zinc-800">
@@ -110,6 +126,18 @@ export default function BrowseCard({ people, photoBase }: BrowseCardProps) {
           className="rounded-lg border border-zinc-700 px-3 py-3 text-sm font-semibold text-zinc-300 transition hover:border-zinc-500 hover:text-white"
         >
           Message
+        </button>
+        <button
+          onClick={handleWave}
+          disabled={waved.has(person.id) || waveBusy}
+          title={waved.has(person.id) ? 'You waved at them' : 'Send a wave'}
+          className={`rounded-lg px-3 py-3 text-sm font-bold transition ${
+            waved.has(person.id)
+              ? 'bg-platinum/15 text-platinum'
+              : 'border border-zinc-700 text-zinc-300 hover:border-platinum hover:text-platinum'
+          }`}
+        >
+          {waved.has(person.id) ? 'Waved ✓' : '👋'}
         </button>
         <button
           onClick={() => setIndex((i) => i + 1)}

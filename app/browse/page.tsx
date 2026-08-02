@@ -33,6 +33,12 @@ export default async function BrowsePage() {
     .select('id, display_name, bio, verified_at, photos(id, storage_path, position, is_primary)')
     .limit(50);
 
+  const { data: myWaves } = await supabase
+    .from('waves')
+    .select('recipient_id')
+    .eq('sender_id', user.id);
+  const wavedIds = (myWaves ?? []).map((w) => w.recipient_id);
+
   // Viewer tier photo limit: 3 for Silver and below, more for paid floors.
   const subscription = await getSubscription(supabase);
   const tierName = subscription?.prices?.products?.name ?? null;
@@ -74,7 +80,7 @@ export default async function BrowsePage() {
           back, it&apos;s instant. No waiting, no wondering.
         </p>
         <div className="mt-10">
-          <BrowseCard people={people} photoBase={photoBase} />
+          <BrowseCard people={people} photoBase={photoBase} wavedIds={wavedIds} />
         </div>
       </div>
     </div>

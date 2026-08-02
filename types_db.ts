@@ -1243,6 +1243,27 @@ export type Database = {
         }
         Relationships: []
       }
+      waves: {
+        Row: {
+          created_at: string
+          id: number
+          recipient_id: string
+          sender_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          recipient_id: string
+          sender_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          recipient_id?: string
+          sender_id?: string
+        }
+        Relationships: []
+      }
       webhook_events: {
         Row: {
           event_id: string

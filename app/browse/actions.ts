@@ -22,3 +22,29 @@ export async function likeUser(
   const matchId = data?.[0]?.match_id ?? null;
   return { matched: Boolean(matchId), matchId };
 }
+
+/**
+ * Sends a one-tap "noticed you" wave. Lighter than a Like — no match
+ * trigger, no pressure. The recipient sees it in Messages and can say hi.
+ */
+export async function waveAt(
+  userId: string
+): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: 'not signed in' };
+  }
+
+  const { error } = await supabase.from('waves').insert({
+    sender_id: user.id,
+    recipient_id: userId
+  });
+  if (error) {
+    console.error('wave failed:', error.message);
+    return { error: error.message };
+  }
+  return {};
+}
