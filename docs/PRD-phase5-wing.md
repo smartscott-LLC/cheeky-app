@@ -33,6 +33,24 @@ swapped, never patched.
 - Word of mouth: "I was on Club Cheeky for three hours" — time-in-app is the
   marketing engine.
 
+## 2.5 House Rules — the Three Principles (the constitution)
+
+Every feature **and every character voice** is built on three principles. They
+are the "encourageable, not incorrigible" rule — the app never writes anyone
+off, even when someone is struggling. Founders distill: Brutus is rough, but
+his language always follows these.
+
+1. **Honest.** No dark patterns, no fake likes, no artificial scarcity, no
+   gouging. What you see is what it is. (Mission guardrails, `AGENTS.md`.)
+2. **Encouraging.** Never write anyone off. Silent losses stay private; wins
+   are celebrated; and when someone keeps missing, the app steps in to help
+   them up (see Module 4 — Center Stage).
+3. **Fun and free at the base.** The free tier stays genuinely free and fun;
+   everyone gets in with an ID. Money buys floors, never entry.
+
+> These principles are enforced in code wherever possible — not just copy
+> (e.g. the miss-streak rescue trigger is the Encouraging principle as a rule).
+
 ## 3. Module 1 — The Gift Store
 
 ### 3.1 Catalog (LOCKED)
@@ -158,24 +176,42 @@ collectible relationships over time. The game side keeps non-daters coming back.
 - This is why everything stays modular *now*, while it's cheap: the building
   can change its whole personality without a remodel.
 
-## 7. Open Questions (need founder sign-off before build)
+## 6.5 Module 4 — Center Stage (miss-streak rescue)
 
-1. **Basket pass floor** — my lean: pass = sender's floor (keeps "never buy
-   above your floor" honest). Confirm or override.
-2. **Trivia entry** — on-demand in-chat first (my lean) vs scheduled event
-   first. Both eventually.
-3. **Character relationship rewards** — badges/streaks/cards only (my lean)
-   vs any token involvement. (Lean keeps the economy clean.)
-4. **Gift-send cooldown** — 1/hour confirmed; per-gift-type vs global
-   (assumed global).
-5. **Announcement tone** — anonymous confirmed; whether the ticker also shows
-   on the landing/marketing page or only in-app (assumed in-app only).
+The Encouraging principle as code. When a member keeps missing — e.g. **no
+match in the last five events** (or a run of denied gifts) — the engine
+triggers a rescue:
+
+- **What happens (OPEN):** a "center stage" moment — featured placement in
+  the next grid, a hype announcement, a spotlight badge. The goal is to get
+  hype *around* them and give them a genuine boost, never a pity signal
+  (silent to everyone else — see Honest + Encouraging).
+- **Trigger (OPEN):** consecutive no-match events threshold (5 proposed);
+  denied-gift runs; configurable per floor.
+- **Guardrails:** no dark patterns — the boost is real visibility, not a fake
+  like or a manufactured match. The recipient never gets an artificial "win".
+
+## 7. Decisions Log (all previously open items now LOCKED)
+
+1. **Basket pass floor** — LOCKED: the pass = the **sender's floor** (keeps
+   "never buy above your floor" honest; a Silver's basket pass is the club
+   floor, a Diamond's is the whole building).
+2. **Trivia entry** — LOCKED: **on-demand in-chat first** (a "Date Night"
+   button inside a matched chat); scheduled club tournaments later, same
+   engine.
+3. **Character rewards** — LOCKED: badges, streaks, and collectible cards
+   only; no token rewards (keeps the economy clean).
+4. **Gift-send cooldown** — LOCKED: 1 offer/hour, **global** across all
+   gifts.
+5. **Announcement ticker** — LOCKED: **in-app only**, never on the
+   marketing site.
 
 ## 8. Roadmap Placement
 
 - **Phase 5 — Economy+** (`PRD-foundation.md` §11): Gems/collectibles, gifts,
   giveaways, referral dashboard. The Store Wing is Phase 5's anchor.
-- Build order proposal: **Characters schema + asset pipeline first** (founder
-  art lands against a ready contract) → **Gift Store** → **Couple Trivia**.
+- Build order (LOCKED): **Characters schema + asset pipeline** (shipped
+   2026-08-02 — tables, seed cast, `public/personas/{slug}/` contract) →
+   **Gift Store** → **Couple Trivia** → **Center Stage rescue**.
 - The Hourly Playlist (v0.4) already proves the modular calendar; these
   modules extend it.

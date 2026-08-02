@@ -62,6 +62,89 @@ export type Database = {
           },
         ]
       }
+      character_relations: {
+        Row: {
+          character_id: string
+          created_at: string
+          id: string
+          last_interaction_at: string | null
+          level: number
+          points: number
+          user_id: string
+        }
+        Insert: {
+          character_id: string
+          created_at?: string
+          id?: string
+          last_interaction_at?: string | null
+          level?: number
+          points?: number
+          user_id: string
+        }
+        Update: {
+          character_id?: string
+          created_at?: string
+          id?: string
+          last_interaction_at?: string | null
+          level?: number
+          points?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "character_relations_character_id_fkey"
+            columns: ["character_id"]
+            isOneToOne: false
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      characters: {
+        Row: {
+          active: boolean
+          created_at: string
+          fullbody_path: string | null
+          greeting_lines: Json
+          id: string
+          name: string
+          persona_prompt: string | null
+          portrait_path: string | null
+          role: string
+          scene_video_path: string | null
+          slug: string
+          tagline: string | null
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          fullbody_path?: string | null
+          greeting_lines?: Json
+          id?: string
+          name: string
+          persona_prompt?: string | null
+          portrait_path?: string | null
+          role: string
+          scene_video_path?: string | null
+          slug: string
+          tagline?: string | null
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          fullbody_path?: string | null
+          greeting_lines?: Json
+          id?: string
+          name?: string
+          persona_prompt?: string | null
+          portrait_path?: string | null
+          role?: string
+          scene_video_path?: string | null
+          slug?: string
+          tagline?: string | null
+        }
+        Relationships: []
+      }
       consents: {
         Row: {
           accepted_at: string
