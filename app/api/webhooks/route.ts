@@ -7,7 +7,8 @@ import {
   deleteProductRecord,
   deletePriceRecord,
   applyVerificationResult,
-  handleVerificationFailure
+  handleVerificationFailure,
+  supabaseAdmin
 } from '@/utils/supabase/admin';
 
 const relevantEvents = new Set([
@@ -37,6 +38,45 @@ export async function POST(req: Request) {
       return new Response('Webhook secret not found.', { status: 400 });
     event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
     console.log(`🔔  Webhook received: ${event.type}`);
+
+    // Idempotency guard: record the event_id in webhook_events and ignore if already present.
+    // Note: this SELECT-then-INSERT approach has a small race window; a DB-side function (INSERT ... ON CONFLICT DO NOTHING RETURNING) would be ideal.
+    try {
+      const { data: existing } = await supabaseAdmin
+        .from('webhook_events')
+        .select('event_id')
+        .eq('event_id', event.id)
+        .maybeSingle();
+
+      if (existing) {
+        console.log(`🔁 Duplicate webhook event ignored: ${event.id}`);
+        return new Response(JSON.stringify({ received: true }));
+      }
+
+      const { error: recordError } = await supabaseAdmin.from('webhook_events').insert([
+        {
+          event_id: event.id,
+          event_type: event.type,
+          payload: event.data.object as any
+        }
+      ]);
+
+      if (recordError) {
+        // If insert failed due to uniqueness race, assume processed and ack.
+        const msg = String(recordError.message || recordError);
+        if (msg.includes('duplicate') || msg.includes('already exists')) {
+          console.log(`🔁 Duplicate webhook event (race) ignored: ${event.id}`);
+          return new Response(JSON.stringify({ received: true }));
+        }
+        console.log(`❌ Failed to record webhook event: ${msg}`);
+        return new Response('Webhook handler failed to record event.', { status: 500 });
+      }
+    } catch (recErr: any) {
+      console.log('❌ Error recording webhook idempotency:', recErr?.message ?? recErr);
+      // Fail closed: prefer not to process if the idempotency store is unreachable.
+      return new Response('Webhook handler failed (idempotency store).', { status: 500 });
+    }
+
   } catch (err: any) {
     console.log(`❌ Error message: ${err.message}`);
     return new Response(`Webhook Error: ${err.message}`, { status: 400 });

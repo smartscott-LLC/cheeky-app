@@ -19,6 +19,22 @@ const supabaseAdmin = createClient<Database>(
 
 export { supabaseAdmin };
 
+// Helper: check and record a processed webhook event atomically is best done
+// via a DB function. For now the route does a select+insert; expose helpers
+// here for future reuse.
+export const recordWebhookEvent = async (eventId: string, eventType: string, payload: any) => {
+  return await supabaseAdmin.from('webhook_events').insert([{
+    event_id: eventId,
+    event_type: eventType,
+    payload
+  }]);
+};
+
+export const hasWebhookEvent = async (eventId: string) => {
+  const { data } = await supabaseAdmin.from('webhook_events').select('event_id').eq('event_id', eventId).maybeSingle();
+  return !!data;
+};
+
 const upsertProductRecord = async (product: Stripe.Product) => {
   const productData: Product = {
     id: product.id,
