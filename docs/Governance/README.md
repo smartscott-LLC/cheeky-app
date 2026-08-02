@@ -32,6 +32,7 @@ schema or flow is locked here and enforced in Phase 1+.
 | `community-safety.md` | Keeping the floor safe — conduct, report/block/ban, no-follow-up rule |
 | `data-retention-deletion.md` | The Key Return — retention windows, account deletion |
 | `refunds-tokens.md` | House rules on the house currency — refunds, no-match, cancellations |
+| `best-practices.md` | Best practices + external-activity disclaimer — acknowledged at signup (v1) |
 
 ## Code-shaping decisions (locked before Phase 1 schema)
 

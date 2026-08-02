@@ -1394,7 +1394,7 @@ export type Database = {
       }
     }
     Enums: {
-      consent_type: "terms" | "privacy" | "verification"
+      consent_type: "terms" | "privacy" | "verification" | "best_practices"
       pricing_plan_interval: "day" | "week" | "month" | "year"
       pricing_type: "one_time" | "recurring"
       subscription_status:

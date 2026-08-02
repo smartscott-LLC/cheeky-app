@@ -172,13 +172,14 @@ export async function signUp(formData: FormData) {
   const retention = Number(formData.get('messageRetentionDays') ?? 90);
   const termsConsent = formData.get('termsConsent') === 'on';
   const privacyConsent = formData.get('privacyConsent') === 'on';
+  const bestPracticesConsent = formData.get('bestPracticesConsent') === 'on';
   let redirectPath: string;
 
-  if (!termsConsent || !privacyConsent) {
+  if (!termsConsent || !privacyConsent || !bestPracticesConsent) {
     redirectPath = getErrorRedirect(
       '/signin/signup',
       'Almost there.',
-      'Please accept the Rules of the Club and the Privacy Policy to enter.'
+      'Please accept the Rules of the Club, the Privacy Policy, and the Best Practices disclaimer to enter.'
     );
     return redirectPath;
   }
@@ -221,7 +222,8 @@ export async function signUp(formData: FormData) {
         birthday: birthday || undefined,
         message_retention_days: Math.min(90, Math.max(3, retention)),
         terms_version: 'v1',
-        privacy_version: 'v1'
+        privacy_version: 'v1',
+        best_practices_version: 'v1'
       }
     }
   });

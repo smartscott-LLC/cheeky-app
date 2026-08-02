@@ -100,6 +100,22 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               />
               <span>I&apos;ve read What the Bouncer Knows (Privacy) v1.</span>
             </label>
+            <label className="flex items-start gap-3 text-sm text-zinc-300">
+              <input
+                type="checkbox"
+                name="bestPracticesConsent"
+                required
+                className="mt-1 h-4 w-4 accent-club"
+              />
+              <span>
+                I understand the club is in-app — meeting up or moving outside
+                the app is my choice, on me. Read the{' '}
+                <Link href="/best-practices" className="text-club underline">
+                  Best Practices
+                </Link>{' '}
+                (v1).
+              </span>
+            </label>
           </div>
           <Button
             variant="slim"
