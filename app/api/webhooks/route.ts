@@ -39,36 +39,29 @@ export async function POST(req: Request) {
     event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
     console.log(`🔔  Webhook received: ${event.type}`);
 
-    // Idempotency guard: use a DB-side atomic function to mark processed events.
-    try {
-      const { data: rpcData, error: rpcError } = await supabaseAdmin.rpc(
-        'mark_webhook_processed',
-        {
-          p_event_id: event.id,
-          p_event_type: event.type,
-          p_payload: event.data.object as any
-        }
-      );
-
-      if (rpcError) {
-        console.log('❌ RPC error marking webhook processed:', rpcError.message || rpcError);
-        return new Response('Webhook handler failed (idempotency rpc).', { status: 500 });
+    // Idempotency guard: mark the event processed atomically in the DB.
+    // mark_webhook_processed returns true on first sight, false on a replay.
+    // Fail closed — if the idempotency store is unreachable, do not process
+    // (a replay must never double-grant).
+    const { data: firstSeen, error: idemError } = await supabaseAdmin.rpc(
+      'mark_webhook_processed',
+      {
+        p_event_id: event.id,
+        p_event_type: event.type,
+        p_payload: event.data.object as any
       }
+    );
 
-      // Supabase RPC returns an array-like result; when the function returns a scalar boolean
-      // it often appears as [{ mark_webhook_processed: true }] or [true] depending on the client.
-      const processed = Array.isArray(rpcData)
-        ? // try multiple shapes
-          (rpcData[0] === true || (rpcData[0] && (rpcData[0].mark_webhook_processed === true || Object.values(rpcData[0])[0] === true)))
-        : Boolean(rpcData);
-
-      if (!processed) {
-        console.log(`🔁 Duplicate webhook event ignored: ${event.id}`);
-        return new Response(JSON.stringify({ received: true }));
-      }
-    } catch (recErr: any) {
-      console.log('❌ Error recording webhook idempotency RPC:', recErr?.message ?? recErr);
-      // Fail closed: prefer not to process if the idempotency store is unreachable.
+    if (idemError) {
+      console.error('Idempotency store failed:', idemError.message);
+      return new Response('Webhook handler failed (idempotency store).', { status: 500 });
+    }
+    if (firstSeen === false) {
+      console.log(`🔁 Duplicate webhook event ignored: ${event.id}`);
+      return new Response(JSON.stringify({ received: true }));
+    }
+    if (firstSeen !== true) {
+      console.error('Unexpected idempotency response:', firstSeen);
       return new Response('Webhook handler failed (idempotency store).', { status: 500 });
     }
 

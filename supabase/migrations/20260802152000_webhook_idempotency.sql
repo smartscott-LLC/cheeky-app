@@ -11,6 +11,6 @@ create table public.webhook_events (
 alter table public.webhook_events enable row level security;
 
 create policy "No client select" on public.webhook_events for select using (false);
-create policy "No client insert" on public.webhook_events for insert using (false);
+create policy "No client insert" on public.webhook_events for insert with check (false);
 create policy "No client update" on public.webhook_events for update using (false);
 create policy "No client delete" on public.webhook_events for delete using (false);

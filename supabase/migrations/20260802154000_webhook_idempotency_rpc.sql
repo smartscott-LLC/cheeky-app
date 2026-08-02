@@ -20,7 +20,8 @@ begin
     return false;
   end if;
 end;
-$$ language plpgsql security definer;
+$$ language plpgsql security definer
+set search_path = public;
 
 -- Grant execute to the authenticated/owner role is not necessary for
 -- server-side service role usage, but prevents accidental client calls.

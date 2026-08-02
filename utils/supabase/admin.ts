@@ -20,22 +20,6 @@ const supabaseAdmin = createClient<Database>(
 
 export { supabaseAdmin };
 
-// Helper: check and record a processed webhook event atomically is best done
-// via a DB function. For now the route does a select+insert; expose helpers
-// here for future reuse.
-export const recordWebhookEvent = async (eventId: string, eventType: string, payload: any) => {
-  return await supabaseAdmin.from('webhook_events').insert([{
-    event_id: eventId,
-    event_type: eventType,
-    payload
-  }]);
-};
-
-export const hasWebhookEvent = async (eventId: string) => {
-  const { data } = await supabaseAdmin.from('webhook_events').select('event_id').eq('event_id', eventId).maybeSingle();
-  return !!data;
-};
-
 const upsertProductRecord = async (product: Stripe.Product) => {
   const productData: Product = {
     id: product.id,
@@ -110,31 +94,27 @@ const deleteProductRecord = async (product: Stripe.Product) => {
  * the one-time +20 token bonus (idempotent). Service-role only.
  */
 const applyVerificationResult = async (userId: string, sessionId: string) => {
-  // Use a security-definer RPC to perform idempotent token grants server-side.
-  try {
-    const { data: rpcData, error: rpcError } = await supabaseAdmin.rpc('add_token_delta', {
-      p_user: userId,
-      p_delta: 20,
-      p_reason: 'verification_bonus',
-      p_ref: sessionId
-    });
+  // Idempotent +20 token bonus. The webhook route's event-level guard
+  // (webhook_events) already blocks duplicate processing; this per-reason
+  // check is a second layer of defense.
+  const { data: existing } = await supabaseAdmin
+    .from('token_ledger')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('reason', 'verification_bonus')
+    .maybeSingle();
 
-    if (rpcError) {
-      throw new Error(`Verification token grant RPC failed: ${rpcError.message}`);
-    }
-
-    // rpcData may come back in various shapes depending on the Postgres client.
-    // If rpcData is an array and first element is null, the grant was skipped due to existing record.
-    const granted = Array.isArray(rpcData)
-      ? !(rpcData.length && (rpcData[0] === null || Object.values(rpcData[0])[0] === null))
-      : Boolean(rpcData);
-
-    if (!granted) {
-      // No-op – grant already exists (idempotent)
-      console.log(`Verification token grant skipped (already granted) for user ${userId}`);
-    }
-  } catch (err: any) {
-    throw new Error(`Verification token grant failed: ${err.message}`);
+  if (!existing) {
+    const { error: grantError } = await supabaseAdmin
+      .from('token_ledger')
+      .insert({
+        user_id: userId,
+        delta: 20,
+        reason: 'verification_bonus',
+        ref: sessionId
+      });
+    if (grantError)
+      throw new Error(`Verification token grant failed: ${grantError.message}`);
   }
 
   const { error: profileError } = await supabaseAdmin
