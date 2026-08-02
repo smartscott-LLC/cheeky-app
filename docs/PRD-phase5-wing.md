@@ -170,6 +170,9 @@ collectible relationships over time. The game side keeps non-daters coming back.
   (floor, tokens, verification) and can call `get_next_events` to recommend
   real rooms. No invented matches, likes, prices, or events — ever (House
   Rules in the system prompt; the Three Principles enforced in code).
+- **Persona governance (audit finding, verified 2026-08-02)**: `characters`
+  has RLS with a read-only public SELECT policy and NO write policies —
+  personas are service-role/admin only, never client-editable.
 - **One backbone, N personas**: per-request routing costs nothing idle and
   scales by adding personas, not servers. The multi-agent orchestrator
   (Surgical Weave, memory substrate) from the synthesis report remains
