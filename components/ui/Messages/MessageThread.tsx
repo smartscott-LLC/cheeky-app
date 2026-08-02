@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import {
+  addSpecialInterest,
   blockUser,
   reportUser,
   resolveSong,
@@ -37,6 +38,9 @@ interface MessageThreadProps {
   matchId?: string | null;
   songEndsAt?: number | null;
   declined?: boolean;
+  certificateMode?: boolean;
+  hasSpecialInterest?: boolean;
+  interestUserId?: string | null;
   photoBase: string;
   currentUserId: string;
 }
@@ -71,6 +75,8 @@ function describeError(code: string): string {
       return 'This conversation is blocked.';
     case 'conversation_closed':
       return 'This conversation is closed. No follow-ups — respect the floor.';
+    case 'certificate_required':
+      return 'You need a Speed Dating certificate with this person first.';
     case 'not_a_participant':
       return 'You are not part of this conversation.';
     default:
@@ -87,6 +93,9 @@ export default function MessageThread({
   matchId = null,
   songEndsAt = null,
   declined: initiallyDeclined = false,
+  certificateMode = false,
+  hasSpecialInterest = false,
+  interestUserId = null,
   photoBase,
   currentUserId
 }: MessageThreadProps) {
@@ -100,6 +109,8 @@ export default function MessageThread({
   const [declined, setDeclined] = useState(initiallyDeclined);
   const [reportOpen, setReportOpen] = useState(false);
   const [reported, setReported] = useState(false);
+  const [interestAdded, setInterestAdded] = useState(hasSpecialInterest);
+  const [interestBusy, setInterestBusy] = useState(false);
   const [promptIdx, setPromptIdx] = useState(0);
   const [now, setNow] = useState(Date.now());
   const [busy, setBusy] = useState(false);
@@ -169,6 +180,18 @@ export default function MessageThread({
     await refresh();
   };
 
+  const handleAddInterest = async () => {
+    if (!interestUserId) return;
+    setInterestBusy(true);
+    const res = await addSpecialInterest(interestUserId);
+    setInterestBusy(false);
+    if (res.error) {
+      setError(describeError(res.error));
+      return;
+    }
+    setInterestAdded(true);
+  };
+
   const handleResolve = async (keepGoing: boolean) => {
     if (!matchId) return;
     setBusy(true);
@@ -187,7 +210,11 @@ export default function MessageThread({
   };
 
   return (
-    <div className="flex h-[70vh] flex-col overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50">
+    <div
+      className={`flex h-[70vh] flex-col overflow-hidden rounded-xl border bg-zinc-900/50 ${
+        certificateMode ? 'border-platinum/30' : 'border-zinc-800'
+      }`}
+    >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-zinc-800 p-4">
         <div className="flex items-center gap-3">
@@ -216,6 +243,11 @@ export default function MessageThread({
             {other.verified_at && (
               <p className="text-xs font-bold uppercase tracking-wide text-club">
                 Verified
+              </p>
+            )}
+            {certificateMode && (
+              <p className="text-xs font-bold uppercase tracking-wide text-platinum">
+                💎 Certificate match
               </p>
             )}
             {songMode && (
@@ -266,6 +298,36 @@ export default function MessageThread({
           )}
         </div>
       </div>
+
+      {/* Certificate room — the Speed Dating reward skin (permanent). */}
+      {certificateMode && (
+        <div className="border-b border-platinum/20 bg-platinum-navy px-4 py-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-bold text-platinum-alice">
+                💎 Speed Dating Certificate Match
+              </p>
+              <p className="text-xs text-platinum/70">
+                You two picked each other on the Speed Dating floor — this chat
+                is certified. No one else gets this room.
+              </p>
+            </div>
+            {interestAdded ? (
+              <span className="rounded-full border border-platinum/40 bg-platinum/10 px-3 py-1 text-xs font-semibold text-platinum-alice">
+                ⭐ On your special interests
+              </span>
+            ) : (
+              <button
+                onClick={handleAddInterest}
+                disabled={interestBusy}
+                className="rounded-full bg-platinum px-3 py-1 text-xs font-bold text-platinum-navy transition hover:bg-platinum-alice"
+              >
+                ⭐ Add to special interests
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Icebreakers during the song */}
       {songMode && (

@@ -26,7 +26,7 @@ export default async function Account() {
     return redirect('/signin');
   }
 
-  const [profile, tokenBalance, photos, tierData, grants, passes] =
+  const [profile, tokenBalance, photos, tierData, grants, passes, certRows, interestRows] =
     await Promise.all([
       getProfile(supabase, user.id),
       getTokenBalance(supabase),
@@ -43,6 +43,16 @@ export default async function Account() {
       supabase
         .from('guest_passes')
         .select('tier, expires_at')
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('certificates')
+        .select('id, kind, issued_at, matches!inner(id, user_id_a, user_id_b)')
+        .eq('user_id', user.id)
+        .order('issued_at', { ascending: false }),
+      supabase
+        .from('special_interests')
+        .select('id, interest_user_id, created_at')
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false })
     ]);
 
@@ -51,6 +61,45 @@ export default async function Account() {
     tier === 'gold' ? 'Gold' : tier === 'platinum' ? 'Platinum' : tier === 'diamond' ? 'Diamond' : 'Silver';
   const photoLimit =
     tier === 'gold' ? 6 : tier === 'platinum' ? 8 : tier === 'diamond' ? 10 : 3;
+
+  // Certificates + special interests: who did you meet at Speed Dating?
+  const certPartners = (certRows?.data ?? []).map((c) => {
+    const m = c.matches;
+    const otherId = m.user_id_a === user.id ? m.user_id_b : m.user_id_a;
+    return { certificateId: c.id, issuedAt: c.issued_at, otherId };
+  });
+  const interestUserIds = (interestRows?.data ?? []).map(
+    (i) => i.interest_user_id
+  );
+  const partnerIds = [
+    ...certPartners.map((p) => p.otherId),
+    ...interestUserIds
+  ].filter((id, i, arr) => arr.indexOf(id) === i);
+
+  const partnerProfiles =
+    partnerIds.length > 0
+      ? ((await supabase
+          .from('profiles')
+          .select('id, display_name')
+          .in('id', partnerIds)).data ?? [])
+      : [];
+  const myConvos =
+    partnerIds.length > 0
+      ? ((await supabase
+          .from('conversations')
+          .select('id, user_id_a, user_id_b')
+          .or(
+            `user_id_a.eq.${user.id},user_id_b.eq.${user.id}`
+          )).data ?? [])
+      : [];
+
+  const nameOf = (id: string) =>
+    partnerProfiles.find((p) => p.id === id)?.display_name ?? 'Member';
+  const convoByOther = new Map<string, string>();
+  for (const c of myConvos) {
+    const other = c.user_id_a === user.id ? c.user_id_b : c.user_id_a;
+    if (!convoByOther.has(other)) convoByOther.set(other, c.id);
+  }
 
   return (
     <section className="mb-32 bg-black">
@@ -134,6 +183,66 @@ export default async function Account() {
             photoLimit={photoLimit}
             photoBase={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`}
           />
+        </div>
+        <div className="mb-6 rounded-xl border border-platinum/30 bg-zinc-900/50 p-6">
+          <h2 className="text-xl font-bold text-platinum-alice">
+            💎 Certificates
+          </h2>
+          <p className="mt-1 text-zinc-400">
+            Speed Dating matches that made it count.
+          </p>
+          {certPartners.length > 0 ? (
+            <ul className="mt-4 space-y-3">
+              {certPartners.map((p) => (
+                <li
+                  key={p.certificateId}
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-platinum/20 bg-platinum/5 px-4 py-3"
+                >
+                  <div>
+                    <p className="text-sm font-bold text-platinum-alice">
+                      Speed Dating certificate
+                    </p>
+                    <p className="text-sm text-zinc-400">
+                      Matched with {nameOf(p.otherId)} ·{' '}
+                      {new Date(p.issuedAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                  {convoByOther.has(p.otherId) && (
+                    <Link
+                      href={`/messages/${convoByOther.get(p.otherId)}`}
+                      className="rounded-lg border border-platinum/40 px-3 py-1.5 text-xs font-semibold text-platinum-alice transition hover:bg-platinum hover:text-platinum-navy"
+                    >
+                      Open chat
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-3 text-sm text-zinc-500">
+              No certificates yet. Meet someone at Speed Dating on the Platinum
+              floor and this shelf lights up.
+            </p>
+          )}
+          <h3 className="mt-6 text-xs font-bold uppercase tracking-wide text-zinc-500">
+            Special interests
+          </h3>
+          {interestRows?.data && interestRows.data.length > 0 ? (
+            <ul className="mt-2 flex flex-wrap gap-2">
+              {interestRows.data.map((i) => (
+                <li
+                  key={i.id}
+                  className="rounded-full border border-platinum/30 bg-platinum/10 px-3 py-1 text-xs font-semibold text-platinum-alice"
+                >
+                  ⭐ {nameOf(i.interest_user_id)}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-2 text-sm text-zinc-500">
+              Nobody yet. Certificate matches can be added from the chat.
+            </p>
+          )}
         </div>
         <CustomerPortalForm subscription={subscription} />
         <NameForm userName={userDetails?.full_name ?? ''} />

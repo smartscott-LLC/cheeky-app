@@ -108,6 +108,24 @@ export async function sendEventMessage(
   return {};
 }
 
+/**
+ * Adds a certificate-match partner to your Special Interests. Server-side
+ * gate (add_special_interest): you must hold a certificate with this person.
+ */
+export async function addSpecialInterest(
+  interestUserId: string
+): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc('add_special_interest', {
+    p_interest_user: interestUserId
+  });
+  if (error) {
+    console.error('addSpecialInterest failed:', error.message);
+    return { error: error.message };
+  }
+  return {};
+}
+
 /** Post-song decision: continue the match or close it (no follow-ups). */
 export async function resolveSong(
   matchId: string,

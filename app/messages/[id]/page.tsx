@@ -66,6 +66,25 @@ export default async function ThreadPage({
     songEndsAt !== null &&
     songEndsAt > Date.now();
 
+  // Certificate room: a Speed Dating match issues one certificate per
+  // participant — if I hold one for this match, the chat gets the skin.
+  const [{ data: certificate }, { data: interestRow }] = await Promise.all([
+    match?.id
+      ? supabase
+          .from('certificates')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('match_id', match.id)
+          .maybeSingle()
+      : Promise.resolve({ data: null }),
+    supabase
+      .from('special_interests')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('interest_user_id', otherId)
+      .maybeSingle()
+  ]);
+
   const primaryPhoto =
     otherProfile?.photos?.find((p) => p.is_primary)?.storage_path ??
     otherProfile?.photos?.[0]?.storage_path ??
@@ -93,6 +112,9 @@ export default async function ThreadPage({
           matchId={match?.id ?? null}
           songEndsAt={songEndsAt}
           declined={match?.status === 'declined'}
+          certificateMode={Boolean(certificate)}
+          hasSpecialInterest={Boolean(interestRow)}
+          interestUserId={otherId}
           photoBase={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`}
           currentUserId={user.id}
         />

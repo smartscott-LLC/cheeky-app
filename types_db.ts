@@ -815,6 +815,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_special_interest: {
+        Args: {
+          p_interest_user: string
+        }
+        Returns: string
+      }
       create_like: {
         Args: {
           p_likee: string
