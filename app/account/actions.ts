@@ -34,7 +34,8 @@ export async function updateProfile(
 
 /**
  * Profile photo upload — server-side (robust session, size + type checks,
- * RLS-clean). Receives the file via FormData.
+ * RLS-clean). Receives the file via FormData. Position + primary are
+ * computed server-side (never trust the client).
  */
 export async function uploadProfilePhoto(
   formData: FormData
@@ -59,8 +60,17 @@ export async function uploadProfilePhoto(
       return { error: 'unsupported format — use an image (JPG, PNG, WebP)' };
     }
 
-    const position = Number(formData.get('position') ?? 0);
-    const isFirst = formData.get('isFirst') === 'true';
+    // Position is server-computed (never trust the client — earlier broken
+    // client states wrote duplicate positions). First photo = position 0 + primary.
+    const { data: lastPhoto } = await supabase
+      .from('photos')
+      .select('position')
+      .eq('user_id', user.id)
+      .order('position', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    const position = (lastPhoto?.position ?? -1) + 1;
+    const isFirst = position === 0;
 
     const storagePath = `${user.id}/${crypto.randomUUID()}`;
     const { error: upErr } = await supabase.storage
