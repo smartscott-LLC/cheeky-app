@@ -20,6 +20,16 @@ export async function startCheckoutSession(
     return { error: 'not signed in' };
   }
 
+  // The card IS verification — no purchases before the Door Check.
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('verified_at')
+    .eq('id', user.id)
+    .maybeSingle();
+  if (!profile?.verified_at) {
+    return { error: 'verification_required' };
+  }
+
   // The real price from the DB (synced from Stripe via webhook).
   const { data: price } = await supabase
     .from('prices')

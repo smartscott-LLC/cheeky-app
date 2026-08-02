@@ -26,11 +26,17 @@ interface Props {
   user: User | null | undefined;
   products: ProductWithPrices[];
   subscription: SubscriptionWithProduct | null;
+  verified: boolean;
 }
 
 type BillingInterval = 'lifetime' | 'year' | 'month';
 
-export default function Pricing({ user, products, subscription }: Props) {
+export default function Pricing({
+  user,
+  products,
+  subscription,
+  verified
+}: Props) {
   const intervals = Array.from(
     new Set(
       products.flatMap((product) =>
@@ -46,6 +52,10 @@ export default function Pricing({ user, products, subscription }: Props) {
   const handleSelect = (price: Price) => {
     if (!user) {
       return router.push('/signin/signup');
+    }
+    if (!verified) {
+      // The card IS verification — get through the door first.
+      return router.push('/verify');
     }
     setSelectedPrice(price);
   };
@@ -115,7 +125,8 @@ export default function Pricing({ user, products, subscription }: Props) {
           <div className="mt-12 space-y-0 sm:mt-16 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
             {products.map((product) => {
               const price = product?.prices?.find(
-                (price) => price.interval === billingInterval
+                (p) =>
+                  p.interval === billingInterval || p.type === 'one_time'
               );
               if (!price) return null;
               const priceString = new Intl.NumberFormat('en-US', {
@@ -148,7 +159,9 @@ export default function Pricing({ user, products, subscription }: Props) {
                         {priceString}
                       </span>
                       <span className="text-base font-medium text-zinc-100">
-                        /{billingInterval}
+                        {price.type === 'recurring'
+                          ? `/${billingInterval}`
+                          : ' one-time'}
                       </span>
                     </p>
                     <Button
@@ -163,7 +176,9 @@ export default function Pricing({ user, products, subscription }: Props) {
                                               ? 'Manage'
                                               : product.name === 'Standard Membership'
                                                 ? 'Get Silver Card'
-                                                : 'Join'}
+                                                : price.type === 'one_time'
+                                                  ? 'Buy'
+                                                  : 'Join'}
                     </Button>
                   </div>
                 </div>

@@ -3,7 +3,8 @@ import { createClient } from '@/utils/supabase/server';
 import {
   getProducts,
   getSubscription,
-  getUser
+  getUser,
+  getProfile
 } from '@/utils/supabase/queries';
 
 const floors = [
@@ -40,6 +41,8 @@ export default async function LandingPage() {
     getProducts(supabase),
     getSubscription(supabase)
   ]);
+
+  const profile = user ? await getProfile(supabase, user.id) : null;
 
   return (
     <div className="bg-black text-white">
@@ -179,6 +182,7 @@ export default async function LandingPage() {
           user={user}
           products={products ?? []}
           subscription={subscription}
+          verified={Boolean(profile?.verified_at)}
         />
       </section>
     </div>
