@@ -10,7 +10,7 @@ export default async function SpeedDatingPage() {
     return redirect('/signin');
   }
 
-  await supabase.rpc('ensure_speed_dating_events', { p_hours: 48 });
+  await supabase.rpc('ensure_floor_events', { p_hours: 2 });
 
   const { data: events } = await supabase
     .from('events')

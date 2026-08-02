@@ -17,7 +17,7 @@ export async function updateProfile(
   }
 
   const { error } = await supabase
-    .from('profiles')
+    .from('profiles')column s.created_at does not exist
     .update({
       display_name: displayName.trim().slice(0, 50),
       bio: bio.trim().slice(0, 500),

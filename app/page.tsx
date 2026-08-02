@@ -68,7 +68,7 @@ export default async function LandingPage() {
             candy right here.
           </p>
           <p className="mt-8 text-lg font-bold text-club">
-            The Dance Floor opens once an hour — every hour.
+            The floors spin all hour — every quarter brings another room.
           </p>
           <p className="mx-auto mt-3 max-w-2xl text-lg text-zinc-400">
             What are you waiting for? It&apos;s free to get your groove on.
@@ -131,14 +131,16 @@ export default async function LandingPage() {
       <section className="border-t border-zinc-900">
         <div className="mx-auto max-w-6xl px-6 py-20 text-center">
           <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
-            The Dance Floor
+            The Hourly Playlist
           </p>
           <h2 className="mx-auto mt-4 max-w-2xl text-3xl font-extrabold sm:text-4xl">
-            Every hour on the hour. 3 tokens. One song to make it count.
+            Every hour, every quarter: the Dance Floor at :00, Themed Night at
+            :15, Speed Dating at :30, the Rooftop at :45.
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-lg text-zinc-400">
-            Everyone&apos;s photo hits the grid. Pick the ones you like. When
-            two people pick each other — instant match, center floor, announced.
+            Four floors, four rooms, one hour — a Diamond plays the whole set.
+            Everyone&apos;s photo hits the grid. Pick the ones you like. When two
+            people pick each other — instant match, center floor, announced.
             No match? Your tokens come back. Quietly.
           </p>
         </div>

@@ -60,8 +60,11 @@ export default async function ThreadPage({
   const songEndsAt = match?.created_at
     ? new Date(match.created_at).getTime() + 3 * 60 * 1000
     : null;
+  // Every grid room (Dance Floor, Themed Night, Rooftop) pays for the song
+  // moment — the DJ + timer follow the room, not just the reference event.
+  const GRID_KINDS = ['dance_floor', 'themed_night', 'rooftop'];
   const songMode =
-    match?.source === 'dance_floor' &&
+    (match?.source ? GRID_KINDS.includes(match.source) : false) &&
     match?.status === 'active' &&
     songEndsAt !== null &&
     songEndsAt > Date.now();

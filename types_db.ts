@@ -841,6 +841,12 @@ export type Database = {
         }
         Returns: undefined
       }
+      ensure_floor_events: {
+        Args: {
+          p_hours?: number
+        }
+        Returns: undefined
+      }
       ensure_speed_dating_events: {
         Args: {
           p_hours?: number

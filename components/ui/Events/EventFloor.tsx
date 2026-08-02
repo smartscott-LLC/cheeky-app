@@ -24,6 +24,8 @@ interface EventFloorProps {
     tokenCost: number;
     minFill: number;
   };
+  kind: string;
+  roomName: string;
   participants: Participant[];
   myEntry: { status: string } | null;
   myPicks: number;
@@ -33,6 +35,35 @@ interface EventFloorProps {
 
 const PICK_BUDGET = 10;
 const ROUND_SECONDS = 120;
+
+// Per-floor skin — the grid engine is shared, the room palette follows
+// the floor (Dance Floor = club pink, Themed Night = gold, Rooftop = diamond).
+const ACCENTS: Record<
+  string,
+  { kicker: string; cta: string; lockedBorder: string; lockedText: string; verified: string }
+> = {
+  dance_floor: {
+    kicker: 'text-club',
+    cta: 'bg-club hover:bg-club-cotton',
+    lockedBorder: 'border-club/60',
+    lockedText: 'text-club/70',
+    verified: 'text-club'
+  },
+  themed_night: {
+    kicker: 'text-gold',
+    cta: 'bg-gold hover:bg-gold-royal',
+    lockedBorder: 'border-gold/60',
+    lockedText: 'text-gold/70',
+    verified: 'text-gold'
+  },
+  rooftop: {
+    kicker: 'text-diamond',
+    cta: 'bg-diamond hover:bg-diamond-raspberry',
+    lockedBorder: 'border-diamond/60',
+    lockedText: 'text-diamond/70',
+    verified: 'text-diamond'
+  }
+};
 
 function describePickError(code: string): string {
   switch (code) {
@@ -51,12 +82,15 @@ function describePickError(code: string): string {
 
 export default function EventFloor({
   event,
+  kind,
+  roomName,
   participants: initialParticipants,
   myEntry: initialEntry,
   myPicks: initialPicks,
   myUserId,
   photoBase
 }: EventFloorProps) {
+  const accent = ACCENTS[kind] ?? ACCENTS.dance_floor;
   const supabase = createClient();
   const router = useRouter();
   const [participants, setParticipants] = useState(initialParticipants);
@@ -213,7 +247,7 @@ export default function EventFloor({
         title: 'Doors open',
         body: `Entry is ${event.tokenCost} tokens (reserved — back if no match). Starts in ${mm}:${ss}.`
       };
-    return { title: 'The floor is moving', body: 'Check back next hour.' };
+    return { title: `${roomName} is moving`, body: 'Check back next hour.' };
   })();
 
   const pickable = eventStatus === 'running' && joined && !dancing;
@@ -230,7 +264,7 @@ export default function EventFloor({
 
       {/* Banner */}
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
-        <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
+        <p className={`text-sm font-bold uppercase tracking-[0.3em] ${accent.kicker}`}>
           {eventStatus === 'running'
             ? `Round closes in ${Math.floor(secondsLeftInRound / 60)}:${String(
                 secondsLeftInRound % 60
@@ -249,7 +283,7 @@ export default function EventFloor({
             <button
               onClick={handleJoin}
               disabled={busy}
-              className="rounded-lg bg-club px-6 py-2.5 font-bold text-white transition hover:bg-club-cotton"
+              className={`rounded-lg px-6 py-2.5 font-bold text-white transition ${accent.cta}`}
             >
               {busy ? 'Checking…' : `Join for ${event.tokenCost} tokens`}
             </button>
@@ -263,7 +297,7 @@ export default function EventFloor({
             </button>
           )}
           {dancing && (
-            <span className="rounded-lg bg-club px-5 py-2.5 font-bold text-white">
+            <span className={`rounded-lg px-5 py-2.5 font-bold text-white ${accent.cta}`}>
               💃 One song. Make it count.
             </span>
           )}
@@ -287,7 +321,7 @@ export default function EventFloor({
             <div
               key={p.userId}
               className={`overflow-hidden rounded-xl border bg-zinc-900/50 ${
-                locked ? 'border-club/60' : 'border-zinc-800'
+                locked ? accent.lockedBorder : 'border-zinc-800'
               }`}
             >
               <div className="flex aspect-square items-center justify-center bg-zinc-800">
@@ -304,7 +338,7 @@ export default function EventFloor({
                   </span>
                 )}
                 {locked && (
-                  <span className="absolute m-1 rounded-full bg-club px-2 py-0.5 text-[10px] font-bold uppercase text-white">
+                  <span className={`absolute m-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase text-white ${accent.cta}`}>
                     Dancing
                   </span>
                 )}
@@ -315,7 +349,7 @@ export default function EventFloor({
                 </p>
                 <div className="mt-2 flex items-center justify-between">
                   {p.profile?.verified_at && (
-                    <span className="text-[10px] font-bold uppercase tracking-wide text-club">
+                    <span className={`text-[10px] font-bold uppercase tracking-wide ${accent.verified}`}>
                       ✓
                     </span>
                   )}
@@ -323,12 +357,12 @@ export default function EventFloor({
                     <button
                       onClick={() => handlePick(p.userId)}
                       disabled={busy}
-                      className="ml-auto rounded-md bg-club px-3 py-1 text-xs font-bold text-white transition hover:bg-club-cotton"
+                      className={`ml-auto rounded-md px-3 py-1 text-xs font-bold text-white transition ${accent.cta}`}
                     >
                       Pick
                     </button>
                   ) : locked ? (
-                    <span className="ml-auto text-xs text-club/70">💃</span>
+                    <span className={`ml-auto text-xs ${accent.lockedText}`}>💃</span>
                   ) : null}
                 </div>
               </div>
