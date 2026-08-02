@@ -1,15 +1,15 @@
-# Cheeky — Foundation PRD
+# Club Cheeky — Foundation PRD
 
-> The source of truth for the Cheeky product. Locked decisions live here; when a decision changes, update this doc. Companion docs: `AGENTS.md` (how we work), `docs/` (feature PRDs).
+> The source of truth for the Club Cheeky product. Locked decisions live here; when a decision changes, update this doc. Companion docs: `AGENTS.md` (how we work), `docs/` (feature PRDs).
 
 ## 1. TL;DR
 
-Cheeky is a dating app built like a nightclub. Everyone gets in **free with a verified ID** — "everyone's a VIP with an ID here." The club has floors (Silver → Gold → Platinum → Diamond), live scheduled events (starting with the hourly Dance Floor), and a token economy you can earn into or buy into. The pitch: real connections, real events, genuinely usable free tier, zero gouging. Desktop first, mobile after the product is proven.
+Club Cheeky is a dating app built like a nightclub. Everyone gets in **free with a verified ID** — "everyone's a VIP with an ID here." The club has floors (Silver → Gold → Platinum → Diamond), live scheduled events (starting with the hourly Dance Floor), and a token economy you can earn into or buy into. The pitch: real connections, real events, genuinely usable free tier, zero gouging. Desktop first, mobile after the product is proven.
 
 ## 2. Background
 
 - The incumbents paywall basic function: ~$20/week to even message matches, endless swipes, no actual dates.
-- Cheeky's answer is a **place**, not a feed: a club you enter with ID, where the main event is a live, time-boxed, low-stakes matching game.
+- Club Cheeky's answer is a **place**, not a feed: a club you enter with ID, where the main event is a live, time-boxed, low-stakes matching game.
 - The template repo (Next.js + Supabase + Stripe) is already standing: auth, subscription sync, and six Stripe products are live. The dating product itself is greenfield.
 
 ## 3. Problem & Target Users

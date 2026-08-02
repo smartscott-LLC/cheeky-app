@@ -1,4 +1,4 @@
-# Cheeky
+# Club Cheeky
 
 A dating app built like a nightclub. Everyone gets in free with a verified ID — **everyone's a VIP with an ID here.**
 

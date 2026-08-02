@@ -19,9 +19,9 @@ export default function Navlinks({ user }: NavlinksProps) {
   return (
     <div className="relative flex flex-row justify-between py-4 align-center md:py-6">
       <div className="flex items-center flex-1">
-        <Link href="/" className={s.logo} aria-label="Cheeky home">
+        <Link href="/" className={s.logo} aria-label="Club Cheeky home">
           <Logo />
-          <span className="ml-2 text-lg font-bold text-white">Cheeky</span>
+          <span className="ml-2 text-lg font-bold text-white">Club Cheeky</span>
         </Link>
         <nav className="ml-6 space-x-2 lg:block">
           <Link href="/#membership" className={s.link}>

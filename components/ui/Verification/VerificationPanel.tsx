@@ -113,7 +113,7 @@ export default function VerificationPanel({
             I consent to identity verification via Stripe Identity. My name,
             date of birth, and government ID number are checked against
             government and third-party databases, and are never stored by
-            Cheeky. (Verification policy v1)
+            Club Cheeky. (Verification policy v1)
           </span>
         </label>
         <button

@@ -6,7 +6,7 @@ import Stripe from 'stripe';
 // products/prices; the webhook syncs them into our DB.
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   appInfo: {
-    name: 'Cheeky',
+    name: 'Club Cheeky',
     version: '0.1.0',
     url: 'https://smartscott.online'
   }

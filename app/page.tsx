@@ -59,7 +59,7 @@ export default async function LandingPage() {
             Find your next date in our virtual nightclub.
           </p>
           <p className="mt-10 text-2xl font-extrabold sm:text-3xl">
-            At Cheeky&apos;s,{' '}
+            At Club Cheeky&apos;s,{' '}
             <span className="text-club">you are the VIP.</span>
           </p>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-zinc-400">

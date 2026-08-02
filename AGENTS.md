@@ -1,8 +1,8 @@
-# AGENTS.md — Cheeky Project Guidelines
+# AGENTS.md — Club Cheeky Project Guidelines
 
 Guidelines for everyone working in this repo — humans and agents — so we stay aligned as we scale. The product spec is `docs/PRD-foundation.md`; that is the source of truth for *what* we build. This file is *how* we build it.
 
-## What Cheeky is
+## What Club Cheeky is
 
 A dating app built like a nightclub. Three pillars:
 
