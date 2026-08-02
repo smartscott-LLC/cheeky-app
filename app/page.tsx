@@ -13,6 +13,7 @@ const floors = [
     price: 'Free',
     color: 'bg-zinc-300',
     image: '/floors/silver.png',
+    gradient: 'from-club-indigo via-club to-club-cotton',
     perks: ['Verified with ID', '20 tokens on entry', 'Hourly Dance Floor']
   },
   {
@@ -20,6 +21,7 @@ const floors = [
     price: '$9.99/mo',
     color: 'bg-gold',
     image: '/floors/gold.png',
+    gradient: 'from-gold-graphite via-gold to-gold-royal',
     perks: ['Themed nights', 'More events', 'Message down to Silver']
   },
   {
@@ -27,6 +29,7 @@ const floors = [
     price: '$19.99/mo',
     color: 'bg-platinum-navy',
     image: '/floors/platinum.png',
+    gradient: 'from-platinum-navy via-platinum to-platinum-alice',
     perks: ['Speed Dating', 'Upper floors', 'Message everyone below']
   },
   {
@@ -34,6 +37,7 @@ const floors = [
     price: '$29.99/mo',
     color: 'bg-diamond',
     image: '/floors/diamond.png',
+    gradient: 'from-diamond-raspberry via-diamond to-diamond-mist',
     perks: ['The Penthouse', 'Rooftop pool', 'Whole-building access']
   }
 ];
@@ -172,6 +176,7 @@ export default async function LandingPage() {
                   alt={`The ${floor.name} floor at Club Cheeky`}
                   className="aspect-video w-full object-cover"
                 />
+                <div className={`h-1.5 w-full bg-gradient-to-r ${floor.gradient}`} />
                 <div className="p-6">
                   <div className={`h-3 w-3 rounded-full ${floor.color}`} />
                   <h3 className="mt-4 text-xl font-bold">{floor.name}</h3>

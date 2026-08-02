@@ -13,6 +13,7 @@ const KIND_META: Record<
     tagline: string;
     accent: string;
     image: string;
+    gradient: string;
   }
 > = {
   dance_floor: {
@@ -21,7 +22,8 @@ const KIND_META: Record<
     emoji: '🕺',
     tagline: 'Hourly. 2 minutes to pick. One song to make it count.',
     accent: 'text-club border-club/40',
-    image: '/floors/silver.png'
+    image: '/floors/silver.png',
+    gradient: 'from-club-indigo via-club to-club-cotton'
   },
   themed_night: {
     name: 'Themed Night',
@@ -29,7 +31,8 @@ const KIND_META: Record<
     emoji: '🎭',
     tagline: 'The floor, dressed up. A pricier ticket, a deeper crowd.',
     accent: 'text-gold border-gold/40',
-    image: '/floors/gold.png'
+    image: '/floors/gold.png',
+    gradient: 'from-gold-graphite via-gold to-gold-royal'
   },
   speed_dating: {
     name: 'Speed Dating',
@@ -37,7 +40,8 @@ const KIND_META: Record<
     emoji: '💘',
     tagline: 'Rotations. Ranked picks. A certificate for the ones that click.',
     accent: 'text-platinum border-platinum/40',
-    image: '/floors/platinum.png'
+    image: '/floors/platinum.png',
+    gradient: 'from-platinum-navy via-platinum to-platinum-alice'
   },
   rooftop: {
     name: 'The Rooftop',
@@ -45,7 +49,8 @@ const KIND_META: Record<
     emoji: '🌇',
     tagline: 'The penthouse pool. Closer, higher, fewer.',
     accent: 'text-diamond border-diamond/40',
-    image: '/floors/diamond.png'
+    image: '/floors/diamond.png',
+    gradient: 'from-diamond-raspberry via-diamond to-diamond-mist'
   }
 };
 
@@ -215,6 +220,7 @@ export default async function EventsPage() {
                   alt={meta.name}
                   className="h-24 w-full object-cover"
                 />
+                <div className={`h-1 w-full bg-gradient-to-r ${meta.gradient}`} />
                 <div className="p-5">
                   <div className="flex items-center justify-between">
                     <span className={`text-lg font-extrabold ${meta.accent.split(' ')[0]}`}>
