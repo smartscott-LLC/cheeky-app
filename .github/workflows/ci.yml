@@ -23,6 +23,6 @@ jobs:
       - name: Typecheck
         run: pnpm tsc --noEmit
       - name: Lint
-        run: pnpm lint --silent
+        run: pnpm lint
       - name: Build
-        run: pnpm build --silent
+        run: pnpm build
