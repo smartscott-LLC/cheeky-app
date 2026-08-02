@@ -52,47 +52,66 @@ export default function ProfileForm({
       return;
     }
     setError(null);
-    setUploading(true);
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('position', String(photos.length));
-    formData.append('isFirst', photos.length === 0 ? 'true' : 'false');
-
-    const res = await uploadProfilePhoto(formData);
-    if (res.error) {
-      setError(res.error);
-      setUploading(false);
+    if (file.size > 10 * 1024 * 1024) {
+      setError('file too large (10MB max)');
       return;
     }
+    setUploading(true);
 
-    const isFirst = photos.length === 0;
-    setPhotos([
-      ...photos,
-      {
-        id: res.id!,
-        storage_path: res.storagePath!,
-        is_primary: isFirst,
-        position: photos.length
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('position', String(photos.length));
+      formData.append('isFirst', photos.length === 0 ? 'true' : 'false');
+
+      const res = await uploadProfilePhoto(formData);
+      if (res.error) {
+        setError(res.error);
+        return;
       }
-    ]);
-    setUploading(false);
-    if (fileRef.current) fileRef.current.value = '';
+
+      const isFirst = photos.length === 0;
+      setPhotos([
+        ...photos,
+        {
+          id: res.id!,
+          storage_path: res.storagePath!,
+          is_primary: isFirst,
+          position: photos.length
+        }
+      ]);
+      if (fileRef.current) fileRef.current.value = '';
+    } catch (err) {
+      console.error('upload threw:', err);
+      setError('upload failed — please try again');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleDelete = async (photo: ProfilePhoto) => {
-    await deleteProfilePhoto(photo.id, photo.storage_path);
-    const next = photos.filter((p) => p.id !== photo.id);
-    if (photo.is_primary && next.length > 0) {
-      await setPrimaryPhoto(next[0].id);
-      next[0] = { ...next[0], is_primary: true };
+    try {
+      await deleteProfilePhoto(photo.id, photo.storage_path);
+      const next = photos.filter((p) => p.id !== photo.id);
+      if (photo.is_primary && next.length > 0) {
+        await setPrimaryPhoto(next[0].id);
+        next[0] = { ...next[0], is_primary: true };
+      }
+      setPhotos(next);
+    } catch (err) {
+      console.error('delete threw:', err);
+      setError('could not delete photo');
     }
-    setPhotos(next);
   };
 
   const handleSetPrimary = async (photo: ProfilePhoto) => {
-    await setPrimaryPhoto(photo.id);
-    setPhotos(photos.map((p) => ({ ...p, is_primary: p.id === photo.id })));
+    try {
+      await setPrimaryPhoto(photo.id);
+      setPhotos(photos.map((p) => ({ ...p, is_primary: p.id === photo.id })));
+    } catch (err) {
+      console.error('setPrimary threw:', err);
+      setError('could not update photo');
+    }
   };
 
   const handleSave = async () => {
