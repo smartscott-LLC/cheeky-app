@@ -51,6 +51,8 @@ Rules that make it fair:
 
 The **Dance Floor is the reference event**; every floor reskins it with a pricier ticket (Gold themed night 5 tokens, Platinum Speed Dating 25, Diamond rooftop ~40). Build the engine once, curate events forever.
 
+**The Hourly Playlist (locked):** every floor's signature event runs **hourly, staggered on the quarter** — :00 Dance Floor (Silver, 3), :15 Themed Night (Gold, 5), :30 Speed Dating (Platinum, 25), :45 Rooftop (Diamond, 40). Staggering means higher tiers never choose between events — a Diamond can play the whole set in one hour. Events are cheap for us to offer; the hold model makes them self-balancing (you only pay when you win).
+
 **Dance Floor spec (locked):**
 - Runs **every hour on the hour** — appointment commerce; timezone-proof; "next one in 40 minutes" keeps people idling in the club.
 - Entry: **reserve 3 tokens** (a hold, not a debit). Balance is pre-checked before reserving; insufficient → top-up path (buy a pack or earn via referral). No match or timeout → **hold released**; match → **hold converts to spend**. No refund race, no double-writes.
@@ -60,7 +62,7 @@ The **Dance Floor is the reference event**; every floor reskins it with a pricie
 - The match: **one song (~3 min) private chat** — countdown, pre-loaded icebreakers, report/exit button, either side can end early.
 - After the song: **Continue** → becomes a normal match with the "Met on the Dance Floor" badge. **Decline** → chat closes, no follow-ups, no re-match in the next round.
 - Minimum fill (e.g., 20) or the event cancels with refunds.
-- Scheduling: hourly Dance Floor + later, daily/weekly **headliner** events on Gold+ and rare exclusive events (fewer, pricier, status).
+- Scheduling: the Hourly Playlist (all four floors, on the quarter — see above). Future headliners and rare exclusives (fewer, pricier, status) slot into the same table.
 
 **Event Kinds (mechanics per event type — the engine is a platform):**
 
@@ -68,13 +70,13 @@ The engine (events, entries + token holds, the minute-hand cron, matches,
 conversations, song chat, block/report, no-follow-up) is shared by every
 event kind. What differs per kind is a **mechanics config**:
 
-| Mechanic | Dance Floor (Silver, 3) | Speed Dating (Platinum, 25) |
-|---|---|---|
-| Round structure | 2-min open grid, parallel | Groups ≤ 10 by orientation preference; rotated 1:1 sessions, 1.5 min each (≈ 7.5 min round) |
-| Pairing | First mutual click, live, grid-wide | Rotation schedule by group |
-| Selection | 10-pick budget during round | **Ranked at the end**: top choice + one alternate |
-| Match trigger | Mutual pick = instant | Mutual top-choice → notified |
-| Reward | Match + "Met on the Dance Floor" badge | Match + **Speed Dating certificate** → decorated private chat + special-interests list |
+| Mechanic | Dance Floor (Silver, 3) | Themed Night (Gold, 5) | Speed Dating (Platinum, 25) | Rooftop (Diamond, 40) |
+|---|---|---|---|---|
+| Round structure | 2-min open grid, parallel | Grid reskin (same 2-min round) | Groups ≤ 10 by orientation preference; rotated 1:1 sessions, 1.5 min each (≈ 7.5 min round) | Grid reskin, closer/higher crowd |
+| Pairing | First mutual click, live, grid-wide | First mutual click, live | Rotation schedule by group | First mutual click, live |
+| Selection | 10-pick budget during round | 10-pick budget | **Ranked at the end**: top choice + one alternate | 10-pick budget |
+| Match trigger | Mutual pick = instant | Mutual pick = instant | Mutual top-choice → notified | Mutual pick = instant |
+| Reward | Match + "Met on the Dance Floor" badge | Match + "Met at Themed Night" badge | Match + **Speed Dating certificate** → decorated private chat + special-interests list | Match + "Met on the Rooftop" badge |
 
 Mechanics config fields: `round_type` (grid / rotation / …),
 `selection_model` (live_mutual / ranked / …), timing params (round length,
