@@ -39,40 +39,35 @@ export async function POST(req: Request) {
     event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
     console.log(`🔔  Webhook received: ${event.type}`);
 
-    // Idempotency guard: record the event_id in webhook_events and ignore if already present.
-    // Note: this SELECT-then-INSERT approach has a small race window; a DB-side function (INSERT ... ON CONFLICT DO NOTHING RETURNING) would be ideal.
+    // Idempotency guard: use a DB-side atomic function to mark processed events.
     try {
-      const { data: existing } = await supabaseAdmin
-        .from('webhook_events')
-        .select('event_id')
-        .eq('event_id', event.id)
-        .maybeSingle();
+      const { data: rpcData, error: rpcError } = await supabaseAdmin.rpc(
+        'mark_webhook_processed',
+        {
+          p_event_id: event.id,
+          p_event_type: event.type,
+          p_payload: event.data.object as any
+        }
+      );
 
-      if (existing) {
+      if (rpcError) {
+        console.log('❌ RPC error marking webhook processed:', rpcError.message || rpcError);
+        return new Response('Webhook handler failed (idempotency rpc).', { status: 500 });
+      }
+
+      // Supabase RPC returns an array-like result; when the function returns a scalar boolean
+      // it often appears as [{ mark_webhook_processed: true }] or [true] depending on the client.
+      const processed = Array.isArray(rpcData)
+        ? // try multiple shapes
+          (rpcData[0] === true || (rpcData[0] && (rpcData[0].mark_webhook_processed === true || Object.values(rpcData[0])[0] === true)))
+        : Boolean(rpcData);
+
+      if (!processed) {
         console.log(`🔁 Duplicate webhook event ignored: ${event.id}`);
         return new Response(JSON.stringify({ received: true }));
       }
-
-      const { error: recordError } = await supabaseAdmin.from('webhook_events').insert([
-        {
-          event_id: event.id,
-          event_type: event.type,
-          payload: event.data.object as any
-        }
-      ]);
-
-      if (recordError) {
-        // If insert failed due to uniqueness race, assume processed and ack.
-        const msg = String(recordError.message || recordError);
-        if (msg.includes('duplicate') || msg.includes('already exists')) {
-          console.log(`🔁 Duplicate webhook event (race) ignored: ${event.id}`);
-          return new Response(JSON.stringify({ received: true }));
-        }
-        console.log(`❌ Failed to record webhook event: ${msg}`);
-        return new Response('Webhook handler failed to record event.', { status: 500 });
-      }
     } catch (recErr: any) {
-      console.log('❌ Error recording webhook idempotency:', recErr?.message ?? recErr);
+      console.log('❌ Error recording webhook idempotency RPC:', recErr?.message ?? recErr);
       // Fail closed: prefer not to process if the idempotency store is unreachable.
       return new Response('Webhook handler failed (idempotency store).', { status: 500 });
     }
