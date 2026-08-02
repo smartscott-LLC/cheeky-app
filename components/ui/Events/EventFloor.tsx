@@ -189,7 +189,9 @@ export default function EventFloor({
       setError(
         res.error === 'insufficient_tokens'
           ? 'Not enough tokens for the door. Top up or earn some, then come back.'
-          : 'Could not join. Try again.'
+          : res.error === 'tier_required'
+            ? 'That room is on a higher floor — climb the ladder first.'
+            : 'Could not join. Try again.'
       );
       return;
     }
