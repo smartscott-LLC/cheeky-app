@@ -53,15 +53,24 @@ his language always follows these.
 
 ## 3. Module 1 — The Gift Store
 
-### 3.1 Catalog (LOCKED)
+### 3.1 Catalog (LOCKED — expanded 2026-08-02)
 
-| Floor | Special gift | Tokens |
+Two tiers per floor: **✨ featured** (announces on the ticker; accept = 2-hour
+pass + date room) and **🎁 mini** (silent gesture; accept just opens the
+chat). Five items per floor (1 featured + 4 minis) + the basket.
+
+| Floor | Featured (announces + pass) | Minis (silent gestures) |
 |---|---|---|
-| Silver | 🧸 Stuffed animal (teddy bear) | 25 |
-| Gold | 🌹 Golden bouquet of roses | 50 |
-| Platinum | 💎 Jewelry (necklace / tennis bracelet) | 100 |
-| Diamond | 🍾 Bottle of champagne | 200 |
-| **Every floor** | 🧺 The Gift Basket (all four) | **300** (vs 375 bought separately — saves 75) |
+| Silver | 🧸 Stuffed Bear — 25 | 🦆 Rubber Duck 10 · 🍭 Candy Hearts 12 · 🐰 Plush Bunny 15 · 🐻 Mini Bear 20 |
+| Gold | 🌹 Golden Bouquet — 50 | 🎲 Golden Dice 25 · 🍫 Gold Bar 30 · 🕶️ Gold Shades 35 · ✒️ Gold Pen 40 |
+| Platinum | 💎 Jewelry — 100 | 🖊️ Metal Pen 45 · 🔑 Platinum Keychain 55 · 🎩 Velvet Bow Tie 65 · 🥃 Pocket Flask 75 |
+| Diamond | 🍾 Champagne — 200 | 👓 Diamond Shades 80 · 🖋️ Fountain Pen 100 · 🎩 Top Hat 120 · 💎 Crystal Heart 150 |
+| **Every floor** | 🧺 The Gift Basket — **300** (all four, 75 off) | — |
+
+- Minis are the icebreaker: show interest without the first-line anxiety.
+  They are priced under their floor's featured gift and never announce.
+- Featured gifts + the basket announce (send-only, anonymous) and unlock the
+  pass + date room on accept. Minis unlock only the conversation.
 
 ### 3.2 Rules (LOCKED)
 

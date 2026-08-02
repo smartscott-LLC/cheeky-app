@@ -52,6 +52,21 @@ const FLOOR_LABEL: Record<string, string> = {
   diamond: 'Diamond'
 };
 
+const FLOOR_ORDER = ['silver', 'gold', 'platinum', 'diamond'];
+
+function giftPitch(g: {
+  kind: string;
+  name: string;
+  emoji: string;
+  floor: string;
+}): string {
+  if (g.kind === 'basket')
+    return 'All four, one gift — 75 tokens off. Announces + full pass.';
+  if (g.kind === 'featured')
+    return 'Announces on the ticker. Accept = a 2-hour pass + a date room.';
+  return 'A silent gesture — just showing interest. No announcement.';
+}
+
 function describe(code: string): string {
   switch (code) {
     case 'insufficient_tokens':
@@ -168,36 +183,84 @@ export default function GiftShop({
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="text-xl font-bold">🍸 The Bar</h2>
           <p className="mt-1 text-sm text-zinc-400">
-            {tokenBalance} tokens · {tierLabel} floor
+            {tokenBalance} tokens · {tierLabel} floor · you can buy your
+            floor and below
           </p>
-          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {catalog.map((g) => (
-              <div
-                key={g.id}
-                className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl">{g.emoji}</span>
-                  <span className="text-xs font-bold uppercase tracking-wide text-zinc-500">
-                    {FLOOR_LABEL[g.floor] ?? g.floor}
-                    {g.kind === 'basket' && ' · all floors'}
-                  </span>
+          <div className="mt-4 space-y-6">
+            {FLOOR_ORDER.map((floor) => {
+              const floorGifts = catalog
+                .filter((g) => g.floor === floor)
+                .sort((a, b) => {
+                  const rank = (k: string) =>
+                    k === 'featured' ? 0 : k === 'basket' ? 0 : 1;
+                  return rank(a.kind) - rank(b.kind) || a.token_cost - b.token_cost;
+                });
+              const basket = catalog.find((g) => g.kind === 'basket');
+              const showBasket = floor === 'silver' && basket;
+              if (floorGifts.length === 0 && !showBasket) return null;
+              return (
+                <div key={floor}>
+                  <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-zinc-500">
+                    {FLOOR_LABEL[floor]} floor
+                  </h3>
+                  <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    {floorGifts.map((g) => (
+                      <div
+                        key={g.id}
+                        className={`rounded-lg border bg-zinc-900/60 p-4 ${
+                          g.kind === 'featured'
+                            ? 'border-club/40'
+                            : 'border-zinc-800'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-2xl">{g.emoji}</span>
+                          <span className="text-xs font-bold uppercase tracking-wide text-zinc-500">
+                            {g.kind === 'featured' ? '✨ Featured' : 'Gesture'}
+                          </span>
+                        </div>
+                        <p className="mt-2 font-bold">{g.name}</p>
+                        <p className="text-sm text-zinc-400">{giftPitch(g)}</p>
+                        <button
+                          onClick={() => run(`buy-${g.slug}`, () => buyGift(g.slug))}
+                          disabled={busy === `buy-${g.slug}`}
+                          className={`mt-3 w-full rounded-lg px-4 py-2 text-sm font-bold text-white transition ${
+                            g.kind === 'featured'
+                              ? 'bg-club hover:bg-club-cotton'
+                              : 'bg-zinc-700 hover:bg-zinc-600'
+                          }`}
+                        >
+                          {busy === `buy-${g.slug}`
+                            ? 'Pouring…'
+                            : `Buy for ${g.token_cost} tokens`}
+                        </button>
+                      </div>
+                    ))}
+                    {showBasket && (
+                      <div className="rounded-lg border border-gold/40 bg-gold/5 p-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-2xl">{basket.emoji}</span>
+                          <span className="text-xs font-bold uppercase tracking-wide text-gold">
+                            Every floor
+                          </span>
+                        </div>
+                        <p className="mt-2 font-bold">{basket.name}</p>
+                        <p className="text-sm text-zinc-400">{giftPitch(basket)}</p>
+                        <button
+                          onClick={() => run(`buy-${basket.slug}`, () => buyGift(basket.slug))}
+                          disabled={busy === `buy-${basket.slug}`}
+                          className="mt-3 w-full rounded-lg bg-gold px-4 py-2 text-sm font-bold text-black transition hover:bg-gold-royal"
+                        >
+                          {busy === `buy-${basket.slug}`
+                            ? 'Pouring…'
+                            : `Buy for ${basket.token_cost} tokens`}
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <p className="mt-2 font-bold">{g.name}</p>
-                <p className="text-sm text-zinc-400">
-                  {g.kind === 'basket'
-                    ? 'All four, one gift — 75 tokens off.'
-                    : 'A gift from this floor.'}
-                </p>
-                <button
-                  onClick={() => run(`buy-${g.slug}`, () => buyGift(g.slug))}
-                  disabled={busy === `buy-${g.slug}`}
-                  className="mt-3 w-full rounded-lg bg-club px-4 py-2 text-sm font-bold text-white transition hover:bg-club-cotton"
-                >
-                  {busy === `buy-${g.slug}` ? 'Pouring…' : `Buy for ${g.token_cost} tokens`}
-                </button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
