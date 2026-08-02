@@ -1,6 +1,6 @@
-# What the Bouncer Knows — Privacy Policy (Draft)
+# What the Bouncer Knows — Privacy Policy
 
-> **Draft — legal review required before public launch.**
+> **Living document — refined as the club grows.**
 
 ## What we collect
 

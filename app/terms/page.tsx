@@ -106,8 +106,8 @@ export default function TermsPage() {
         </div>
 
         <p className="mt-8 text-xs text-zinc-600">
-          Policy source: docs/Governance/terms.md (binding on the build). Draft —
-          final legal language with counsel before public launch.
+          Policy source: docs/Governance/terms.md (binding on the build). Living
+          document — refined as the club grows.
         </p>
 
         <div className="mt-8 text-center">

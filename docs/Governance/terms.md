@@ -1,6 +1,6 @@
-# The Rules of the Club — Terms of Service (Draft)
+# The Rules of the Club — Terms of Service
 
-> **Draft — legal review required before public launch.**
+> **Living document — refined as the club grows.**
 
 ## 1. Getting in
 

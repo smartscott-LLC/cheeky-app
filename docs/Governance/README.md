@@ -1,8 +1,13 @@
 # Governance Layer — "Brutus the Bouncer"
 
-> **Draft — legal review required before public launch.**
-> The voice is the club's. The substance is real. A lawyer must sign off on
-> every policy here before real users are on the app.
+> **Legal status (founders' decision, 2026-08-02):** policies are self-drafted
+> and binding on the build. They are living documents, refined as the club
+> grows and revenue allows. There is **no external legal-review gate** before
+> launch: a lawyer's sign-off does not shield the club from liability, and
+> the operating shield is the policy language itself (disclaimers, as-is
+> liability, external-activity terms) — which is already drafted. Early-stage
+> apps commonly iterate policies with counsel only once revenue supports it.
+> The voice is the club's. The substance is real.
 
 ## What this is
 

@@ -76,8 +76,8 @@ export default function PrivacyPage() {
         </div>
 
         <p className="mt-8 text-xs text-zinc-600">
-          Policy source: docs/Governance/privacy.md (binding on the build). Draft —
-          final legal language with counsel before public launch.
+          Policy source: docs/Governance/privacy.md (binding on the build). Living
+          document — refined as the club grows.
         </p>
 
         <div className="mt-8 text-center">
