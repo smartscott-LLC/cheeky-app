@@ -226,6 +226,94 @@ export type Database = {
         }
         Relationships: []
       }
+      date_night_picks: {
+        Row: {
+          created_at: string
+          game_id: string
+          id: number
+          picked_index: number | null
+          question_index: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          game_id: string
+          id?: never
+          picked_index?: number | null
+          question_index: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          game_id?: string
+          id?: never
+          picked_index?: number | null
+          question_index?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "date_night_picks_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "date_nights"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      date_nights: {
+        Row: {
+          current_index: number
+          finished_at: string | null
+          id: string
+          pack_id: string
+          question_ids: Json
+          question_started_at: string
+          results: Json
+          score: number
+          started_at: string
+          status: string
+          user_a: string
+          user_b: string
+        }
+        Insert: {
+          current_index?: number
+          finished_at?: string | null
+          id?: string
+          pack_id: string
+          question_ids: Json
+          question_started_at?: string
+          results?: Json
+          score?: number
+          started_at?: string
+          status?: string
+          user_a: string
+          user_b: string
+        }
+        Update: {
+          current_index?: number
+          finished_at?: string | null
+          id?: string
+          pack_id?: string
+          question_ids?: Json
+          question_started_at?: string
+          results?: Json
+          score?: number
+          started_at?: string
+          status?: string
+          user_a?: string
+          user_b?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "date_nights_pack_id_fkey"
+            columns: ["pack_id"]
+            isOneToOne: false
+            referencedRelation: "trivia_packs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       date_rooms: {
         Row: {
           created_at: string
@@ -1047,6 +1135,54 @@ export type Database = {
         }
         Relationships: []
       }
+      trivia_packs: {
+        Row: {
+          active: boolean
+          id: string
+          name: string
+          question_ids: Json
+        }
+        Insert: {
+          active?: boolean
+          id?: string
+          name: string
+          question_ids: Json
+        }
+        Update: {
+          active?: boolean
+          id?: string
+          name?: string
+          question_ids?: Json
+        }
+        Relationships: []
+      }
+      trivia_questions: {
+        Row: {
+          active: boolean
+          category: string
+          correct_index: number
+          id: string
+          options: Json
+          prompt: string
+        }
+        Insert: {
+          active?: boolean
+          category?: string
+          correct_index: number
+          id: string
+          options: Json
+          prompt: string
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          correct_index?: number
+          id?: string
+          options?: Json
+          prompt?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           avatar_url: string | null
@@ -1101,6 +1237,20 @@ export type Database = {
           p_user: string
         }
         Returns: string
+      }
+      date_night_leaderboard: {
+        Args: {
+          p_pack: string
+        }
+        Returns: {
+          score: number
+        }[]
+      }
+      date_night_state: {
+        Args: {
+          p_game: string
+        }
+        Returns: Json
       }
       ensure_events: {
         Args: {
@@ -1219,6 +1369,20 @@ export type Database = {
       setup_speed_dating: {
         Args: {
           p_event_id: string
+        }
+        Returns: undefined
+      }
+      start_date_night: {
+        Args: {
+          p_other: string
+        }
+        Returns: string
+      }
+      tap_date_night: {
+        Args: {
+          p_game: string
+          p_index: number
+          p_pick: number
         }
         Returns: undefined
       }

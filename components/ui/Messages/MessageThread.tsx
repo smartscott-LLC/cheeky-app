@@ -11,6 +11,8 @@ import {
   sendEventMessage,
   sendMessage
 } from '@/app/messages/actions';
+import { startDateNight } from '@/app/date-night/actions';
+import DateNightPanel from '@/components/ui/DateNight/DateNightPanel';
 import {
   startDJ,
   toggleDJ,
@@ -80,6 +82,8 @@ function describeError(code: string): string {
       return 'This conversation is closed. No follow-ups — respect the floor.';
     case 'certificate_required':
       return 'You need a Speed Dating certificate with this person first.';
+    case 'match_required':
+      return 'Date Night is for matches — you two need to match first.';
     case 'not_a_participant':
       return 'You are not part of this conversation.';
     default:
@@ -121,6 +125,8 @@ export default function MessageThread({
   const [now, setNow] = useState(Date.now());
   const [busy, setBusy] = useState(false);
   const [djMuted, setDjMuted] = useState(false);
+  const [dateNightGame, setDateNightGame] = useState<string | null>(null);
+  const [dateNightBusy, setDateNightBusy] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const refresh = async () => {
@@ -184,6 +190,18 @@ export default function MessageThread({
     }
     setInput('');
     await refresh();
+  };
+
+  const handleDateNight = async () => {
+    if (!matchId) return;
+    setDateNightBusy(true);
+    const res = await startDateNight(other.id);
+    setDateNightBusy(false);
+    if (res.error) {
+      setError(describeError(res.error));
+      return;
+    }
+    if (res.gameId) setDateNightGame(res.gameId);
   };
 
   const handleAddInterest = async () => {
@@ -268,6 +286,15 @@ export default function MessageThread({
           </div>
         </div>
         <div className="flex gap-2">
+          {matchId && !blocked && !declined && !dateNightGame && (
+            <button
+              onClick={handleDateNight}
+              disabled={dateNightBusy}
+              className="rounded-md border border-club/50 px-3 py-1.5 text-xs font-semibold text-club transition hover:bg-club/10"
+            >
+              {dateNightBusy ? '…' : '💘 Date Night'}
+            </button>
+          )}
           {songMode && (
             <button
               onClick={() => setDjMuted(toggleDJ())}
@@ -469,6 +496,17 @@ export default function MessageThread({
         })}
         <div ref={bottomRef} />
       </div>
+
+      {/* Date Night panel — the couple game lives above the composer. */}
+      {dateNightGame && (
+        <div className="border-t border-zinc-800 p-3">
+          <DateNightPanel
+            gameId={dateNightGame}
+            otherName={other.display_name}
+            onClose={() => setDateNightGame(null)}
+          />
+        </div>
+      )}
 
       {/* Composer */}
       <div className="border-t border-zinc-800 p-4">
