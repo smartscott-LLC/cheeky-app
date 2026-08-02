@@ -92,19 +92,29 @@ export default async function EventsPage() {
   }[] = [];
   let myEntry: { status: string } | null = null;
   let myPicks = 0;
+  let spotlightIds: string[] = [];
+  let onCenterStage = false;
 
   if (roomEvent) {
-    const [{ data: entries }, { data: picks }] = await Promise.all([
-      supabase
-        .from('event_entries')
-        .select('user_id, status')
-        .eq('event_id', roomEvent.id),
-      supabase
-        .from('event_picks')
-        .select('id')
-        .eq('event_id', roomEvent.id)
-        .eq('picker_id', user.id)
-    ]);
+    const [{ data: entries }, { data: picks }, { data: spotlights }] =
+      await Promise.all([
+        supabase
+          .from('event_entries')
+          .select('user_id, status')
+          .eq('event_id', roomEvent.id),
+        supabase
+          .from('event_picks')
+          .select('id')
+          .eq('event_id', roomEvent.id)
+          .eq('picker_id', user.id),
+        supabase
+          .from('center_stage')
+          .select('user_id')
+          .gt('center_stage_until', new Date().toISOString())
+      ]);
+
+    spotlightIds = (spotlights ?? []).map((s) => s.user_id);
+    onCenterStage = spotlightIds.includes(user.id);
 
     const ids = (entries ?? []).map((e) => e.user_id);
     const { data: profiles } =
@@ -231,6 +241,17 @@ export default async function EventsPage() {
         <div className="mt-12">
           {roomEvent ? (
             <>
+              {onCenterStage && (
+                <div className="mx-auto mb-6 max-w-xl rounded-xl border border-gold/40 bg-gradient-to-r from-gold/15 via-zinc-900 to-club/10 p-4 text-center">
+                  <p className="text-sm font-bold text-gold">
+                    🌟 You&apos;re on Center Stage tonight
+                  </p>
+                  <p className="mt-1 text-xs text-zinc-400">
+                    The floor is yours. Show them what you&apos;ve got — the
+                    spotlight doesn&apos;t miss a thing.
+                  </p>
+                </div>
+              )}
               <div className="mb-6 text-center">
                 <h2 className="text-2xl font-extrabold">
                   {KIND_META[roomEvent.kind]?.emoji}{' '}
@@ -254,6 +275,7 @@ export default async function EventsPage() {
                 myEntry={myEntry}
                 myPicks={myPicks}
                 myUserId={user.id}
+                spotlightIds={spotlightIds}
                 photoBase={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`}
               />
             </>

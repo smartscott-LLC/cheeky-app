@@ -30,6 +30,24 @@ export type Database = {
         }
         Relationships: []
       }
+      center_stage: {
+        Row: {
+          center_stage_until: string | null
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          center_stage_until?: string | null
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          center_stage_until?: string | null
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       certificates: {
         Row: {
           id: string
@@ -707,6 +725,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      miss_streaks: {
+        Row: {
+          count: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          count?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          count?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       photos: {
         Row: {

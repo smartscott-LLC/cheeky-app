@@ -30,6 +30,7 @@ interface EventFloorProps {
   myEntry: { status: string } | null;
   myPicks: number;
   myUserId: string;
+  spotlightIds: string[];
   photoBase: string;
 }
 
@@ -88,6 +89,7 @@ export default function EventFloor({
   myEntry: initialEntry,
   myPicks: initialPicks,
   myUserId,
+  spotlightIds: initialSpotlightIds,
   photoBase
 }: EventFloorProps) {
   const accent = ACCENTS[kind] ?? ACCENTS.dance_floor;
@@ -101,9 +103,10 @@ export default function EventFloor({
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [match, setMatch] = useState<{ convId: string | null } | null>(null);
+  const [spotlightIds, setSpotlightIds] = useState(initialSpotlightIds);
 
   const refresh = async () => {
-    const [{ data: ev }, { data: entries }, { data: picks }] =
+    const [{ data: ev }, { data: entries }, { data: picks }, { data: spotlights }] =
       await Promise.all([
         supabase
           .from('events')
@@ -118,10 +121,15 @@ export default function EventFloor({
           .from('event_picks')
           .select('id')
           .eq('event_id', event.id)
-          .eq('picker_id', myUserId)
+          .eq('picker_id', myUserId),
+        supabase
+          .from('center_stage')
+          .select('user_id')
+          .gt('center_stage_until', new Date().toISOString())
       ]);
 
     if (ev?.status) setEventStatus(ev.status);
+    if (spotlights) setSpotlightIds(spotlights.map((s) => s.user_id));
 
     const ids = (entries ?? []).map((e) => e.user_id);
     const { data: profiles } =
@@ -315,15 +323,26 @@ export default function EventFloor({
 
       {/* Grid */}
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-        {participants.map((p) => {
+        {[...participants]
+          .sort((a, b) => {
+            const sa = spotlightIds.includes(a.userId) ? 0 : 1;
+            const sb = spotlightIds.includes(b.userId) ? 0 : 1;
+            return sa - sb;
+          })
+          .map((p) => {
           const locked = p.status === 'locked';
+          const spotlight = spotlightIds.includes(p.userId);
           const canPick =
             pickable && p.userId !== myUserId && !locked && p.status === 'reserved';
           return (
             <div
               key={p.userId}
               className={`overflow-hidden rounded-xl border bg-zinc-900/50 ${
-                locked ? accent.lockedBorder : 'border-zinc-800'
+                locked
+                  ? accent.lockedBorder
+                  : spotlight
+                    ? 'border-gold/70 shadow-[0_0_24px_rgba(210,148,54,0.35)]'
+                    : 'border-zinc-800'
               }`}
             >
               <div className="flex aspect-square items-center justify-center bg-zinc-800">
@@ -342,6 +361,11 @@ export default function EventFloor({
                 {locked && (
                   <span className={`absolute m-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase text-white ${accent.cta}`}>
                     Dancing
+                  </span>
+                )}
+                {spotlight && !locked && (
+                  <span className="absolute m-1 rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase text-black">
+                    🌟 Center Stage
                   </span>
                 )}
               </div>

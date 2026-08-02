@@ -224,6 +224,8 @@ triggers a rescue:
    **Gift Store** (shipped 2026-08-02 — catalog incl. mini tier, inventory,
    sends, ticker, date rooms) → **Couple Trivia** (shipped 2026-08-02 —
    25-question bank, 5 packs, mutual-tap engine, in-chat Date Night panel,
-   couples leaderboard) → **Center Stage rescue**.
+   couples leaderboard) → **Center Stage** (shipped 2026-08-02 — 5-miss
+   streak triggers a 24h public spotlight in the grid; streak stays private;
+   a match clears it).
 - The Hourly Playlist (v0.4) already proves the modular calendar; these
   modules extend it.
