@@ -36,6 +36,14 @@ export default function Footer() {
             </li>
             <li className="py-3 md:py-0 md:pb-4">
               <Link
+                href="/pricing"
+                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+              >
+                Pricing
+              </Link>
+            </li>
+            <li className="py-3 md:py-0 md:pb-4">
+              <Link
                 href="/signin"
                 className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
               >
@@ -99,6 +107,30 @@ export default function Footer() {
                 Terms of Use
               </Link>
             </li>
+            <li className="py-3 md:py-0 md:pb-4">
+              <Link
+                href="/aup"
+                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+              >
+                Acceptable Use
+              </Link>
+            </li>
+            <li className="py-3 md:py-0 md:pb-4">
+              <Link
+                href="/refunds"
+                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+              >
+                Refund Policy
+              </Link>
+            </li>
+            <li className="py-3 md:py-0 md:pb-4">
+              <Link
+                href="/law-enforcement"
+                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+              >
+                Law Enforcement
+              </Link>
+            </li>
           </ul>
         </div>
         <div className="col-span-1 lg:col-span-2">
@@ -107,6 +139,14 @@ export default function Footer() {
               <p className="font-bold text-white transition duration-150 ease-in-out hover:text-zinc-200">
                 CONTACT
               </p>
+            </li>
+            <li className="py-3 md:py-0 md:pb-4">
+              <Link
+                href="/contact"
+                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+              >
+                Contact us
+              </Link>
             </li>
             <li className="py-3 md:py-0 md:pb-4">
               <a
