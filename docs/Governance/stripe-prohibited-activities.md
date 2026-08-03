@@ -167,6 +167,43 @@ NCMEC and law enforcement.
 
 ---
 
+## 5. Controls around profile verification during registration
+
+Club Cheeky uses Stripe Identity itself to verify every member during
+registration — the platform's verification control is Stripe's own
+verification product.
+
+- **Verification is a prerequisite, not a checkbox.** Registration creates a
+  Guest confined to the public street level — no messaging, no matching, no
+  events. Before any interactive feature, the member must pass the Door
+  Check.
+- **The Door Check requires a government-issued ID and a live selfie,**
+  submitted through Stripe Identity, which validates the document, checks
+  liveness, and face-matches the selfie to the ID. The check enforces our
+  18+ gate at the door.
+- **We store only the result** — `verified_at`, provider reference, and
+  outcome. We never store the ID document, the selfie, or the ID number;
+  raw verification material is not retained by us.
+- **Consent is explicit and separate:** members consent to identity
+  verification and biometric processing before the check runs, recorded in
+  our `consents` table — never buried in the Terms.
+- **Identity is anchored:** one account per verified identity; gender is
+  declared at signup; the verification result powers the VIP badge, the free
+  Silver card, and the welcome token grant.
+- **In-product framing:** the Door Check is Brutus the bouncer's job — the
+  AI staff direct members to the door and never bypass it.
+- **Failed checks grant nothing.** Bot-flagged accounts cannot verify through
+  to interactive features, and the operator can review verification state at
+  any time through the owner back door.
+- **Minimization:** account deletion wipes the verification state per our
+  retention and deletion policy; a de-identified fraud flag may remain.
+
+**Honest note.** We rely on Stripe Identity's document/liveness checks as the
+verification authority; we do not run our own document-fraud analysis beyond
+what Stripe Identity provides.
+
+---
+
 *Living document — refined as the club grows. Backed by the policy layer in
 `docs/Governance/`. If automated content scanning is required by a platform
 or jurisdiction, it is a defined build we will ship and document here.*
