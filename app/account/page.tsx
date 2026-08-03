@@ -59,6 +59,21 @@ export default async function Account() {
   const tier = (tierData?.data as string) ?? 'standard';
   const tierLabel =
     tier === 'gold' ? 'Gold' : tier === 'platinum' ? 'Platinum' : tier === 'diamond' ? 'Diamond' : 'Silver';
+  const cardLabel =
+    tier === 'diamond'
+      ? '💎 Your Diamond card'
+      : tier === 'platinum'
+        ? '💳 Your Platinum card'
+        : tier === 'gold'
+          ? '🥇 Your Gold card'
+          : '🪪 Your Silver card';
+  // Far-future grants (owner comps, giveaways) read as permanent — no
+  // misreading a 2126 date as days.
+  const grantExpiry = (iso: string) => {
+    const exp = new Date(iso).getTime();
+    if (exp - Date.now() > 10 * 365 * 86400000) return 'permanent';
+    return `expires ${new Date(iso).toLocaleDateString()}`;
+  };
   const photoLimit =
     tier === 'gold' ? 6 : tier === 'platinum' ? 8 : tier === 'diamond' ? 10 : 3;
 
@@ -117,7 +132,7 @@ export default async function Account() {
         <div className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold">Your Silver card</h2>
+              <h2 className="text-xl font-bold">{cardLabel}</h2>
               <p className="mt-1 text-zinc-400">
                 {profile?.verified_at
                   ? 'Verified — VIP badge active.'
@@ -149,9 +164,7 @@ export default async function Account() {
                 <span className="ml-2 text-sm text-zinc-500">
                   (
                   {grants?.data?.[0]
-                    ? `grant — expires ${new Date(
-                        grants.data[0].expires_at
-                      ).toLocaleDateString()}`
+                    ? `grant — ${grantExpiry(grants.data[0].expires_at)}`
                     : `guest pass — expires ${new Date(
                         passes!.data![0].expires_at
                       ).toLocaleDateString()}`}
