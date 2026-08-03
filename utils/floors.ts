@@ -41,19 +41,11 @@ const GIFT = {
   color: 'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
   pos: 'right-[6%] top-[42%]'
 };
-const COAT = {
-  href: '/coat-check',
-  emoji: '🧥',
-  name: 'Coat Check',
-  sub: 'Your collection',
-  color: 'text-purple-neon border-purple-neon/50 hover:shadow-[0_0_24px_rgba(155,89,182,0.25)]',
-  pos: 'left-[6%] bottom-[10%]'
-};
-const SWAG = {
-  href: '/swag',
-  emoji: '🎟️',
-  name: 'Swag Shop',
-  sub: 'Codes redeem here',
+const ELEVATORS = {
+  href: '/floors',
+  emoji: '🛗',
+  name: 'Elevators',
+  sub: 'Up or down',
   color: 'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
   pos: 'right-[6%] bottom-[10%]'
 };
@@ -87,8 +79,7 @@ export const FLOORS: FloorMeta[] = [
       CHAT,
       SPARK,
       CENTER,
-      COAT,
-      SWAG
+      ELEVATORS
     ]
   },
   {
@@ -111,8 +102,7 @@ export const FLOORS: FloorMeta[] = [
       CHAT,
       SPARK,
       CENTER,
-      COAT,
-      SWAG
+      ELEVATORS
     ]
   },
   {
@@ -135,8 +125,7 @@ export const FLOORS: FloorMeta[] = [
       CHAT,
       SPARK,
       CENTER,
-      COAT,
-      SWAG
+      ELEVATORS
     ]
   },
   {
@@ -159,8 +148,7 @@ export const FLOORS: FloorMeta[] = [
       CHAT,
       SPARK,
       CENTER,
-      COAT,
-      SWAG
+      ELEVATORS
     ]
   }
 ];

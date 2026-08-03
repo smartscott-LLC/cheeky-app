@@ -47,6 +47,10 @@ export default function Navlinks({ user }: NavlinksProps) {
     return result;
   };
 
+  // The marquee button switches: on the street it's the door, inside the
+  // club it's the way back to the lobby.
+  const onTheStreet = pathname === '/' || pathname.startsWith('/signin');
+
   return (
     <div className="relative flex items-center justify-between py-3 md:py-4">
       <div className="flex items-center">
@@ -74,7 +78,7 @@ export default function Navlinks({ user }: NavlinksProps) {
               href="/club"
               className="rounded-lg bg-club px-5 py-2 text-sm font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
             >
-              Enter the club
+              {onTheStreet ? 'Enter the club' : 'Lobby'}
             </Link>
             <form onSubmit={handleSignOut}>
               <input type="hidden" name="pathName" value={pathname} />
@@ -82,6 +86,9 @@ export default function Navlinks({ user }: NavlinksProps) {
                 Sign out
               </button>
             </form>
+            <Link href="/swag" className={s.link}>
+              🎟️ Swag Shop
+            </Link>
           </>
         ) : (
           <>

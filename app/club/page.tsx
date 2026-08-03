@@ -47,6 +47,14 @@ const SPOTS: FloorSpot[] = [
     sub: 'Gold · Platinum · Diamond',
     color: 'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
     pos: 'right-[5%] top-[8%]'
+  },
+  {
+    href: '/coat-check',
+    emoji: '🧥',
+    name: 'Coat Check',
+    sub: 'Your collection',
+    color: 'text-purple-neon border-purple-neon/50 hover:shadow-[0_0_24px_rgba(155,89,182,0.25)]',
+    pos: 'right-[6%] bottom-[10%]'
   }
 ];
 
