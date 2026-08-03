@@ -10,9 +10,9 @@ import FloorLayout, { FloorSpot } from '@/components/ui/Club/FloorLayout';
 const SPOTS: FloorSpot[] = [
   {
     href: '/floor/silver',
-    emoji: '🪩',
-    name: 'Dance Floor',
-    sub: 'The silver room',
+    emoji: '👑',
+    name: 'VIP area',
+    sub: 'The silver floor',
     color: 'text-cyan border-cyan/50 hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
     pos: 'left-[6%] top-[42%]'
   },
@@ -43,7 +43,7 @@ const SPOTS: FloorSpot[] = [
   {
     href: '/floors',
     emoji: '🛗',
-    name: 'Upper floors',
+    name: 'Elevators',
     sub: 'Gold · Platinum · Diamond',
     color: 'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
     pos: 'right-[5%] top-[8%]'

@@ -17,6 +17,13 @@ export interface FloorMeta {
   rooms: FloorRoom[];
 }
 
+// Every floor's room scene — the floor map (docs/floor-map.md) is the
+// source of truth for what belongs where:
+//   LEFT   = the floor's signature event
+//   MIDDLE = Event Center, Cheeky Chats, The Spark List
+//   RIGHT  = Elevators + Gift Shop
+// The lobby (/club) differs: LEFT = VIP area, RIGHT also carries Coat Check.
+
 const CHAT = {
   href: '/messages',
   emoji: '💬',

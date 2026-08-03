@@ -1,6 +1,5 @@
 import Link from 'next/link';
 
-import Logo from '@/components/icons/Logo';
 import { CONTACT } from '@/utils/contact';
 
 export default function Footer() {
@@ -10,12 +9,19 @@ export default function Footer() {
         <div className="col-span-1 lg:col-span-3">
           <Link
             href="/"
-            className="flex items-center flex-initial font-bold md:mr-24"
+            className="flex items-center flex-initial md:mr-24"
           >
-            <span className="mr-2 border rounded-full border-zinc-700">
-              <Logo />
+            <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-gold shadow-[0_0_14px_rgba(255,215,0,0.35)]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/brand/entrance.png"
+                alt="Club Cheeky entrance"
+                className="h-full w-full object-cover"
+              />
             </span>
-            <span>Club Cheeky</span>
+            <span className="font-script ml-2.5 bg-gradient-to-r from-gold via-gold-royal to-gold bg-clip-text text-2xl leading-none text-transparent">
+              Club Cheeky
+            </span>
           </Link>
         </div>
         <div className="col-span-1 lg:col-span-2">
