@@ -185,6 +185,58 @@ export default function Pricing({
               );
             })}
           </div>
+
+          {/* Messaging is the room, never a product. */}
+          <div className="mx-auto mt-14 max-w-3xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-center">
+            <p className="text-3xl">💬</p>
+            <h2 className="mt-3 text-xl font-extrabold">
+              Messaging is never for sale
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-sm text-zinc-400">
+              You can&apos;t buy more messages. No message packs, no upsells,
+              no pay-to-talk — ever. Messaging is a membership perk, not a
+              product: it&apos;s the room you&apos;re in, and every card gets in.
+            </p>
+            <div className="mt-6 grid grid-cols-1 gap-3 text-left sm:grid-cols-2">
+              <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">
+                <p className="text-xs font-bold uppercase tracking-wide text-silver">
+                  Silver — free
+                </p>
+                <p className="mt-1 text-sm text-zinc-300">
+                  30 messages + 5 new conversations a day. Generous on
+                  purpose, never shrunk.
+                </p>
+              </div>
+              <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">
+                <p className="text-xs font-bold uppercase tracking-wide text-gold">
+                  Gold
+                </p>
+                <p className="mt-1 text-sm text-zinc-300">
+                  75 messages + 15 new people a day.
+                </p>
+              </div>
+              <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">
+                <p className="text-xs font-bold uppercase tracking-wide text-platinum">
+                  Platinum
+                </p>
+                <p className="mt-1 text-sm text-zinc-300">
+                  Unlimited messages + 40 new people a day.
+                </p>
+              </div>
+              <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">
+                <p className="text-xs font-bold uppercase tracking-wide text-diamond">
+                  Diamond
+                </p>
+                <p className="mt-1 text-sm text-zinc-300">
+                  Unlimited messages + 100 new people a day.
+                </p>
+              </div>
+            </div>
+            <p className="mt-5 text-xs text-zinc-600">
+              Tokens power events and gifts only — never messaging.
+            </p>
+          </div>
+
           {selectedPrice && (
             <div className="mx-auto mt-12 max-w-2xl">
               <div className="mb-4 flex items-center justify-between">
