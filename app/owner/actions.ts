@@ -125,12 +125,12 @@ export async function ownerGrantDirect(input: {
   return {};
 }
 
-/** Resolves a flag: grant the flagged benefit to the member, or dismiss. */
+/** Resolves a flag: grant directly, hand the cast a code to deliver, or dismiss. */
 export async function ownerResolveFlag(input: {
   key?: string;
   flagId: string;
-  action: 'grant' | 'dismiss';
-}): Promise<{ error?: string }> {
+  action: 'grant' | 'give-code' | 'dismiss';
+}): Promise<{ error?: string; code?: string }> {
   if (!(await authorized(input.key))) return { error: 'forbidden' };
   const { data: flag } = await supabaseAdmin
     .from('swag_flags')
@@ -138,9 +138,11 @@ export async function ownerResolveFlag(input: {
     .eq('id', input.flagId)
     .maybeSingle();
   if (!flag || flag.status !== 'open') return { error: 'flag not open' };
-  if (!flag.user_id) return { error: 'flag has no member' };
+
+  let minted: string | undefined;
 
   if (input.action === 'grant') {
+    if (!flag.user_id) return { error: 'flag has no member' };
     const { error } = await supabaseAdmin.rpc('owner_grant', {
       p_user: flag.user_id,
       p_benefit_type: flag.benefit_type,
@@ -149,14 +151,34 @@ export async function ownerResolveFlag(input: {
       p_days: 30
     });
     if (error) return { error: error.message };
+  } else if (input.action === 'give-code') {
+    // Mint an owner code tied to this member + the flagging character, so
+    // the cast can hand it over in-character.
+    if (!flag.user_id) return { error: 'flag has no member' };
+    const { code, error } = await generateSwagCode({
+      benefitType: flag.benefit_type as SwagBenefitType,
+      benefitValue: flag.benefit_value,
+      actorType: 'owner',
+      notes: flag.reason?.trim() || null
+    });
+    if (error) return { error };
+    const { error: updErr } = await supabaseAdmin
+      .from('swag_codes')
+      .update({
+        deliver_to_user_id: flag.user_id,
+        deliver_via_actor: flag.actor_ref ?? null
+      })
+      .eq('code', code as string);
+    if (updErr) return { error: updErr.message };
+    minted = code;
   }
 
   const { error } = await supabaseAdmin
     .from('swag_flags')
-    .update({ status: input.action, resolved_at: new Date().toISOString() })
+    .update({ status: input.action === 'dismiss' ? 'dismissed' : 'granted', resolved_at: new Date().toISOString() })
     .eq('id', input.flagId);
   if (error) return { error: error.message };
-  return {};
+  return { code: minted };
 }
 
 /** Kills or restores the whole engine (fail-closed). */

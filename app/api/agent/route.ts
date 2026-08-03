@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { supabaseAdmin } from '@/utils/supabase/admin';
 import { streamAgent, GatewayMessage } from '@/utils/agent/gateway';
 import {
   streamDeepseekDirect,
@@ -129,7 +130,28 @@ export async function POST(req: Request) {
 
   const system = buildSystemPrompt(char.persona_prompt, context);
   const swagNote = hasSwagAccess(character) ? swagSystemNote(character) : '';
-  const fullSystem = swagNote ? `${system}\n${swagNote}` : system;
+
+  // Cast delivery: the owner approved a flag and handed the CODE to this
+  // character to deliver in-character. Shown once, then marked delivered.
+  let deliveryNote = '';
+  const { data: delivery } = await supabaseAdmin
+    .from('swag_codes')
+    .select('code, benefit_type, benefit_value')
+    .eq('deliver_to_user_id', user.id)
+    .eq('deliver_via_actor', character)
+    .is('deliver_shown_at', null)
+    .eq('used_count', 0)
+    .limit(1)
+    .maybeSingle();
+  if (delivery) {
+    deliveryNote = `\n===== CAST DELIVERY =====\nThe owner approved ${delivery.benefit_type} (${delivery.benefit_value}) for this member — you have the code: ${delivery.code}. Hand it over in your voice and tell them to redeem it in the Swag Shop. It is real and already paid for — do not act like it might fail.`;
+    await supabaseAdmin
+      .from('swag_codes')
+      .update({ deliver_shown_at: new Date().toISOString() })
+      .eq('code', delivery.code);
+  }
+
+  const fullSystem = `${system}${swagNote ? `\n${swagNote}` : ''}${deliveryNote}`;
 
   try {
     const messages: DirectMessage[] = [

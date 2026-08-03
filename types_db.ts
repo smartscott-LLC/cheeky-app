@@ -1417,6 +1417,9 @@ export type Database = {
           claimed_by_user_id: string | null
           code: string
           created_at: string
+          deliver_shown_at: string | null
+          deliver_to_user_id: string | null
+          deliver_via_actor: string | null
           expires_at: string | null
           id: string
           max_uses: number
@@ -1432,6 +1435,9 @@ export type Database = {
           claimed_by_user_id?: string | null
           code: string
           created_at?: string
+          deliver_shown_at?: string | null
+          deliver_to_user_id?: string | null
+          deliver_via_actor?: string | null
           expires_at?: string | null
           id?: string
           max_uses?: number
@@ -1447,6 +1453,9 @@ export type Database = {
           claimed_by_user_id?: string | null
           code?: string
           created_at?: string
+          deliver_shown_at?: string | null
+          deliver_to_user_id?: string | null
+          deliver_via_actor?: string | null
           expires_at?: string | null
           id?: string
           max_uses?: number

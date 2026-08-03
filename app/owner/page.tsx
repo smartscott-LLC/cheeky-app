@@ -149,12 +149,16 @@ export default function OwnerPage() {
     refresh();
   };
 
-  const resolveFlag = async (flagId: string, action: 'grant' | 'dismiss') => {
+  const resolveFlag = async (flagId: string, action: 'grant' | 'give-code' | 'dismiss') => {
     setBusy(true);
     const res = await ownerResolveFlag({ key, flagId, action });
     setBusy(false);
     if (res.error) return notice(false, res.error);
-    notice(true, action === 'grant' ? 'Flag granted — member got it' : 'Flag dismissed');
+    if (res.code) {
+      notice(true, `Code minted for the cast: ${res.code} — they'll hand it over in chat`);
+    } else {
+      notice(true, action === 'grant' ? 'Flag granted — member got it' : 'Flag dismissed');
+    }
     refresh();
   };
 
@@ -265,13 +269,20 @@ export default function OwnerPage() {
                   </p>
                   <p className="mt-1 text-sm italic text-zinc-400">“{f.reason}”</p>
                   <p className="mt-1 text-xs text-zinc-600">{new Date(f.created_at).toLocaleString()}</p>
-                  <div className="mt-3 flex gap-2">
+                  <div className="mt-3 flex flex-wrap gap-2">
                     <button
                       onClick={() => resolveFlag(f.id, 'grant')}
                       disabled={busy}
                       className="rounded-lg bg-emerald-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-emerald-500 disabled:opacity-40"
                     >
                       Grant it
+                    </button>
+                    <button
+                      onClick={() => resolveFlag(f.id, 'give-code')}
+                      disabled={busy}
+                      className="rounded-lg bg-club px-4 py-1.5 text-sm font-bold text-white hover:bg-club-cotton disabled:opacity-40"
+                    >
+                      🎭 Give the cast a code
                     </button>
                     <button
                       onClick={() => resolveFlag(f.id, 'dismiss')}
