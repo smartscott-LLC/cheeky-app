@@ -73,7 +73,7 @@ export default async function BrowsePage() {
     <div className="bg-black">
       <div className="mx-auto max-w-6xl px-6 py-16">
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
-          The floor
+          The Spark List
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
           Everyone&apos;s out tonight. Pick who you like — if they pick you

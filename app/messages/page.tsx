@@ -82,7 +82,7 @@ export default async function MessagesPage() {
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-2xl px-6 py-16">
-        <h1 className="text-3xl font-extrabold sm:text-4xl">Messages</h1>
+        <h1 className="text-3xl font-extrabold sm:text-4xl">Cheeky Chats</h1>
         <p className="mt-2">
           <Link
             href="/browse"

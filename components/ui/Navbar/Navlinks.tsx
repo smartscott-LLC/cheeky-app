@@ -77,11 +77,11 @@ export default function Navlinks({ user, tier, verified }: NavlinksProps) {
         ) : (
           <>
             <Link href="/browse" className={s.link}>
-              Browse
+              Spark List
             </Link>
             {verified && (
               <Link href="/events" className={s.link}>
-                Events
+                Event Center
               </Link>
             )}
             {paidTier && (
@@ -90,10 +90,10 @@ export default function Navlinks({ user, tier, verified }: NavlinksProps) {
               </Link>
             )}
             <Link href="/gifts" className={s.link}>
-              Gifts
+              Gift Shop
             </Link>
             <Link href="/messages" className={s.link}>
-              Messages
+              Cheeky Chats
             </Link>
             <Link href="/account" className={s.link}>
               Account

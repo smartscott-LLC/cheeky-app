@@ -25,3 +25,13 @@ Heart (double): Neon pink #FF2D9B Velvet Rope: Gold #FFD700 Cocktail Glass: Neon
 "SWAG SHOP" → Gold neon #FFD700, shopping bag icon "COAT CHECK" → Purple neon #9B59B6, coat hanger icon "DANCE FLOOR" → Pink neon #FF2D9B, disco ball icon "SPEED DATING" → Cyan neon #00F5FF, lightning bolt heart icon "GIFT SHOP" → Gold neon #FFD700, ribbon gift box icon "THE SPARK LIST"→ Pink neon #FF2D9B, flame/spark icon "CHEEKY CHATS" → Purple neon #9B59B6, speech bubble heart icon "EVENT CENTER" → Cyan neon #00F5FF, calendar star icon
 Floor assignments:
 DANCE FLOOR → Silver Floor SPEED DATING → Gold/Platinum Floor GIFT SHOP → All floors (tier-locked inventory) SWAG SHOP → All floors (redemption center)
+
+ROOM NAMES → APP PAGES (founder mapping, 2026-08-03)
+THE SPARK LIST → /browse (who's out tonight — pick, and get picked back)
+CHEEKY CHATS → /messages (the message center)
+EVENT CENTER → /events (the hourly playlist: Dance Floor :00, Themed Night :15, Speed Dating :30, Rooftop :45)
+SPEED DATING → /events/speed
+GIFT SHOP → /gifts
+SWAG SHOP → /swag
+COAT CHECK → /coat-check
+DANCE FLOOR → the :00 event inside the Event Center

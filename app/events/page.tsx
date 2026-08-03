@@ -163,11 +163,11 @@ export default async function EventsPage() {
     <div className="bg-black">
       <div className="mx-auto max-w-6xl px-6 py-16">
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
-          The Hourly Playlist
+          The Event Center
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
-          Four floors. Four rooms. Every hour, on the quarter — a Diamond
-          plays the whole set.
+          The hourly playlist. Four floors. Four rooms — every hour, on the
+          quarter — a Diamond plays the whole set.
         </p>
 
         {/* The overhead ticker — anonymous, in-app only. */}

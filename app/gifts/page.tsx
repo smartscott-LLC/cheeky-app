@@ -163,7 +163,7 @@ export default async function GiftsPage() {
     <div className="bg-black">
       <div className="mx-auto max-w-6xl px-6 py-16">
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
-          🍾 The Gift Store
+          🎁 The Gift Shop
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
           Pour something for someone. The club hears the cork pop — but only
