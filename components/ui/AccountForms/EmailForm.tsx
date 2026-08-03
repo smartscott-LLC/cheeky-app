@@ -1,7 +1,6 @@
 'use client';
 
 import Button from '@/components/ui/Button';
-import Card from '@/components/ui/Card';
 import { updateEmail } from '@/utils/auth-helpers/server';
 import { handleRequest } from '@/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
@@ -28,37 +27,37 @@ export default function EmailForm({
   };
 
   return (
-    <Card
-      title="Your Email"
-      description="Please enter the email address you want to use to login."
-      footer={
-        <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          <p className="pb-4 sm:pb-0">
-            We will email you to verify the change.
-          </p>
-          <Button
-            variant="slim"
-            type="submit"
-            form="emailForm"
-            loading={isSubmitting}
-          >
-            Update Email
-          </Button>
-        </div>
-      }
-    >
-      <div className="mt-8 mb-4 text-xl font-semibold">
-        <form id="emailForm" onSubmit={(e) => handleSubmit(e)}>
-          <input
-            type="text"
-            name="newEmail"
-            className="w-1/2 p-3 rounded-md bg-zinc-800"
-            defaultValue={userEmail ?? ''}
-            placeholder="Your email"
-            maxLength={64}
-          />
-        </form>
-      </div>
-    </Card>
+    <div className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
+      <h2 className="text-xl font-bold">Your email</h2>
+      <p className="mt-1 text-sm text-zinc-400">
+        Used for login and club contact. Personal — never shown on your
+        profile.
+      </p>
+      <form
+        id="emailForm"
+        onSubmit={(e) => handleSubmit(e)}
+        className="mt-4 flex flex-col gap-3 sm:flex-row"
+      >
+        <input
+          type="text"
+          name="newEmail"
+          className="flex-1 rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
+          defaultValue={userEmail ?? ''}
+          placeholder="Your email"
+          maxLength={64}
+        />
+        <Button
+          variant="slim"
+          type="submit"
+          form="emailForm"
+          loading={isSubmitting}
+        >
+          Update Email
+        </Button>
+      </form>
+      <p className="mt-3 text-xs text-zinc-500">
+        We&apos;ll email you to verify the change.
+      </p>
+    </div>
   );
 }

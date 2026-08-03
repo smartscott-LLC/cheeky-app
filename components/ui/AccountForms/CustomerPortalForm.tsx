@@ -5,7 +5,6 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { createStripePortal } from '@/utils/stripe/server';
 import Link from 'next/link';
-import Card from '@/components/ui/Card';
 import { Tables } from '@/types_db';
 
 type Subscription = Tables<'subscriptions'>;
@@ -24,6 +23,11 @@ interface Props {
   subscription: SubscriptionWithPriceAndProduct | null;
 }
 
+/**
+ * Membership card — sits near the top of Account, next to the card.
+ * Frame it as boosting your chances, never "subscribe to a plan" and never
+ * "access" (you're never locked out — the free floor stays fun).
+ */
 export default function CustomerPortalForm({ subscription }: Props) {
   const router = useRouter();
   const currentPath = usePathname();
@@ -45,33 +49,44 @@ export default function CustomerPortalForm({ subscription }: Props) {
   };
 
   return (
-    <Card
-      title="Your Plan"
-      description={
-        subscription
-          ? `You are currently on the ${subscription?.prices?.products?.name} plan.`
-          : 'You are not currently subscribed to any plan.'
-      }
-      footer={
-        <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          <p className="pb-4 sm:pb-0">Manage your subscription on Stripe.</p>
-          <Button
-            variant="slim"
-            onClick={handleStripePortalRequest}
-            loading={isSubmitting}
-          >
-            Open customer portal
-          </Button>
+    <div className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="min-w-0">
+          <h2 className="text-xl font-bold">Membership</h2>
+          {subscription ? (
+            <p className="mt-1 text-zinc-400">
+              Your {subscription.prices?.products?.name} plan is active —{' '}
+              <span className="font-semibold text-gold">
+                {subscriptionPrice}/{subscription.prices?.interval}
+              </span>
+              . Cancel anytime, one click, no scripts.
+            </p>
+          ) : (
+            <p className="mt-1 text-zinc-400">
+              You&apos;re on the Silver floor — free, and it stays fun. When
+              you want the view from up top, the memberships are waiting.
+            </p>
+          )}
         </div>
-      }
-    >
-      <div className="mt-8 mb-4 text-xl font-semibold">
-        {subscription ? (
-          `${subscriptionPrice}/${subscription?.prices?.interval}`
-        ) : (
-          <Link href="/">Choose your plan</Link>
-        )}
+        <div className="flex shrink-0 items-center gap-3">
+          {subscription ? (
+            <Button
+              variant="slim"
+              onClick={handleStripePortalRequest}
+              loading={isSubmitting}
+            >
+              Manage billing
+            </Button>
+          ) : (
+            <Link
+              href="/#membership"
+              className="rounded-lg bg-club px-6 py-2.5 text-sm font-extrabold uppercase tracking-[0.1em] text-white transition hover:bg-club-cotton"
+            >
+              See the memberships
+            </Link>
+          )}
+        </div>
       </div>
-    </Card>
+    </div>
   );
 }

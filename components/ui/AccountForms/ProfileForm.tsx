@@ -134,7 +134,7 @@ export default function ProfileForm({
         Up to {photoLimit} photos on this floor. This is what the club sees.
       </p>
 
-      <div className="mt-5 grid grid-cols-3 gap-3">
+      <div className="mt-5 grid grid-cols-4 gap-2.5 sm:grid-cols-5">
         {photos.map((photo) => (
           <div
             key={photo.id}
@@ -193,8 +193,12 @@ export default function ProfileForm({
       <div className="mt-6 grid gap-4">
         <div className="grid gap-1">
           <label htmlFor="displayName" className="text-sm font-semibold">
-            Display name
+            Choose your avatar name
           </label>
+          <p className="text-xs text-zinc-500">
+            This is the name the club calls you. Your real name stays private
+            unless you put it here.
+          </p>
           <input
             id="displayName"
             value={name}

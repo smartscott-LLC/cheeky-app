@@ -1,13 +1,11 @@
 import CustomerPortalForm from '@/components/ui/AccountForms/CustomerPortalForm';
 import EmailForm from '@/components/ui/AccountForms/EmailForm';
 import GuestPassForm from '@/components/ui/AccountForms/GuestPassForm';
-import NameForm from '@/components/ui/AccountForms/NameForm';
 import ProfileForm from '@/components/ui/AccountForms/ProfileForm';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import {
-  getUserDetails,
   getSubscription,
   getUser,
   getProfile,
@@ -16,9 +14,8 @@ import {
 
 export default async function Account() {
   const supabase = await createClient();
-  const [user, userDetails, subscription] = await Promise.all([
+  const [user, subscription] = await Promise.all([
     getUser(supabase),
-    getUserDetails(supabase),
     getSubscription(supabase)
   ]);
 
@@ -139,7 +136,7 @@ export default async function Account() {
                   : 'Not verified yet. Brutus is at the door.'}
               </p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-3">
               <span className="text-lg font-bold text-club">
                 {tokenBalance} tokens
               </span>
@@ -151,9 +148,18 @@ export default async function Account() {
                   Get your card
                 </Link>
               )}
+              {tier === 'standard' && (
+                <Link
+                  href="/#membership"
+                  className="rounded-lg border-2 border-gold px-4 py-2 text-xs font-extrabold uppercase tracking-[0.1em] text-gold transition hover:bg-gold/10"
+                >
+                  ✦ Boost your chances — obtain a membership today
+                </Link>
+              )}
             </div>
           </div>
         </div>
+        <CustomerPortalForm subscription={subscription} />
         <div className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="text-xl font-bold">Your floor</h2>
           <p className="mt-1 text-zinc-400">
@@ -257,8 +263,6 @@ export default async function Account() {
             </p>
           )}
         </div>
-        <CustomerPortalForm subscription={subscription} />
-        <NameForm userName={userDetails?.full_name ?? ''} />
         <EmailForm userEmail={user.email} />
       </div>
     </section>
