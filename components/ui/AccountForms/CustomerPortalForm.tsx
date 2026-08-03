@@ -21,6 +21,8 @@ type SubscriptionWithPriceAndProduct = Subscription & {
 
 interface Props {
   subscription: SubscriptionWithPriceAndProduct | null;
+  tier: string;
+  tierLabel: string;
 }
 
 /**
@@ -28,7 +30,11 @@ interface Props {
  * Frame it as boosting your chances, never "subscribe to a plan" and never
  * "access" (you're never locked out — the free floor stays fun).
  */
-export default function CustomerPortalForm({ subscription }: Props) {
+export default function CustomerPortalForm({
+  subscription,
+  tier,
+  tierLabel
+}: Props) {
   const router = useRouter();
   const currentPath = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,6 +67,11 @@ export default function CustomerPortalForm({ subscription }: Props) {
               </span>
               . Cancel anytime, one click, no scripts.
             </p>
+          ) : tier !== 'standard' ? (
+            <p className="mt-1 text-zinc-400">
+              Your <span className="font-semibold text-gold">{tierLabel}</span>{' '}
+              membership is active.
+            </p>
           ) : (
             <p className="mt-1 text-zinc-400">
               You&apos;re on the Silver floor — free, and it stays fun. When
@@ -77,14 +88,14 @@ export default function CustomerPortalForm({ subscription }: Props) {
             >
               Manage billing
             </Button>
-          ) : (
+          ) : tier === 'standard' ? (
             <Link
               href="/#membership"
               className="rounded-lg bg-club px-6 py-2.5 text-sm font-extrabold uppercase tracking-[0.1em] text-white transition hover:bg-club-cotton"
             >
               See the memberships
             </Link>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

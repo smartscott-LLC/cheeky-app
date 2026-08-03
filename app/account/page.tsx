@@ -159,7 +159,7 @@ export default async function Account() {
             </div>
           </div>
         </div>
-        <CustomerPortalForm subscription={subscription} />
+        <CustomerPortalForm subscription={subscription} tier={tier} tierLabel={tierLabel} />
         <div className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="text-xl font-bold">Your floor</h2>
           <p className="mt-1 text-zinc-400">
