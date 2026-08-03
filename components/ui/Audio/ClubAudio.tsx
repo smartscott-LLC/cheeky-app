@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 
 // The club's house engine — synthesized live in the browser, no samples, no
-// licensing. Four-on-the-floor in A minor, the kind of room you walk into
-// and immediately want to move. Patterns randomize every phrase so the DJ
-// never plays the same loop twice.
+// licensing. 200 BPM, A minor, built for action: bass-drum gallop
+// (1-2-3 / 1-2), snare running just behind it with 4-beat rolls, fast 16th
+// hats, and the "t-t-t" hook bursting a fast 12-beat run, then freezing.
 
-const BPM = 124;
-const STEP = 60 / BPM / 4; // one 16th note, in seconds
+const BPM = 200;
+const STEP = 60 / BPM / 4; // one 16th note (0.075s at 200 BPM)
 const CYCLE_STEPS = 64; // four bars of 16
 
 // A minor — Am, F, C, G. The chords every dance floor knows.
@@ -30,22 +30,21 @@ class ClubBeatEngine {
   private cycle = 0;
   private started = false;
   private hatVariant = 1;
-  private bassVariant = 0;
   private arpBar = true;
 
   private ensure() {
     if (this.ctx) return;
     const ctx = new AudioContext();
     const comp = ctx.createDynamicsCompressor();
-    comp.threshold.value = -18;
-    comp.ratio.value = 4;
+    comp.threshold.value = -16;
+    comp.ratio.value = 5;
     this.master = ctx.createGain();
-    this.master.gain.value = 0.42;
+    this.master.gain.value = 0.36;
     this.master.connect(comp);
     comp.connect(ctx.destination);
     this.stabBus = ctx.createBiquadFilter();
     this.stabBus.type = 'lowpass';
-    this.stabBus.frequency.value = 2600;
+    this.stabBus.frequency.value = 2400;
     this.stabBus.connect(this.master);
     const buf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
     const d = buf.getChannelData(0);
@@ -62,31 +61,32 @@ class ClubBeatEngine {
     const o = this.ctx!.createOscillator();
     const g = this.ctx!.createGain();
     o.type = 'sine';
-    o.frequency.setValueAtTime(160, t);
-    o.frequency.exponentialRampToValueAtTime(46, t + 0.11);
+    o.frequency.setValueAtTime(170, t);
+    o.frequency.exponentialRampToValueAtTime(48, t + 0.08);
     g.gain.setValueAtTime(0.9 * v, t);
-    g.gain.exponentialRampToValueAtTime(0.001, t + 0.24);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
     o.connect(g);
     g.connect(this.master!);
     o.start(t);
-    o.stop(t + 0.26);
+    o.stop(t + 0.16);
   }
 
-  private clap(t: number, v: number) {
+  private snare(t: number, v: number) {
+    // Body + crack: a low thump under a bandpassed snap.
     const s = this.ctx!.createBufferSource();
     s.buffer = this.noise!;
     const bp = this.ctx!.createBiquadFilter();
     bp.type = 'bandpass';
-    bp.frequency.value = 1900;
-    bp.Q.value = 0.9;
+    bp.frequency.value = 1800;
+    bp.Q.value = 1;
     const g = this.ctx!.createGain();
-    g.gain.setValueAtTime(0.55 * v, t);
-    g.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
+    g.gain.setValueAtTime(0.5 * v, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.13);
     s.connect(bp);
     bp.connect(g);
     g.connect(this.master!);
     s.start(t);
-    s.stop(t + 0.2);
+    s.stop(t + 0.15);
   }
 
   private hat(t: number, v: number, open = false) {
@@ -94,15 +94,31 @@ class ClubBeatEngine {
     s.buffer = this.noise!;
     const hp = this.ctx!.createBiquadFilter();
     hp.type = 'highpass';
-    hp.frequency.value = 7500;
+    hp.frequency.value = 7800;
     const g = this.ctx!.createGain();
-    g.gain.setValueAtTime(0.28 * v, t);
-    g.gain.exponentialRampToValueAtTime(0.001, t + (open ? 0.28 : 0.05));
+    g.gain.setValueAtTime(0.24 * v, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + (open ? 0.22 : 0.04));
     s.connect(hp);
     hp.connect(g);
     g.connect(this.master!);
     s.start(t);
-    s.stop(t + 0.32);
+    s.stop(t + 0.26);
+  }
+
+  private crash(t: number) {
+    const s = this.ctx!.createBufferSource();
+    s.buffer = this.noise!;
+    const hp = this.ctx!.createBiquadFilter();
+    hp.type = 'highpass';
+    hp.frequency.value = 5200;
+    const g = this.ctx!.createGain();
+    g.gain.setValueAtTime(0.22, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+    s.connect(hp);
+    hp.connect(g);
+    g.connect(this.master!);
+    s.start(t);
+    s.stop(t + 0.55);
   }
 
   private bass(t: number, f: number, v: number) {
@@ -111,17 +127,17 @@ class ClubBeatEngine {
     o.frequency.value = f;
     const lp = this.ctx!.createBiquadFilter();
     lp.type = 'lowpass';
-    lp.frequency.value = 420;
+    lp.frequency.value = 460;
     lp.Q.value = 3;
     const g = this.ctx!.createGain();
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.4 * v, t + 0.012);
-    g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+    g.gain.exponentialRampToValueAtTime(0.36 * v, t + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.11);
     o.connect(lp);
     lp.connect(g);
     g.connect(this.master!);
     o.start(t);
-    o.stop(t + 0.22);
+    o.stop(t + 0.13);
   }
 
   private stab(t: number, notes: number[], v: number) {
@@ -131,12 +147,12 @@ class ClubBeatEngine {
       o.frequency.value = f;
       const g = this.ctx!.createGain();
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.14 * v, t + 0.006);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+      g.gain.exponentialRampToValueAtTime(0.11 * v, t + 0.005);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.13);
       o.connect(g);
       g.connect(this.stabBus!);
       o.start(t);
-      o.stop(t + 0.26);
+      o.stop(t + 0.15);
     });
   }
 
@@ -146,55 +162,53 @@ class ClubBeatEngine {
     o.frequency.value = f;
     const lp = this.ctx!.createBiquadFilter();
     lp.type = 'lowpass';
-    lp.frequency.value = 2400;
+    lp.frequency.value = 2000;
     const g = this.ctx!.createGain();
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.12 * v, t + 0.008);
-    g.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
+    g.gain.exponentialRampToValueAtTime(0.09 * v, t + 0.006);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
     o.connect(lp);
     lp.connect(g);
     g.connect(this.stabBus!);
     o.start(t);
-    o.stop(t + 0.2);
+    o.stop(t + 0.12);
   }
 
   private playStep(step: number, t: number) {
     const bar = Math.floor(step / 16);
     const s = step % 16;
     const chord = CHORDS[bar % 4];
-    const fill = this.cycle % 2 === 1 && bar === 3;
+    const sIdx = [0, 2, 4, 8, 10, 14].indexOf(s);
 
-    // Kick — four on the floor; the fill rolls the last beat over.
-    if (s % 4 === 0 && !(fill && s === 12)) this.kick(t, this.hu());
+    // Bass drum — the gallop: 1, 2, 3 — 1, 2 — and the pickup in.
+    if (sIdx !== -1) this.kick(t, sIdx === 5 ? 0.95 : this.hu());
 
-    // Fill: 16th claps rolling into the next phrase, open hat to land it.
-    if (fill) {
-      if (s >= 8 && s < 15) this.clap(t, s % 2 === 0 ? 0.4 : 0.75);
-      if (s === 15) this.hat(t, 0.5, true);
-      return;
+    // Snare — running just behind the bass drum, with the 4-beat rolls.
+    if (s === 1 || s === 3) this.snare(t, 0.75 * this.hu());
+    if (bar % 2 === 0) {
+      if (s >= 8 && s <= 11) this.snare(t, 0.55 * this.hu()); // 1,2,3,4
+    } else if (s >= 12 && s <= 15) {
+      this.snare(t, 0.55 * this.hu()); // the second 1,2,3,4
     }
 
-    // Claps on 2 & 4 — the hands in the air.
-    if (s === 4 || s === 12) this.clap(t, 0.85 * this.hu());
+    // Hats — fast 16ths, the downbeats hit harder.
+    if (s % 2 === 1) this.hat(t, s % 4 === 3 ? 0.6 : 0.34);
+    if (s === 14 && this.hatVariant === 2) this.hat(t, 0.4, true);
 
-    // Hats — driving 8ths, ghost 16ths on the hot variant.
-    if (s % 2 === 0) this.hat(t, 0.5 * this.hu());
-    if (this.hatVariant === 1 && (s === 7 || s === 15)) this.hat(t, 0.35 * this.hu());
-    if (s === 14) this.hat(t, 0.35 * this.hu(), this.hatVariant === 2);
-
-    // Bass — 8ths on the root, octave pop on the offbeat.
+    // Bass — 8ths on the root, popping up where the gallop lands.
     if (s % 2 === 0) {
-      const oct = this.bassVariant === 1 && (s === 6 || s === 14) ? 2 : 1;
+      const oct = s === 4 || s === 12 ? 2 : 1;
       this.bass(t, chord.bass * oct, this.hu());
     }
 
     // Stabs — the chord on the 1, and on the 3 when the room's hot.
-    if (s === 0) this.stab(t, chord.notes, 1);
-    else if (s === 8 && this.hatVariant === 2) this.stab(t, chord.notes, 0.7);
+    if (s === 0) this.stab(t, chord.notes, 0.9);
+    else if (s === 8 && this.hatVariant === 2) this.stab(t, chord.notes, 0.6);
 
-    // Arp — a bright 16th hook every other bar, the DJ's little wink.
-    if (this.arpBar && s % 4 === 0) {
-      this.pluck(t, chord.notes[(s / 4) % 3] * 2, 0.9);
+    // The "t-t-t" hook — a fast 12-beat run, then it freezes.
+    if (this.arpBar && bar === 0 && s < 12) {
+      const idx = [0, 1, 2, 2][s % 4];
+      this.pluck(t, chord.notes[idx] * 2, 0.85 * this.hu());
     }
   }
 
@@ -208,10 +222,10 @@ class ClubBeatEngine {
       if (this.step === CYCLE_STEPS) {
         this.step = 0;
         this.cycle++;
-        // Fresh pattern per phrase — the DJ is never on repeat.
+        // Fresh pattern per phrase — plus the crash on the 1.
         this.hatVariant = Math.random() < 0.5 ? 1 : 2;
-        this.bassVariant = Math.random() < 0.4 ? 1 : 0;
-        this.arpBar = Math.random() < 0.6;
+        this.arpBar = Math.random() < 0.75;
+        this.crash(this.nextTime);
         this.sweep();
       }
     }
@@ -220,8 +234,8 @@ class ClubBeatEngine {
   private sweep() {
     const t = this.ctx!.currentTime;
     this.stabBus!.frequency.cancelScheduledValues(t);
-    this.stabBus!.frequency.setValueAtTime(400, t);
-    this.stabBus!.frequency.exponentialRampToValueAtTime(3200, t + 0.5);
+    this.stabBus!.frequency.setValueAtTime(500, t);
+    this.stabBus!.frequency.exponentialRampToValueAtTime(3000, t + 0.4);
   }
 
   private tick = () => this.schedule();
@@ -237,7 +251,6 @@ class ClubBeatEngine {
       this.step = 0;
       this.cycle = 0;
       this.hatVariant = 1;
-      this.bassVariant = 0;
       this.arpBar = true;
       this.started = true;
       this.timer = setInterval(this.tick, 25);
