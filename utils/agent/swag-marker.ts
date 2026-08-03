@@ -8,9 +8,10 @@
 import { generateSwagCode, flagSwagRequest } from '@/utils/swag';
 
 // Which cast members have a swag shelf, and which items they may offer.
-// Tune here; the DB enforces the weekly caps regardless.
+// Tune here; the DB enforces the weekly caps regardless. 'gold' is a
+// short (2-day) gold membership — special occasions only.
 export const CAST_SWAG: Record<string, string[]> = {
-  chaz: ['teddy', 'golden_roses'],
+  chaz: ['gold', 'teddy', 'golden_roses'],
   trixie: ['teddy', 'golden_roses']
 };
 
@@ -26,7 +27,8 @@ export function swagSystemNote(slug: string): string {
 ===== SWAG SHOP (you have a small shelf) =====
 You may occasionally hand a member a free gift code when it genuinely helps (a struggling member, a kind moment). Never pressure, never push, never promise a specific item — the shelf can be empty or the item may need the owner.
 To offer one, write EXACTLY [[SWAG:slug]] where the code should appear — slug is one of: ${items.join(', ')}. The front desk converts it into a real code the member redeems in the Swag Shop.
-If the member deserves a bigger gesture (champagne, a gift basket, a membership), write [[SWAG:champagne|reason in a few words]] — the front desk notifies the owner, but DO NOT promise the item.`;
+If you offer a gold membership ([[SWAG:gold]]), it is a SHORT special-occasion gesture (a couple of days) — never present it as long-term, and use it rarely.
+If the member deserves a bigger gesture (champagne, a gift basket, a platinum or diamond membership), write [[SWAG:champagne|reason in a few words]] — the front desk notifies the owner, but DO NOT promise the item.`;
 }
 
 const MARKER = /\[\[SWAG:([a-z0-9_]+)(?:\|([^\]]{0,140}))?\]\]/;
@@ -39,8 +41,9 @@ async function handleMarker(
   allowed: string[]
 ): Promise<string> {
   if (allowed.includes(slug)) {
+    const isMembership = slug === 'gold' || slug === 'platinum' || slug === 'diamond';
     const { code, error } = await generateSwagCode({
-      benefitType: 'gift',
+      benefitType: isMembership ? 'membership' : 'gift',
       benefitValue: slug,
       actorType: 'character',
       actorRef: actorSlug,
