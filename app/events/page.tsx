@@ -23,7 +23,7 @@ const KIND_META: Record<
     emoji: '🕺',
     tagline: 'Hourly. 2 minutes to pick. One song to make it count.',
     accent: 'text-club border-club/40',
-    image: '/floors/silver.png',
+    image: '/brand/floor-free.png',
     gradient: 'from-club-indigo via-club to-club-cotton'
   },
   themed_night: {
@@ -32,7 +32,7 @@ const KIND_META: Record<
     emoji: '🎭',
     tagline: 'The floor, dressed up. A pricier ticket, a deeper crowd.',
     accent: 'text-gold border-gold/40',
-    image: '/floors/gold.png',
+    image: '/brand/floor-gold.png',
     gradient: 'from-gold-graphite via-gold to-gold-royal'
   },
   speed_dating: {
@@ -41,7 +41,7 @@ const KIND_META: Record<
     emoji: '💘',
     tagline: 'Rotations. Ranked picks. A certificate for the ones that click.',
     accent: 'text-platinum border-platinum/40',
-    image: '/floors/platinum.png',
+    image: '/brand/floor-platinum.png',
     gradient: 'from-platinum-navy via-platinum to-platinum-alice'
   },
   rooftop: {
@@ -50,7 +50,7 @@ const KIND_META: Record<
     emoji: '🌇',
     tagline: 'The penthouse pool. Closer, higher, fewer.',
     accent: 'text-diamond border-diamond/40',
-    image: '/floors/diamond.png',
+    image: '/brand/floor-diamond.png',
     gradient: 'from-diamond-raspberry via-diamond to-diamond-mist'
   }
 };
@@ -274,7 +274,16 @@ export default async function EventsPage() {
         {/* The room — next grid event renders inline; speed dating has its own. */}
         <div className="mt-12">
           {roomEvent ? (
-            <>
+            <div className="relative overflow-hidden rounded-2xl border border-zinc-800">
+              {/* The life of the floor */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={KIND_META[roomEvent.kind]?.image ?? '/brand/floor-free.png'}
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/70" />
+              <div className="relative p-6">
               {onCenterStage && (
                 <div className="mx-auto mb-6 max-w-xl rounded-xl border border-gold/40 bg-gradient-to-r from-gold/15 via-zinc-900 to-club/10 p-4 text-center">
                   <p className="text-sm font-bold text-gold">
@@ -312,7 +321,8 @@ export default async function EventsPage() {
                 spotlightIds={spotlightIds}
                 photoBase={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`}
               />
-            </>
+              </div>
+            </div>
           ) : speedEvent ? (
             <div className="rounded-xl border border-platinum/40 bg-platinum/5 p-8 text-center">
               <p className="text-3xl">💘</p>

@@ -15,11 +15,14 @@ interface NavlinksProps {
     email?: string | null;
     user_metadata?: Record<string, unknown>;
   } | null;
-  tier?: string;
-  verified?: boolean;
 }
 
-export default function Navlinks({ user, tier, verified }: NavlinksProps) {
+/**
+ * The nav is the marquee, not the menu. The club's rooms live INSIDE the
+ * club (/club) — the nav only carries the door: sign in, enter, account.
+ * No event links, no floor links — those are found by walking the room.
+ */
+export default function Navlinks({ user }: NavlinksProps) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -44,9 +47,6 @@ export default function Navlinks({ user, tier, verified }: NavlinksProps) {
     return result;
   };
 
-  const paidTier =
-    tier === 'gold' || tier === 'platinum' || tier === 'diamond';
-
   return (
     <div className="relative flex items-center justify-between py-3 md:py-4">
       <div className="flex items-center">
@@ -64,8 +64,26 @@ export default function Navlinks({ user, tier, verified }: NavlinksProps) {
           </span>
         </Link>
       </div>
-      <nav className="flex items-center gap-1 lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:gap-2">
-        {!user ? (
+      <nav className="flex items-center gap-1 lg:gap-2">
+        {user ? (
+          <>
+            <Link href="/account" className={s.link}>
+              Account
+            </Link>
+            <Link
+              href="/club"
+              className="rounded-lg bg-club px-5 py-2 text-sm font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
+            >
+              Enter the club
+            </Link>
+            <form onSubmit={handleSignOut}>
+              <input type="hidden" name="pathName" value={pathname} />
+              <button type="submit" className={s.link}>
+                Sign out
+              </button>
+            </form>
+          </>
+        ) : (
           <>
             <Link href="/#membership" className={s.link}>
               Membership
@@ -74,47 +92,8 @@ export default function Navlinks({ user, tier, verified }: NavlinksProps) {
               Sign In
             </Link>
           </>
-        ) : (
-          <>
-            <Link href="/browse" className={s.link}>
-              Spark List
-            </Link>
-            {verified && (
-              <Link href="/events" className={s.link}>
-                Event Center
-              </Link>
-            )}
-            {paidTier && (
-              <Link href="/events/speed" className={s.link}>
-                Speed Dating
-              </Link>
-            )}
-            <Link href="/gifts" className={s.link}>
-              Gift Shop
-            </Link>
-            <Link href="/messages" className={s.link}>
-              Cheeky Chats
-            </Link>
-            <Link href="/account" className={s.link}>
-              Account
-            </Link>
-          </>
         )}
       </nav>
-      <div className="flex items-center justify-end space-x-4">
-        {user ? (
-          <form onSubmit={handleSignOut}>
-            <input type="hidden" name="pathName" value={pathname} />
-            <button type="submit" className={s.link}>
-              Sign out
-            </button>
-          </form>
-        ) : (
-          <Link href="/signin" className={s.link}>
-            Sign In
-          </Link>
-        )}
-      </div>
     </div>
   );
 }

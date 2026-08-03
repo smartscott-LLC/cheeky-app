@@ -96,7 +96,7 @@ export default async function SpeedDatingPage() {
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
           Platinum floor. Groups of six. Ninety seconds with each person, then
-          pick who you&apos;d dance with again.
+          pick who you&apos;d like to meet again.
         </p>
         <div className="mt-10">
           {event ? (

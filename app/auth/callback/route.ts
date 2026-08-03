@@ -25,12 +25,13 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // URL to redirect to after sign in process completes
+  // URL to redirect to after sign in process completes — the club is the
+  // destination; the velvet-rope gate inside handles the unverified.
   return NextResponse.redirect(
     getStatusRedirect(
-      `${requestUrl.origin}/account`,
-      'Success!',
-      'You are now signed in.'
+      `${requestUrl.origin}/club`,
+      'Welcome in.',
+      'The club is open.'
     )
   );
 }
