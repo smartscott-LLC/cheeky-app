@@ -8,7 +8,7 @@ import { createClient } from '@/utils/supabase/server';
  */
 export async function likeUser(
   userId: string
-): Promise<{ matched: boolean; matchId?: string | null }> {
+): Promise<{ matched: boolean; matchId?: string | null; error?: string }> {
   const supabase = await createClient();
   const { data, error } = await supabase.rpc('create_like', {
     p_likee: userId
@@ -16,7 +16,7 @@ export async function likeUser(
 
   if (error) {
     console.error('Like failed:', error.message);
-    return { matched: false };
+    return { matched: false, error: error.message };
   }
 
   const matchId = data?.[0]?.match_id ?? null;
