@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      badge_catalog: {
+        Row: {
+          created_at: string
+          description: string
+          emoji: string
+          how_to_earn: string
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          emoji: string
+          how_to_earn: string
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          emoji?: string
+          how_to_earn?: string
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
       benefit_grants: {
         Row: {
           actor_ref: string | null
@@ -329,6 +359,27 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_checkins: {
+        Row: {
+          created_at: string
+          day: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          day: string
+          id?: never
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          day?: string
+          id?: never
+          user_id?: string
+        }
+        Relationships: []
+      }
       date_night_picks: {
         Row: {
           created_at: string
@@ -588,6 +639,39 @@ export type Database = {
         }
         Relationships: []
       }
+      gem_catalog: {
+        Row: {
+          active: boolean
+          created_at: string
+          emoji: string
+          how_to_earn: string
+          id: string
+          name: string
+          rarity: string
+          slug: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          emoji: string
+          how_to_earn: string
+          id?: string
+          name: string
+          rarity?: string
+          slug: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          emoji?: string
+          how_to_earn?: string
+          id?: string
+          name?: string
+          rarity?: string
+          slug?: string
+        }
+        Relationships: []
+      }
       gift_catalog: {
         Row: {
           active: boolean
@@ -778,6 +862,67 @@ export type Database = {
           user_id_b?: string
         }
         Relationships: []
+      }
+      member_badges: {
+        Row: {
+          badge_id: string
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "member_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badge_catalog"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      member_gems: {
+        Row: {
+          earned_at: string
+          gem_id: string
+          id: string
+          ref: string | null
+          user_id: string
+        }
+        Insert: {
+          earned_at?: string
+          gem_id: string
+          id?: string
+          ref?: string | null
+          user_id: string
+        }
+        Update: {
+          earned_at?: string
+          gem_id?: string
+          id?: string
+          ref?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "member_gems_gem_id_fkey"
+            columns: ["gem_id"]
+            isOneToOne: false
+            referencedRelation: "gem_catalog"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       messages: {
         Row: {
@@ -1504,6 +1649,20 @@ export type Database = {
         }
         Returns: string
       }
+      award_badge: {
+        Args: {
+          p_user: string
+          p_slug: string
+        }
+        Returns: undefined
+      }
+      award_gem: {
+        Args: {
+          p_user: string
+          p_slug: string
+        }
+        Returns: undefined
+      }
       buy_gift: {
         Args: {
           p_slug: string
@@ -1636,6 +1795,10 @@ export type Database = {
           p_message: string
         }
         Returns: undefined
+      }
+      record_checkin: {
+        Args: Record<PropertyKey, never>
+        Returns: number
       }
       record_common_moment: {
         Args: {

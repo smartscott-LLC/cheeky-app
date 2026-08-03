@@ -124,6 +124,12 @@ const applyVerificationResult = async (userId: string, sessionId: string) => {
     );
     if (momentError)
       console.error('Verification moment failed:', momentError.message);
+
+    // First verification — the "In the Club" badge goes on the coat.
+    await supabaseAdmin.rpc('award_badge', {
+      p_user: userId,
+      p_slug: 'verified'
+    });
   }
 
   const { error: profileError } = await supabaseAdmin
