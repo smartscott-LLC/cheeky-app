@@ -193,6 +193,9 @@ export default async function Account() {
               (profile?.interested_in as 'women' | 'men' | 'everyone') ??
               'everyone'
             }
+            gender={
+              (profile?.gender as 'gentleman' | 'lady' | null) ?? null
+            }
             photos={(photos?.data ?? []).map((p) => ({
               id: p.id,
               storage_path: p.storage_path,

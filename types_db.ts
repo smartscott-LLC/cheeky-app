@@ -1128,6 +1128,7 @@ export type Database = {
           bio: string
           created_at: string
           display_name: string
+          gender: string | null
           id: string
           interested_in: string
           message_retention_days: number
@@ -1138,6 +1139,7 @@ export type Database = {
           bio?: string
           created_at?: string
           display_name?: string
+          gender?: string | null
           id: string
           interested_in?: string
           message_retention_days?: number
@@ -1148,6 +1150,7 @@ export type Database = {
           bio?: string
           created_at?: string
           display_name?: string
+          gender?: string | null
           id?: string
           interested_in?: string
           message_retention_days?: number
@@ -1692,6 +1695,13 @@ export type Database = {
           p_slug: string
         }
         Returns: string
+      }
+      compatible: {
+        Args: {
+          a: string
+          b: string
+        }
+        Returns: boolean
       }
       create_like: {
         Args: {

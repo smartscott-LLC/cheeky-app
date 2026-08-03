@@ -20,6 +20,7 @@ interface ProfileFormProps {
   displayName: string;
   bio: string;
   interestedIn?: 'women' | 'men' | 'everyone';
+  gender?: 'gentleman' | 'lady' | null;
   photos: ProfilePhoto[];
   photoBase: string;
   photoLimit?: number;
@@ -32,6 +33,7 @@ export default function ProfileForm({
   displayName,
   bio,
   interestedIn = 'everyone',
+  gender = null,
   photos: initialPhotos,
   photoBase,
   photoLimit = MAX_PHOTOS
@@ -39,6 +41,7 @@ export default function ProfileForm({
   const [name, setName] = useState(displayName);
   const [bioText, setBioText] = useState(bio);
   const [pref, setPref] = useState<'women' | 'men' | 'everyone'>(interestedIn);
+  const [identity, setIdentity] = useState<'gentleman' | 'lady' | null>(gender);
   const [photos, setPhotos] = useState<ProfilePhoto[]>(initialPhotos);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -117,7 +120,12 @@ export default function ProfileForm({
   const handleSave = async () => {
     setSaving(true);
     setError(null);
-    const res = await updateProfile(name, bioText, pref);
+    if (!identity) {
+      setError('The club needs to know who you are — gentleman or lady.');
+      setSaving(false);
+      return;
+    }
+    const res = await updateProfile(name, bioText, pref, identity);
     setSaving(false);
     if (res.error) {
       setError(res.error);
@@ -208,8 +216,31 @@ export default function ProfileForm({
           />
         </div>
         <div className="grid gap-1">
+          <label htmlFor="gender" className="text-sm font-semibold">
+            What are you?
+          </label>
+          <select
+            id="gender"
+            value={identity ?? ''}
+            onChange={(e) =>
+              setIdentity(e.target.value as 'gentleman' | 'lady' | null)
+            }
+            className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
+          >
+            <option value="" disabled>
+              Choose one
+            </option>
+            <option value="gentleman">Gentleman</option>
+            <option value="lady">Lady</option>
+          </select>
+          <p className="text-xs text-zinc-500">
+            The club pairs real gentlemen and real ladies. This tells the
+            floor who you are — required, and never shown as a label.
+          </p>
+        </div>
+        <div className="grid gap-1">
           <label htmlFor="interestedIn" className="text-sm font-semibold">
-            Interested in
+            Dating preference
           </label>
           <select
             id="interestedIn"
@@ -219,12 +250,14 @@ export default function ProfileForm({
             }
             className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
           >
-            <option value="everyone">Everyone</option>
-            <option value="women">Women</option>
-            <option value="men">Men</option>
+            <option value="everyone">Both</option>
+            <option value="women">Ladies</option>
+            <option value="men">Gentlemen</option>
           </select>
           <p className="text-xs text-zinc-500">
-            Used for Speed Dating group assignments. Never shown publicly.
+            Who you&apos;re here to meet — personal, and never shown publicly.
+            It groups you with the right company at events and guides the
+            club&apos;s suggestions.
           </p>
         </div>
         <div className="grid gap-1">

@@ -49,6 +49,29 @@ export const toDateTime = (secs: number) => {
   return t;
 };
 
+export interface IdentityLike {
+  gender: string | null;
+  interested_in: string | null;
+}
+
+/**
+ * Mutual compatibility — the club's pairing rule: each member must be in
+ * the other's dating preference (Ladies/Gentlemen/Both). Mirrors the DB
+ * public.compatible(). Members without an identity set are hidden until
+ * they identify (a real gentleman on one side, a real lady on the other).
+ */
+export const isCompatible = (
+  a: IdentityLike | null | undefined,
+  b: IdentityLike | null | undefined
+): boolean => {
+  if (!a?.gender || !b?.gender) return false;
+  const wants = (me: IdentityLike, other: IdentityLike) =>
+    me.interested_in === 'everyone' ||
+    (me.interested_in === 'women' && other.gender === 'lady') ||
+    (me.interested_in === 'men' && other.gender === 'gentleman');
+  return wants(a, b) && wants(b, a);
+};
+
 export const calculateTrialEndUnixTimestamp = (
   trialPeriodDays: number | null | undefined
 ) => {

@@ -170,6 +170,8 @@ export async function signUp(formData: FormData) {
   const password = String(formData.get('password')).trim();
   const birthday = String(formData.get('birthday') ?? '').trim();
   const retention = Number(formData.get('messageRetentionDays') ?? 90);
+  const gender = String(formData.get('gender') ?? '').trim();
+  const interestedIn = String(formData.get('interestedIn') ?? '').trim();
   const termsConsent = formData.get('termsConsent') === 'on';
   const privacyConsent = formData.get('privacyConsent') === 'on';
   const bestPracticesConsent = formData.get('bestPracticesConsent') === 'on';
@@ -182,6 +184,15 @@ export async function signUp(formData: FormData) {
       'Please accept the Rules of the Club, the Privacy Policy, and the Best Practices disclaimer to enter.'
     );
     return redirectPath;
+  }
+
+  if (gender !== 'gentleman' && gender !== 'lady') {
+    redirectPath = getErrorRedirect(
+      '/signin/signup',
+      'Almost there.',
+      'The club needs to know who you are — are you a gentleman or a lady?'
+    );
+    return redirect(redirectPath);
   }
 
   if (birthday) {
@@ -221,6 +232,11 @@ export async function signUp(formData: FormData) {
       data: {
         birthday: birthday || undefined,
         message_retention_days: Math.min(90, Math.max(3, retention)),
+        gender,
+        interested_in:
+          interestedIn === 'women' || interestedIn === 'men'
+            ? interestedIn
+            : 'everyone',
         terms_version: 'v1',
         privacy_version: 'v1',
         best_practices_version: 'v1'

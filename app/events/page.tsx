@@ -1,6 +1,7 @@
 import EventFloor from '@/components/ui/Events/EventFloor';
 import { createClient } from '@/utils/supabase/server';
-import { getUser } from '@/utils/supabase/queries';
+import { getProfile, getUser } from '@/utils/supabase/queries';
+import { isCompatible } from '@/utils/helpers';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 
@@ -106,6 +107,10 @@ export default async function EventsPage() {
   let onCenterStage = false;
 
   if (roomEvent) {
+    // Identity + preference: the room only shows mutually compatible
+    // company — a real gentleman on one side, a real lady on the other.
+    const myProfile = await getProfile(supabase, user.id);
+
     const [{ data: entries }, { data: picks }, { data: spotlights }] =
       await Promise.all([
         supabase
@@ -131,7 +136,7 @@ export default async function EventsPage() {
       ids.length > 0
         ? await supabase
             .from('profiles')
-            .select('id, display_name, verified_at, photos(storage_path, is_primary)')
+            .select('id, display_name, verified_at, gender, interested_in, photos(storage_path, is_primary)')
             .in('id', ids)
         : { data: [] };
 
@@ -141,6 +146,8 @@ export default async function EventsPage() {
         {
           display_name: p.display_name,
           verified_at: p.verified_at,
+          gender: p.gender,
+          interested_in: p.interested_in,
           photo:
             p.photos?.find((ph) => ph.is_primary)?.storage_path ??
             p.photos?.[0]?.storage_path ??
@@ -150,11 +157,18 @@ export default async function EventsPage() {
     );
 
     participants =
-      (entries ?? []).map((e) => ({
-        userId: e.user_id,
-        status: e.status,
-        profile: profileMap.get(e.user_id) ?? null
-      })) ?? [];
+      (entries ?? [])
+        .map((e) => ({
+          userId: e.user_id,
+          status: e.status,
+          profile: profileMap.get(e.user_id) ?? null
+        }))
+        .filter(
+          (p) =>
+            p.userId === user.id ||
+            (p.profile && isCompatible(myProfile, p.profile)) ||
+            false
+        ) ?? [];
     myEntry = (entries ?? []).find((e) => e.user_id === user.id) ?? null;
     myPicks = (picks ?? []).length;
   }

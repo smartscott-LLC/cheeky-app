@@ -64,6 +64,38 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
             <p className="text-xs text-zinc-500">
               You must be 18 or older. Brutus double-checks it at the door.
             </p>
+            <label htmlFor="gender">What are you?</label>
+            <select
+              id="gender"
+              name="gender"
+              required
+              defaultValue=""
+              className="w-full p-3 rounded-md bg-zinc-800"
+            >
+              <option value="" disabled>
+                Choose one
+              </option>
+              <option value="gentleman">Gentleman</option>
+              <option value="lady">Lady</option>
+            </select>
+            <p className="text-xs text-zinc-500">
+              The club pairs real gentlemen and real ladies — no surprises.
+              This tells the floor who you are.
+            </p>
+            <label htmlFor="interestedIn">Dating preference</label>
+            <select
+              id="interestedIn"
+              name="interestedIn"
+              defaultValue="everyone"
+              className="w-full p-3 rounded-md bg-zinc-800"
+            >
+              <option value="everyone">Both</option>
+              <option value="women">Ladies</option>
+              <option value="men">Gentlemen</option>
+            </select>
+            <p className="text-xs text-zinc-500">
+              Who you&apos;re here to meet. Personal, and never shown publicly.
+            </p>
             <label htmlFor="messageRetentionDays">
               How long should we keep your conversations?
             </label>

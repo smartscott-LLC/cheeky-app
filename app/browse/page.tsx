@@ -1,6 +1,7 @@
 import BrowseCard, { BrowsePerson } from '@/components/ui/Browse/BrowseCard';
 import { createClient } from '@/utils/supabase/server';
-import { getSubscription, getUser } from '@/utils/supabase/queries';
+import { getProfile, getSubscription, getUser } from '@/utils/supabase/queries';
+import { isCompatible } from '@/utils/helpers';
 import { redirect } from 'next/navigation';
 
 export default async function BrowsePage() {
@@ -28,9 +29,13 @@ export default async function BrowsePage() {
     exclude.add(m.user_id_b);
   });
 
+  // Identity + preference drive the Spark List: only mutually compatible
+  // people show up (each must be in the other's dating preference).
+  const myProfile = await getProfile(supabase, user.id);
+
   const { data: candidates } = await supabase
     .from('profiles')
-    .select('id, display_name, bio, verified_at, photos(id, storage_path, position, is_primary)')
+    .select('id, display_name, bio, verified_at, gender, interested_in, photos(id, storage_path, position, is_primary)')
     .limit(50);
 
   const { data: myWaves } = await supabase
@@ -52,7 +57,9 @@ export default async function BrowsePage() {
           : 3;
 
   const people: BrowsePerson[] = (candidates ?? [])
-    .filter((p) => !exclude.has(p.id))
+    .filter(
+      (p) => !exclude.has(p.id) && isCompatible(myProfile, p)
+    )
     .slice(0, 30)
     .map((p) => ({
       id: p.id,
