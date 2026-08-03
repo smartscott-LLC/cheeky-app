@@ -18,22 +18,34 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ['var(--font-sans)', ...fontFamily.sans]
+        sans: ['var(--font-sans)', ...fontFamily.sans],
+        script: ['var(--font-script)', 'cursive']
       },
-      // Floor palettes — source of truth: styles/palettes/*.scss
+      // Floor palettes — source of truth: styles/palettes/*.scss, brand
+      // values from the Club Cheeky UI Style Guide (persona_assets/).
       colors: {
         club: {
-          DEFAULT: '#F605BA', // shocking pink
-          pink: '#F605BA',
+          DEFAULT: '#FF2D9B', // neon pink (style guide)
+          pink: '#FF2D9B',
           cotton: '#FF56D5',
           indigo: '#6C089B',
           canary: '#F1F15E'
         },
         gold: {
-          DEFAULT: '#D29436', // harvest gold
-          royal: '#E9CD42',
+          DEFAULT: '#FFD700', // primary gold (style guide)
+          royal: '#FFE44D',
           graphite: '#434041',
           mocha: '#3E2E33'
+        },
+        purple: {
+          DEFAULT: '#2D0A4E', // deep purple (style guide)
+          neon: '#9B59B6'
+        },
+        cyan: {
+          DEFAULT: '#00F5FF' // neon cyan (style guide)
+        },
+        silver: {
+          DEFAULT: '#C0C0C0' // chrome silver (style guide)
         },
         platinum: {
           DEFAULT: '#C7C7C7', // silver
@@ -45,7 +57,8 @@ module.exports = {
           DEFAULT: '#FB035C', // hot fuchsia
           raspberry: '#85054C',
           mist: '#F0FFFF',
-          taupe: '#55484C'
+          taupe: '#55484C',
+          navy: '#1B3A6B' // diamond blue badge (style guide)
         }
       },
       keyframes: {

@@ -5,7 +5,16 @@ import { Toaster } from '@/components/ui/Toasts/toaster';
 import Concierge from '@/components/ui/Agent/Concierge';
 import { PropsWithChildren, Suspense } from 'react';
 import { getURL } from '@/utils/helpers';
+import { Great_Vibes } from 'next/font/google';
 import 'styles/main.css';
+
+// The club's script wordmark — gold metallic gradient, per the UI style guide.
+const script = Great_Vibes({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-script',
+  display: 'swap'
+});
 
 const title = 'Club Cheeky — The Club for Real Connections';
 const description =
@@ -23,7 +32,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en">
+    <html lang="en" className={script.variable}>
       <body className="bg-black">
         <Navbar />
         <main

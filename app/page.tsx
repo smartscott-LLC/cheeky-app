@@ -56,7 +56,12 @@ export default async function LandingPage() {
     <div className="bg-black text-white">
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="mx-auto max-w-6xl px-6 pt-24 pb-20 text-center sm:pt-32 sm:pb-28">
+        {/* Pink + gold glow behind the entrance */}
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -top-40 left-1/2 h-96 w-[42rem] -translate-x-1/2 rounded-full bg-club/10 blur-3xl" />
+          <div className="absolute top-24 left-1/2 h-72 w-96 -translate-x-1/2 rounded-full bg-gold/10 blur-3xl" />
+        </div>
+        <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-20 text-center sm:pt-20 sm:pb-28">
           <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
             A dating app built like a nightclub
           </p>
@@ -66,31 +71,36 @@ export default async function LandingPage() {
           <p className="mx-auto mt-4 max-w-2xl text-xl text-zinc-300 sm:text-2xl">
             Find your next date in our virtual nightclub.
           </p>
-          <p className="mt-10 text-2xl font-extrabold sm:text-3xl">
-            At Club Cheeky&apos;s,{' '}
-            <span className="text-club">you are the VIP.</span>
+
+          {/* The entrance — velvet doors, gold trim, pink neon */}
+          <div className="mx-auto mt-12 w-fit">
+            <div className="overflow-hidden rounded-2xl border-2 border-gold shadow-[0_0_45px_rgba(255,215,0,0.25),0_0_90px_rgba(255,45,155,0.18)]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/brand/entrance.png"
+                alt="The entrance to Club Cheeky"
+                className="h-72 w-56 object-cover sm:h-96 sm:w-72"
+              />
+            </div>
+          </div>
+
+          <p className="mt-12 text-2xl font-extrabold sm:text-3xl">
+            At Club Cheeky&apos;s, <span className="text-club">you are the VIP.</span>
           </p>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-zinc-400">
-            Everyone with an ID starts their very own VIP adventure. Spend $80 a
-            month somewhere else — or hit the Dance Floor and find your arm
-            candy right here.
-          </p>
-          <p className="mt-8 text-lg font-bold text-club">
-            The floors spin all hour — every quarter brings another room.
-          </p>
-          <p className="mx-auto mt-3 max-w-2xl text-lg text-zinc-400">
-            What are you waiting for? It&apos;s free to get your groove on.
+            Everyone with an ID starts their own VIP adventure. It&apos;s free
+            to get your groove on — money buys floors, never entry.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
               href="/signin/signup"
-              className="rounded-lg bg-club px-10 py-4 text-lg font-bold text-white transition hover:bg-club-cotton"
+              className="rounded-lg bg-club px-12 py-4 text-lg font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
             >
-              Enter
+              Join now
             </a>
             <a
               href="#membership"
-              className="rounded-lg border border-zinc-700 px-8 py-4 text-lg font-semibold text-zinc-200 transition hover:border-zinc-500 hover:text-white"
+              className="rounded-lg border-2 border-gold px-10 py-4 text-lg font-extrabold uppercase tracking-[0.12em] text-gold transition hover:bg-gold/10"
             >
               See the floors
             </a>

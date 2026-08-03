@@ -1,0 +1,27 @@
+@🎨 CLUB CHEEKY — UI STYLE GUIDE
+
+BRAND COLORS
+
+Primary Pink (Neon): #FF2D9B Primary Gold: #FFD700 Silver: #C0C0C0 Platinum: #E5E4E2 Diamond Blue: #1B3A6B Deep Purple: #2D0A4E Background Black: #0A0A0A
+TYPOGRAPHY
+
+Wordmark/Display: Cursive script, gold metallic gradient UI Labels: Sans-serif, all-caps, tight tracking Button Text: Bold sans-serif, centered
+MEMBERSHIP TIER BADGES (circular, 80px min)
+
+SILVER: Chrome/silver metallic, crown icon, #C0C0C0 GOLD: Gold metallic, crown icon, #FFD700 PLATINUM: Light silver-white, crown icon, #E5E4E2 DIAMOND: Deep navy blue, diamond gem icon, #1B3A6B
+BUTTONS
+
+"JOIN NOW" → Hot pink fill #FF2D9B, white bold text, 8px radius "UPGRADE" → Gold outline #FFD700, gold text, transparent fill "ENTER CLUB" → Deep purple fill #2D0A4E, white text "VIEW PROFILE" → Outline only, pink border, pink text
+FLOOR TAGS (pill shape, small)
+
+GOLD FLOOR: #FFD700 border, gold text, crown icon PLATINUM FLOOR: #E5E4E2 border, silver text, crown icon DIAMOND FLOOR: #1B3A6B border, blue text, diamond icon SILVER FLOOR: #C0C0C0 border, silver text, crown icon
+NOTIFICATION BADGES (pill shape)
+
+"IT'S A MATCH" → Pink #FF2D9B, heart icon "NEW MESSAGE" → Purple #2D0A4E, chat bubble icon "VIP ACCESS GRANTED" → Gold #FFD700, crown icon
+ICON SET (24px–48px, neon stroke style)
+
+Heart (double): Neon pink #FF2D9B Velvet Rope: Gold #FFD700 Cocktail Glass: Neon pink #FF2D9B Crown: Gold #FFD700 Wink Face: Neon pink circle, blue LED wink
+
+"SWAG SHOP" → Gold neon #FFD700, shopping bag icon "COAT CHECK" → Purple neon #9B59B6, coat hanger icon "DANCE FLOOR" → Pink neon #FF2D9B, disco ball icon "SPEED DATING" → Cyan neon #00F5FF, lightning bolt heart icon "GIFT SHOP" → Gold neon #FFD700, ribbon gift box icon "THE SPARK LIST"→ Pink neon #FF2D9B, flame/spark icon "CHEEKY CHATS" → Purple neon #9B59B6, speech bubble heart icon "EVENT CENTER" → Cyan neon #00F5FF, calendar star icon
+Floor assignments:
+DANCE FLOOR → Silver Floor SPEED DATING → Gold/Platinum Floor GIFT SHOP → All floors (tier-locked inventory) SWAG SHOP → All floors (redemption center)
