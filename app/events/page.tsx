@@ -1,68 +1,8 @@
-import EventFloor from '@/components/ui/Events/EventFloor';
 import { createClient } from '@/utils/supabase/server';
-import { getProfile, getUser } from '@/utils/supabase/queries';
-import { isCompatible } from '@/utils/helpers';
+import { getUser } from '@/utils/supabase/queries';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-
-const KIND_META: Record<
-  string,
-  {
-    name: string;
-    floor: string;
-    emoji: string;
-    tagline: string;
-    accent: string;
-    image: string;
-    gradient: string;
-  }
-> = {
-  dance_floor: {
-    name: 'The Dance Floor',
-    floor: 'Silver',
-    emoji: '🕺',
-    tagline: 'Hourly. 2 minutes to pick. One song to make it count.',
-    accent: 'text-club border-club/40',
-    image: '/brand/floor-free.png',
-    gradient: 'from-club-indigo via-club to-club-cotton'
-  },
-  themed_night: {
-    name: 'Themed Night',
-    floor: 'Gold',
-    emoji: '🎭',
-    tagline: 'The floor, dressed up. A pricier ticket, a deeper crowd.',
-    accent: 'text-gold border-gold/40',
-    image: '/brand/floor-gold.png',
-    gradient: 'from-gold-graphite via-gold to-gold-royal'
-  },
-  speed_dating: {
-    name: 'Speed Dating',
-    floor: 'Platinum',
-    emoji: '💘',
-    tagline: 'Rotations. Ranked picks. A certificate for the ones that click.',
-    accent: 'text-platinum border-platinum/40',
-    image: '/brand/floor-platinum.png',
-    gradient: 'from-platinum-navy via-platinum to-platinum-alice'
-  },
-  rooftop: {
-    name: 'The Rooftop',
-    floor: 'Diamond',
-    emoji: '🌇',
-    tagline: 'The penthouse pool. Closer, higher, fewer.',
-    accent: 'text-diamond border-diamond/40',
-    image: '/brand/floor-diamond.png',
-    gradient: 'from-diamond-raspberry via-diamond to-diamond-mist'
-  }
-};
-
-const GRID_KINDS = ['dance_floor', 'themed_night', 'rooftop'];
-
-function timeLabel(iso: string): string {
-  return new Date(iso).toLocaleTimeString([], {
-    hour: 'numeric',
-    minute: '2-digit'
-  });
-}
+import { KIND_META, eventUrl, timeLabel } from '@/utils/events';
 
 export default async function EventsPage() {
   const supabase = await createClient();
@@ -74,13 +14,24 @@ export default async function EventsPage() {
   // Make sure the next couple of hours of the playlist exist.
   await supabase.rpc('ensure_floor_events', { p_hours: 2 });
 
+  // Your floor decides which rooms are lit. Silver=0, Gold=1, Platinum=2,
+  // Diamond=3 — every room at or below your floor is open to you.
+  const { data: tierData } = await supabase.rpc('current_tier', {
+    p_user: user.id
+  });
+  const tier = (tierData as string) ?? 'standard';
+  const rank =
+    tier === 'gold' ? 1 : tier === 'platinum' ? 2 : tier === 'diamond' ? 3 : 0;
+
+  const kinds = Object.keys(KIND_META);
   const [{ data: events }, { data: announcements }] = await Promise.all([
     supabase
       .from('events')
       .select('*')
+      .in('kind', kinds)
       .gte('starts_at', new Date(Date.now() - 3 * 60 * 1000).toISOString())
       .order('starts_at')
-      .limit(4),
+      .limit(8),
     supabase
       .from('club_announcements')
       .select('body, created_at')
@@ -88,90 +39,11 @@ export default async function EventsPage() {
       .limit(5)
   ]);
 
-  const roomEvent =
-    (events ?? []).find((e) => GRID_KINDS.includes(e.kind)) ?? null;
-  const speedEvent = (events ?? []).find((e) => e.kind === 'speed_dating') ?? null;
-
-  let participants: {
-    userId: string;
-    status: string;
-    profile: {
-      display_name: string | null;
-      verified_at: string | null;
-      photo: string | null;
-    } | null;
-  }[] = [];
-  let myEntry: { status: string } | null = null;
-  let myPicks = 0;
-  let spotlightIds: string[] = [];
-  let onCenterStage = false;
-
-  if (roomEvent) {
-    // Identity + preference: the room only shows mutually compatible
-    // company — a real gentleman on one side, a real lady on the other.
-    const myProfile = await getProfile(supabase, user.id);
-
-    const [{ data: entries }, { data: picks }, { data: spotlights }] =
-      await Promise.all([
-        supabase
-          .from('event_entries')
-          .select('user_id, status')
-          .eq('event_id', roomEvent.id),
-        supabase
-          .from('event_picks')
-          .select('id')
-          .eq('event_id', roomEvent.id)
-          .eq('picker_id', user.id),
-        supabase
-          .from('center_stage')
-          .select('user_id')
-          .gt('center_stage_until', new Date().toISOString())
-      ]);
-
-    spotlightIds = (spotlights ?? []).map((s) => s.user_id);
-    onCenterStage = spotlightIds.includes(user.id);
-
-    const ids = (entries ?? []).map((e) => e.user_id);
-    const { data: profiles } =
-      ids.length > 0
-        ? await supabase
-            .from('profiles')
-            .select('id, display_name, verified_at, gender, interested_in, photos(storage_path, is_primary)')
-            .in('id', ids)
-            .is('bot_flagged_at', null)
-        : { data: [] };
-
-    const profileMap = new Map(
-      (profiles ?? []).map((p) => [
-        p.id,
-        {
-          display_name: p.display_name,
-          verified_at: p.verified_at,
-          gender: p.gender,
-          interested_in: p.interested_in,
-          photo:
-            p.photos?.find((ph) => ph.is_primary)?.storage_path ??
-            p.photos?.[0]?.storage_path ??
-            null
-        }
-      ])
-    );
-
-    participants =
-      (entries ?? [])
-        .map((e) => ({
-          userId: e.user_id,
-          status: e.status,
-          profile: profileMap.get(e.user_id) ?? null
-        }))
-        .filter(
-          (p) =>
-            p.userId === user.id ||
-            (p.profile && isCompatible(myProfile, p.profile)) ||
-            false
-        ) ?? [];
-    myEntry = (entries ?? []).find((e) => e.user_id === user.id) ?? null;
-    myPicks = (picks ?? []).length;
+  // The playlist spins one of each every hour — the first slot per room is
+  // its next (or current) set.
+  const nextByKind = new Map<string, NonNullable<typeof events>[number]>();
+  for (const e of events ?? []) {
+    if (!nextByKind.has(e.kind)) nextByKind.set(e.kind, e);
   }
 
   return (
@@ -182,7 +54,7 @@ export default async function EventsPage() {
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
           The hourly playlist. Four floors. Four rooms — every hour, on the
-          quarter — a Diamond plays the whole set.
+          quarter. Join any room any time; your spot is held for the next set.
         </p>
 
         {/* The overhead ticker — anonymous, in-app only. */}
@@ -194,7 +66,7 @@ export default async function EventsPage() {
             <ul className="divide-y divide-zinc-800">
               {(announcements ?? []).map((a, i) => (
                 <li key={i} className="px-4 py-2 text-sm text-zinc-300">
-                  {a.body}{" "}
+                  {a.body}{' '}
                   <span className="text-xs text-zinc-600">
                     {new Date(a.created_at).toLocaleTimeString([], {
                       hour: 'numeric',
@@ -207,143 +79,72 @@ export default async function EventsPage() {
           </div>
         )}
 
-        {/* The Gift Store link */}
-        <div className="mt-8 text-center">
-          <Link
-            href="/gifts"
-            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold text-club transition hover:bg-club/10"
-          >
-            🍾 Pour something at the Gift Store
-          </Link>
-        </div>
-
-        {/* The schedule */}
+        {/* The four rooms — lit up to your floor, behind the rope past it. */}
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {(events ?? []).map((e) => {
-            const meta = KIND_META[e.kind] ?? KIND_META.dance_floor;
-            const isSpeed = e.kind === 'speed_dating';
+          {kinds.map((kind) => {
+            const meta = KIND_META[kind];
+            const locked = rank < meta.rank;
+            const next = nextByKind.get(kind) ?? null;
             return (
               <div
-                key={e.id}
-                className={`overflow-hidden rounded-xl border bg-zinc-900/50 ${
-                  isSpeed ? 'border-platinum/40' : meta.accent.split(' ')[1]
+                key={kind}
+                className={`relative overflow-hidden rounded-2xl border bg-zinc-900/50 ${
+                  locked ? 'border-zinc-800' : 'border-zinc-700'
                 }`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={meta.image}
                   alt={meta.name}
-                  className="h-24 w-full object-cover"
+                  className="h-28 w-full object-cover"
                 />
                 <div className={`h-1 w-full bg-gradient-to-r ${meta.gradient}`} />
                 <div className="p-5">
                   <div className="flex items-center justify-between">
-                    <span className={`text-lg font-extrabold ${meta.accent.split(' ')[0]}`}>
-                      {meta.emoji}
-                    </span>
-                    <span className="text-xs font-bold uppercase tracking-wide text-zinc-500">
-                      {timeLabel(e.starts_at)}
+                    <h3 className="text-lg font-extrabold">
+                      {meta.emoji} {meta.name}
+                    </h3>
+                    <span
+                      className={`text-xs font-bold uppercase tracking-wide ${
+                        meta.accent.split(' ')[0]
+                      }`}
+                    >
+                      {meta.floor}
                     </span>
                   </div>
-                  <h3 className="mt-2 text-lg font-bold">{meta.name}</h3>
-                  <p className="text-xs text-zinc-500">
-                    {meta.floor} · {e.token_cost} tokens
+                  <p className="mt-1 text-xs text-zinc-500">
+                    {next
+                      ? `${timeLabel(next.starts_at)} · ${next.token_cost} tokens`
+                      : 'Between sets'}
                   </p>
                   <p className="mt-2 text-xs text-zinc-400">{meta.tagline}</p>
-                  <div className="mt-3 flex items-center justify-between">
-                    <span className="rounded-full border border-zinc-700 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-zinc-400">
-                      {e.status}
-                    </span>
-                    {isSpeed ? (
-                      <Link
-                        href="/events/speed"
-                        className="rounded-md bg-platinum px-3 py-1 text-xs font-bold text-platinum-navy transition hover:bg-platinum-alice"
-                      >
-                        Enter
-                      </Link>
-                    ) : (
-                      <span className="text-xs text-zinc-600">On this page</span>
-                    )}
-                  </div>
+                  {locked ? (
+                    <p className="mt-4 text-sm font-bold text-gold">
+                      Behind the rope. Come see what&apos;s on these floors with
+                      a {meta.floor} card today.
+                    </p>
+                  ) : (
+                    <Link
+                      href={eventUrl(kind)}
+                      className={`mt-4 inline-block w-full rounded-lg px-4 py-2 text-center text-sm font-bold transition ${meta.cta}`}
+                    >
+                      {next ? 'Enter the room →' : 'The room'}
+                    </Link>
+                  )}
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* The room — next grid event renders inline; speed dating has its own. */}
-        <div className="mt-12">
-          {roomEvent ? (
-            <div className="relative overflow-hidden rounded-2xl border border-zinc-800">
-              {/* The life of the floor */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={KIND_META[roomEvent.kind]?.image ?? '/brand/floor-free.png'}
-                alt=""
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black/70" />
-              <div className="relative p-6">
-              {onCenterStage && (
-                <div className="mx-auto mb-6 max-w-xl rounded-xl border border-gold/40 bg-gradient-to-r from-gold/15 via-zinc-900 to-club/10 p-4 text-center">
-                  <p className="text-sm font-bold text-gold">
-                    🌟 You&apos;re on Center Stage tonight
-                  </p>
-                  <p className="mt-1 text-xs text-zinc-400">
-                    The floor is yours. Show them what you&apos;ve got — the
-                    spotlight doesn&apos;t miss a thing.
-                  </p>
-                </div>
-              )}
-              <div className="mb-6 text-center">
-                <h2 className="text-2xl font-extrabold">
-                  {KIND_META[roomEvent.kind]?.emoji}{' '}
-                  {KIND_META[roomEvent.kind]?.name ?? 'The floor'}
-                </h2>
-                <p className="mt-1 text-sm text-zinc-400">
-                  {KIND_META[roomEvent.kind]?.tagline}
-                </p>
-              </div>
-              <EventFloor
-                event={{
-                  id: roomEvent.id,
-                  status: roomEvent.status,
-                  startsAt: roomEvent.starts_at,
-                  tokenCost: roomEvent.token_cost,
-                  minFill: roomEvent.min_fill
-                }}
-                kind={roomEvent.kind}
-                roomName={KIND_META[roomEvent.kind]?.name ?? 'The floor'}
-                participants={participants}
-                myEntry={myEntry}
-                myPicks={myPicks}
-                myUserId={user.id}
-                spotlightIds={spotlightIds}
-                photoBase={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`}
-              />
-              </div>
-            </div>
-          ) : speedEvent ? (
-            <div className="rounded-xl border border-platinum/40 bg-platinum/5 p-8 text-center">
-              <p className="text-3xl">💘</p>
-              <h2 className="mt-2 text-2xl font-extrabold">Speed Dating is next</h2>
-              <p className="mx-auto mt-1 max-w-md text-sm text-zinc-400">
-                Rotations every 90 seconds, ranked picks, and a certificate if
-                you both click. Entry is 25 tokens (reserved — back if no
-                match).
-              </p>
-              <Link
-                href="/events/speed"
-                className="mt-4 inline-block rounded-lg bg-platinum px-6 py-2.5 font-bold text-platinum-navy transition hover:bg-platinum-alice"
-              >
-                Enter the room
-              </Link>
-            </div>
-          ) : (
-            <p className="text-center text-zinc-500">
-              The playlist is spinning up — check back in a minute.
-            </p>
-          )}
+        {/* The Gift Shop link */}
+        <div className="mt-8 text-center">
+          <Link
+            href="/gifts"
+            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold text-club transition hover:bg-club/10"
+          >
+            🎁 Buy something for someone at the Gift Shop
+          </Link>
         </div>
       </div>
     </div>

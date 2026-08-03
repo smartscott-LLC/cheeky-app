@@ -37,7 +37,7 @@ const GIFT = {
   href: '/gifts',
   emoji: '🎁',
   name: 'Gift Shop',
-  sub: 'Pour something',
+  sub: 'Buy something',
   color: 'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
   pos: 'right-[6%] top-[42%]'
 };
@@ -76,7 +76,7 @@ export const FLOORS: FloorMeta[] = [
     accent: 'text-silver border-silver/50',
     rooms: [
       {
-        href: '/events',
+        href: '/events/dance_floor',
         emoji: '🪩',
         name: 'Dance Floor',
         sub: 'The hourly room',
@@ -100,11 +100,11 @@ export const FLOORS: FloorMeta[] = [
     accent: 'text-gold border-gold/50',
     rooms: [
       {
-        href: '/events/speed',
-        emoji: '💘',
-        name: 'Speed Dating',
-        sub: 'Rotations on the Gold floor',
-        color: 'text-cyan border-cyan/50 hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
+        href: '/events/themed_night',
+        emoji: '🎭',
+        name: 'Themed Night',
+        sub: 'The Gold floor\u2019s signature',
+        color: 'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
         pos: 'left-[6%] top-[42%]'
       },
       GIFT,
@@ -148,7 +148,7 @@ export const FLOORS: FloorMeta[] = [
     accent: 'text-diamond border-diamond/50',
     rooms: [
       {
-        href: '/events',
+        href: '/events/rooftop',
         emoji: '🌇',
         name: 'The Rooftop',
         sub: 'Closer, higher, fewer',

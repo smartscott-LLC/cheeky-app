@@ -2,12 +2,51 @@ import SpeedDatingFloor from '@/components/ui/Events/SpeedDatingFloor';
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 
 export default async function SpeedDatingPage() {
   const supabase = await createClient();
   const user = await getUser(supabase);
   if (!user) {
     return redirect('/signin');
+  }
+
+  // The Platinum room — only members who reach the Platinum floor get in.
+  const { data: tierData } = await supabase.rpc('current_tier', {
+    p_user: user.id
+  });
+  const tier = (tierData as string) ?? 'standard';
+  const rank =
+    tier === 'gold' ? 1 : tier === 'platinum' ? 2 : tier === 'diamond' ? 3 : 0;
+  if (rank < 2) {
+    return (
+      <div className="bg-black">
+        <div className="mx-auto max-w-2xl px-6 py-16 text-center">
+          <p className="text-5xl">💘</p>
+          <h1 className="mt-6 text-3xl font-extrabold">
+            Speed Dating is behind the rope.
+          </h1>
+          <p className="mx-auto mt-3 max-w-md text-zinc-400">
+            Come see what&apos;s on this floor with a Platinum card today —
+            the room&apos;s worth it.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/#membership"
+              className="rounded-lg bg-club px-8 py-3 font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
+            >
+              See the memberships
+            </Link>
+            <Link
+              href="/events"
+              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-zinc-200 transition hover:border-zinc-500 hover:text-white"
+            >
+              The Event Center
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   await supabase.rpc('ensure_floor_events', { p_hours: 2 });

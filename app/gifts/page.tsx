@@ -166,7 +166,7 @@ export default async function GiftsPage() {
           🎁 The Gift Shop
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
-          Pour something for someone. The club hears the cork pop — but only
+          Buy something for someone. The club hears the cork pop — but only
           they know it was you.
         </p>
         <div className="mt-10">

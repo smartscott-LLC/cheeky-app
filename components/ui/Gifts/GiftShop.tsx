@@ -259,7 +259,7 @@ export default function GiftShop({
                           }`}
                         >
                           {busy === `buy-${g.slug}`
-                            ? 'Pouring…'
+                            ? 'Buying…'
                             : `Buy for ${g.token_cost} tokens`}
                         </button>
                       </div>
@@ -287,7 +287,7 @@ export default function GiftShop({
                           className="mt-3 w-full rounded-lg bg-gold px-4 py-2 text-sm font-bold text-black transition hover:bg-gold-royal"
                         >
                           {busy === `buy-${basket.slug}`
-                            ? 'Pouring…'
+                            ? 'Buying…'
                             : `Buy for ${basket.token_cost} tokens`}
                         </button>
                       </div>

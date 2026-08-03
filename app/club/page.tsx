@@ -20,7 +20,7 @@ const SPOTS: FloorSpot[] = [
     href: '/gifts',
     emoji: '🎁',
     name: 'Gift Shop',
-    sub: 'Pour something',
+    sub: 'Buy something',
     color: 'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
     pos: 'right-[6%] top-[42%]'
   },
