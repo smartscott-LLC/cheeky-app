@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server';
 import { supabaseAdmin } from '@/utils/supabase/admin';
+import { recordMoment } from '@/utils/character-moments';
 
 export async function updateProfile(
   displayName: string,
@@ -187,6 +188,9 @@ export async function grantComplimentaryMembership(input: {
     console.error('grant failed:', error.message);
     return { error: error.message };
   }
+
+  // Personal milestone — the host(ess)/bouncer greets them on their floor.
+  await recordMoment(target.id, 'membership');
   return {};
 }
 

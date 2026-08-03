@@ -80,6 +80,44 @@ export type Database = {
           },
         ]
       }
+      character_moments: {
+        Row: {
+          character_id: string
+          created_at: string
+          id: string
+          message: string
+          milestone: string
+          seen_at: string | null
+          user_id: string
+        }
+        Insert: {
+          character_id: string
+          created_at?: string
+          id?: string
+          message: string
+          milestone: string
+          seen_at?: string | null
+          user_id: string
+        }
+        Update: {
+          character_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+          milestone?: string
+          seen_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "character_moments_character_id_fkey"
+            columns: ["character_id"]
+            isOneToOne: false
+            referencedRelation: "characters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       character_relations: {
         Row: {
           character_id: string
@@ -1387,6 +1425,29 @@ export type Database = {
           matched: boolean
           match_id: string
         }[]
+      }
+      record_character_moment: {
+        Args: {
+          p_user: string
+          p_character_slug: string
+          p_milestone: string
+          p_message: string
+        }
+        Returns: undefined
+      }
+      record_common_moment: {
+        Args: {
+          p_user: string
+          p_milestone: string
+        }
+        Returns: undefined
+      }
+      record_personal_moment: {
+        Args: {
+          p_user: string
+          p_milestone: string
+        }
+        Returns: undefined
       }
       resolve_song: {
         Args: {

@@ -115,6 +115,15 @@ const applyVerificationResult = async (userId: string, sessionId: string) => {
       });
     if (grantError)
       throw new Error(`Verification token grant failed: ${grantError.message}`);
+
+    // First verification — Brutus greets you at the door. Best-effort:
+    // never fail the webhook because a greeting didn't land.
+    const { error: momentError } = await supabaseAdmin.rpc(
+      'record_common_moment',
+      { p_user: userId, p_milestone: 'verification' }
+    );
+    if (momentError)
+      console.error('Verification moment failed:', momentError.message);
   }
 
   const { error: profileError } = await supabaseAdmin
@@ -349,6 +358,18 @@ const manageSubscriptionStatusChange = async (
   console.log(
     `Inserted/updated subscription [${subscription.id}] for user [${uuid}]`
   );
+
+  // New membership — the host(ess)/bouncer greets you on your floor. The
+  // RPC dedupes within 24h so the checkout + subscription webhooks (which
+  // both land here with createAction) greet once, not twice. Best-effort.
+  if (createAction) {
+    const { error: momentError } = await supabaseAdmin.rpc(
+      'record_personal_moment',
+      { p_user: uuid, p_milestone: 'membership' }
+    );
+    if (momentError)
+      console.error('Membership moment failed:', momentError.message);
+  }
 
   // For a new subscription copy the billing details to the customer object.
   // NOTE: This is a costly operation and should happen at the very end.

@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/utils/supabase/server';
+import { recordMoment } from '@/utils/character-moments';
 
 /** Buys a gift from the catalog — floor-gated, ledger debit, to inventory. */
 export async function buyGift(slug: string): Promise<{ error?: string }> {
@@ -36,6 +37,13 @@ export async function respondGift(
   accept: boolean
 ): Promise<{ error?: string }> {
   const supabase = await createClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: 'not signed in' };
+  }
+
   const { error } = await supabase.rpc('respond_gift', {
     p_send_id: sendId,
     p_accept: accept
@@ -43,6 +51,11 @@ export async function respondGift(
   if (error) {
     console.error('respondGift failed:', error.message);
     return { error: error.message };
+  }
+
+  // Personal milestone — the cast congratulates you for accepting a gift.
+  if (accept) {
+    await recordMoment(user.id, 'gift_accepted');
   }
   return {};
 }

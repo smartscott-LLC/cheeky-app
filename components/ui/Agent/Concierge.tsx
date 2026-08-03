@@ -29,6 +29,7 @@ export default function Concierge() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [typingIdx, setTypingIdx] = useState(0);
+  const [unreadMoments, setUnreadMoments] = useState(0);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -49,6 +50,23 @@ export default function Concierge() {
       });
   }, [signedIn, supabase]);
 
+  // Unread character-moment badge on the corner button.
+  useEffect(() => {
+    if (!signedIn) return;
+    (async () => {
+      const {
+        data: { user }
+      } = await supabase.auth.getUser();
+      if (!user) return;
+      const { count } = await supabase
+        .from('character_moments')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .is('seen_at', null);
+      setUnreadMoments(count ?? 0);
+    })();
+  }, [signedIn, supabase]);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, busy]);
@@ -58,6 +76,26 @@ export default function Concierge() {
     const t = setInterval(() => setTypingIdx((i) => (i + 1) % TYPING.length), 800);
     return () => clearInterval(t);
   }, [busy]);
+
+  const togglePanel = () => {
+    const next = !open;
+    setOpen(next);
+    if (next) {
+      // Opening the club reads the messages — clear the badge.
+      (async () => {
+        const {
+          data: { user }
+        } = await supabase.auth.getUser();
+        if (!user) return;
+        await supabase
+          .from('character_moments')
+          .update({ seen_at: new Date().toISOString() })
+          .eq('user_id', user.id)
+          .is('seen_at', null);
+        setUnreadMoments(0);
+      })();
+    }
+  };
 
   const openChat = (member: CastMember) => {
     setActive(member);
@@ -119,11 +157,16 @@ export default function Concierge() {
     <>
       {/* The corner button */}
       <button
-        onClick={() => setOpen((v) => !v)}
+        onClick={togglePanel}
         aria-label="Talk to the club characters"
         className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-club/50 bg-zinc-900 text-2xl shadow-[0_0_20px_rgba(246,5,186,0.4)] transition hover:scale-105"
       >
         🎭
+        {unreadMoments > 0 && (
+          <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-club px-1 text-[11px] font-bold text-white">
+            {unreadMoments > 9 ? '9+' : unreadMoments}
+          </span>
+        )}
       </button>
 
       {open && (

@@ -3,6 +3,7 @@ import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
 import { openConversation } from '@/app/messages/actions';
 import { redirect } from 'next/navigation';
+import MomentsStrip from '@/components/ui/Messages/MomentsStrip';
 
 export default async function MessagesPage() {
   const supabase = await createClient();
@@ -90,6 +91,8 @@ export default async function MessagesPage() {
             ← Back to the floor
           </Link>
         </p>
+
+        <MomentsStrip />
 
         {(waves ?? []).length > 0 && (
           <div className="mt-8 rounded-xl border border-platinum/30 bg-platinum/5 p-5">
