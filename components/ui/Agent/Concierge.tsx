@@ -34,7 +34,18 @@ export default function Concierge() {
   const [error, setError] = useState<string | null>(null);
   const [typingIdx, setTypingIdx] = useState(0);
   const [unreadMoments, setUnreadMoments] = useState(0);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const nearBottomRef = useRef(true);
+
+  // Start at the top, never yank the reader: only follow the stream when
+  // they're already at the bottom. Scrolling up to read is never interrupted.
+  // The container is scrolled directly (scrollTop) — scrollIntoView would
+  // scroll the whole page, not just the chat box.
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    nearBottomRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 120;
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -73,7 +84,9 @@ export default function Concierge() {
   }, [signedIn, supabase]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (!nearBottomRef.current) return;
+    const el = scrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [messages, busy]);
 
   useEffect(() => {
@@ -204,7 +217,11 @@ export default function Concierge() {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 space-y-3 overflow-y-auto p-4">
+          <div
+            ref={scrollRef}
+            onScroll={handleScroll}
+            className="flex-1 space-y-3 overflow-y-auto p-4"
+          >
             {messages.length === 0 && (
               <p className="pt-6 text-center text-sm text-zinc-500">
                 {chaz.tagline ?? `Talk to ${chaz.name}.`}
@@ -229,8 +246,7 @@ export default function Concierge() {
             {busy && (
               <p className="text-sm text-zinc-500">{TYPING[typingIdx]}…</p>
             )}
-            <div ref={bottomRef} />
-          </div>
+            </div>
 
           {error && (
             <p className="border-t border-zinc-800 px-4 py-2 text-xs text-club">
