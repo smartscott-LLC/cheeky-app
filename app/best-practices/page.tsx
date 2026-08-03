@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { CONTACT } from '@/utils/contact';
 
 const PRACTICES = [
   {
@@ -93,6 +94,21 @@ export default function BestPracticesPage() {
           </p>
           <p className="mt-4 text-xs text-zinc-500">
             You acknowledged this at signup (Best Practices v1). Policy: docs/Governance/best-practices.md.
+          </p>
+        </div>
+
+        <div className="mt-6 rounded-xl border border-platinum/30 bg-platinum/5 p-6 text-sm">
+          <h2 className="font-bold text-white">📮 Something feel off?</h2>
+          <p className="mt-2 text-zinc-300">
+            If something happened that made you feel unsafe — on the app or on
+            a date — write the front desk at{' '}
+            <a
+              href={`mailto:${CONTACT.dateSafely}`}
+              className="text-club underline hover:text-club-cotton"
+            >
+              {CONTACT.dateSafely}
+            </a>
+            . It goes straight to the club and we take it from there.
           </p>
         </div>
 

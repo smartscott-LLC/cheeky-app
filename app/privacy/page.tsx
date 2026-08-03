@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { CONTACT } from '@/utils/contact';
 
 const SECTIONS = [
   {
@@ -78,6 +79,17 @@ export default function PrivacyPage() {
         <p className="mt-8 text-xs text-zinc-600">
           Policy source: docs/Governance/privacy.md (binding on the build). Living
           document — refined as the club grows.
+        </p>
+
+        <p className="mt-4 text-sm text-zinc-400">
+          Questions about your data or your rights? Email{' '}
+          <a
+            href={`mailto:${CONTACT.info}`}
+            className="text-club underline hover:text-club-cotton"
+          >
+            {CONTACT.info}
+          </a>
+          .
         </p>
 
         <div className="mt-8 text-center">

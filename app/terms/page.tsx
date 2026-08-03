@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { CONTACT } from '@/utils/contact';
 
 const SECTIONS = [
   {
@@ -108,6 +109,17 @@ export default function TermsPage() {
         <p className="mt-8 text-xs text-zinc-600">
           Policy source: docs/Governance/terms.md (binding on the build). Living
           document — refined as the club grows.
+        </p>
+
+        <p className="mt-4 text-sm text-zinc-400">
+          Questions about the rules? Write the club at{' '}
+          <a
+            href={`mailto:${CONTACT.clubCheeky}`}
+            className="text-club underline hover:text-club-cotton"
+          >
+            {CONTACT.clubCheeky}
+          </a>
+          .
         </p>
 
         <div className="mt-8 text-center">

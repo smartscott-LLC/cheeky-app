@@ -128,17 +128,27 @@ Two actions: **Approve** (instant grant through the pipe, audit logged) and
 **Deny** (graceful in-character no). Optional note field (e.g., "asked for
 hospital proof").
 
-**Notifications (OPEN):** the owner wants an email when something lands in the
-queue. We do not have a mailer wired yet — OPEN decision: add Resend (cheap at
-our volume) or rely on the in-app queue for now.
+**Notifications (RESOLVED):** no mail client needed. Member-facing contact
+is via the club email addresses below (mailto links, routed to the founder's
+Zoho/CRM). Owner notifications for comp requests stay in-app via the Booth
+queue; a subdomain contact form (founder's own form server, Traefik-routed)
+is the later upgrade path.
 
-## 8. Club emails (OPEN — founder sets up)
+## 8. Club emails (LOCKED — founder-provided 2026-08-02)
 
-Club-flavored inboxes at `smartscott.online` (all route to the founder):
-`frontdesk@`, `helpdesk@`, `vip@` … Presented in-app on support surfaces
-(best-practices, account help, terms) to keep the club feeling real. Founder
-creates the mailboxes; the app only references the addresses. Outbound alerts
-(comp-request notifications) are a separate mailer concern (see §7 OPEN).
+Club-flavored inboxes at `smartscott.online`, all routed to the founder's
+Zoho account for parent `smartscott.com` and fielded by the CRM there:
+
+| Address | Purpose | Surfaced on |
+|---|---|---|
+| `info@smartscott.online` | General club info, data/privacy questions | Footer, Privacy |
+| `date.safely@smartscott.online` | Safety concerns — app or on a date | Best Practices |
+| `club.cheeky@smartscott.online` | Rules / membership / club questions | Terms |
+| `helpdesk@smartscott.online` | Support (ID-check escalation, account help) | Footer, Verification escalation |
+
+Single source of truth in code: `utils/contact.ts`. Later: a subdomain
+contact form (founder's own form server — SSL, Traefik routing, analytics)
+that members click through to the right division. No third-party mail client.
 
 ## 9. Guardrails (non-negotiable)
 
@@ -162,12 +172,15 @@ creates the mailboxes; the app only references the addresses. Outbound alerts
 4. **Claim codes** — one-use, launch + campaigns.
 5. **AI wiring** — the cast asks through the pipe via a grant tool in
    `app/api/agent`, subject to rung + pool.
-6. **Mailer (OPEN)** — comp-request alerts; club email addresses in-app.
+6. ~~Mailer~~ — **not needed** (see §7 RESOLVED); club email addresses are live
+   via `utils/contact.ts` (see §8).
 
 ## OPEN items (need founder sign-off before build)
 
-- [ ] Mailer choice for owner notifications (Resend vs in-app queue only).
-- [ ] Club email addresses to create + where they surface in-app.
+- [x] Mailer choice — **RESOLVED:** no mail client; Zoho/CRM + founder's own
+      form server later.
+- [x] Club email addresses — **LOCKED:** info / date.safely / club.cheeky /
+      helpdesk @smartscott.online (see §8).
 - [ ] Exact pool sizes / cooldowns per character (illustrative above).
 - [ ] Claim-code generation UX (owner page generates + copies codes).
 - [ ] Whether the owner wants a one-click "extend membership" button in the

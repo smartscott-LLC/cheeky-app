@@ -3,6 +3,7 @@
 import { startVerification } from '@/app/verify/actions';
 import Link from 'next/link';
 import type { Tables } from '@/types_db';
+import { CONTACT } from '@/utils/contact';
 
 type Profile = Tables<'profiles'>;
 
@@ -60,7 +61,14 @@ export default function VerificationPanel({
           Our support team will sort your ID check personally — no more loops.
         </p>
         <p className="mt-4 text-sm text-zinc-500">
-          Contact support with your email and we&apos;ll get you through.
+          Email the help desk at{' '}
+          <a
+            href={`mailto:${CONTACT.helpdesk}`}
+            className="text-club underline hover:text-club-cotton"
+          >
+            {CONTACT.helpdesk}
+          </a>{' '}
+          and we&apos;ll get you through.
         </p>
       </div>
     );
