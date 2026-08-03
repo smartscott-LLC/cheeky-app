@@ -121,9 +121,12 @@ Footer stays as-is (no floor links), with the Club Cheeky brand matching the nav
 ## 🎧 The house DJ — on every page
 
 A speaker button sits bottom-left on every page (the concierge owns
-bottom-right). The music is synthesized live in the browser (Web Audio, no
-files, no licensing) — upbeat four-on-the-floor house in A minor that
-randomizes per phrase. Browsers block sound until the first user gesture, so
-the floor comes alive on their first click/tap anywhere. Mute state is
-remembered (localStorage). DJ announcement voice (events/matches) is browser
-TTS, added with the event-audio pass.
+bottom-right). The DJ's real tracks play first — Pressure Gauge and Solar
+Flare Summit (founder-generated MP3s, no licensing), crossfaded like a live
+mix every ~35-60s. If a track ever fails to load, a synthesized house engine
+(Web Audio, 200 BPM) steps in so the floor never goes quiet. Browsers block
+sound until the first user gesture, so the floor comes alive on their first
+click/tap anywhere. Mute state is remembered (localStorage). The MP4
+versions (same music + cover art, no animation) sit in `public/video/` ready
+if we ever want the art displayed. DJ announcement voice (events/matches) is
+browser TTS, added with the event-audio pass.

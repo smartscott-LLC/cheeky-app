@@ -2,16 +2,25 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-// The club's house engine — synthesized live in the browser, no samples, no
-// licensing. 200 BPM, A minor, built for action: bass-drum gallop
-// (1-2-3 / 1-2), snare running just behind it with 4-beat rolls, fast 16th
-// hats, and the "t-t-t" hook bursting a fast 12-beat run, then freezing.
+// The club's music. The DJ's real tracks come first (founder-generated,
+// no licensing) — Pressure Gauge and Solar Flare Summit, crossfaded like a
+// live mix. If a track ever fails to load, the synthesized house engine
+// (below) takes over so the floor never goes quiet.
 
+const TRACKS = [
+  '/audio/pressure-gauge.mp3',
+  '/audio/solar-flare-summit.mp3'
+];
+const MIX_VOL = 0.5;
+const FADE_MS = 1400;
+
+// The fallback engine — synthesized live in the browser: 200 BPM, A minor,
+// bass-drum gallop, snare rolls, fast 16th hats, and a 12-beat hook that
+// bursts and freezes.
 const BPM = 200;
-const STEP = 60 / BPM / 4; // one 16th note (0.075s at 200 BPM)
-const CYCLE_STEPS = 64; // four bars of 16
+const STEP = 60 / BPM / 4;
+const CYCLE_STEPS = 64;
 
-// A minor — Am, F, C, G. The chords every dance floor knows.
 const CHORDS = [
   { bass: 110.0, notes: [220.0, 261.63, 329.63] }, // Am
   { bass: 87.31, notes: [174.61, 220.0, 261.63] }, // F
@@ -72,7 +81,6 @@ class ClubBeatEngine {
   }
 
   private snare(t: number, v: number) {
-    // Body + crack: a low thump under a bandpassed snap.
     const s = this.ctx!.createBufferSource();
     s.buffer = this.noise!;
     const bp = this.ctx!.createBiquadFilter();
@@ -180,32 +188,26 @@ class ClubBeatEngine {
     const chord = CHORDS[bar % 4];
     const sIdx = [0, 2, 4, 8, 10, 14].indexOf(s);
 
-    // Bass drum — the gallop: 1, 2, 3 — 1, 2 — and the pickup in.
     if (sIdx !== -1) this.kick(t, sIdx === 5 ? 0.95 : this.hu());
 
-    // Snare — running just behind the bass drum, with the 4-beat rolls.
     if (s === 1 || s === 3) this.snare(t, 0.75 * this.hu());
     if (bar % 2 === 0) {
-      if (s >= 8 && s <= 11) this.snare(t, 0.55 * this.hu()); // 1,2,3,4
+      if (s >= 8 && s <= 11) this.snare(t, 0.55 * this.hu());
     } else if (s >= 12 && s <= 15) {
-      this.snare(t, 0.55 * this.hu()); // the second 1,2,3,4
+      this.snare(t, 0.55 * this.hu());
     }
 
-    // Hats — fast 16ths, the downbeats hit harder.
     if (s % 2 === 1) this.hat(t, s % 4 === 3 ? 0.6 : 0.34);
     if (s === 14 && this.hatVariant === 2) this.hat(t, 0.4, true);
 
-    // Bass — 8ths on the root, popping up where the gallop lands.
     if (s % 2 === 0) {
       const oct = s === 4 || s === 12 ? 2 : 1;
       this.bass(t, chord.bass * oct, this.hu());
     }
 
-    // Stabs — the chord on the 1, and on the 3 when the room's hot.
     if (s === 0) this.stab(t, chord.notes, 0.9);
     else if (s === 8 && this.hatVariant === 2) this.stab(t, chord.notes, 0.6);
 
-    // The "t-t-t" hook — a fast 12-beat run, then it freezes.
     if (this.arpBar && bar === 0 && s < 12) {
       const idx = [0, 1, 2, 2][s % 4];
       this.pluck(t, chord.notes[idx] * 2, 0.85 * this.hu());
@@ -222,7 +224,6 @@ class ClubBeatEngine {
       if (this.step === CYCLE_STEPS) {
         this.step = 0;
         this.cycle++;
-        // Fresh pattern per phrase — plus the crash on the 1.
         this.hatVariant = Math.random() < 0.5 ? 1 : 2;
         this.arpBar = Math.random() < 0.75;
         this.crash(this.nextTime);
@@ -271,26 +272,101 @@ class ClubBeatEngine {
 
 /**
  * The house DJ — a speaker button in the bottom-left, on every page from
- * touchdown. The music is synthesized in the browser (no files, no rights);
- * browsers only let sound start after a user gesture, so the floor comes
- * alive on their first click or tap anywhere.
+ * touchdown. The DJ's tracks play first (crossfaded like a live mix); the
+ * synthesized engine steps in only if the tracks can't load. Browsers only
+ * allow sound after a user gesture, so the floor comes alive on the
+ * visitor's first click or tap anywhere.
  */
 export default function ClubAudio() {
   const [muted, setMuted] = useState(false);
   const engineRef = useRef<ClubBeatEngine | null>(null);
+  const tracksRef = useRef<HTMLAudioElement[] | null>(null);
+  const currentRef = useRef(0);
+  const switchingRef = useRef(false);
+  const mixTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const stopAll = () => {
+    if (mixTimerRef.current) {
+      clearTimeout(mixTimerRef.current);
+      mixTimerRef.current = null;
+    }
+    tracksRef.current?.forEach((a) => {
+      a.pause();
+      a.volume = 0;
+    });
+    engineRef.current?.stop();
+  };
+
+  const mixTo = () => {
+    const tracks = tracksRef.current;
+    if (!tracks || switchingRef.current) return;
+    switchingRef.current = true;
+    const from = currentRef.current;
+    const to = 1 - from;
+    tracks[to].currentTime = 0;
+    tracks[to]
+      .play()
+      .catch(() => {});
+    const start = performance.now();
+    const step = () => {
+      const p = Math.min(1, (performance.now() - start) / FADE_MS);
+      tracks[from].volume = MIX_VOL * (1 - p);
+      tracks[to].volume = MIX_VOL * p;
+      if (p < 1) {
+        requestAnimationFrame(step);
+      } else {
+        tracks[from].pause();
+        currentRef.current = to;
+        switchingRef.current = false;
+        scheduleMix();
+      }
+    };
+    requestAnimationFrame(step);
+  };
+
+  const scheduleMix = () => {
+    if (mixTimerRef.current) clearTimeout(mixTimerRef.current);
+    mixTimerRef.current = setTimeout(mixTo, 35000 + Math.random() * 25000);
+  };
+
+  const startTracks = (): Promise<void> => {
+    if (!tracksRef.current) {
+      tracksRef.current = TRACKS.map((src) => {
+        const a = new Audio(src);
+        a.loop = true;
+        a.volume = 0;
+        a.preload = 'auto';
+        return a;
+      });
+    }
+    const tracks = tracksRef.current;
+    currentRef.current = Math.floor(Math.random() * TRACKS.length);
+    const first = tracks[currentRef.current];
+    first.currentTime = 0;
+    return first.play().then(() => {
+      first.volume = MIX_VOL;
+      scheduleMix();
+    });
+  };
+
+  const startMusic = () => {
+    stopAll();
+    startTracks().catch(() => {
+      // The tracks didn't load — the synthesized DJ keeps the floor alive.
+      engineRef.current ??= new ClubBeatEngine();
+      engineRef.current.start();
+    });
+  };
 
   useEffect(() => {
     const isMuted = window.localStorage.getItem('club-audio-muted') === '1';
     setMuted(isMuted);
     if (isMuted) return;
 
-    const engine = new ClubBeatEngine();
-    engineRef.current = engine;
-    engine.start();
-
-    // First interaction anywhere starts the music (browser autoplay rule).
+    // Browsers only allow sound after a user gesture — the floor comes
+    // alive on their first click or tap anywhere.
     const startOnInteraction = () => {
-      engineRef.current?.start();
+      startMusic();
     };
     window.addEventListener('pointerdown', startOnInteraction, { once: true });
     window.addEventListener('keydown', startOnInteraction, { once: true });
@@ -298,7 +374,7 @@ export default function ClubAudio() {
     return () => {
       window.removeEventListener('pointerdown', startOnInteraction);
       window.removeEventListener('keydown', startOnInteraction);
-      engine.stop();
+      stopAll();
     };
   }, []);
 
@@ -306,17 +382,10 @@ export default function ClubAudio() {
     const next = !muted;
     setMuted(next);
     window.localStorage.setItem('club-audio-muted', next ? '1' : '0');
-    if (!engineRef.current) {
-      if (!next) {
-        engineRef.current = new ClubBeatEngine();
-        engineRef.current.start();
-      }
-      return;
-    }
     if (next) {
-      engineRef.current.stop();
+      stopAll();
     } else {
-      engineRef.current.start();
+      startMusic();
     }
   };
 
