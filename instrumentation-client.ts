@@ -4,7 +4,7 @@
 import posthog from 'posthog-js';
 import * as Sentry from '@sentry/nextjs';
 
-const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
 const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST;
 
 if (posthogKey && posthogHost) {
@@ -16,7 +16,7 @@ if (posthogKey && posthogHost) {
   });
 } else if (process.env.NODE_ENV === 'development') {
   const missingVariable = !posthogKey
-    ? 'NEXT_PUBLIC_POSTHOG_KEY'
+    ? 'NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN'
     : 'NEXT_PUBLIC_POSTHOG_HOST';
   throw new Error(
     `${missingVariable} variable required by PostHog is missing or un-configured, this causes events to be silently missed. This error stops appearing once ${missingVariable} is configured`
