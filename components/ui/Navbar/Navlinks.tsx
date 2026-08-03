@@ -53,6 +53,13 @@ export default function Navlinks({ user }: NavlinksProps) {
 
   return (
     <div className="relative flex items-center justify-between py-3 md:py-4">
+      {/* Meet the crew — centered, the club's people are its face */}
+      <Link
+        href="/crew"
+        className="absolute left-1/2 hidden -translate-x-1/2 rounded-full border border-gold/50 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-gold transition hover:border-gold hover:bg-gold/10 md:inline-flex"
+      >
+        Meet the Crew
+      </Link>
       <div className="flex items-center">
         <Link href="/" className={s.logo} aria-label="Club Cheeky home">
           <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-gold shadow-[0_0_14px_rgba(255,215,0,0.35)]">
@@ -69,6 +76,10 @@ export default function Navlinks({ user }: NavlinksProps) {
         </Link>
       </div>
       <nav className="flex items-center gap-1 lg:gap-2">
+        {/* Mobile: the crew link rides with the rest of the links */}
+        <Link href="/crew" className={`${s.link} md:hidden`}>
+          Meet the Crew
+        </Link>
         {user ? (
           <>
             <Link href="/account" className={s.link}>

@@ -71,7 +71,7 @@ export default function MomentsStrip() {
   return (
     <div className="mt-8 rounded-xl border border-club/30 bg-club/5 p-5">
       <p className="text-xs font-bold uppercase tracking-[0.3em] text-club">
-        👋 The cast stopped by
+        👋 The crew stopped by
       </p>
       <div className="mt-4 space-y-3">
         {moments.map((m) => (
@@ -93,7 +93,7 @@ export default function MomentsStrip() {
             <div className="min-w-0">
               <p className="flex flex-wrap items-baseline gap-x-2 text-sm">
                 <span className="font-bold text-white">
-                  {m.characters?.name ?? 'The Cast'}
+                  {m.characters?.name ?? 'The Crew'}
                 </span>
                 <span className="text-xs text-zinc-500">
                   {MILESTONE_LABEL[m.milestone] ?? m.milestone} ·{' '}

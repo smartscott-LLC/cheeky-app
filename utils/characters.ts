@@ -18,3 +18,16 @@ export function characterFloorLabel(slug: string): string {
   const rank = characterFloorRank(slug);
   return rank === 1 ? 'Gold' : rank === 2 ? 'Platinum' : rank === 3 ? 'Diamond' : 'Silver';
 }
+
+const CHARACTER_FLOOR_NAMES: Record<string, string> = {
+  brutus: 'The lobby',
+  dj: 'Silver floor',
+  bartender: 'Gold floor',
+  trixie: 'Platinum floor',
+  hostess: 'Diamond floor',
+  chaz: 'Every floor'
+};
+
+export function characterFloorName(slug: string): string {
+  return CHARACTER_FLOOR_NAMES[slug] ?? 'The club';
+}

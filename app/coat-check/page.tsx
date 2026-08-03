@@ -237,9 +237,9 @@ export default async function CoatCheckPage() {
           </div>
         </div>
 
-        {/* The cast — bonds */}
+        {/* The crew — bonds */}
         <div className="mt-10">
-          <h2 className="text-xl font-bold">🎭 The cast</h2>
+          <h2 className="text-xl font-bold">🎭 The crew</h2>
           <p className="text-sm text-zinc-500">
             Characters, not real people — each with a job in the club. Get to
             know them.

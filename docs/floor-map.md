@@ -110,6 +110,7 @@ not chat).
 | Where | Button | Notes |
 |---|---|---|
 | Left | Logo (entrance art + "Club Cheeky") | Always |
+| Center | **Meet the Crew** (→ `/crew`) | Always — every floor, inside and out; portraits + fullbodies of the whole crew |
 | Right | **Account** | Signed in |
 | Right | **Enter the club** → **Lobby** | The only thing that changes: on the street it's "Enter the club", inside it's "Lobby" — same destination `/club` |
 | Right | **Sign out** | Signed in |
