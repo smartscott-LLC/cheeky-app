@@ -9,6 +9,7 @@ export interface BrowsePerson {
   id: string;
   display_name: string | null;
   bio: string | null;
+  one_liner?: string | null;
   verified_at: string | null;
   photos: { storage_path: string | null; is_primary: boolean | null }[];
 }
@@ -119,7 +120,7 @@ export default function BrowseCard({
           )}
         </div>
         <p className="mt-2 text-zinc-400">
-          {person.bio || 'Just got through the door.'}
+          {person.one_liner || person.bio || 'Just got through the door.'}
         </p>
       </div>
       <div className="flex gap-3 p-6 pt-0">

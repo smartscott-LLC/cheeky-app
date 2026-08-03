@@ -138,6 +138,7 @@ export default async function EventsPage() {
             .from('profiles')
             .select('id, display_name, verified_at, gender, interested_in, photos(storage_path, is_primary)')
             .in('id', ids)
+            .is('bot_flagged_at', null)
         : { data: [] };
 
     const profileMap = new Map(

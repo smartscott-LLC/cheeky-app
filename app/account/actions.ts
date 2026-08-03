@@ -8,7 +8,9 @@ export async function updateProfile(
   displayName: string,
   bio: string,
   interestedIn?: 'women' | 'men' | 'everyone',
-  gender?: 'gentleman' | 'lady' | null
+  gender?: 'gentleman' | 'lady' | null,
+  oneLiner?: string,
+  honeypot?: string
 ): Promise<{ error?: string }> {
   const supabase = await createClient();
   const {
@@ -18,11 +20,23 @@ export async function updateProfile(
     return { error: 'not signed in' };
   }
 
+  // Honeypot: a filled hidden field means a bot. Flag the account (the
+  // activity guards shut it down) and never save — no warning, no mercy.
+  if (honeypot) {
+    await supabaseAdmin.rpc('flag_honeypot_catch', {
+      p_field: 'website',
+      p_page: 'profile',
+      p_user: user.id
+    });
+    return { error: 'could not save' };
+  }
+
   const { error } = await supabase
     .from('profiles')
     .update({
       display_name: displayName.trim().slice(0, 50),
       bio: bio.trim().slice(0, 500),
+      one_liner: (oneLiner ?? '').trim().slice(0, 80) || null,
       interested_in: interestedIn ?? 'everyone',
       gender: gender ?? null
     })

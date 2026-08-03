@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/utils/supabase/server';
+import { supabaseAdmin } from '@/utils/supabase/admin';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getURL, getErrorRedirect, getStatusRedirect } from 'utils/helpers';
@@ -172,6 +173,7 @@ export async function signUp(formData: FormData) {
   const retention = Number(formData.get('messageRetentionDays') ?? 90);
   const gender = String(formData.get('gender') ?? '').trim();
   const interestedIn = String(formData.get('interestedIn') ?? '').trim();
+  const honeypot = String(formData.get('company') ?? '').trim();
   const termsConsent = formData.get('termsConsent') === 'on';
   const privacyConsent = formData.get('privacyConsent') === 'on';
   const bestPracticesConsent = formData.get('bestPracticesConsent') === 'on';
@@ -184,6 +186,23 @@ export async function signUp(formData: FormData) {
       'Please accept the Rules of the Club, the Privacy Policy, and the Best Practices disclaimer to enter.'
     );
     return redirectPath;
+  }
+
+  // Honeypot: a filled hidden field means a bot, not a human. Log it and
+  // reject without ever creating the account (and without telling the bot
+  // it was caught).
+  if (honeypot) {
+    await supabaseAdmin.rpc('flag_honeypot_catch', {
+      p_field: 'company',
+      p_page: 'signup',
+      p_email: email
+    });
+    redirectPath = getErrorRedirect(
+      '/signin/signup',
+      'Almost there.',
+      'Please complete the form to enter.'
+    );
+    return redirect(redirectPath);
   }
 
   if (gender !== 'gentleman' && gender !== 'lady') {

@@ -815,6 +815,33 @@ export type Database = {
         }
         Relationships: []
       }
+      honeypot_catches: {
+        Row: {
+          created_at: string
+          email: string | null
+          field: string
+          id: number
+          page: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          field: string
+          id?: never
+          page: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          field?: string
+          id?: never
+          page?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       likes: {
         Row: {
           created_at: string
@@ -1126,34 +1153,40 @@ export type Database = {
       profiles: {
         Row: {
           bio: string
+          bot_flagged_at: string | null
           created_at: string
           display_name: string
           gender: string | null
           id: string
           interested_in: string
           message_retention_days: number
+          one_liner: string | null
           updated_at: string
           verified_at: string | null
         }
         Insert: {
           bio?: string
+          bot_flagged_at?: string | null
           created_at?: string
           display_name?: string
           gender?: string | null
           id: string
           interested_in?: string
           message_retention_days?: number
+          one_liner?: string | null
           updated_at?: string
           verified_at?: string | null
         }
         Update: {
           bio?: string
+          bot_flagged_at?: string | null
           created_at?: string
           display_name?: string
           gender?: string | null
           id?: string
           interested_in?: string
           message_retention_days?: number
+          one_liner?: string | null
           updated_at?: string
           verified_at?: string | null
         }
@@ -1753,6 +1786,25 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      flag_honeypot_catch:
+        | {
+            Args: {
+              p_field: string
+              p_page: string
+              p_email?: string
+              p_user?: string
+            }
+            Returns: undefined
+          }
+        | {
+            Args: {
+              p_user: string
+              p_field: string
+              p_page: string
+              p_email?: string
+            }
+            Returns: undefined
+          }
       flag_swag_request: {
         Args: {
           p_user: string

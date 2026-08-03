@@ -157,6 +157,15 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
           >
             Sign up
           </Button>
+          {/* Honeypot — hidden from humans, irresistible to bots. */}
+          <input
+            type="text"
+            name="company"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            className="absolute -left-[9999px] h-0 w-0 opacity-0"
+          />
         </div>
       </form>
       <p>Already have an account?</p>

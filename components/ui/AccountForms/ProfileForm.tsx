@@ -21,6 +21,7 @@ interface ProfileFormProps {
   bio: string;
   interestedIn?: 'women' | 'men' | 'everyone';
   gender?: 'gentleman' | 'lady' | null;
+  oneLiner?: string | null;
   photos: ProfilePhoto[];
   photoBase: string;
   photoLimit?: number;
@@ -34,14 +35,17 @@ export default function ProfileForm({
   bio,
   interestedIn = 'everyone',
   gender = null,
+  oneLiner = null,
   photos: initialPhotos,
   photoBase,
   photoLimit = MAX_PHOTOS
 }: ProfileFormProps) {
   const [name, setName] = useState(displayName);
   const [bioText, setBioText] = useState(bio);
+  const [oneLinerText, setOneLinerText] = useState(oneLiner ?? '');
   const [pref, setPref] = useState<'women' | 'men' | 'everyone'>(interestedIn);
   const [identity, setIdentity] = useState<'gentleman' | 'lady' | null>(gender);
+  const [honeypot, setHoneypot] = useState('');
   const [photos, setPhotos] = useState<ProfilePhoto[]>(initialPhotos);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -125,7 +129,7 @@ export default function ProfileForm({
       setSaving(false);
       return;
     }
-    const res = await updateProfile(name, bioText, pref, identity);
+    const res = await updateProfile(name, bioText, pref, identity, oneLinerText, honeypot);
     setSaving(false);
     if (res.error) {
       setError(res.error);
@@ -216,6 +220,23 @@ export default function ProfileForm({
           />
         </div>
         <div className="grid gap-1">
+          <label htmlFor="oneLiner" className="text-sm font-semibold">
+            Your one-liner
+          </label>
+          <input
+            id="oneLiner"
+            value={oneLinerText}
+            onChange={(e) => setOneLinerText(e.target.value)}
+            maxLength={80}
+            placeholder="What's your best pickup line?"
+            className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
+          />
+          <p className="text-xs text-zinc-500">
+            A little insight goes a long way. The Spark List shows it under
+            your name.
+          </p>
+        </div>
+        <div className="grid gap-1">
           <label htmlFor="gender" className="text-sm font-semibold">
             What are you?
           </label>
@@ -277,6 +298,18 @@ export default function ProfileForm({
 
       {error && <p className="mt-3 text-sm text-club">{error}</p>}
       {saved && <p className="mt-3 text-sm text-emerald-400">Saved.</p>}
+
+      {/* Honeypot — hidden from humans, irresistible to bots. */}
+      <input
+        type="text"
+        name="website"
+        value={honeypot}
+        onChange={(e) => setHoneypot(e.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute -left-[9999px] h-0 w-0 opacity-0"
+      />
 
       <button
         onClick={handleSave}

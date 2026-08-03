@@ -35,7 +35,8 @@ export default async function BrowsePage() {
 
   const { data: candidates } = await supabase
     .from('profiles')
-    .select('id, display_name, bio, verified_at, gender, interested_in, photos(id, storage_path, position, is_primary)')
+    .select('id, display_name, bio, one_liner, verified_at, gender, interested_in, photos(id, storage_path, position, is_primary)')
+    .is('bot_flagged_at', null)
     .limit(50);
 
   const { data: myWaves } = await supabase
@@ -65,6 +66,7 @@ export default async function BrowsePage() {
       id: p.id,
       display_name: p.display_name,
       bio: p.bio,
+      one_liner: p.one_liner,
       verified_at: p.verified_at,
       photos: (p.photos ?? [])
         .slice(0, photoLimit)
