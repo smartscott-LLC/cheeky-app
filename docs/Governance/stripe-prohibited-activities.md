@@ -204,6 +204,40 @@ what Stripe Identity provides.
 
 ---
 
+## 6. Controls to prevent non-consensual involvement
+
+Club Cheeky treats consent as the floor's law. Non-consensual involvement —
+including non-consensual intimate imagery or profiles created without a
+person's consent — is a permanent-bounce offense, and the platform is
+designed to make it structurally difficult and immediately reportable.
+
+- **Verified identity:** every account is bound to a government ID + live
+  selfie checked through Stripe Identity, so an account created without a
+  person's consent is attributable to a real, verified identity — and is
+  permanently removed on confirmation.
+- **Profiles are self-created by verified members:** a profile is built by
+  its own verified member with their own photos and declared identity.
+  A profile created without consent is reported and removed with prejudice.
+- **Report/Block from any chat, one tap:** non-consensual intimate imagery
+  is explicitly covered by our Terms/AUP prohibitions on explicit content
+  and sharing others' private information. Reports are reviewed by a human;
+  confirmed cases are permanently bounced with no warning.
+- **The AI staff on every floor** are privy to member context and trained to
+  direct any disclosure of coercion, duress, or non-consensual content to
+  the human reporting process and the safety desk.
+- **Safety desk** (`date.safely@smartscott.online`) is a confidential direct
+  line; reports involving potential victims are prioritized and, where
+  warranted, referred to law enforcement per our protocols.
+- **No-follow-up rule:** a decline closes the conversation — no
+  re-messaging, no re-pairing in consecutive rounds, enforced in code.
+
+**Honest note.** We do not run automated image-scanning for intimate
+imagery; detection relies on reporting, human review, and the
+verified-identity deterrent. Confirmed non-consensual content results in a
+permanent bounce and, where required, referral to law enforcement.
+
+---
+
 *Living document — refined as the club grows. Backed by the policy layer in
 `docs/Governance/`. If automated content scanning is required by a platform
 or jurisdiction, it is a defined build we will ship and document here.*
