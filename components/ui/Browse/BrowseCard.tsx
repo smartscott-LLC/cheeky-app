@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { likeUser, waveAt } from '@/app/browse/actions';
 import { openConversation } from '@/app/messages/actions';
+import posthog from 'posthog-js';
 
 export interface BrowsePerson {
   id: string;
@@ -87,6 +88,7 @@ export default function BrowseCard({
     setWaveBusy(false);
     if (res.error) return;
     setWaved((s) => new Set(s).add(person.id));
+    posthog.capture('member_waved_at');
   };
 
   return (
@@ -151,6 +153,10 @@ export default function BrowseCard({
             setBusy(true);
             const result = await likeUser(person.id);
             setBusy(false);
+            if (result.error) return;
+            posthog.capture('member_liked', {
+              resulted_in_match: result.matched
+            });
             if (result.matched) {
               setMatched(person);
             } else {

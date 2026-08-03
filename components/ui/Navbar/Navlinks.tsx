@@ -6,6 +6,8 @@ import { handleRequest } from '@/utils/auth-helpers/client';
 import Logo from '@/components/icons/Logo';
 import { usePathname, useRouter } from 'next/navigation';
 import { getRedirectMethod } from '@/utils/auth-helpers/settings';
+import posthog from 'posthog-js';
+import { type FormEvent, useEffect } from 'react';
 import s from './Navbar.module.css';
 
 interface NavlinksProps {
@@ -15,6 +17,27 @@ interface NavlinksProps {
 export default function Navlinks({ user }: NavlinksProps) {
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    posthog.identify(user.id, {
+      ...(user.email ? { email: user.email } : {}),
+      ...(typeof user.user_metadata?.full_name === 'string'
+        ? { name: user.user_metadata.full_name }
+        : {})
+    });
+  }, [user?.id, user?.email, user?.user_metadata?.full_name]);
+
+  const handleSignOut = async (e: FormEvent<HTMLFormElement>) => {
+    const result = await handleRequest(
+      e,
+      SignOut,
+      getRedirectMethod() === 'client' ? router : null
+    );
+    posthog.reset();
+    return result;
+  };
 
   return (
     <div className="relative flex items-center justify-between py-4 md:py-6">
@@ -53,15 +76,7 @@ export default function Navlinks({ user }: NavlinksProps) {
       </nav>
       <div className="flex items-center justify-end space-x-8">
         {user ? (
-          <form
-            onSubmit={(e) =>
-              handleRequest(
-                e,
-                SignOut,
-                getRedirectMethod() === 'client' ? router : null
-              )
-            }
-          >
+          <form onSubmit={handleSignOut}>
             <input type="hidden" name="pathName" value={pathname} />
             <button type="submit" className={s.link}>
               Sign out

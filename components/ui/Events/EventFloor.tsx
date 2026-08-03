@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { joinEvent, leaveEvent, pickOnFloor } from '@/app/events/actions';
 import MatchedOverlay from '@/components/ui/Events/MatchedOverlay';
+import posthog from 'posthog-js';
 
 interface Participant {
   userId: string;
@@ -203,11 +204,16 @@ export default function EventFloor({
       );
       return;
     }
+    posthog.capture('event_joined', {
+      event_kind: kind,
+      token_cost: event.tokenCost
+    });
     await refresh();
   };
 
   const handleLeave = async () => {
-    await leaveEvent(event.id);
+    const res = await leaveEvent(event.id);
+    if (!res.error) posthog.capture('event_left', { event_kind: kind });
     await refresh();
   };
 
@@ -221,6 +227,10 @@ export default function EventFloor({
       await refresh();
       return;
     }
+    posthog.capture('event_pick_made', {
+      event_kind: kind,
+      resulted_in_match: res.matched
+    });
     if (res.matched) {
       // Find the song-chat conversation, then hit the MATCHED moment.
       const { data: conv } = await supabase

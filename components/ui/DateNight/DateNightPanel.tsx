@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { tapDateNight } from '@/app/date-night/actions';
+import posthog from 'posthog-js';
 
 const ROUND_SECONDS = 30;
 
@@ -109,7 +110,8 @@ export default function DateNightPanel({
 
   const handleTap = async (idx: number) => {
     if (!live || !state) return;
-    await tapDateNight(gameId, state.current_index, idx);
+    const result = await tapDateNight(gameId, state.current_index, idx);
+    if (!result.error) posthog.capture('date_night_answer_selected');
     await poll();
   };
 

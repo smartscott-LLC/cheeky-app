@@ -18,6 +18,7 @@ import {
   toggleDJ,
   unlockDJ
 } from '@/utils/audio/dj';
+import posthog from 'posthog-js';
 
 interface Message {
   id: number;
@@ -188,6 +189,7 @@ export default function MessageThread({
       setError(describeError(res.error));
       return;
     }
+    posthog.capture('message_sent', { channel: songMode ? 'event' : 'standard' });
     setInput('');
     await refresh();
   };
@@ -201,7 +203,10 @@ export default function MessageThread({
       setError(describeError(res.error));
       return;
     }
-    if (res.gameId) setDateNightGame(res.gameId);
+    if (res.gameId) {
+      posthog.capture('date_night_started');
+      setDateNightGame(res.gameId);
+    }
   };
 
   const handleAddInterest = async () => {

@@ -16,9 +16,16 @@ export async function joinEvent(
   return {};
 }
 
-export async function leaveEvent(eventId: string) {
+export async function leaveEvent(
+  eventId: string
+): Promise<{ error?: string }> {
   const supabase = await createClient();
-  await supabase.rpc('leave_event', { p_event_id: eventId });
+  const { error } = await supabase.rpc('leave_event', { p_event_id: eventId });
+  if (error) {
+    console.error('leaveEvent failed:', error.message);
+    return { error: error.message };
+  }
+  return {};
 }
 
 export async function pickOnFloor(

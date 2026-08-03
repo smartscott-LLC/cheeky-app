@@ -4,6 +4,7 @@ import { startVerification } from '@/app/verify/actions';
 import Link from 'next/link';
 import type { Tables } from '@/types_db';
 import { CONTACT } from '@/utils/contact';
+import posthog from 'posthog-js';
 
 type Profile = Tables<'profiles'>;
 
@@ -109,7 +110,11 @@ export default function VerificationPanel({
         </p>
       )}
 
-      <form action={startVerification} className="mt-6 space-y-4">
+      <form
+        action={startVerification}
+        onSubmit={() => posthog.capture('verification_started')}
+        className="mt-6 space-y-4"
+      >
         <label className="flex items-start gap-3 text-sm text-zinc-300">
           <input
             type="checkbox"

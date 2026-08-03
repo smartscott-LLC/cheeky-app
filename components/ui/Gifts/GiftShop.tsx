@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { buyGift, respondGift, sendGift } from '@/app/gifts/actions';
+import posthog from 'posthog-js';
 
 export interface GiftPerson {
   id: string;
@@ -100,7 +101,12 @@ export default function GiftShop({
   const [sendFor, setSendFor] = useState<{ giftId: string; name: string } | null>(null);
   const [recipient, setRecipient] = useState('');
 
-  const run = async (key: string, fn: () => Promise<{ error?: string }>) => {
+  const run = async (
+    key: string,
+    fn: () => Promise<{ error?: string }>,
+    event?: string,
+    properties?: Record<string, string | boolean>
+  ) => {
     setError(null);
     setBusy(key);
     const res = await fn();
@@ -109,6 +115,7 @@ export default function GiftShop({
       setError(describe(res.error));
       return;
     }
+    if (event) posthog.capture(event, properties);
     setSendFor(null);
     setRecipient('');
     router.refresh();
@@ -158,14 +165,28 @@ export default function GiftShop({
                 </div>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => run(`accept-${g.id}`, () => respondGift(g.id, true))}
+                    onClick={() =>
+                      run(
+                        `accept-${g.id}`,
+                        () => respondGift(g.id, true),
+                        'gift_response_submitted',
+                        { accepted: true }
+                      )
+                    }
                     disabled={busy === `accept-${g.id}`}
                     className="rounded-lg bg-club px-4 py-2 text-sm font-bold text-white transition hover:bg-club-cotton"
                   >
                     Accept — come see the floor
                   </button>
                   <button
-                    onClick={() => run(`deny-${g.id}`, () => respondGift(g.id, false))}
+                    onClick={() =>
+                      run(
+                        `deny-${g.id}`,
+                        () => respondGift(g.id, false),
+                        'gift_response_submitted',
+                        { accepted: false }
+                      )
+                    }
                     disabled={busy === `deny-${g.id}`}
                     className="rounded-lg border border-zinc-700 px-4 py-2 text-sm font-semibold text-zinc-300 hover:border-zinc-500"
                   >
@@ -222,7 +243,14 @@ export default function GiftShop({
                         <p className="mt-2 font-bold">{g.name}</p>
                         <p className="text-sm text-zinc-400">{giftPitch(g)}</p>
                         <button
-                          onClick={() => run(`buy-${g.slug}`, () => buyGift(g.slug))}
+                          onClick={() =>
+                            run(
+                              `buy-${g.slug}`,
+                              () => buyGift(g.slug),
+                              'gift_purchased',
+                              { gift_kind: g.kind, gift_floor: g.floor }
+                            )
+                          }
                           disabled={busy === `buy-${g.slug}`}
                           className={`mt-3 w-full rounded-lg px-4 py-2 text-sm font-bold text-white transition ${
                             g.kind === 'featured'
@@ -247,7 +275,14 @@ export default function GiftShop({
                         <p className="mt-2 font-bold">{basket.name}</p>
                         <p className="text-sm text-zinc-400">{giftPitch(basket)}</p>
                         <button
-                          onClick={() => run(`buy-${basket.slug}`, () => buyGift(basket.slug))}
+                          onClick={() =>
+                            run(
+                              `buy-${basket.slug}`,
+                              () => buyGift(basket.slug),
+                              'gift_purchased',
+                              { gift_kind: basket.kind, gift_floor: basket.floor }
+                            )
+                          }
                           disabled={busy === `buy-${basket.slug}`}
                           className="mt-3 w-full rounded-lg bg-gold px-4 py-2 text-sm font-bold text-black transition hover:bg-gold-royal"
                         >
@@ -328,7 +363,8 @@ export default function GiftShop({
                     onClick={() =>
                       recipient &&
                       run(`send-${sendFor.giftId}`, () =>
-                        sendGift(sendFor.giftId, recipient)
+                        sendGift(sendFor.giftId, recipient),
+                        'gift_sent'
                       )
                     }
                     disabled={!recipient || busy === `send-${sendFor.giftId}`}
