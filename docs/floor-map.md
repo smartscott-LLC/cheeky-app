@@ -84,6 +84,27 @@ The free floor. Dance Floor lives here and nowhere else.
 
 ---
 
+## 🎭 The cast — who lives where
+
+Each floor has its own face. Tap their square (top-left of the room) to chat.
+Chats are gated by floor — you meet the cast you can reach, and the cast can
+always reach you (they greet members on milestones regardless of tier).
+
+| Floor | Character | Chat | Button image | Avatar |
+|---|---|---|---|---|
+| Lobby | **Brutus**, the bouncer | `/chat/brutus` | `personas/brutus/door.png` | `portrait.png` |
+| Silver | **The DJ** (D34D_B34T) | `/chat/dj` | `personas/dj/crowd.png` | `stage.png` |
+| Gold | **Roxy**, the mixologist | `/chat/bartender` | `personas/bartender/fullbody.png` | `portrait.png` |
+| Platinum | **Trixie**, the waitress | `/chat/trixie` | `personas/trixie/fullbody.png` | `portrait.png` |
+| Diamond | **Valentina**, the hostess | `/chat/hostess` | `personas/hostess/fullbody.png` | `portrait.png` |
+| Everywhere | **Chaz**, the club manager | floating concierge (bottom-right) | — | `personas/chaz/portrait.png` |
+
+Chaz is the only character in the floating concierge — everyone else lives on
+their floor. The coat-check cast grid keeps showing bond levels (collection,
+not chat).
+
+---
+
 ## 🧭 Nav bar — every page
 
 | Where | Button | Notes |

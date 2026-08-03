@@ -65,6 +65,46 @@ const CENTER = {
   pos: 'left-1/2 top-[58%] -translate-x-1/2'
 };
 
+// The cast — the floor's face. Their fullbody image is the button; the chat
+// page shows the portrait. Top-left, mirroring the elevators top-right, so
+// they're visible without scrolling. The floor map doc lists who is where.
+const DJ = {
+  href: '/chat/dj',
+  image: '/personas/dj/crowd.png',
+  emoji: '🎧',
+  name: 'The DJ',
+  sub: 'D34D_B34T on the decks',
+  color: 'text-cyan border-cyan/50 hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
+  pos: 'left-[6%] top-[8%]'
+};
+const ROXY = {
+  href: '/chat/bartender',
+  image: '/personas/bartender/fullbody.png',
+  emoji: '🍸',
+  name: 'Roxy',
+  sub: 'The mixologist',
+  color: 'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+  pos: 'left-[6%] top-[8%]'
+};
+const TRIXIE = {
+  href: '/chat/trixie',
+  image: '/personas/trixie/fullbody.png',
+  emoji: '🛎️',
+  name: 'Trixie',
+  sub: 'The waitress',
+  color: 'text-club border-club/50 hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+  pos: 'left-[6%] top-[8%]'
+};
+const VALENTINA = {
+  href: '/chat/hostess',
+  image: '/personas/hostess/fullbody.png',
+  emoji: '💎',
+  name: 'Valentina',
+  sub: 'The hostess',
+  color: 'text-diamond border-diamond/50 hover:shadow-[0_0_24px_rgba(251,3,92,0.25)]',
+  pos: 'left-[6%] top-[8%]'
+};
+
 export const FLOORS: FloorMeta[] = [
   {
     slug: 'silver',
@@ -74,6 +114,7 @@ export const FLOORS: FloorMeta[] = [
     tagline: 'The base of the club — free, and it stays fun. The Dance Floor spins every hour.',
     accent: 'text-silver border-silver/50',
     rooms: [
+      DJ,
       {
         href: '/events/dance_floor',
         emoji: '🪩',
@@ -97,6 +138,7 @@ export const FLOORS: FloorMeta[] = [
     tagline: 'Themed nights, deeper crowds, more to do.',
     accent: 'text-gold border-gold/50',
     rooms: [
+      ROXY,
       {
         href: '/events/themed_night',
         emoji: '🎭',
@@ -120,6 +162,7 @@ export const FLOORS: FloorMeta[] = [
     tagline: 'Speed Dating at its finest, plus the upper rooms.',
     accent: 'text-platinum border-platinum/50',
     rooms: [
+      TRIXIE,
       {
         href: '/events/speed',
         emoji: '💘',
@@ -143,6 +186,7 @@ export const FLOORS: FloorMeta[] = [
     tagline: 'The penthouse. The Rooftop, the whole building.',
     accent: 'text-diamond border-diamond/50',
     rooms: [
+      VALENTINA,
       {
         href: '/events/rooftop',
         emoji: '🌇',

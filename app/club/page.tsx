@@ -9,6 +9,15 @@ import FloorLayout, { FloorSpot } from '@/components/ui/Club/FloorLayout';
 // (gold), Chats + Spark List front and center (pink), elevators upper right.
 const SPOTS: FloorSpot[] = [
   {
+    href: '/chat/brutus',
+    image: '/personas/brutus/door.png',
+    emoji: '💪',
+    name: 'Brutus',
+    sub: 'The bouncer',
+    color: 'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+    pos: 'left-[6%] top-[8%]'
+  },
+  {
     href: '/floor/silver',
     emoji: '👑',
     name: 'VIP area',

@@ -8,6 +8,9 @@ export interface FloorSpot {
   sub: string;
   color: string;
   pos: string;
+  /** The cast spots carry the character's image instead of an emoji. */
+  image?: string;
+  imageAlt?: string;
 }
 
 interface FloorLayoutProps {
@@ -52,7 +55,18 @@ export default function FloorLayout({
             href={spot.href}
             className={`absolute ${spot.pos} group rounded-xl border bg-black/70 px-5 py-4 backdrop-blur-sm transition hover:bg-black/85 ${spot.color}`}
           >
-            <p className="text-2xl">{spot.emoji}</p>
+            <p className="text-2xl">
+              {spot.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={spot.image}
+                  alt={spot.imageAlt ?? spot.name}
+                  className="h-16 w-16 rounded-xl object-cover"
+                />
+              ) : (
+                spot.emoji
+              )}
+            </p>
             <p className="mt-1 text-sm font-extrabold uppercase tracking-[0.12em] group-hover:text-white">
               {spot.name}
             </p>
@@ -77,7 +91,18 @@ export default function FloorLayout({
               href={spot.href}
               className={`rounded-xl border bg-black/80 p-4 backdrop-blur-sm ${spot.color}`}
             >
-              <p className="text-2xl">{spot.emoji}</p>
+              <p className="text-2xl">
+                {spot.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={spot.image}
+                    alt={spot.imageAlt ?? spot.name}
+                    className="h-16 w-16 rounded-xl object-cover"
+                  />
+                ) : (
+                  spot.emoji
+                )}
+              </p>
               <p className="mt-1 text-sm font-extrabold uppercase tracking-[0.12em]">
                 {spot.name}
               </p>
