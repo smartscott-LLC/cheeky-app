@@ -25,13 +25,30 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // URL to redirect to after sign in process completes — the club is the
-  // destination; the velvet-rope gate inside handles the unverified.
+  // Where to send them depends on whether they've cleared the door:
+  // unverified members go straight to Brutus (the ID check) — one hoop,
+  // two minutes, then the lobby. Verified members walk straight in.
+  const supabase = await createClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+  let verified = false;
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('verified_at')
+      .eq('id', user.id)
+      .maybeSingle();
+    verified = Boolean(profile?.verified_at);
+  }
+
   return NextResponse.redirect(
     getStatusRedirect(
-      `${requestUrl.origin}/club`,
+      `${requestUrl.origin}${verified ? '/club' : '/verify'}`,
       'Welcome in.',
-      'The club is open.'
+      verified
+        ? 'The club is open.'
+        : 'Now the Door Check — Brutus needs your ID.'
     )
   );
 }
