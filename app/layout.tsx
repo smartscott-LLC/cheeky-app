@@ -3,6 +3,7 @@ import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
 import { Toaster } from '@/components/ui/Toasts/toaster';
 import Concierge from '@/components/ui/Agent/Concierge';
+import ClubAudio from '@/components/ui/Audio/ClubAudio';
 import { PropsWithChildren, Suspense } from 'react';
 import { getURL } from '@/utils/helpers';
 import { Great_Vibes } from 'next/font/google';
@@ -47,6 +48,9 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         </Suspense>
         <Suspense>
           <Concierge />
+        </Suspense>
+        <Suspense>
+          <ClubAudio />
         </Suspense>
       </body>
     </html>
