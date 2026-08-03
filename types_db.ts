@@ -9,6 +9,53 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      benefit_grants: {
+        Row: {
+          actor_ref: string | null
+          actor_type: string
+          benefit_type: string
+          benefit_value: string
+          code_id: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          actor_ref?: string | null
+          actor_type: string
+          benefit_type: string
+          benefit_value: string
+          code_id?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          reason?: string
+          user_id: string
+        }
+        Update: {
+          actor_ref?: string | null
+          actor_type?: string
+          benefit_type?: string
+          benefit_value?: string
+          code_id?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          reason?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "benefit_grants_code_id_fkey"
+            columns: ["code_id"]
+            isOneToOne: false
+            referencedRelation: "swag_codes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blocks: {
         Row: {
           blocked_id: string
@@ -949,6 +996,24 @@ export type Database = {
         }
         Relationships: []
       }
+      promo_config: {
+        Row: {
+          engine_enabled: boolean
+          id: boolean
+          updated_at: string
+        }
+        Insert: {
+          engine_enabled?: boolean
+          id?: boolean
+          updated_at?: string
+        }
+        Update: {
+          engine_enabled?: boolean
+          id?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       reports: {
         Row: {
           context: string | null
@@ -1182,6 +1247,111 @@ export type Database = {
           },
         ]
       }
+      swag_codes: {
+        Row: {
+          actor_ref: string | null
+          actor_type: string
+          benefit_type: string
+          benefit_value: string
+          claimed_at: string | null
+          claimed_by_user_id: string | null
+          code: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          max_uses: number
+          notes: string | null
+          used_count: number
+        }
+        Insert: {
+          actor_ref?: string | null
+          actor_type: string
+          benefit_type: string
+          benefit_value: string
+          claimed_at?: string | null
+          claimed_by_user_id?: string | null
+          code: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          max_uses?: number
+          notes?: string | null
+          used_count?: number
+        }
+        Update: {
+          actor_ref?: string | null
+          actor_type?: string
+          benefit_type?: string
+          benefit_value?: string
+          claimed_at?: string | null
+          claimed_by_user_id?: string | null
+          code?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          max_uses?: number
+          notes?: string | null
+          used_count?: number
+        }
+        Relationships: []
+      }
+      swag_flags: {
+        Row: {
+          actor_ref: string | null
+          benefit_type: string
+          benefit_value: string
+          created_at: string
+          id: string
+          reason: string | null
+          resolved_at: string | null
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          actor_ref?: string | null
+          benefit_type: string
+          benefit_value: string
+          created_at?: string
+          id?: string
+          reason?: string | null
+          resolved_at?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          actor_ref?: string | null
+          benefit_type?: string
+          benefit_value?: string
+          created_at?: string
+          id?: string
+          reason?: string | null
+          resolved_at?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      swag_rules: {
+        Row: {
+          benefit_type: string
+          benefit_value: string
+          owner_only: boolean
+          weekly_limit: number | null
+        }
+        Insert: {
+          benefit_type: string
+          benefit_value: string
+          owner_only?: boolean
+          weekly_limit?: number | null
+        }
+        Update: {
+          benefit_type?: string
+          benefit_value?: string
+          owner_only?: boolean
+          weekly_limit?: number | null
+        }
+        Relationships: []
+      }
       token_ledger: {
         Row: {
           created_at: string
@@ -1390,6 +1560,28 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      flag_swag_request: {
+        Args: {
+          p_user: string
+          p_actor_ref: string
+          p_benefit_type: string
+          p_benefit_value: string
+          p_reason?: string
+        }
+        Returns: undefined
+      }
+      generate_swag_code: {
+        Args: {
+          p_benefit_type: string
+          p_benefit_value: string
+          p_actor_type: string
+          p_actor_ref?: string
+          p_expires_at?: string
+          p_max_uses?: number
+          p_notes?: string
+        }
+        Returns: string
+      }
       get_or_create_conversation: {
         Args: {
           p_other: string
@@ -1415,6 +1607,16 @@ export type Database = {
           p_payload: Json
         }
         Returns: boolean
+      }
+      owner_grant: {
+        Args: {
+          p_user: string
+          p_benefit_type: string
+          p_benefit_value: string
+          p_reason?: string
+          p_days?: number
+        }
+        Returns: undefined
       }
       pick_on_floor: {
         Args: {
@@ -1448,6 +1650,15 @@ export type Database = {
           p_milestone: string
         }
         Returns: undefined
+      }
+      redeem_swag_code: {
+        Args: {
+          p_code: string
+        }
+        Returns: {
+          benefit_type: string
+          benefit_value: string
+        }[]
       }
       resolve_song: {
         Args: {

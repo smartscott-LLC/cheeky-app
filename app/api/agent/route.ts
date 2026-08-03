@@ -5,6 +5,11 @@ import {
   streamDeepseekDirect,
   DirectMessage
 } from '@/utils/agent/deepseek-direct';
+import {
+  hasSwagAccess,
+  swagSystemNote,
+  swagMarkerTransform
+} from '@/utils/agent/swag-marker';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -123,12 +128,18 @@ export async function POST(req: Request) {
   ].join('\n');
 
   const system = buildSystemPrompt(char.persona_prompt, context);
+  const swagNote = hasSwagAccess(character) ? swagSystemNote(character) : '';
+  const fullSystem = swagNote ? `${system}\n${swagNote}` : system;
 
   try {
     const messages: DirectMessage[] = [
       ...(Array.isArray(body.history) ? body.history.slice(-10) : []),
       { role: 'user', content: message }
     ];
+
+    // Swag hook: turns [[SWAG:slug]] markers into real codes (or flags the
+    // owner) as the reply streams. Applies to both model paths below.
+    const swagTransform = swagMarkerTransform(character, user.id);
 
     // Primary: straight to DeepSeek (cheapest, no middleman). The gateway
     // is the free fallback when no DEEPSEEK_API_KEY is set.
@@ -137,15 +148,15 @@ export async function POST(req: Request) {
       const stream = await streamDeepseekDirect({
         apiKey: directKey,
         model: process.env.DEEPSEEK_MODEL ?? 'deepseek-chat',
-        system,
+        system: fullSystem,
         messages
       });
-      return new NextResponse(stream, {
+      return new NextResponse(stream.pipeThrough(swagTransform), {
         headers: { 'Content-Type': 'text/plain; charset=utf-8' }
       });
     }
 
-    const result = streamAgent({ system, messages });
+    const result = streamAgent({ system: fullSystem, messages });
     // Pump the async text stream into a web ReadableStream.
     const stream = new ReadableStream<Uint8Array>({
       async start(controller) {
@@ -159,7 +170,7 @@ export async function POST(req: Request) {
         }
       }
     });
-    return new NextResponse(stream, {
+    return new NextResponse(stream.pipeThrough(swagTransform), {
       headers: { 'Content-Type': 'text/plain; charset=utf-8' }
     });
   } catch (err) {

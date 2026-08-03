@@ -1,187 +1,151 @@
-# Club Cheeky — Feature PRD: The Generosity Engine
+# Club Cheeky — Feature PRD: The Generosity Engine (Swag Shop)
 
-> Status: **DRAFT (design)** — founder vision captured 2026-08-02, pending build.
-> This is the AI + visual reference for how the club gives things away. The
-> mermaid flow below is the canonical picture; everything in this doc hangs
-> off it.
+> Status: **BUILT — v0.6-swag-shop** (2026-08-02). Founder's simplified
+> design: ONE room, ONE universal unit — the code. This is the AI + visual
+> reference; the mermaid flow below is the canonical picture.
 > Extends `PRD-foundation.md` (token economy, mission guardrails) and
 > `PRD-phase5-wing.md` (the cast — the engine's staff). Companion: `AGENTS.md`.
 
 ## 1. TL;DR
 
-The Generosity Engine is a **hidden, always-on system for giving things away** —
-memberships, tokens, gifts, passes. It is not a launch stunt; it is how the club
-runs: launch giveaways, continuous promos, service recovery, and cast members
-comping small kindnesses mid-conversation. Everything a member ever receives
-free flows through one pipe, is audit-logged, and is **never announced as
-scarcity** — it is always "here, this is on us."
+The Generosity Engine is a **hidden, always-on system for giving things away**
+— memberships, tokens, gifts. It is not a launch stunt; it is how the club
+runs. The founder's simplification: **the Swag Shop** — one room, no per-floor
+logic, same everywhere. Everything flows through **one universal unit: the
+code**. Input what it gives → a code is generated and tied to it → the code
+bypasses Stripe and applies the benefit straight to the database → every
+grant is logged and tracked by its code.
 
-Four inputs, one pipe, one audit trail:
-
-1. **Claim codes** — one-use codes for the launch (100 Gold / 50 Platinum /
-   10 Diamond) and any campaign. Redeem → full 30-day membership, member flows
-   through the app exactly like a paying member (no special area, no test flag).
-2. **Staff authority (the AI, budgeted)** — the cast can grant small things
-   in-character, within per-character pools, through a clearance ladder.
-3. **The Owner's key** — founder grants bypass every limit; high-ticket items
-   escalate to the owner's approval queue.
-4. **System/automation** — milestone bonuses, retention gestures, etc.
+Four benefits flow through the pipe: **membership** (30-day entitlement),
+**tokens**, **gifts** (from the catalog). **Verification is NOT a code** —
+that door stays a real ID check (governance + safety).
 
 ## 2. The canonical flow (saved visual reference)
 
 ```mermaid
 flowchart TD
-    A[Cast member sees a moment to help] --> B[Reasons within their pool]
-    B --> C{Item within clearance + pool?}
-    C -->|Yes - small stuff| D[Auto-grant - instant, audit logged]
-    C -->|No - mid/high stuff| E[Chaz files a comp request]
-    E --> F[Owner approval queue]
-    F --> G{Owner decides}
-    G -->|Approve| H[Grant applied - audit logged]
-    G -->|Deny| I[AI gets a graceful no - stays in character]
+    A[Someone gives — owner, cast, or promo] --> B[Swag Shop: input item + generate]
+    B --> C{Who is asking?}
+    C -->|Cast - small item within rule set| D[Code generated, weekly cap decrements]
+    C -->|Cast - owner-only item| E[FLAG - logged to the Owner's Booth]
+    C -->|Owner| D
+    E --> F[Owner reviews why + grants or dismisses]
+    D --> G[Code handed to member]
+    G --> H[Member enters code in Swag Shop]
+    H -->|Hash valid| I[Benefit applied + audit logged]
+    H -->|Hash invalid| J[Rejected - not on the list]
 ```
 
-## 3. The clearance ladder (three rungs)
+## 3. The rule set — the flag job
 
-The engine is not one big "write to DB" button. Every benefit type has a
-clearance rung, enforced **server-side in the database** — the cast can *ask*
-for anything, but the DB only honors what their clearance + pool allow.
+Per-item rules enforced **centrally in the engine**, so it doesn't matter who
+is asking — a confused AI and a hacked caller both get flagged the same way.
 
-| Rung | Who decides | What flows through | Example |
-|---|---|---|---|
-| **1 — AI-auto** | The character, instantly | Small gifts, small token drops, 24h guest pass | Trixie slides a struggling member a teddy bear |
-| **2 — AI-recommend → owner approves** | Founder via approval queue | Mid grants: a week of Gold, a real token bundle, featured gifts | Chaz smooths an escalation with 1 week Gold + 100 tokens |
-| **3 — Owner-only** | Founder only | Diamond memberships, the gift basket, champagne | The car-accident comp (see §6) |
-
-Rules:
-
-- The AI **cannot grant above its rung** — a confused or buggy cast member
-  physically cannot insert a Level-3 grant. Worst case it asks the owner
-  nicely. That is the granular clearance the founder asked for: not "the AI can
-  write," but "the AI can write *these specific things*."
-- **No fake promises:** because the engine won't honor above-rung grants, the
-  cast can never oversell ("I'll talk to the owner" is honest — it really does
-  go to the owner).
-
-## 4. Pools that force reasoning
-
-Each character gets a **monthly comp budget expressed in token-worth**, plus
-cooldowns and per-grant caps. The cast has to *reason* about spending, not
-spray.
-
-| Character | Pool (illustrative) | Typical comps |
+| Item | Who | Weekly cap (cast) |
 |---|---|---|
-| Trixie (floor scout) | ~500 tokens/month | Mini gifts (teddy bear = 25), small token drops |
-| Chaz (manager) | ~2,000 tokens/month | Mid grants (week of Gold ≈ 250), escalations |
-| Valentina (hostess) | VIP-only gestures | Comped event entry, VIP niceties |
-| Brutus / DJ | No comp pool | Never hand out — they protect/spin, not comp |
+| Gold membership | cast + owner | 3/week |
+| Platinum / Diamond membership | owner only | — |
+| Token bags (20 / 50 / 100) | cast + owner | 5 / 3 / 1 per week |
+| Teddy bear / Golden roses / Jewelry | cast + owner | 10 / 5 / 2 per week |
+| Champagne / Gift basket | owner only | — |
 
-Pool exhausted or item above rung → **escalate, don't stretch.**
+- Anything **not listed is owner-only** (fail-closed).
+- The cap counts codes generated that week — generate one, one less left.
+- Owner-only + cast attempt → **`owner_required` flag**: logged to the
+  Owner's Booth with the member + the cast's stated reason ("I need to know
+  why they're requesting those items"), and the cast sees "the front desk
+  has put in a word with the owner."
+- Owner grants bypass caps (the owner IS the supply), but every grant is
+  still audited and the whole engine has a fail-closed kill switch
+  (`promo_config.engine_enabled`).
 
-## 5. DB enforcement model
+## 4. The code lifecycle
 
-- One **grant pipe** (`grant_benefit`) that atomically writes the benefit
-  (entitlement grant / token ledger / gift inventory / pass) **and** an audit
-  row: actor (owner | character slug | system), recipient, benefit, value,
-  reason, rung, expires.
-- **Per-type grant RPCs** with clearance baked in (`grant_gift` L1,
-  `grant_membership` L2/L3 by tier, `grant_basket` L3). Service-role only —
-  members can never grant themselves anything (same rule as tokens).
-- **Comp requests** (L2/L3) are *pending* rows — nothing is applied until the
-  owner approves.
-- **Budgets** enforced inside the RPCs: pool balance, cooldowns, per-grant
-  caps. A character that spends its pool is done until the owner tops it up.
+1. **Generate** — the actor (owner via the Booth, or the cast via the AI
+   shelf) calls the RPC; the rule set is checked; a random hash
+   (`SWAG-XXXXXXXX`) is created and **tied to exactly one item** in one row.
+2. **Give** — the code is handed out in whatever way (in chat, on a card,
+   in an email, a batch of 100 for launch).
+3. **Redeem** — the member enters the code in the Swag Shop; the engine
+   validates it against that row. No match = invalid. Match = the tied item
+   is rewarded (entitlement / ledger / inventory) + an **audit row**.
+4. **Log** — the code row records who generated it and who claimed it; the
+   benefit grant is in `benefit_grants` (actor, benefit, reason, time).
 
-## 6. Escalation — the canonical case (OPEN pattern)
+## 5. Actor access
 
-Founder's example, captured as the reference scenario:
+| Actor | Can do | Enforcement |
+|---|---|---|
+| **Owner** | Generate any code, grant directly by email, resolve flags, toggle engine | ADMIN_KEY-gated Booth (`/owner`) + service-role RPCs |
+| **Character (cast)** | Small items within rule-set caps, via `[[SWAG:slug]]` in conversation | Service-role route + DB rule set (hard backstop) |
+| **System** | Anything (automation) | Service-role only |
+| **Member** | Redeem codes they've been given | Authenticated RPC; can never mint or read codes |
 
-> A member bought a Diamond membership, then was in a car accident and spent
-> 30 days in the hospital — never got to use it. He mentions it to the cast, or
-> files it. The AI picks up on it. **It escalates to the owner** (Level 3 —
-> diamond membership, owner-only). The owner makes a judgment call — possibly
-> asking the member to send proof (e.g., hospital paperwork) to a club email —
-> then approves a 30-day extension.
+## 6. The Owner's Booth (`/owner`)
 
-Rules that fall out of this:
+Keyed page (ADMIN_KEY) — the front desk of the Swag Shop:
 
-- **Anything above a rung, or outside the playbook, escalates.** We can't
-  enumerate every incident — the ladder handles the ones we can't predict.
-- **The owner is the final judgment call.** The AI recommends; the owner
-  decides. The AI stays in character either way (approve → celebration;
-  deny → graceful, honest no — never a hard rejection).
-- **Proof can be requested.** The owner may ask the member to email evidence
-  to a club address; that happens outside the app, owner-side.
+- **Engine switch** — kill the whole engine instantly (fail-closed).
+- **Generate codes** — item + count + notes → batch codes, click-to-copy.
+  This is the launch mechanism: 100 Gold codes in seconds.
+- **The flag job** — open flags show the member, the cast member, the item,
+  and the cast's reason → **Grant it** (applies directly) or **Dismiss**.
+- **Grant directly** — by member email, no code (owner's smooth-over key).
+- **The rule set** — live view; caps are one-row tweaks in `swag_rules`.
+- **Recent codes + grants** — the audit trail.
 
-## 7. The Owner's Booth — approval surface (proposal)
+## 7. The Swag Shop (`/swag`)
 
-The owner's queue is a protected page (ADMIN_KEY-gated, like the existing
-complimentary-grant action), showing each pending comp request:
+Member-facing redemption: enter a code → benefit lands (floor, wallet, or
+stash) → "Your swag" history shows what the club has given. Linked from the
+footer. Quiet by design — the engine is hidden until a code finds you.
 
-- **Who:** member (profile + primary photo)
-- **Who flagged it:** Trixie / Chaz / Valentina + the conversation snippet
-- **What:** the benefit + value (1 week Gold, diamond comp, gift basket…)
-- **Why:** the cast's reason, in their words
-- **Rung:** L2 (recommended) or L3 (owner-only)
+## 8. The AI shelf
 
-Two actions: **Approve** (instant grant through the pipe, audit logged) and
-**Deny** (graceful in-character no). Optional note field (e.g., "asked for
-hospital proof").
+Chaz and Trixie carry a small shelf. Their persona prompt gains a swag note
+(allowed items only), and they write `[[SWAG:teddy]]` inline where the code
+should appear in their reply. The route converts it to a real code — or, for
+a bigger ask, flags the owner (`[[SWAG:champagne|reason]]`). The cast never
+promises: if the shelf is empty or the item needs the owner, the front desk
+says so in-character.
 
-**Notifications (RESOLVED):** no mail client needed. Member-facing contact
-is via the club email addresses below (mailto links, routed to the founder's
-Zoho/CRM). Owner notifications for comp requests stay in-app via the Booth
-queue; a subdomain contact form (founder's own form server, Traefik-routed)
-is the later upgrade path.
-
-## 8. Club emails (LOCKED — founder-provided 2026-08-02)
-
-Club-flavored inboxes at `smartscott.online`, all routed to the founder's
-Zoho account for parent `smartscott.com` and fielded by the CRM there:
+## 9. Club emails (LOCKED)
 
 | Address | Purpose | Surfaced on |
 |---|---|---|
-| `info@smartscott.online` | General club info, data/privacy questions | Footer, Privacy |
-| `date.safely@smartscott.online` | Safety concerns — app or on a date | Best Practices |
-| `club.cheeky@smartscott.online` | Rules / membership / club questions | Terms |
-| `helpdesk@smartscott.online` | Support (ID-check escalation, account help) | Footer, Verification escalation |
+| `info@smartscott.online` | General, data/privacy | Footer, Privacy |
+| `date.safely@smartscott.online` | Safety | Best Practices |
+| `club.cheeky@smartscott.online` | Rules / club questions | Terms |
+| `helpdesk@smartscott.online` | Support | Footer, Verification escalation |
 
-Single source of truth in code: `utils/contact.ts`. Later: a subdomain
-contact form (founder's own form server — SSL, Traefik routing, analytics)
-that members click through to the right division. No third-party mail client.
+Single source of truth: `utils/contact.ts`. Routed to the founder's Zoho/CRM.
+No mail client (founder's form server later).
 
-## 9. Guardrails (non-negotiable)
+## 10. Guardrails (non-negotiable)
 
-- **No dark patterns.** Grants are always real, always logged, never framed as
-  fake scarcity ("we're giving you this because we see you" — never "limited
-  time, act now").
+- **No dark patterns.** Grants are real, audited, never fake scarcity.
 - **Audit trail = governance.** Every grant logs actor/benefit/recipient/
-  reason/rung — free documentation for `docs/Governance/`, and a complete
-  record if a member ever claims "the AI promised me X."
-- **The Three Principles** (PRD-phase5-wing §2.5) govern every comp, including
-  denies — encouraging, honest, never writing anyone off.
-- **Fail-closed.** An engine-wide on/off switch kills all grants instantly;
-  surfaces (marketing giveaway page) show/hide without a deploy.
+  reason/code — free documentation for `docs/Governance/`.
+- **The Three Principles** govern every comp, including flags and denies.
+- **Fail-closed.** Engine kill switch; unlisted items are owner-only; no
+  authenticated grant exists for minting codes.
+- **Verification stays a real ID check.** Never code-granted.
 
-## 10. Build order (proposed)
+## 11. Validation (2026-08-02)
 
-1. **Grant pipe + audit + clearance matrix** — the DB rungs; everything hangs
-   off this.
-2. **The Owner's Booth** — comp requests + approve/deny page + queue.
-3. **Budget pools** per character (with cooldowns/caps).
-4. **Claim codes** — one-use, launch + campaigns.
-5. **AI wiring** — the cast asks through the pipe via a grant tool in
-   `app/api/agent`, subject to rung + pool.
-6. ~~Mailer~~ — **not needed** (see §7 RESOLVED); club email addresses are live
-   via `utils/contact.ts` (see §8).
+Live-tested against the hosted DB: owner mints gold/tokens/teddy; Trixie
+hits the 10-teddy weekly wall at #11; champagne + diamond from the cast →
+`owner_required`; flags log the reason; a real signed-in member redeems all
+three benefit types (entitlement + ledger + inventory) with audit rows;
+duplicate redemption blocked. Zero test residue. `tsc`/`lint`/`build` green.
 
-## OPEN items (need founder sign-off before build)
+## OPEN items
 
-- [x] Mailer choice — **RESOLVED:** no mail client; Zoho/CRM + founder's own
-      form server later.
-- [x] Club email addresses — **LOCKED:** info / date.safely / club.cheeky /
-      helpdesk @smartscott.online (see §8).
-- [ ] Exact pool sizes / cooldowns per character (illustrative above).
-- [ ] Claim-code generation UX (owner page generates + copies codes).
-- [ ] Whether the owner wants a one-click "extend membership" button in the
-      Booth (vs. editing the DB by hand — founder's stated preference).
+- [ ] Tune the weekly caps (current: gold 3, tokens 20/50/100 → 5/3/1,
+      teddy 10, roses 5, jewelry 2 — one-row tweaks in `swag_rules`).
+- [ ] Marketing visibility toggle (`surfaces_visible`) when a giveaway page
+      is wanted — engine on/off already ships.
+- [ ] Owner notification when a flag lands (no mail client — in-Booth for
+      now; founder's form server later).
+- [ ] Confirm `ADMIN_KEY` is set in Vercel env (the Booth + admin grants
+      require it).
