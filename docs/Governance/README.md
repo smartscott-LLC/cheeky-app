@@ -39,6 +39,7 @@ schema or flow is locked here and enforced in Phase 1+.
 | `refunds-tokens.md` | House rules on the house currency — refunds, no-match, cancellations |
 | `best-practices.md` | Best practices + external-activity disclaimer — acknowledged at signup (v1) |
 | `aup-enforcement.md` | How AUP violations are detected, enforced, and minimized — the controls behind `/aup`, answerable to reviewers |
+| `stripe-prohibited-activities.md` | Stripe submission — protocols for trafficking, illegal acts, impersonation, and CSAM (one document, per-section copy-paste) |
 
 ## Code-shaping decisions (locked before Phase 1 schema)
 
