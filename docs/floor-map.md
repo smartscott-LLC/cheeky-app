@@ -40,7 +40,7 @@ The free floor. Dance Floor lives here and nowhere else.
 | Middle | **Cheeky Chats** | `/messages` |
 | Middle | **The Spark List** | `/browse` |
 | Middle (center) | **Event Center** | `/events` |
-| Right | **Elevators** | `/floors` |
+| Right (top) | **Elevators** | `/floors` |
 | Right | **Gift Shop** | `/gifts` |
 
 ---
@@ -53,7 +53,7 @@ The free floor. Dance Floor lives here and nowhere else.
 | Middle | **Cheeky Chats** | `/messages` |
 | Middle | **The Spark List** | `/browse` |
 | Middle (center) | **Event Center** | `/events` |
-| Right | **Elevators** | `/floors` |
+| Right (top) | **Elevators** | `/floors` |
 | Right | **Gift Shop** | `/gifts` |
 
 ---
@@ -66,7 +66,7 @@ The free floor. Dance Floor lives here and nowhere else.
 | Middle | **Cheeky Chats** | `/messages` |
 | Middle | **The Spark List** | `/browse` |
 | Middle (center) | **Event Center** | `/events` |
-| Right | **Elevators** | `/floors` |
+| Right (top) | **Elevators** | `/floors` |
 | Right | **Gift Shop** | `/gifts` |
 
 ---

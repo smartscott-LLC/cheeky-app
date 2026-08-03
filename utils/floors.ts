@@ -54,7 +54,7 @@ const ELEVATORS = {
   name: 'Elevators',
   sub: 'Up or down',
   color: 'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
-  pos: 'right-[6%] bottom-[10%]'
+  pos: 'right-[5%] top-[8%]'
 };
 const CENTER = {
   href: '/events',
