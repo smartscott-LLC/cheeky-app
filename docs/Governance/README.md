@@ -38,6 +38,7 @@ schema or flow is locked here and enforced in Phase 1+.
 | `data-retention-deletion.md` | The Key Return — retention windows, account deletion |
 | `refunds-tokens.md` | House rules on the house currency — refunds, no-match, cancellations |
 | `best-practices.md` | Best practices + external-activity disclaimer — acknowledged at signup (v1) |
+| `aup-enforcement.md` | How AUP violations are detected, enforced, and minimized — the controls behind `/aup`, answerable to reviewers |
 
 ## Code-shaping decisions (locked before Phase 1 schema)
 
