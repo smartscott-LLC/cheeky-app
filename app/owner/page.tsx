@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ownerFetchState,
   ownerGenerateCodes,
@@ -76,11 +76,23 @@ export default function OwnerPage() {
 
   const notice = (ok: boolean, text: string) => setMsg({ ok, text });
 
-  const unlock = async () => {
+  // Auto-unlock: if the signed-in account IS the owner, the Booth opens
+  // with no key (the back door). The key input below is the fallback path.
+  useEffect(() => {
+    unlock('');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const unlock = async (attemptKey: string) => {
     setBusy(true);
-    const res = await ownerFetchState({ key });
+    const res = await ownerFetchState({ key: attemptKey });
     setBusy(false);
-    if (res.error) return notice(false, res.error);
+    if (res.error) {
+      // Silent fail on the mount-time back-door attempt (not signed in as
+      // the owner) — show the key input instead. Manual attempts show it.
+      if (attemptKey !== '') notice(false, res.error);
+      return;
+    }
     setEngine(res.engineEnabled ?? true);
     setRules((res.rules ?? []) as Rule[]);
     setCodes((res.codes ?? []) as CodeRow[]);
@@ -169,17 +181,20 @@ export default function OwnerPage() {
             type="password"
             value={key}
             onChange={(e) => setKey(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && unlock()}
+            onKeyDown={(e) => e.key === 'Enter' && unlock(key)}
             placeholder="Owner key"
             className="mt-6 w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-white outline-none focus:ring-2 focus:ring-club/50"
           />
           <button
-            onClick={unlock}
-            disabled={busy || !key}
+            onClick={() => unlock(key)}
+            disabled={busy}
             className="mt-3 w-full rounded-lg bg-club px-6 py-3 font-bold text-white transition hover:bg-club-cotton disabled:opacity-40"
           >
             Unlock
           </button>
+          <p className="mt-3 text-center text-xs text-zinc-600">
+            Signed in as the owner? The Booth opens on its own — no key needed.
+          </p>
           {msg && (
             <p className={`mt-3 text-center text-sm ${msg.ok ? 'text-zinc-400' : 'text-club'}`}>
               {msg.text}

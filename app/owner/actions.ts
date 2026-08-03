@@ -1,16 +1,34 @@
 'use server';
 
+import { createClient } from '@/utils/supabase/server';
 import { supabaseAdmin } from '@/utils/supabase/admin';
 import { generateSwagCode, type SwagBenefitType } from '@/utils/swag';
 
-function checkKey(key: string): boolean {
+/**
+ * The Owner's Back Door: authorized if the signed-in user IS the owner
+ * (their account is in owner_accounts — no key to lose), OR the legacy
+ * ADMIN_KEY matches (fallback path). Both checked server-side.
+ */
+async function authorized(key?: string): Promise<boolean> {
+  const supabase = await createClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+  if (user) {
+    const { data } = await supabaseAdmin
+      .from('owner_accounts')
+      .select('user_id')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    if (data) return true;
+  }
   const adminKey = process.env.ADMIN_KEY;
   return Boolean(adminKey && key === adminKey);
 }
 
 /** Fetches the full Booth state (engine, rules, codes, grants, flags). */
 export async function ownerFetchState(input: {
-  key: string;
+  key?: string;
 }): Promise<{
   engineEnabled?: boolean;
   rules?: { benefit_type: string; benefit_value: string; owner_only: boolean; weekly_limit: number | null }[];
@@ -19,7 +37,7 @@ export async function ownerFetchState(input: {
   flags?: unknown[];
   error?: string;
 }> {
-  if (!checkKey(input.key)) return { error: 'forbidden' };
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
   const [config, rules, codes, grants, flags] = await Promise.all([
     supabaseAdmin.from('promo_config').select('engine_enabled').maybeSingle(),
     supabaseAdmin
@@ -55,13 +73,13 @@ export async function ownerFetchState(input: {
 
 /** Generates one or more codes (owner path — anything goes). */
 export async function ownerGenerateCodes(input: {
-  key: string;
+  key?: string;
   benefitType: SwagBenefitType;
   benefitValue: string;
   count: number;
   notes?: string;
 }): Promise<{ codes?: string[]; error?: string }> {
-  if (!checkKey(input.key)) return { error: 'forbidden' };
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
   const count = Math.min(Math.max(Math.floor(input.count) || 1, 1), 100);
   const codes: string[] = [];
   for (let i = 0; i < count; i++) {
@@ -79,14 +97,14 @@ export async function ownerGenerateCodes(input: {
 
 /** Grants a benefit directly to a member by email (owner's key). */
 export async function ownerGrantDirect(input: {
-  key: string;
+  key?: string;
   email: string;
   benefitType: SwagBenefitType;
   benefitValue: string;
   reason?: string;
   days?: number;
 }): Promise<{ error?: string }> {
-  if (!checkKey(input.key)) return { error: 'forbidden' };
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
   const { data: users } = await supabaseAdmin.auth.admin.listUsers({
     page: 1,
     perPage: 1000
@@ -109,11 +127,11 @@ export async function ownerGrantDirect(input: {
 
 /** Resolves a flag: grant the flagged benefit to the member, or dismiss. */
 export async function ownerResolveFlag(input: {
-  key: string;
+  key?: string;
   flagId: string;
   action: 'grant' | 'dismiss';
 }): Promise<{ error?: string }> {
-  if (!checkKey(input.key)) return { error: 'forbidden' };
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
   const { data: flag } = await supabaseAdmin
     .from('swag_flags')
     .select('*')
@@ -143,10 +161,10 @@ export async function ownerResolveFlag(input: {
 
 /** Kills or restores the whole engine (fail-closed). */
 export async function ownerToggleEngine(input: {
-  key: string;
+  key?: string;
   enabled: boolean;
 }): Promise<{ enabled?: boolean; error?: string }> {
-  if (!checkKey(input.key)) return { error: 'forbidden' };
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
   const { error } = await supabaseAdmin
     .from('promo_config')
     .update({ engine_enabled: input.enabled })
