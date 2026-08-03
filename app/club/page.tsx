@@ -9,10 +9,10 @@ import FloorLayout, { FloorSpot } from '@/components/ui/Club/FloorLayout';
 // (gold), Chats + Spark List front and center (pink), elevators upper right.
 const SPOTS: FloorSpot[] = [
   {
-    href: '/events',
+    href: '/floor/silver',
     emoji: '🪩',
     name: 'Dance Floor',
-    sub: 'The hourly room',
+    sub: 'The silver room',
     color: 'text-cyan border-cyan/50 hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
     pos: 'left-[6%] top-[42%]'
   },
@@ -41,7 +41,7 @@ const SPOTS: FloorSpot[] = [
     pos: 'right-[36%] top-[30%]'
   },
   {
-    href: '/#membership',
+    href: '/floors',
     emoji: '🛗',
     name: 'Upper floors',
     sub: 'Gold · Platinum · Diamond',

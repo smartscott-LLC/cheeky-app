@@ -1,0 +1,85 @@
+import Link from 'next/link';
+import { createClient } from '@/utils/supabase/server';
+import { getUser } from '@/utils/supabase/queries';
+import { redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
+import { floorBySlug } from '@/utils/floors';
+import FloorLayout from '@/components/ui/Club/FloorLayout';
+
+export default async function FloorPage({
+  params
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const floor = floorBySlug(slug);
+  if (!floor) {
+    notFound();
+  }
+
+  const supabase = await createClient();
+  const user = await getUser(supabase);
+  if (!user) {
+    return redirect('/signin');
+  }
+
+  const { data: tierData } = await supabase.rpc('current_tier', {
+    p_user: user.id
+  });
+  const tier = (tierData as string) ?? 'standard';
+  const rank =
+    tier === 'gold' ? 1 : tier === 'platinum' ? 2 : tier === 'diamond' ? 3 : 0;
+  const locked = floor.rank > rank;
+
+  return (
+    <div className="bg-black">
+      <div className="mx-auto max-w-6xl px-6 pt-10">
+        <Link
+          href="/floors"
+          className="text-sm font-semibold text-zinc-500 hover:text-white"
+        >
+          ← The floors
+        </Link>
+      </div>
+
+      {locked ? (
+        <div className="mx-auto max-w-2xl px-6 py-16 text-center">
+          <p className="text-5xl">🛗</p>
+          <h1 className="mt-6 text-3xl font-extrabold">
+            The {floor.name} floor is behind the rope.
+          </h1>
+          <p className="mx-auto mt-3 max-w-md text-zinc-400">
+            Come see what&apos;s on these floors with a {floor.name} card
+            today — the view&apos;s worth it.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/#membership"
+              className="rounded-lg bg-club px-8 py-3 font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
+            >
+              See the memberships
+            </Link>
+            <Link
+              href="/club"
+              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-zinc-200 transition hover:border-zinc-500 hover:text-white"
+            >
+              Back to the lobby
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="mx-auto max-w-6xl px-6 pt-6 text-center">
+            <p className={`text-sm font-bold uppercase tracking-[0.3em] ${floor.accent}`}>
+              The {floor.name} floor
+            </p>
+            <p className="mx-auto mt-2 max-w-xl text-zinc-400">{floor.tagline}</p>
+          </div>
+          <div className="pt-6">
+            <FloorLayout background={floor.art} spots={floor.rooms} />
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
