@@ -100,40 +100,38 @@ Reporting is available through multiple, always-visible channels:
 
 ---
 
-## Submission answer (corrected, copy-paste)
+## Submission answer (final, copy-paste)
 
-**Reporting methods.** Members can report a policy-violating profile or
-content multiple ways: an in-app Report/Block button in any chat (one tap,
-logged with member, content, and time); the AI staff, who take reports in
-conversation, log the incident, and route it to the human process; and
-public support/safety contacts — info@smartscott.online, helpdesk@smartscott.online,
-date.safely@smartscott.online, and report-anonymous@smartscott.online —
-all fielded by humans.
+**Reporting.** Members can report a policy-violating profile or content
+through three channels, all fielded by humans: the in-app Report/Block
+button in any chat — one tap, logged with the member, the content, and the
+time; the AI staff, who take reports in conversation and route them to the
+review process; and the public support and safety contacts
+(info@smartscott.online, helpdesk@smartscott.online,
+date.safely@smartscott.online, and report-anonymous@smartscott.online).
 
-**Review.** A takedown is immediate upon report until a decision is reached —
-an image block is applied to the user's profile content in the database, and
-the image/content is immediately reviewed by the AI staff (under a 5-minute
-response). If the allegation is false, the block is removed and an apology
-email explaining the incident and procedure is sent. If the image/content is
-in violation, the user responsible is immediately expelled from the app, and
-an email is issued explaining the incident, the examination results, and the
-detailed reason the conclusion was reached — they are made aware of the ban.
-Our system then flags the account, and it is placed in a banned-account area
-of the database that is referenced when a user applies for membership. If the
-incident violates any state or federal laws, the user's username and
-non-government information are retained along with any evidence collected
-during the investigation, kept on file for 5 years (the length of the ban)
-in the event authorities request it. Repeat offenders who return after
-serving a ban are banned for the life of the user.
+**Review.** A reported image or piece of content is taken down immediately
+and held until a decision is reached — a block is placed on the user's
+profile content in the database the moment the report lands. The content is
+reviewed by the AI staff, with a response in under five minutes. If the
+allegation is unfounded, the block is lifted and an apology email explains
+the incident and the procedure. If it is founded, the responsible user is
+immediately expelled from the app, and an email explains the incident, the
+findings, and how the conclusion was reached. The account is then flagged
+and moved to a banned-account registry that is checked whenever anyone
+applies for membership, so a banned user cannot simply re-register. If the
+incident appears to violate state or federal law, the user's username and
+non-government information are retained — along with any evidence collected
+during the investigation — for five years, the length of the ban, in the
+event authorities request them. Repeat offenders who return after serving a
+ban are banned for life.
 
-**Appeals.** The accused user has 14 days to appeal any punishment. If the
-decision is not appealed within the 14-day limit, the verdict is assumed
-correct and the punishment is carried out. A timely appeal triggers an
-exhaustive review by a human, and both sides may submit evidence within a
-14-day period. At the end of that period, a decision is made on the
-supporting evidence and an interview (conducted by video chat) within 3
-days. This completes the appeal within a one-month time frame — expedient
-and thorough. Any time lost on the platform due to an incorrect accusation
-and a verdict of not guilty is compensated to the user at their choice: a
-refund to the original credit/debit payment method, or membership of equal
-value.
+**Appeals.** Any user subject to a ban or punishment has 14 days to appeal.
+If no appeal is filed within 14 days, the decision stands. A timely appeal
+triggers an exhaustive human review, and both sides may submit evidence
+during a 14-day period. At the end of that period, a decision is made on
+the evidence — with an interview conducted by video chat when needed —
+within three days, completing the appeal within one month: expedient and
+thorough. If the verdict is not guilty, the account is restored and any
+time lost is compensated at the member's choice: a refund to the original
+credit or debit payment method, or membership of equal value.
