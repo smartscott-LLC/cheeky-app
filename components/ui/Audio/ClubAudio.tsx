@@ -3,16 +3,19 @@
 import { useEffect, useRef, useState } from 'react';
 
 // The club's music. The DJ's real tracks come first (founder-generated,
-// no licensing) — Pressure Gauge and Solar Flare Summit, crossfaded like a
-// live mix. If a track ever fails to load, the synthesized house engine
-// (below) takes over so the floor never goes quiet.
+// no licensing) — Pressure Gauge, Solar Flare Summit, Above the Clouds, and
+// Final Ascent, crossfaded like a live mix. If a track ever fails to load,
+// the synthesized house engine (below) takes over so the floor never goes
+// quiet.
 
 const TRACKS = [
   '/audio/pressure-gauge.mp3',
-  '/audio/solar-flare-summit.mp3'
+  '/audio/solar-flare-summit.mp3',
+  '/audio/above-the-clouds.mp3',
+  '/audio/final-ascent.mp3'
 ];
 const MIX_VOL = 0.5;
-const FADE_MS = 1400;
+const FADE_MS = 2000;
 
 // The fallback engine — synthesized live in the browser: 200 BPM, A minor,
 // bass-drum gallop, snare rolls, fast 16th hats, and a 12-beat hook that
@@ -302,16 +305,30 @@ export default function ClubAudio() {
     if (!tracks || switchingRef.current) return;
     switchingRef.current = true;
     const from = currentRef.current;
-    const to = 1 - from;
-    tracks[to].currentTime = 0;
-    tracks[to]
-      .play()
-      .catch(() => {});
+    // Four beats on the decks — spin to any track that isn't already up.
+    let to = Math.floor(Math.random() * tracks.length);
+    if (to === from) to = (to + 1) % tracks.length;
+    const startIn = tracks[to];
+    startIn.currentTime = 0;
+    startIn.volume = 0;
     const start = performance.now();
+    let aborted = false;
+    startIn.play().catch(() => {
+      // The deck skipped a beat — roll forward; the next mix tries again.
+      aborted = true;
+      currentRef.current = to;
+      switchingRef.current = false;
+      scheduleMix();
+    });
     const step = () => {
+      if (aborted) return;
       const p = Math.min(1, (performance.now() - start) / FADE_MS);
-      tracks[from].volume = MIX_VOL * (1 - p);
-      tracks[to].volume = MIX_VOL * p;
+      // Equal-power crossfade: constant perceived loudness, no mid-fade
+      // pump where both beats are loud and it sounds like clipping.
+      const out = Math.cos((p * Math.PI) / 2);
+      const inn = Math.sin((p * Math.PI) / 2);
+      tracks[from].volume = MIX_VOL * out;
+      startIn.volume = MIX_VOL * inn;
       if (p < 1) {
         requestAnimationFrame(step);
       } else {
