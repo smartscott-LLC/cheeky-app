@@ -26,8 +26,8 @@ export function Toaster() {
     if (error || status) {
       toast({
         title: error
-          ? error ?? 'Hmm... Something went wrong.'
-          : status ?? 'Alright!',
+          ? (error ?? 'Hmm... Something went wrong.')
+          : (status ?? 'Alright!'),
         description: error ? error_description : status_description,
         variant: error ? 'destructive' : undefined
       });
@@ -45,6 +45,9 @@ export function Toaster() {
       const redirectPath = `${pathname}?${newSearchParams.toString()}`;
       router.replace(redirectPath, { scroll: false });
     }
+    // The effect runs when the URL changes; once the params are cleared it
+    // has nothing left to do, so re-runs from unstable identities are no-ops.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   return (
