@@ -388,6 +388,53 @@ const manageSubscriptionStatusChange = async (
     );
 };
 
+/**
+ * Credits the ledger when a one-time token pack clears checkout. The
+ * webhook's event-level idempotency guard (webhook_events) blocks replays;
+ * ref = the Stripe session id. Token count comes from the product name
+ * ("Cheeky Token Bag - 100 Tokens"), synced from Stripe — no hardcoded
+ * price ids, so re-created products still credit.
+ */
+const creditTokenPurchase = async (session: Stripe.Checkout.Session) => {
+  const full = await stripe.checkout.sessions.retrieve(session.id, {
+    expand: ['line_items.data.price.product']
+  });
+  const item = full.line_items?.data?.[0];
+  const product = item?.price?.product;
+  if (
+    !item ||
+    typeof product !== 'object' ||
+    !('name' in product) ||
+    !product.name
+  ) {
+    console.log('Token purchase: no line-item product to credit.');
+    return;
+  }
+  const match = /(\d+)\s*Tokens?/i.exec(product.name);
+  if (!match) {
+    console.log(`Token purchase: "${product.name}" is not a token product.`);
+    return;
+  }
+  const amount = parseInt(match[1], 10);
+  const { data: customerRow } = await supabaseAdmin
+    .from('customers')
+    .select('id')
+    .eq('stripe_customer_id', full.customer as string)
+    .maybeSingle();
+  if (!customerRow?.id) {
+    console.log('Token purchase: no Supabase customer mapping.');
+    return;
+  }
+  const { error } = await supabaseAdmin.from('token_ledger').insert({
+    user_id: customerRow.id,
+    delta: amount,
+    reason: 'token_purchase',
+    ref: full.id
+  });
+  if (error) throw new Error(`Token purchase credit failed: ${error.message}`);
+  console.log(`🪙 Token purchase credited: +${amount} to ${customerRow.id}`);
+};
+
 export {
   upsertProductRecord,
   upsertPriceRecord,
@@ -396,5 +443,6 @@ export {
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
   applyVerificationResult,
-  handleVerificationFailure
+  handleVerificationFailure,
+  creditTokenPurchase
 };

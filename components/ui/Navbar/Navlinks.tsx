@@ -52,15 +52,10 @@ export default function Navlinks({ user }: NavlinksProps) {
   const onTheStreet = pathname === '/' || pathname.startsWith('/signin');
 
   return (
-    <div className="relative flex items-center justify-between py-3 md:py-4">
-      {/* Meet the crew — centered, the club's people are its face */}
-      <Link
-        href="/crew"
-        className="absolute left-1/2 hidden -translate-x-1/2 rounded-full border border-gold/50 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-gold transition hover:border-gold hover:bg-gold/10 md:inline-flex"
-      >
-        Meet the Crew
-      </Link>
-      <div className="flex items-center">
+    // Three-zone grid: logo / crew / door. The crew pill lives in the flow
+    // (not absolutely centered) so it can never overlap the right links.
+    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 py-3 md:py-4">
+      <div className="flex items-center justify-start">
         <Link href="/" className={s.logo} aria-label="Club Cheeky home">
           <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-gold shadow-[0_0_14px_rgba(255,215,0,0.35)]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -75,13 +70,25 @@ export default function Navlinks({ user }: NavlinksProps) {
           </span>
         </Link>
       </div>
-      <nav className="flex items-center gap-1 lg:gap-2">
+      {/* Meet the crew — dead center, the club's people are its face */}
+      <Link
+        href="/crew"
+        className="hidden rounded-full border border-gold/50 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-gold transition hover:border-gold hover:bg-gold/10 md:inline-flex"
+      >
+        Meet the Crew
+      </Link>
+      <nav className="flex items-center justify-end gap-1 lg:gap-2">
         {/* Mobile: the crew link rides with the rest of the links */}
         <Link href="/crew" className={`${s.link} md:hidden`}>
           Meet the Crew
         </Link>
         {user ? (
           <>
+            {/* The Exchange — cards and tokens, on every floor */}
+            <Link href="/store" className={s.link} title="Buy cards & tokens">
+              <span className="lg:hidden">🪙</span>
+              <span className="hidden lg:inline">🪙 The Exchange</span>
+            </Link>
             <Link href="/account" className={s.link}>
               Account
             </Link>
@@ -97,8 +104,9 @@ export default function Navlinks({ user }: NavlinksProps) {
                 Sign out
               </button>
             </form>
-            <Link href="/swag" className={s.link}>
-              🎟️ Swag Shop
+            <Link href="/swag" className={s.link} title="Swag Shop">
+              <span className="lg:hidden">🎟️</span>
+              <span className="hidden lg:inline">🎟️ Swag Shop</span>
             </Link>
           </>
         ) : (

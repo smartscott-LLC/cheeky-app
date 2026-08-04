@@ -8,6 +8,7 @@ import {
   deletePriceRecord,
   applyVerificationResult,
   handleVerificationFailure,
+  creditTokenPurchase,
   supabaseAdmin
 } from '@/utils/supabase/admin';
 
@@ -106,6 +107,9 @@ export async function POST(req: Request) {
               checkoutSession.customer as string,
               true
             );
+          } else if (checkoutSession.mode === 'payment') {
+            // Token packs — credit the ledger (no subscription to sync).
+            await creditTokenPurchase(checkoutSession);
           }
           break;
         case 'identity.verification_session.verified':
