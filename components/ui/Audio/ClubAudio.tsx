@@ -393,6 +393,10 @@ export default function ClubAudio() {
       window.removeEventListener('keydown', startOnInteraction);
       stopAll();
     };
+    // Mount-once by design: the audio lifecycle lives in refs and explicit
+    // calls, not reactive state — re-running on every render would re-arm
+    // the gesture listener and restart the music.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggle = () => {

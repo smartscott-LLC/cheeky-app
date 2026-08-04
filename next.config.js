@@ -17,8 +17,13 @@ const sentryToken =
 
 module.exports = sentryToken
   ? require('@sentry/nextjs').withSentryConfig(nextConfig, {
-      org: 'smartscottcom-llc',
-      project: 'cheeky-app',
+      // The Vercel→Sentry integration injects SENTRY_ORG / SENTRY_PROJECT
+      // into the build env — read them instead of hardcoding, so a project
+      // re-link can't leave the build pointing at a dead slug (that was
+      // failing source-map uploads on Vercel). Local fallbacks keep the
+      // current working local setup untouched.
+      org: process.env.SENTRY_ORG ?? 'smartscottcom-llc',
+      project: process.env.SENTRY_PROJECT ?? 'cheeky-app',
 
       authToken: sentryToken,
 
