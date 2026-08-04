@@ -24,7 +24,7 @@ if (posthogKey && posthogHost) {
 }
 
 Sentry.init({
-  dsn: 'https://6aaf79deeb5b8a2e119e502317a67802@o4511848259715072.ingest.us.sentry.io/4511848262795265',
+  dsn: process.env.SENTRY_DSN,
 
   // Add optional integrations for additional features
   integrations: [Sentry.replayIntegration()],
