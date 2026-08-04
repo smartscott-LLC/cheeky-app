@@ -9,7 +9,9 @@ import {
   ownerToggleEngine,
   ownerPostAnnouncement,
   ownerUpdateModels,
-  ownerSetFloorClosure
+  ownerSetFloorClosure,
+  ownerResolveReport,
+  ownerSetBan
 } from '@/app/owner/actions';
 
 type BenefitType = 'membership' | 'tokens' | 'gift';
@@ -138,6 +140,22 @@ export default function OwnerPage() {
   const [closures, setClosures] = useState<
     { floor: string; reason: string | null; until: string | null }[]
   >([]);
+  // The safety desk + the banned list.
+  const [reports, setReports] = useState<
+    {
+      id: number;
+      reason: string;
+      verdict: string | null;
+      category: string | null;
+      confidence: number | null;
+      review_summary: string | null;
+      reported_id: string;
+      created_at: string;
+    }[]
+  >([]);
+  const [banned, setBanned] = useState<
+    { email: string; reason: string; banned_until: string | null; created_at: string }[]
+  >([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [fresh, setFresh] = useState<string[]>([]);
@@ -208,6 +226,8 @@ export default function OwnerPage() {
       res.watchdogModel ?? 'nvidia/nemotron-nano-12b-v2-vl:free'
     );
     setClosures((res.closures ?? []) as typeof closures);
+    setReports((res.reports ?? []) as typeof reports);
+    setBanned((res.banned ?? []) as typeof banned);
     setUnlocked(true);
   };
 
@@ -253,6 +273,8 @@ export default function OwnerPage() {
         res.watchdogModel ?? 'nvidia/nemotron-nano-12b-v2-vl:free'
       );
       setClosures((res.closures ?? []) as typeof closures);
+      setReports((res.reports ?? []) as typeof reports);
+      setBanned((res.banned ?? []) as typeof banned);
     }
   };
 
@@ -441,6 +463,36 @@ export default function OwnerPage() {
     refresh();
   };
 
+  const resolveReport = async (reportId: number, verdict: 'upheld' | 'dismissed') => {
+    setBusy(true);
+    const res = await ownerResolveReport({ key, reportId, verdict });
+    setBusy(false);
+    if (res.error) return notice(false, res.error);
+    notice(true, verdict === 'upheld' ? 'Report upheld — the hold stays' : 'Report dismissed — the hold lifted');
+    refresh();
+  };
+
+  const banEmail = async (
+    e: React.FormEvent<HTMLFormElement>,
+    banned: boolean
+  ) => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    setBusy(true);
+    const res = await ownerSetBan({
+      key,
+      email: String(fd.get('email') ?? ''),
+      banned,
+      reason: String(fd.get('reason') ?? ''),
+      years: Number(fd.get('years') ?? 0)
+    });
+    setBusy(false);
+    if (res.error) return notice(false, res.error);
+    notice(true, banned ? 'Email banned — the door will refuse it' : 'Email pardoned');
+    e.currentTarget.reset();
+    refresh();
+  };
+
   const copy = (text: string) => navigator.clipboard?.writeText(text);
 
   if (!unlocked) {
@@ -599,6 +651,134 @@ export default function OwnerPage() {
                       Dismiss
                     </button>
                   </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* The safety desk — reports needing a human */}
+        <div className="mt-8">
+          <h2 className="text-lg font-bold">🛡️ The safety desk</h2>
+          <p className="mt-1 text-sm text-zinc-500">
+            Reports DateSafe couldn&apos;t settle — your call is the final word.
+          </p>
+          {reports.length === 0 ? (
+            <p className="mt-2 text-sm text-zinc-500">
+              Nothing on the desk. DateSafe cleared the queue.
+            </p>
+          ) : (
+            <div className="mt-3 space-y-3">
+              {reports.map((r) => (
+                <div
+                  key={r.id}
+                  className="rounded-xl border border-club/30 bg-zinc-900/60 p-4"
+                >
+                  <p className="text-sm">
+                    <span className="font-bold">Report #{r.id}</span>{' '}
+                    <span className="text-zinc-500">· {new Date(r.created_at).toLocaleString()}</span>
+                  </p>
+                  <p className="mt-1 text-sm">“{r.reason}”</p>
+                  <p className="mt-1 text-xs text-zinc-500">
+                    {r.verdict === 'violation' ? '🛑 flagged as violation' : '❔ inconclusive'} · {r.category ?? 'no category'} ·{' '}
+                    {r.confidence != null ? `${Math.round(r.confidence * 100)}% confident` : ''}
+                    {r.review_summary ? ` — ${r.review_summary}` : ''}
+                  </p>
+                  <p className="mt-0.5 font-mono text-[10px] text-zinc-600">
+                    member {r.reported_id.slice(0, 8)}…
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <button
+                      onClick={() => resolveReport(r.id, 'upheld')}
+                      disabled={busy}
+                      className="rounded-lg bg-emerald-600 px-4 py-1.5 text-sm font-bold text-white hover:bg-emerald-500 disabled:opacity-40"
+                    >
+                      Uphold — hold stays
+                    </button>
+                    <button
+                      onClick={() => resolveReport(r.id, 'dismissed')}
+                      disabled={busy}
+                      className="rounded-lg border border-zinc-600 px-4 py-1.5 text-sm font-bold text-zinc-300 hover:border-zinc-400 disabled:opacity-40"
+                    >
+                      Dismiss — lift the hold
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* The banned list — the door refuses these emails */}
+        <div className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
+          <h2 className="font-bold">⛔ The banned list</h2>
+          <p className="mt-1 text-xs text-zinc-500">
+            The door checks this at signup and sign-in. 0 years = lifetime.
+          </p>
+          <form
+            onSubmit={(e) => banEmail(e, true)}
+            className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4"
+          >
+            <input
+              name="email"
+              required
+              type="email"
+              placeholder="member@email.com"
+              className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white"
+            />
+            <input
+              name="reason"
+              placeholder="reason (optional)"
+              className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white"
+            />
+            <input
+              name="years"
+              type="number"
+              min={0}
+              placeholder="years (0 = lifetime)"
+              className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white"
+            />
+            <button
+              type="submit"
+              disabled={busy}
+              className="rounded-lg bg-club px-6 py-2.5 font-bold text-white transition hover:bg-club-cotton disabled:opacity-40"
+            >
+              Ban email
+            </button>
+          </form>
+          {banned.length > 0 && (
+            <div className="mt-4 space-y-2">
+              {banned.map((b) => (
+                <div
+                  key={b.email}
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2 text-sm"
+                >
+                  <span className="font-mono text-club">{b.email}</span>
+                  <span className="flex-1 text-xs text-zinc-500">
+                    {b.reason} ·{' '}
+                    {b.banned_until
+                      ? `until ${new Date(b.banned_until).toLocaleDateString()}`
+                      : 'lifetime'}
+                  </span>
+                  <button
+                    onClick={() => {
+                      setBusy(true);
+                      ownerSetBan({ key, email: b.email, banned: false }).then(
+                        (res) => {
+                          setBusy(false);
+                          if (res.error) notice(false, res.error);
+                          else {
+                            notice(true, 'Email pardoned');
+                            refresh();
+                          }
+                        }
+                      );
+                    }}
+                    disabled={busy}
+                    className="rounded border border-zinc-600 px-3 py-1 text-xs font-bold text-zinc-300 hover:border-zinc-400 disabled:opacity-40"
+                  >
+                    Pardon
+                  </button>
                 </div>
               ))}
             </div>

@@ -75,6 +75,39 @@ export type Database = {
         }
         Relationships: []
       }
+      banned_accounts: {
+        Row: {
+          banned_until: string | null
+          created_at: string
+          created_by: string | null
+          email: string
+          evidence: string | null
+          id: string
+          reason: string
+          user_id: string | null
+        }
+        Insert: {
+          banned_until?: string | null
+          created_at?: string
+          created_by?: string | null
+          email: string
+          evidence?: string | null
+          id?: string
+          reason: string
+          user_id?: string | null
+        }
+        Update: {
+          banned_until?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string
+          evidence?: string | null
+          id?: string
+          reason?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       benefit_grants: {
         Row: {
           actor_ref: string | null

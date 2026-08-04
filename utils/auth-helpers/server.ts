@@ -12,6 +12,30 @@ function isValidEmail(email: string) {
   return regex.test(email);
 }
 
+/**
+ * The door checks the ban registry before any entry: an expelled email
+ * (active ban) is refused at signup AND sign-in, so a ban can't be walked
+ * around with a fresh account. Service-role read; the registry is written
+ * only from the Lions Den.
+ */
+async function bannedCheck(email: string): Promise<boolean> {
+  const { data } = await supabaseAdmin
+    .from('banned_accounts')
+    .select('banned_until')
+    .eq('email', email.trim().toLowerCase())
+    .maybeSingle();
+  return Boolean(
+    data && (!data.banned_until || new Date(data.banned_until) > new Date())
+  );
+}
+
+const BANNED_REDIRECT = () =>
+  getErrorRedirect(
+    '/signin',
+    'Not tonight.',
+    'The club has closed this account. The decision can be appealed through the support desk.'
+  );
+
 export async function redirectToPath(path: string) {
   return redirect(path);
 }
@@ -39,6 +63,8 @@ export async function signInWithEmail(formData: FormData) {
 
   const email = String(formData.get('email')).trim();
   let redirectPath: string;
+
+  if (await bannedCheck(email)) return BANNED_REDIRECT();
 
   if (!isValidEmail(email)) {
     redirectPath = getErrorRedirect(
@@ -138,6 +164,8 @@ export async function signInWithPassword(formData: FormData) {
   const password = String(formData.get('password')).trim();
   let redirectPath: string;
 
+  if (await bannedCheck(email)) return BANNED_REDIRECT();
+
   const supabase = await createClient();
   const { error, data } = await supabase.auth.signInWithPassword({
     email,
@@ -178,6 +206,8 @@ export async function signUp(formData: FormData) {
   const privacyConsent = formData.get('privacyConsent') === 'on';
   const bestPracticesConsent = formData.get('bestPracticesConsent') === 'on';
   let redirectPath: string;
+
+  if (await bannedCheck(email)) return BANNED_REDIRECT();
 
   if (!termsConsent || !privacyConsent || !bestPracticesConsent) {
     redirectPath = getErrorRedirect(

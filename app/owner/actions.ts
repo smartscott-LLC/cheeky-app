@@ -67,6 +67,22 @@ export async function ownerFetchState(input: {
   castModel?: string;
   watchdogModel?: string;
   closures?: { floor: string; reason: string | null; until: string | null }[];
+  reports?: {
+    id: number;
+    reason: string;
+    verdict: string | null;
+    category: string | null;
+    confidence: number | null;
+    review_summary: string | null;
+    reported_id: string;
+    created_at: string;
+  }[];
+  banned?: {
+    email: string;
+    reason: string;
+    banned_until: string | null;
+    created_at: string;
+  }[];
   error?: string;
 }> {
   if (!(await authorized(input.key))) return { error: 'forbidden' };
@@ -96,7 +112,9 @@ export async function ownerFetchState(input: {
     ledger,
     catalog,
     modelRow,
-    closures
+    closures,
+    reports,
+    banned
   ] = await Promise.all([
     supabaseAdmin.from('promo_config').select('engine_enabled').maybeSingle(),
     supabaseAdmin
@@ -175,7 +193,18 @@ export async function ownerFetchState(input: {
       .order('token_cost')
       .limit(30),
     supabaseAdmin.from('model_config').select('cast_model, watchdog_model').eq('id', true).maybeSingle(),
-    supabaseAdmin.from('floor_closures').select('floor, reason, until')
+    supabaseAdmin.from('floor_closures').select('floor, reason, until'),
+    supabaseAdmin
+      .from('reports')
+      .select('id, reason, verdict, category, confidence, review_summary, reported_id, created_at')
+      .is('human_confirmed_at', null)
+      .order('created_at', { ascending: false })
+      .limit(20),
+    supabaseAdmin
+      .from('banned_accounts')
+      .select('email, reason, banned_until, created_at')
+      .order('created_at', { ascending: false })
+      .limit(50)
   ]);
 
   const paidUsers = new Set((activeSubs.data ?? []).map((s) => s.user_id));
@@ -234,8 +263,91 @@ export async function ownerFetchState(input: {
     castModel: modelRow.data?.cast_model ?? 'deepseek-chat',
     watchdogModel:
       modelRow.data?.watchdog_model ?? 'nvidia/nemotron-nano-12b-v2-vl:free',
-    closures: (closures.data ?? []) as never
+    closures: (closures.data ?? []) as never,
+    reports: (reports.data ?? []) as never,
+    banned: (banned.data ?? []) as never
   };
+}
+
+/** The human half of DateSafe: upholds a held report or lifts the hold. */
+export async function ownerResolveReport(input: {
+  key?: string;
+  reportId: number;
+  verdict: 'upheld' | 'dismissed';
+}): Promise<{ error?: string }> {
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
+  const { data: report } = await supabaseAdmin
+    .from('reports')
+    .select('id, image_url')
+    .eq('id', input.reportId)
+    .maybeSingle();
+  if (!report) return { error: 'report not found' };
+  const now = new Date().toISOString();
+
+  if (input.verdict === 'dismissed') {
+    // Unfounded — the hold lifts and the reported photo goes back up.
+    if (report.image_url) {
+      const storagePath = report.image_url.split('/profiles/')[1];
+      if (storagePath) {
+        await supabaseAdmin
+          .from('photos')
+          .update({ held_at: null })
+          .eq('storage_path', storagePath);
+      }
+    }
+    await supabaseAdmin
+      .from('reports')
+      .update({
+        human_verdict: 'dismissed',
+        human_confirmed_at: now,
+        status: 'reviewed',
+        outcome: 'no_action',
+        resolved_at: now
+      })
+      .eq('id', report.id);
+  } else {
+    await supabaseAdmin
+      .from('reports')
+      .update({
+        human_verdict: 'upheld',
+        human_confirmed_at: now,
+        status: 'reviewed',
+        outcome: 'action_taken',
+        resolved_at: now
+      })
+      .eq('id', report.id);
+  }
+  return {};
+}
+
+/** Bans (or pardons) an email in the registry the door checks at signup. */
+export async function ownerSetBan(input: {
+  key?: string;
+  email: string;
+  banned: boolean;
+  reason?: string;
+  years?: number;
+}): Promise<{ error?: string }> {
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
+  const email = input.email.trim().toLowerCase();
+  if (input.banned) {
+    const { error } = await supabaseAdmin.from('banned_accounts').upsert({
+      email,
+      reason: input.reason?.trim() || 'banned by the owner',
+      banned_until:
+        input.years && input.years > 0
+          ? new Date(
+              Date.now() + input.years * 365 * 24 * 3_600_000
+            ).toISOString()
+          : null
+    });
+    return error ? { error: error.message } : {};
+  }
+  const { error } = await supabaseAdmin
+    .from('banned_accounts')
+    .delete()
+    .eq('email', email);
+  return error ? { error: error.message } : {};
 }
 
 /** Swaps the cast + watchdog models from the Den — no redeploy needed. */
