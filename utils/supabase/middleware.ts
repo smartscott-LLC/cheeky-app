@@ -71,6 +71,18 @@ export const updateSession = async (request: NextRequest) => {
     // https://supabase.com/docs/guides/auth/server-side/nextjs
     await supabase.auth.getUser();
 
+    // Remember which floor the member is standing on — every inside-club
+    // "back to the floor" exit reads this cookie (utils/return-floor.ts).
+    const floorMatch = request.nextUrl.pathname.match(
+      /^\/floor\/(silver|gold|platinum|diamond)$/
+    );
+    if (floorMatch) {
+      response.cookies.set('cc_last_floor', floorMatch[1], {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7
+      });
+    }
+
     return response;
   } catch (e) {
     // If you are here, a Supabase client could not be created!

@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import StoreClient from '@/components/ui/Store/StoreClient';
 import { createClient } from '@/utils/supabase/server';
+import { getReturnFloor } from '@/utils/return-floor';
 import {
   getProducts,
   getSubscription,
@@ -22,10 +24,17 @@ export default async function StorePage() {
     getProfile(supabase, user.id),
     getTokenBalance(supabase)
   ]);
+  const floorHref = await getReturnFloor();
 
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-6xl px-6 py-14">
+        <Link
+          href={floorHref}
+          className="text-sm font-semibold text-zinc-500 hover:text-white"
+        >
+          ← Back to the floor
+        </Link>
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
           🪙 The Exchange
         </h1>

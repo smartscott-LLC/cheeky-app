@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
+import { getReturnFloor } from '@/utils/return-floor';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { KIND_META, eventUrl, timeLabel } from '@/utils/events';
@@ -13,6 +14,7 @@ export default async function EventsPage() {
 
   // Make sure the next couple of hours of the playlist exist.
   await supabase.rpc('ensure_floor_events', { p_hours: 2 });
+  const floorHref = await getReturnFloor();
 
   // Your floor decides which rooms are lit. Silver=0, Gold=1, Platinum=2,
   // Diamond=3 — every room at or below your floor is open to you.
@@ -49,6 +51,12 @@ export default async function EventsPage() {
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-6xl px-6 py-16">
+        <Link
+          href={floorHref}
+          className="text-sm font-semibold text-zinc-500 hover:text-white"
+        >
+          ← Back to the floor
+        </Link>
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
           The Event Center
         </h1>

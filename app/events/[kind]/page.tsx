@@ -2,6 +2,7 @@ import EventFloor from '@/components/ui/Events/EventFloor';
 import { createClient } from '@/utils/supabase/server';
 import { getProfile, getUser } from '@/utils/supabase/queries';
 import { isCompatible } from '@/utils/helpers';
+import { getReturnFloor } from '@/utils/return-floor';
 import { redirect, notFound } from 'next/navigation';
 import Link from 'next/link';
 import { KIND_META, timeLabel } from '@/utils/events';
@@ -30,6 +31,7 @@ export default async function EventRoomPage({
   if (!profile?.verified_at) {
     return redirect('/club');
   }
+  const floorHref = await getReturnFloor();
 
   // Access: the room only opens for members who reach its floor.
   const { data: tierData } = await supabase.rpc('current_tier', {
@@ -166,12 +168,20 @@ export default async function EventRoomPage({
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-6xl px-6 pt-10">
-        <Link
-          href="/events"
-          className="text-sm font-semibold text-zinc-500 hover:text-white"
-        >
-          ← The Event Center
-        </Link>
+        <div className="flex flex-wrap items-center gap-4">
+          <Link
+            href="/events"
+            className="text-sm font-semibold text-zinc-500 hover:text-white"
+          >
+            ← The Event Center
+          </Link>
+          <Link
+            href={floorHref}
+            className="text-sm font-semibold text-zinc-500 hover:text-white"
+          >
+            ← Back to the floor
+          </Link>
+        </div>
       </div>
 
       {roomEvent ? (

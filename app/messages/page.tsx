@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
 import { openConversation } from '@/app/messages/actions';
+import { getReturnFloor } from '@/utils/return-floor';
 import { redirect } from 'next/navigation';
 import MomentsStrip from '@/components/ui/Messages/MomentsStrip';
 
@@ -11,6 +12,7 @@ export default async function MessagesPage() {
   if (!user) {
     return redirect('/signin');
   }
+  const floorHref = await getReturnFloor();
 
   // Incoming waves — a one-tap "noticed you" waiting for a hello.
   const { data: waves } = await supabase
@@ -86,8 +88,8 @@ export default async function MessagesPage() {
         <h1 className="text-3xl font-extrabold sm:text-4xl">Cheeky Chats</h1>
         <p className="mt-2">
           <Link
-            href="/browse"
-            className="text-sm font-semibold text-zinc-500 hover:text-white"
+            href={floorHref}
+            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-zinc-200 transition hover:border-zinc-500 hover:text-white"
           >
             ← Back to the floor
           </Link>

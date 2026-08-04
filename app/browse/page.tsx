@@ -2,6 +2,8 @@ import BrowseCard, { BrowsePerson } from '@/components/ui/Browse/BrowseCard';
 import { createClient } from '@/utils/supabase/server';
 import { getProfile, getSubscription, getUser } from '@/utils/supabase/queries';
 import { isCompatible } from '@/utils/helpers';
+import { getReturnFloor } from '@/utils/return-floor';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 export default async function BrowsePage() {
@@ -78,10 +80,17 @@ export default async function BrowsePage() {
     }));
 
   const photoBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`;
+  const floorHref = await getReturnFloor();
 
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-6xl px-6 py-16">
+        <Link
+          href={floorHref}
+          className="text-sm font-semibold text-zinc-500 hover:text-white"
+        >
+          ← Back to the floor
+        </Link>
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
           The Spark List
         </h1>

@@ -31,3 +31,20 @@ const CHARACTER_FLOOR_NAMES: Record<string, string> = {
 export function characterFloorName(slug: string): string {
   return CHARACTER_FLOOR_NAMES[slug] ?? 'The club';
 }
+
+const FLOOR_PATHS = [
+  '/floor/silver',
+  '/floor/gold',
+  '/floor/platinum',
+  '/floor/diamond'
+];
+
+/**
+ * Where an AI's exit goes: back to their own floor. Brutus is at the door
+ * (the lobby); Chaz is everywhere, so his exit is decided by the caller.
+ */
+export function characterFloorHref(slug: string): string {
+  if (slug === 'brutus') return '/club';
+  const rank = CHARACTER_FLOORS[slug] ?? -1;
+  return rank >= 0 && rank < FLOOR_PATHS.length ? FLOOR_PATHS[rank] : '/club';
+}

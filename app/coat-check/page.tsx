@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
+import { getReturnFloor } from '@/utils/return-floor';
 import { redirect } from 'next/navigation';
 
 const RARITY_STYLE: Record<string, string> = {
@@ -14,6 +15,7 @@ export default async function CoatCheckPage() {
   if (!user) {
     return redirect('/signin');
   }
+  const floorHref = await getReturnFloor();
 
   // Checking in at the Coat Check = your daily streak.
   const { data: streak } = await supabase.rpc('record_checkin');
@@ -283,8 +285,8 @@ export default async function CoatCheckPage() {
 
         <p className="mt-8">
           <Link
-            href="/browse"
-            className="text-sm font-semibold text-zinc-500 hover:text-white"
+            href={floorHref}
+            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-zinc-200 transition hover:border-zinc-500 hover:text-white"
           >
             ← Back to the floor
           </Link>

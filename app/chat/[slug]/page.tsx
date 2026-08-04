@@ -3,8 +3,10 @@ import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
 import {
   characterFloorRank,
-  characterFloorLabel
+  characterFloorLabel,
+  characterFloorHref
 } from '@/utils/characters';
+import { getReturnFloor } from '@/utils/return-floor';
 import { redirect, notFound } from 'next/navigation';
 import Link from 'next/link';
 
@@ -35,6 +37,11 @@ export default async function ChatPage({
   // Floor gate: the cast live behind their own ropes. Chaz (rank -1) is the
   // manager — reachable from anywhere. Everyone else needs their floor.
   const rank = characterFloorRank(slug);
+  // The exit: back to the AI's own floor (Chaz goes to wherever the member
+  // last stood; a locked floor exits to the member's last floor too).
+  const floorHref =
+    slug === 'chaz' ? await getReturnFloor() : characterFloorHref(slug);
+  const lastFloorHref = await getReturnFloor();
   if (rank >= 0) {
     const { data: tierData } = await supabase.rpc('current_tier', {
       p_user: user.id
@@ -63,10 +70,10 @@ export default async function ChatPage({
                 See the memberships
               </Link>
               <Link
-                href="/club"
+                href={lastFloorHref}
                 className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-zinc-200 transition hover:border-zinc-500 hover:text-white"
               >
-                Back to the lobby
+                ← Back to the floor
               </Link>
             </div>
           </div>
@@ -79,10 +86,10 @@ export default async function ChatPage({
     <div className="bg-black">
       <div className="mx-auto max-w-3xl px-6 pt-10">
         <Link
-          href="/club"
+          href={floorHref}
           className="text-sm font-semibold text-zinc-500 hover:text-white"
         >
-          ← The lobby
+          ← Back to the floor
         </Link>
       </div>
       <div className="mx-auto max-w-3xl px-6 pb-16 pt-4">

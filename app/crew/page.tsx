@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { characterFloorName } from '@/utils/characters';
+import { getReturnFloor } from '@/utils/return-floor';
 
 // The crew's home order — up the building, then the manager.
 const ORDER = ['brutus', 'dj', 'bartender', 'trixie', 'hostess', 'chaz'];
@@ -22,9 +23,17 @@ export default async function CrewPage() {
         (ORDER.indexOf(b.slug) === -1 ? 99 : ORDER.indexOf(b.slug))
     );
 
+  const floorHref = await getReturnFloor();
+
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-6xl px-6 py-16">
+        <Link
+          href={floorHref}
+          className="text-sm font-semibold text-zinc-500 hover:text-white"
+        >
+          ← Back to the floor
+        </Link>
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
           🎭 Meet the Crew
         </h1>

@@ -1,10 +1,12 @@
 import GiftShop from '@/components/ui/Gifts/GiftShop';
+import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import {
   getUser,
   getProfile,
   getTokenBalance
 } from '@/utils/supabase/queries';
+import { getReturnFloor } from '@/utils/return-floor';
 import { redirect } from 'next/navigation';
 
 export default async function GiftsPage() {
@@ -60,6 +62,7 @@ export default async function GiftsPage() {
     ]);
 
   // Who can I send to? Your matches + your conversations.
+  const floorHref = await getReturnFloor();
   const [{ data: matches }, { data: convos }] = await Promise.all([
     supabase
       .from('matches')
@@ -164,6 +167,12 @@ export default async function GiftsPage() {
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-6xl px-6 py-16">
+        <Link
+          href={floorHref}
+          className="text-sm font-semibold text-zinc-500 hover:text-white"
+        >
+          ← Back to the floor
+        </Link>
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
           🎁 The Gift Shop
         </h1>

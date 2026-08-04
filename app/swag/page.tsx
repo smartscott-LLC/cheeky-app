@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
+import { getReturnFloor } from '@/utils/return-floor';
 import { redirect } from 'next/navigation';
 import RedeemCode from '@/components/ui/Swag/RedeemCode';
 
@@ -24,6 +25,7 @@ export default async function SwagPage() {
   if (!user) {
     return redirect('/signin');
   }
+  const floorHref = await getReturnFloor();
 
   // Your swag history (RLS: your own rows only).
   const { data: grants } = await supabase
@@ -73,8 +75,8 @@ export default async function SwagPage() {
 
         <p className="mt-8">
           <Link
-            href="/browse"
-            className="text-sm font-semibold text-zinc-500 hover:text-white"
+            href={floorHref}
+            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-zinc-200 transition hover:border-zinc-500 hover:text-white"
           >
             ← Back to the floor
           </Link>
