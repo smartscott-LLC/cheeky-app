@@ -1,7 +1,84 @@
 'use server';
 
 import { createClient } from '@/utils/supabase/server';
+import { supabaseAdmin } from '@/utils/supabase/admin';
+import { runDateSafe } from '@/utils/datesafe';
+import { Database } from '@/types_db';
 import { redirect } from 'next/navigation';
+
+/**
+ * The DateSafe pipeline — runs in the back after a report lands. Finds the
+ * reported member's photo and holds it immediately (a hold is an action, not
+ * a verdict), pipes it to the AI reviewer (vision model), then: a clean
+ * verdict lifts the hold, a violation keeps it, an inconclusive verdict
+ * keeps it and stays in the queue for human confirmation. A held photo
+ * stops appearing on the floor the moment the report lands.
+ * (Spec: docs/Governance/takedown-appeals.md §2)
+ */
+async function runDateSafeForReport(
+  reportId: number,
+  reportedId: string,
+  reason: string,
+  context?: string
+) {
+  const { data: profile } = await supabaseAdmin
+    .from('profiles')
+    .select('photos(storage_path, is_primary)')
+    .eq('id', reportedId)
+    .maybeSingle();
+
+  const photo =
+    profile?.photos?.find((p) => p.is_primary) ?? profile?.photos?.[0] ?? null;
+  const imageUrl = photo?.storage_path
+    ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/${photo.storage_path}`
+    : null;
+
+  // The hold lands now, before the review — reported content comes off the
+  // floor while a decision is made, whether or not the allegation holds.
+  const heldAt = new Date().toISOString();
+  if (photo?.storage_path) {
+    await supabaseAdmin
+      .from('photos')
+      .update({ held_at: heldAt })
+      .eq('storage_path', photo.storage_path);
+  }
+
+  const complaint = `${reason}${context ? ` — conversation: ${context}` : ''}`;
+  const verdict = await runDateSafe({ imageUrl, complaint });
+
+  const updates: Partial<Database['public']['Tables']['reports']['Update']> = {
+    verdict: verdict.verdict,
+    category: verdict.category,
+    confidence: verdict.confidence,
+    review_summary: verdict.summary,
+    reviewed_at: new Date().toISOString(),
+    image_url: imageUrl,
+    held_at: imageUrl ? heldAt : null
+  };
+
+  if (verdict.verdict === 'clean') {
+    // Unfounded — the hold lifts and the reported content is restored.
+    if (photo?.storage_path) {
+      await supabaseAdmin
+        .from('photos')
+        .update({ held_at: null })
+        .eq('storage_path', photo.storage_path);
+    }
+    updates.held_at = null;
+    updates.status = 'reviewed';
+    updates.outcome = 'no_action';
+  } else if (verdict.verdict === 'violation') {
+    // Confirmed violation — the hold stays; the ban ladder is human-led.
+    updates.status = 'reviewed';
+    updates.outcome = 'action_taken';
+  } else {
+    // Inconclusive — hold stays, report stays pending for human review.
+    updates.status = 'pending';
+    updates.outcome = null;
+  }
+
+  await supabaseAdmin.from('reports').update(updates).eq('id', reportId);
+}
 
 /**
  * Resolves (or creates) the conversation with another member and opens it.
@@ -54,16 +131,31 @@ export async function reportUser(
     return { error: 'not signed in' };
   }
 
-  const { error } = await supabase.from('reports').insert({
-    reporter_id: user.id,
-    reported_id: reportedId,
-    reason,
-    context: context ?? null
-  });
+  const { data: report, error } = await supabase
+    .from('reports')
+    .insert({
+      reporter_id: user.id,
+      reported_id: reportedId,
+      reason,
+      context: context ?? null
+    })
+    .select('id')
+    .single();
 
   if (error) {
     console.error('report failed:', error.message);
     return { error: error.message };
+  }
+
+  // DateSafe: the back-end reviewer takes it from here — reported content is
+  // held the moment the report lands, reviewed by the AI, and the hold is
+  // lifted only if the allegation is unfounded. Fire-and-forget so the
+  // reporter isn't kept waiting on the AI.
+  if (report?.id) {
+    void runDateSafeForReport(report.id, reportedId, reason, context).catch(
+      (e: unknown) =>
+        console.error('DateSafe review failed:', e instanceof Error ? e.message : e)
+    );
   }
   return {};
 }

@@ -1019,6 +1019,7 @@ export type Database = {
       photos: {
         Row: {
           created_at: string
+          held_at: string | null
           id: string
           is_primary: boolean
           position: number
@@ -1027,6 +1028,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          held_at?: string | null
           id?: string
           is_primary?: boolean
           position?: number
@@ -1035,6 +1037,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          held_at?: string | null
           id?: string
           is_primary?: boolean
           position?: number
@@ -1212,37 +1215,64 @@ export type Database = {
       }
       reports: {
         Row: {
+          category: string | null
+          confidence: number | null
           context: string | null
           created_at: string
+          held_at: string | null
+          human_confirmed_at: string | null
+          human_verdict: string | null
           id: number
+          image_url: string | null
           outcome: string | null
           reason: string
           reported_id: string
           reporter_id: string
           resolved_at: string | null
+          review_summary: string | null
+          reviewed_at: string | null
           status: string
+          verdict: string | null
         }
         Insert: {
+          category?: string | null
+          confidence?: number | null
           context?: string | null
           created_at?: string
+          held_at?: string | null
+          human_confirmed_at?: string | null
+          human_verdict?: string | null
           id?: never
+          image_url?: string | null
           outcome?: string | null
           reason: string
           reported_id: string
           reporter_id: string
           resolved_at?: string | null
+          review_summary?: string | null
+          reviewed_at?: string | null
           status?: string
+          verdict?: string | null
         }
         Update: {
+          category?: string | null
+          confidence?: number | null
           context?: string | null
           created_at?: string
+          held_at?: string | null
+          human_confirmed_at?: string | null
+          human_verdict?: string | null
           id?: never
+          image_url?: string | null
           outcome?: string | null
           reason?: string
           reported_id?: string
           reporter_id?: string
           resolved_at?: string | null
+          review_summary?: string | null
+          reviewed_at?: string | null
           status?: string
+          verdict?: string | null
         }
         Relationships: []
       }

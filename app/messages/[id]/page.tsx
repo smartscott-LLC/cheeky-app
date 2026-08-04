@@ -36,6 +36,7 @@ export default async function ThreadPage({
         .from('profiles')
         .select('id, display_name, bio, verified_at, photos(storage_path, is_primary)')
         .eq('id', otherId)
+        .filter('photos.held_at', 'is', 'null')
         .maybeSingle(),
       supabase
         .from('messages')

@@ -2,7 +2,7 @@
 
 > **Status:** binding on the build (per the Governance README). Backs the
 > Stripe takedown-notice submission and the member-facing Acceptable Use
-> Policy. Where the code does not yet automate a step (content holds, banned
+> > where the code does not yet automate a step (the banned
 > registry), the process below is the spec — operable today by human staff,
 > with automation to follow. Overclaims are the enemy: we describe what we
 > do and what we will build, never fiction.

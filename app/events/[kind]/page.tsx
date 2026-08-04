@@ -127,6 +127,7 @@ export default async function EventRoomPage({
             )
             .in('id', ids)
             .is('bot_flagged_at', null)
+            .filter('photos.held_at', 'is', 'null')
         : { data: [] };
 
     const profileMap = new Map(

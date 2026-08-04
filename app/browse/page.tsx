@@ -37,6 +37,7 @@ export default async function BrowsePage() {
     .from('profiles')
     .select('id, display_name, bio, one_liner, verified_at, gender, interested_in, photos(id, storage_path, position, is_primary)')
     .is('bot_flagged_at', null)
+    .filter('photos.held_at', 'is', 'null')
     .limit(50);
 
   const { data: myWaves } = await supabase

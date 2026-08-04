@@ -87,6 +87,7 @@ export default async function SpeedDatingPage() {
             .from('profiles')
             .select('id, display_name, verified_at, photos(storage_path, is_primary)')
             .in('id', ids)
+            .filter('photos.held_at', 'is', 'null')
         : { data: [] };
 
     const profileMap = new Map(

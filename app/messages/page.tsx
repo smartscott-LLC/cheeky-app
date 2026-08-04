@@ -27,6 +27,7 @@ export default async function MessagesPage() {
           .from('profiles')
           .select('id, display_name, photos(storage_path, is_primary)')
           .in('id', waveSenders)
+          .filter('photos.held_at', 'is', 'null')
       : { data: [] };
   const wavePhoto = (id: string) => {
     const p = (waveProfiles ?? []).find((w) => w.id === id);

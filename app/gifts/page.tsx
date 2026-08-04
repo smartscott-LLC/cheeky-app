@@ -87,6 +87,7 @@ export default async function GiftsPage() {
           .from('profiles')
           .select('id, display_name, photos(storage_path, is_primary)')
           .in('id', otherIds)
+          .filter('photos.held_at', 'is', 'null')
       : { data: [] };
 
   const people = (peopleProfiles ?? []).map((p) => ({
@@ -110,6 +111,7 @@ export default async function GiftsPage() {
           .from('profiles')
           .select('id, display_name, photos(storage_path, is_primary)')
           .in('id', senderIds)
+          .filter('photos.held_at', 'is', 'null')
       : { data: [] };
 
   const profileMap = new Map(
