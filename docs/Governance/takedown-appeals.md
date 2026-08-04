@@ -110,27 +110,30 @@ public support/safety contacts — info@smartscott.online, helpdesk@smartscott.o
 date.safely@smartscott.online, and report-anonymous@smartscott.online —
 all fielded by humans.
 
-**Review.** Review is layered. A report is piped immediately to our
-automated image-review model (an OpenRouter-hosted reviewer that sits idle
-until triggered) and returns a verdict on the reported content within
-minutes (target under 5). Clear violations are held and routed for human
-confirmation; inconclusive results go straight to human review; every ban
-is confirmed by a human. Reported content is held from public view
-immediately while a decision is made. Actions escalate by severity:
-harassment and non-consensual behavior earn a 5-year expulsion; sexually
-explicit behavior — unsolicited explicit imagery — earns permanent
-expulsion with no exceptions; anything that may violate state or federal
-law is reported to the local authorities.
+**Review.** A takedown is immediate upon report until a decision is reached —
+an image block is applied to the user's profile content in the database, and
+the image/content is immediately reviewed by the AI staff (under a 5-minute
+response). If the allegation is false, the block is removed and an apology
+email explaining the incident and procedure is sent. If the image/content is
+in violation, the user responsible is immediately expelled from the app, and
+an email is issued explaining the incident, the examination results, and the
+detailed reason the conclusion was reached — they are made aware of the ban.
+Our system then flags the account, and it is placed in a banned-account area
+of the database that is referenced when a user applies for membership. If the
+incident violates any state or federal laws, the user's username and
+non-government information are retained along with any evidence collected
+during the investigation, kept on file for 5 years (the length of the ban)
+in the event authorities request it. Repeat offenders who return after
+serving a ban are banned for the life of the user.
 
-**Appeals.** A takedown holds immediately upon report until a decision is
-reached. The affected member has 14 days to appeal; without a timely appeal,
-the decision stands. A timely appeal triggers an exhaustive human review,
-with both sides able to submit evidence within a 14-day period, followed by
-a decision on the evidence (with an interview arranged by the support desk
-if needed) within 3 days — the full appeal completes within roughly one
-month. Wrongful bans are made right: the hold is lifted, the account is
-restored, and time lost is compensated per the member's choice (membership
-credit or refund through our payment processor). Banned accounts are flagged
-in a banned-account registry referenced at signup; repeat offenders are
-banned for life. Evidence for incidents that may violate law is retained for
-the length of the ban (5 years) in case authorities request it.
+**Appeals.** The accused user has 14 days to appeal any punishment. If the
+decision is not appealed within the 14-day limit, the verdict is assumed
+correct and the punishment is carried out. A timely appeal triggers an
+exhaustive review by a human, and both sides may submit evidence within a
+14-day period. At the end of that period, a decision is made on the
+supporting evidence and an interview (conducted by video chat) within 3
+days. This completes the appeal within a one-month time frame — expedient
+and thorough. Any time lost on the platform due to an incorrect accusation
+and a verdict of not guilty is compensated to the user at their choice: a
+refund to the original credit/debit payment method, or membership of equal
+value.
