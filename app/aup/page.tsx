@@ -28,7 +28,8 @@ const SECTIONS = [
     items: [
       'Report or block from any chat, one tap. Reports go to a human bouncer for review — no automated bans on word filters alone.',
       'No follow-ups after a decline. You said no; that\u2019s the whole sentence.',
-      'If you feel unsafe, report immediately — and reach out at date.safely@smartscott.online for a direct line to the safety desk.'
+      'If you feel unsafe, report immediately — and reach out at date.safely@smartscott.online for a direct line to the safety desk.',
+      'Prefer to stay anonymous? report-anonymous@smartscott.online — no name, no trace, still read by a human.'
     ]
   },
   {

@@ -39,9 +39,8 @@
   with no paid bypass; report/block from any chat with human review;
   escalation ladder; mutual-compatibility filtering; data minimization
   (PII split, 3–90-day message retention, in-app deletion).
-- **Open question:** `report-anonymous@smartscott.online` — claimed in the
-  takedown submission; confirm the mailbox exists and surface it on the
-  Contact page, or remove it from the answer.
+- **Resolved:** `report-anonymous@smartscott.online` — mailbox confirmed;
+  surfaced on the Contact page and the AUP reporting section.
 - **The process we describe is the spec.** Where automation isn't built, the
   human process is operable today (the founder is the escalation desk); the
   docs are binding and the code marches to them as we build.

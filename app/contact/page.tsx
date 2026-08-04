@@ -21,6 +21,11 @@ const DESKS = [
     email: CONTACT.dateSafely,
     label: 'Safety & reporting',
     body: 'Report a concern, a safety issue, or anything that made you uncomfortable. Handled with care and confidentiality.'
+  },
+  {
+    email: CONTACT.reportAnonymous,
+    label: 'Anonymous reporting',
+    body: 'Report without leaving your name. No trace, no follow-up to you — it still lands at the safety desk, read by a human.'
   }
 ];
 
