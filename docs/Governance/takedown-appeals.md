@@ -29,23 +29,32 @@ Reporting is available through multiple, always-visible channels:
 
 ## 2. How a submitted report is reviewed
 
-- **Who:** review is human-led. The AI staff perform intake, logging, and
-  triage; a human staff member adjudicates. Where the AI can conclusively
-  route a clear-cut case (spam, bot activity flagged by the honeypot
-  systems), it does — every ban is confirmed by a human.
+- **Who:** review is layered. **Automated first pass:** a report is piped
+  immediately to our automated image-review model — an OpenRouter-hosted
+  reviewer that sits idle until a report triggers it (near-zero cost,
+  fail-safe). It returns a verdict on the reported image/content within
+  minutes (target: under 5). Clear violations are held and routed for human
+  confirmation; inconclusive results go straight to human review. **Every
+  ban is confirmed by a human.** The AI staff perform intake and triage in
+  conversation; adjudication is human-led.
 - **Immediate hold:** reported images/content are **held** (removed from
   public view) as soon as a report lands, while a decision is made — the
   safety of everyone involved comes before anyone's convenience. A hold is
   an action, not a verdict.
-- **Targets (SLA):** initial human review begins within a few hours of the
-  report; straightforward cases resolve within 24–48 hours; escalated cases
-  resolve within the appeal window below. Speed matters, accuracy matters
-  more — a wrongful hold is lifted the moment the review clears it.
-- **Actions:** confirmed violations escalate warning → temporary timeout →
-  permanent expulsion. **Zero tolerance for sexually explicit behavior:
-  immediate permanent expulsion from the platform for no less than 5 years.**
-  Anything that appears to violate state or federal law is reported to the
-  local authorities, with evidence preserved for lawful request.
+- **Targets (SLA):** automated first pass within minutes (under 5, aiming
+  for 3); initial human review begins within a few hours of the report;
+  straightforward cases resolve within 24–48 hours; escalated cases resolve
+  within the appeal window below. Speed matters, accuracy matters more — a
+  wrongful hold is lifted the moment the review clears it.
+- **Actions — severity ladder:**
+  - **5-year ban:** harassment, non-consensual behavior, and serious but
+    non-criminal conduct. A report of non-consensual involvement lands a
+    5-year expulsion.
+  - **Permanent expulsion:** sexually explicit behavior — unsolicited
+    explicit imagery or exposure. Gone for good, no exceptions.
+  - **Permanent + authorities:** anything that appears to violate state or
+    federal law — reported to the local authorities, with evidence
+    preserved for lawful request.
 
 ## 3. How a reported user appeals a removal or ban
 
@@ -101,13 +110,17 @@ public support/safety contacts — info@smartscott.online, helpdesk@smartscott.o
 date.safely@smartscott.online, and report-anonymous@smartscott.online —
 all fielded by humans.
 
-**Review.** Review is human-led; the AI staff perform intake and triage.
-Reported content is held from public view immediately while a decision is
-made, for the safety of everyone involved. Initial human review begins
-within hours; straightforward cases resolve within 24–48 hours. We have a
-zero-tolerance policy for sexually explicit behavior — immediate permanent
-expulsion for no less than 5 years — and incidents that may violate state
-or federal law are reported to the local authorities.
+**Review.** Review is layered. A report is piped immediately to our
+automated image-review model (an OpenRouter-hosted reviewer that sits idle
+until triggered) and returns a verdict on the reported content within
+minutes (target under 5). Clear violations are held and routed for human
+confirmation; inconclusive results go straight to human review; every ban
+is confirmed by a human. Reported content is held from public view
+immediately while a decision is made. Actions escalate by severity:
+harassment and non-consensual behavior earn a 5-year expulsion; sexually
+explicit behavior — unsolicited explicit imagery — earns permanent
+expulsion with no exceptions; anything that may violate state or federal
+law is reported to the local authorities.
 
 **Appeals.** A takedown holds immediately upon report until a decision is
 reached. The affected member has 14 days to appeal; without a timely appeal,
