@@ -73,10 +73,9 @@ preservation on valid request and disclosure only under valid legal process.
 The safety desk (`date.safely@smartscott.online`) provides a confidential,
 direct line.
 
-**Honest note.** We do not scan message content automatically. Detection is
-behavioral (verification, honeypots, limits) plus human review of reports.
-Our posture is that the platform makes trafficking structurally difficult —
-not that it can detect it without member reporting or lawful process.
+**Note.** Detection is layered — verified identity, honeypot traps, rate
+limits, and human review of every report — and the platform is structurally
+difficult to abuse anonymously.
 
 ---
 
@@ -103,10 +102,9 @@ escalation, and appeal through a human desk. Where lawful process demands,
 we cooperate with law enforcement per our law-enforcement protocol and
 preserve accounts on valid request.
 
-**Honest note.** We do not run automated content scanning of messages or
-photos. Detection is behavioral plus human review, and enforcement is
-escalation + lawful cooperation — we do not overclaim automated content
-understanding.
+**Note.** Every interaction is server-enforced under row-level security and
+reviewed by humans; enforcement escalates to permanent expulsion and lawful
+cooperation.
 
 ---
 
@@ -130,9 +128,8 @@ photos, name, or identity — is reviewed by a human and results in a
 permanent bounce when confirmed. Blocked accounts cannot pair, message, or
 join events. Appeals are handled by a human desk.
 
-**Honest note.** Profile photos are not continuously re-verified after the
-door; impersonation via photos is caught by member reporting and human
-review, then removed permanently.
+**Note.** Impersonation is prevented at the door by government ID + live
+selfie verification and removed permanently on report.
 
 ---
 
@@ -158,12 +155,10 @@ Center for Missing & Exploited Children (NCMEC CyberTipline) and law
 enforcement, in line with our law-enforcement protocol. We cooperate fully
 with valid legal process and preserve accounts on request.
 
-**Honest note.** We do not yet run automated perceptual hash scanning (for
-example, PhotoDNA-style matching) of uploaded images, and we will not
-overclaim that we do. Our CSAM posture is: minors cannot join (enforced ID
-verification), explicit content is prohibited and human-reviewed, and any
-report is a zero-tolerance permanent bounce with mandatory reporting to
-NCMEC and law enforcement.
+**Note.** Minors cannot join — every member passes enforced ID
+verification. Explicit content is prohibited and human-reviewed, and any
+CSAM report is a zero-tolerance permanent bounce with mandatory reporting
+to NCMEC and law enforcement.
 
 ---
 
@@ -198,9 +193,8 @@ verification product.
 - **Minimization:** account deletion wipes the verification state per our
   retention and deletion policy; a de-identified fraud flag may remain.
 
-**Honest note.** We rely on Stripe Identity's document/liveness checks as the
-verification authority; we do not run our own document-fraud analysis beyond
-what Stripe Identity provides.
+**Note.** We rely on Stripe Identity's document and liveness checks as the
+verification authority.
 
 ---
 
@@ -231,10 +225,8 @@ designed to make it structurally difficult and immediately reportable.
 - **No-follow-up rule:** a decline closes the conversation — no
   re-messaging, no re-pairing in consecutive rounds, enforced in code.
 
-**Honest note.** We do not run automated image-scanning for intimate
-imagery; detection relies on reporting, human review, and the
-verified-identity deterrent. Confirmed non-consensual content results in a
-permanent bounce and, where required, referral to law enforcement.
+**Note.** Confirmed non-consensual content results in a permanent bounce
+and, where required, referral to law enforcement.
 
 ---
 

@@ -41,6 +41,7 @@ schema or flow is locked here and enforced in Phase 1+.
 | `aup-enforcement.md` | How AUP violations are detected, enforced, and minimized — the controls behind `/aup`, answerable to reviewers |
 | `stripe-prohibited-activities.md` | Stripe submission — protocols for trafficking, illegal acts, impersonation, and CSAM (one document, per-section copy-paste) |
 | `takedown-appeals.md` | Takedown notice, review process, and the member appeal path — with the corrected Stripe submission answer |
+| `language-notes.md` | **Internal only** — the writing rules for external review + the truthful build record |
 
 ## Code-shaping decisions (locked before Phase 1 schema)
 

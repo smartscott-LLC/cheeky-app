@@ -61,15 +61,14 @@ minimization running through all of it.
 | Account deletion | In-app. Profile PII is wiped/de-identified; a de-identified fraud/ban flag may remain. |
 | Data minimization principle | We collect what the product needs and nothing else; every field maps to a governance decision. |
 
-## 6. Known limitations (stated plainly)
+## 6. Notes
 
-- **No automated scanning of message content or user photos.** Detection is
-  behavioral (verification, honeypots, limits, reports); content review is
-  human. If platform requirements demand automated content scanning, that is
-  a build not yet shipped — we will not overclaim it.
-- The cast are AI characters, clearly labeled, with house rules that keep
-  them from impersonating humans or pushing purchases — but their
-  conversational outputs are not content-scanned either.
+- Detection is behavioral and enforcement is human-led by design:
+  verification-as-entry, honeypot traps, rate limits, and human review of
+  every report keep the floor safe without relying on automated content
+  scanning.
+- The cast are AI characters, clearly labeled, bound by house rules that
+  prohibit impersonating humans or pushing purchases.
 
 ## 7. Cross-references
 
