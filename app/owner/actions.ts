@@ -37,55 +37,157 @@ export async function ownerFetchState(input: {
   flags?: unknown[];
   announcement?: unknown;
   unpurchased?: { id: string; display_name: string | null; verified_at: string | null }[];
+  metrics?: {
+    members: number;
+    verified: number;
+    paid: number;
+    tokensOut: number;
+    giftsOut: number;
+    redeemed: number;
+    newThisWeek: number;
+    msgsToday: number;
+  };
+  events?: {
+    id: string;
+    kind: string;
+    floor: string;
+    starts_at: string;
+    status: string;
+    token_cost: number;
+    entrants: number;
+  }[];
+  ledger?: {
+    id: number;
+    delta: number;
+    reason: string | null;
+    ref: string | null;
+    created_at: string;
+  }[];
+  catalog?: { id: string; slug: string; name: string; emoji: string; token_cost: number }[];
   error?: string;
 }> {
   if (!(await authorized(input.key))) return { error: 'forbidden' };
-  const [config, rules, codes, grants, flags, announcement, profiles, activeSubs] =
-    await Promise.all([
-      supabaseAdmin.from('promo_config').select('engine_enabled').maybeSingle(),
-      supabaseAdmin
-        .from('swag_rules')
-        .select('benefit_type, benefit_value, owner_only, weekly_limit')
-        .order('benefit_type')
-        .order('benefit_value'),
-      supabaseAdmin
-        .from('swag_codes')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(40),
-      supabaseAdmin
-        .from('benefit_grants')
-        .select('*, profiles(display_name)')
-        .order('created_at', { ascending: false })
-        .limit(25),
-      supabaseAdmin
-        .from('swag_flags')
-        .select('*, profiles(display_name), characters(name)')
-        .eq('status', 'open')
-        .order('created_at', { ascending: false })
-        .limit(25),
-      supabaseAdmin
-        .from('announcements')
-        .select('*')
-        .eq('active', true)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle(),
-      supabaseAdmin
-        .from('profiles')
-        .select('id, display_name, verified_at, created_at')
-        .not('verified_at', 'is', null)
-        .order('verified_at', { ascending: false })
-        .limit(50),
-      supabaseAdmin
-        .from('subscriptions')
-        .select('user_id')
-        .in('status', ['trialing', 'active'])
-    ]);
+  const now = new Date().toISOString();
+  const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
+  const dayAgo = new Date(Date.now() - 24 * 3_600_000).toISOString();
+  const sixHoursAgo = new Date(Date.now() - 6 * 3_600_000).toISOString();
+
+  const [
+    config,
+    rules,
+    codes,
+    grants,
+    flags,
+    announcement,
+    profiles,
+    activeSubs,
+    countMembers,
+    countVerified,
+    countPaid,
+    sumTokens,
+    countGifts,
+    countRedeemed,
+    countNew,
+    countMsgs,
+    events,
+    ledger,
+    catalog
+  ] = await Promise.all([
+    supabaseAdmin.from('promo_config').select('engine_enabled').maybeSingle(),
+    supabaseAdmin
+      .from('swag_rules')
+      .select('benefit_type, benefit_value, owner_only, weekly_limit')
+      .order('benefit_type')
+      .order('benefit_value'),
+    supabaseAdmin
+      .from('swag_codes')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(40),
+    supabaseAdmin
+      .from('benefit_grants')
+      .select('*, profiles(display_name)')
+      .order('created_at', { ascending: false })
+      .limit(25),
+    supabaseAdmin
+      .from('swag_flags')
+      .select('*, profiles(display_name), characters(name)')
+      .eq('status', 'open')
+      .order('created_at', { ascending: false })
+      .limit(25),
+    supabaseAdmin
+      .from('announcements')
+      .select('*')
+      .eq('active', true)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+    supabaseAdmin
+      .from('profiles')
+      .select('id, display_name, verified_at, created_at')
+      .not('verified_at', 'is', null)
+      .order('verified_at', { ascending: false })
+      .limit(50),
+    supabaseAdmin
+      .from('subscriptions')
+      .select('user_id')
+      .in('status', ['trialing', 'active']),
+    supabaseAdmin.from('profiles').select('id', { count: 'exact', head: true }),
+    supabaseAdmin
+      .from('profiles')
+      .select('id', { count: 'exact', head: true })
+      .not('verified_at', 'is', null),
+    supabaseAdmin
+      .from('subscriptions')
+      .select('id', { count: 'exact', head: true })
+      .in('status', ['trialing', 'active']),
+    supabaseAdmin.from('token_ledger').select('delta'),
+    supabaseAdmin.from('gift_inventory').select('id', { count: 'exact', head: true }),
+    supabaseAdmin.from('benefit_grants').select('id', { count: 'exact', head: true }),
+    supabaseAdmin
+      .from('profiles')
+      .select('id', { count: 'exact', head: true })
+      .gte('created_at', weekAgo),
+    supabaseAdmin
+      .from('messages')
+      .select('id', { count: 'exact', head: true })
+      .gte('created_at', dayAgo),
+    supabaseAdmin
+      .from('events')
+      .select('id, kind, floor, starts_at, status, token_cost')
+      .gte('starts_at', sixHoursAgo)
+      .order('starts_at', { ascending: true })
+      .limit(12),
+    supabaseAdmin
+      .from('token_ledger')
+      .select('delta, reason, ref, created_at')
+      .order('created_at', { ascending: false })
+      .limit(25),
+    supabaseAdmin
+      .from('gift_catalog')
+      .select('id, slug, name, emoji, token_cost')
+      .eq('active', true)
+      .order('token_cost')
+      .limit(30)
+  ]);
 
   const paidUsers = new Set((activeSubs.data ?? []).map((s) => s.user_id));
   const unpurchased = (profiles.data ?? []).filter(
     (p) => !paidUsers.has(p.id)
+  );
+
+  const eventIds = (events.data ?? []).map((e) => e.id);
+  const { data: entries } =
+    eventIds.length > 0
+      ? await supabaseAdmin
+          .from('event_entries')
+          .select('event_id')
+          .in('event_id', eventIds)
+          .in('status', ['reserved', 'locked'])
+      : { data: [] };
+  const entryCounts = new Map<string, number>();
+  (entries ?? []).forEach((en) =>
+    entryCounts.set(en.event_id, (entryCounts.get(en.event_id) ?? 0) + 1)
   );
 
   return {
@@ -99,7 +201,29 @@ export async function ownerFetchState(input: {
       id: p.id,
       display_name: p.display_name,
       verified_at: p.verified_at
-    }))
+    })),
+    metrics: {
+      members: countMembers.count ?? 0,
+      verified: countVerified.count ?? 0,
+      paid: countPaid.count ?? 0,
+      tokensOut:
+        (sumTokens.data ?? []).reduce((s, r) => s + (r.delta ?? 0), 0) ?? 0,
+      giftsOut: countGifts.count ?? 0,
+      redeemed: countRedeemed.count ?? 0,
+      newThisWeek: countNew.count ?? 0,
+      msgsToday: countMsgs.count ?? 0
+    },
+    events: (events.data ?? []).map((e) => ({
+      id: e.id,
+      kind: e.kind,
+      floor: e.floor,
+      starts_at: e.starts_at,
+      status: e.status,
+      token_cost: e.token_cost,
+      entrants: entryCounts.get(e.id) ?? 0
+    })),
+    ledger: (ledger.data ?? []) as never,
+    catalog: (catalog.data ?? []) as never
   };
 }
 

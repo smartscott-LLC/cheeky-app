@@ -95,6 +95,39 @@ export default function OwnerPage() {
   const [unpurchased, setUnpurchased] = useState<
     { id: string; display_name: string | null; verified_at: string | null }[]
   >([]);
+  const [metrics, setMetrics] = useState({
+    members: 0,
+    verified: 0,
+    paid: 0,
+    tokensOut: 0,
+    giftsOut: 0,
+    redeemed: 0,
+    newThisWeek: 0,
+    msgsToday: 0
+  });
+  const [events, setEvents] = useState<
+    {
+      id: string;
+      kind: string;
+      floor: string;
+      starts_at: string;
+      status: string;
+      token_cost: number;
+      entrants: number;
+    }[]
+  >([]);
+  const [ledger, setLedger] = useState<
+    {
+      id: number;
+      delta: number;
+      reason: string | null;
+      ref: string | null;
+      created_at: string;
+    }[]
+  >([]);
+  const [catalog, setCatalog] = useState<
+    { id: string; slug: string; name: string; emoji: string; token_cost: number }[]
+  >([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [fresh, setFresh] = useState<string[]>([]);
@@ -145,6 +178,21 @@ export default function OwnerPage() {
         verified_at: string | null;
       }[]
     );
+    setMetrics(
+      res.metrics ?? {
+        members: 0,
+        verified: 0,
+        paid: 0,
+        tokensOut: 0,
+        giftsOut: 0,
+        redeemed: 0,
+        newThisWeek: 0,
+        msgsToday: 0
+      }
+    );
+    setEvents((res.events ?? []) as typeof events);
+    setLedger((res.ledger ?? []) as typeof ledger);
+    setCatalog((res.catalog ?? []) as typeof catalog);
     setUnlocked(true);
   };
 
@@ -170,6 +218,21 @@ export default function OwnerPage() {
           verified_at: string | null;
         }[]
       );
+      setMetrics(
+        res.metrics ?? {
+          members: 0,
+          verified: 0,
+          paid: 0,
+          tokensOut: 0,
+          giftsOut: 0,
+          redeemed: 0,
+          newThisWeek: 0,
+          msgsToday: 0
+        }
+      );
+      setEvents((res.events ?? []) as typeof events);
+      setLedger((res.ledger ?? []) as typeof ledger);
+      setCatalog((res.catalog ?? []) as typeof catalog);
     }
   };
 
@@ -407,6 +470,32 @@ export default function OwnerPage() {
           <p className={`mt-3 text-sm ${msg.ok ? 'text-emerald-400' : 'text-club'}`}>{msg.text}</p>
         )}
 
+        {/* The pulse — minimal metrics, no dashboards required */}
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {[
+            { label: 'Verified members', value: metrics.verified, icon: '🧍' },
+            { label: 'All members', value: metrics.members, icon: '📈' },
+            { label: 'Paid now', value: metrics.paid, icon: '🎫' },
+            { label: 'Tokens out', value: metrics.tokensOut, icon: '🪙' },
+            { label: 'New this week', value: metrics.newThisWeek, icon: '👋' },
+            { label: 'Msgs today', value: metrics.msgsToday, icon: '💬' },
+            { label: 'Gifts out', value: metrics.giftsOut, icon: '📦' },
+            { label: 'Codes redeemed', value: metrics.redeemed, icon: '🎟️' }
+          ].map((m) => (
+            <div
+              key={m.label}
+              className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 text-center"
+            >
+              <p className="text-2xl font-extrabold text-white">
+                {m.icon} {m.value.toLocaleString()}
+              </p>
+              <p className="mt-1 text-[11px] uppercase tracking-wider text-zinc-500">
+                {m.label}
+              </p>
+            </div>
+          ))}
+        </div>
+
         {/* Fresh codes */}
         {fresh.length > 0 && (
           <div className="mt-6 rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-5">
@@ -623,6 +712,81 @@ export default function OwnerPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+
+        {/* Events on the floor — who's in, what's running */}
+        <div className="mt-8">
+          <h2 className="text-lg font-bold">📅 Events on the floor</h2>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {events.length === 0 && (
+              <p className="text-sm text-zinc-500">
+                Nothing scheduled in the next 6 hours.
+              </p>
+            )}
+            {events.map((e) => (
+              <div
+                key={e.id}
+                className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3"
+              >
+                <p className="text-sm font-bold capitalize text-white">
+                  {e.kind.replace(/_/g, ' ')} · {e.floor}
+                </p>
+                <p className="mt-0.5 text-xs text-zinc-500">
+                  {new Date(e.starts_at).toLocaleString()} · {e.token_cost}{' '}
+                  tokens · {e.entrants} in ·{' '}
+                  <span className="uppercase">{e.status}</span>
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Loot ledger — the token flow */}
+        <div className="mt-8">
+          <h2 className="text-lg font-bold">🪙 Loot ledger</h2>
+          <div className="mt-3 space-y-1.5">
+            {ledger.length === 0 && (
+              <p className="text-sm text-zinc-500">No movement yet.</p>
+            )}
+            {ledger.map((r) => (
+              <div
+                key={r.id}
+                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-1.5 text-sm"
+              >
+                <span
+                  className={`font-bold ${
+                    r.delta > 0 ? 'text-emerald-400' : 'text-club'
+                  }`}
+                >
+                  {r.delta > 0 ? `+${r.delta}` : r.delta} tokens
+                </span>
+                <span className="text-xs text-zinc-500">
+                  {r.reason}
+                  {r.ref ? ` · ${String(r.ref).slice(0, 18)}` : ''}
+                </span>
+                <span className="text-xs text-zinc-600">
+                  {new Date(r.created_at).toLocaleString()}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Gift shop catalog — quick look */}
+        <div className="mt-8">
+          <h2 className="text-lg font-bold">🎁 Gift shop catalog</h2>
+          <div className="mt-3 grid gap-2 sm:grid-cols-3 lg:grid-cols-5">
+            {catalog.map((g) => (
+              <div
+                key={g.id}
+                className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3 text-center"
+              >
+                <p className="text-2xl">{g.emoji}</p>
+                <p className="mt-1 text-xs font-bold text-white">{g.name}</p>
+                <p className="text-xs text-zinc-500">{g.token_cost} tokens</p>
+              </div>
+            ))}
           </div>
         </div>
 
