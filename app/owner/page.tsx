@@ -60,8 +60,24 @@ const GIFT_LABEL: Record<string, string> = {
   champagne: '🍾 Champagne',
   gift_basket: '🧺 Gift Basket'
 };
-const label = (t: string, v: string) =>
-  t === 'gift' ? (GIFT_LABEL[v] ?? v) : t === 'membership' ? `${v} membership` : `${v} tokens`;
+const label = (t: string, v: string) => {
+  if (t === 'gift') return GIFT_LABEL[v] ?? v;
+  if (t === 'membership') return `${v} membership`;
+  if (t === 'bundle') {
+    try {
+      const p = JSON.parse(v);
+      const parts: string[] = [];
+      if (p.tokens) parts.push(`${p.tokens} tokens`);
+      if (p.membership) parts.push(p.membership);
+      if (Array.isArray(p.gifts))
+        parts.push(...p.gifts.map((g: string) => GIFT_LABEL[g] ?? g));
+      return parts.join(' + ') || 'bundle';
+    } catch {
+      return 'bundle';
+    }
+  }
+  return `${v} tokens`;
+};
 
 export default function OwnerPage() {
   const [key, setKey] = useState('');
@@ -71,9 +87,25 @@ export default function OwnerPage() {
   const [codes, setCodes] = useState<CodeRow[]>([]);
   const [grants, setGrants] = useState<GrantRow[]>([]);
   const [flags, setFlags] = useState<FlagRow[]>([]);
+  const [announcement, setAnnouncement] = useState<{
+    message: string;
+    display_style: string;
+    ends_at: string | null;
+  } | null>(null);
+  const [unpurchased, setUnpurchased] = useState<
+    { id: string; display_name: string | null; verified_at: string | null }[]
+  >([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [fresh, setFresh] = useState<string[]>([]);
+  // The Mint — the right-hand drawer that prints what the member needs.
+  const [mintOpen, setMintOpen] = useState(false);
+  const [mintRows, setMintRows] = useState<
+    { id: number; kind: 'tokens' | 'gift' | 'membership'; value: string }[]
+  >([{ id: 1, kind: 'tokens', value: '5' }]);
+  const [mintNotes, setMintNotes] = useState('');
+  const [mintCount, setMintCount] = useState(1);
+  const [mintFresh, setMintFresh] = useState<string[]>([]);
 
   const notice = (ok: boolean, text: string) => setMsg({ ok, text });
 
@@ -99,6 +131,20 @@ export default function OwnerPage() {
     setCodes((res.codes ?? []) as CodeRow[]);
     setGrants((res.grants ?? []) as GrantRow[]);
     setFlags((res.flags ?? []) as FlagRow[]);
+    setAnnouncement(
+      (res.announcement as {
+        message: string;
+        display_style: string;
+        ends_at: string | null;
+      } | null) ?? null
+    );
+    setUnpurchased(
+      (res.unpurchased ?? []) as {
+        id: string;
+        display_name: string | null;
+        verified_at: string | null;
+      }[]
+    );
     setUnlocked(true);
   };
 
@@ -110,7 +156,101 @@ export default function OwnerPage() {
       setCodes((res.codes ?? []) as CodeRow[]);
       setGrants((res.grants ?? []) as GrantRow[]);
       setFlags((res.flags ?? []) as FlagRow[]);
+      setAnnouncement(
+        (res.announcement as {
+          message: string;
+          display_style: string;
+          ends_at: string | null;
+        } | null) ?? null
+      );
+      setUnpurchased(
+        (res.unpurchased ?? []) as {
+          id: string;
+          display_name: string | null;
+          verified_at: string | null;
+        }[]
+      );
     }
+  };
+
+  // The Mint — print presets and the bundle builder.
+  const PRESETS = [
+    {
+      label: '⚡ Event glitch kit',
+      payload: { tokens: 8, gifts: ['teddy'] },
+      note: 'glitched event: entry back + comfort'
+    },
+    {
+      label: '🧸 No-match comfort',
+      payload: { tokens: 5 },
+      note: 'no-match comfort'
+    },
+    {
+      label: '🌹 Complaint soothe',
+      payload: { tokens: 10, gifts: ['golden_roses'] },
+      note: 'complaint gesture'
+    },
+    {
+      label: '🥇 Gold weekend',
+      payload: { membership: 'gold' },
+      note: 'special occasion'
+    }
+  ];
+
+  const applyPreset = (p: (typeof PRESETS)[number]) => {
+    const rows: { id: number; kind: 'tokens' | 'gift' | 'membership'; value: string }[] =
+      [];
+    let id = 1;
+    if (typeof p.payload.tokens === 'number')
+      rows.push({ id: id++, kind: 'tokens', value: String(p.payload.tokens) });
+    if (typeof p.payload.membership === 'string')
+      rows.push({ id: id++, kind: 'membership', value: p.payload.membership });
+    if (Array.isArray(p.payload.gifts))
+      (p.payload.gifts as string[]).forEach((g) =>
+        rows.push({ id: id++, kind: 'gift', value: g })
+      );
+    setMintRows(rows.length ? rows : [{ id: 1, kind: 'tokens', value: '5' }]);
+    setMintNotes(p.note);
+    setMintFresh([]);
+  };
+
+  const addMintRow = () =>
+    setMintRows((r) => [
+      ...r,
+      { id: Date.now(), kind: 'tokens', value: '' }
+    ]);
+  const removeMintRow = (id: number) =>
+    setMintRows((r) => (r.length > 1 ? r.filter((x) => x.id !== id) : r));
+  const setMintRow = (
+    id: number,
+    patch: Partial<{ kind: 'tokens' | 'gift' | 'membership'; value: string }>
+  ) => setMintRows((r) => r.map((x) => (x.id === id ? { ...x, ...patch } : x)));
+
+  const printMint = async () => {
+    const payload: { tokens?: number; gifts?: string[]; membership?: string } = {};
+    const gifts: string[] = [];
+    for (const row of mintRows) {
+      const v = row.value.trim();
+      if (!v) continue;
+      if (row.kind === 'tokens')
+        payload.tokens = (payload.tokens ?? 0) + Math.max(1, parseInt(v, 10) || 1);
+      else if (row.kind === 'gift') gifts.push(v);
+      else payload.membership = v;
+    }
+    if (gifts.length) payload.gifts = gifts;
+    setBusy(true);
+    const res = await ownerGenerateCodes({
+      key,
+      benefitType: 'bundle',
+      benefitValue: JSON.stringify(payload),
+      count: mintCount,
+      notes: mintNotes.trim() || 'minted from the Lions Den'
+    });
+    setBusy(false);
+    if (res.error) return notice(false, res.error);
+    setMintFresh(res.codes ?? []);
+    notice(true, `${res.codes?.length ?? 0} code(s) printed — hand them out`);
+    refresh();
   };
 
   const generate = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -239,17 +379,28 @@ export default function OwnerPage() {
       <div className="mx-auto max-w-4xl px-6 py-16">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-extrabold">🗝️ The Owner&apos;s Booth</h1>
-            <p className="mt-1 text-sm text-zinc-500">The Swag Shop&apos;s front desk.</p>
+            <h1 className="text-3xl font-extrabold">🦁 The Lions Den</h1>
+            <p className="mt-1 text-sm text-zinc-500">
+              The club from one seat — mint, announce, and keep the floors
+              moving.
+            </p>
           </div>
-          <button
-            onClick={toggleEngine}
-            className={`rounded-lg px-4 py-2 text-sm font-bold transition ${
-              engine ? 'bg-emerald-600 text-white' : 'bg-club text-white'
-            }`}
-          >
-            {engine ? '● Engine ON' : '● Engine OFF'}
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setMintOpen(true)}
+              className="rounded-lg bg-gold px-4 py-2 text-sm font-bold text-black transition hover:bg-gold/80"
+            >
+              ⚒️ Open the Mint
+            </button>
+            <button
+              onClick={toggleEngine}
+              className={`rounded-lg px-4 py-2 text-sm font-bold transition ${
+                engine ? 'bg-emerald-600 text-white' : 'bg-club text-white'
+              }`}
+            >
+              {engine ? '● Engine ON' : '● Engine OFF'}
+            </button>
+          </div>
         </div>
 
         {msg && (
@@ -363,6 +514,15 @@ export default function OwnerPage() {
               Clear it
             </button>
           </div>
+          {announcement && (
+            <p className="mt-3 rounded-lg border border-gold/30 bg-gold/5 px-4 py-2 text-sm text-gold">
+              Live now: “{announcement.message}” ·{' '}
+              <span className="uppercase">{announcement.display_style}</span> ·{' '}
+              {announcement.ends_at
+                ? `until ${new Date(announcement.ends_at).toLocaleString()}`
+                : 'until cleared'}
+            </p>
+          )}
           <form onSubmit={postAnnounce} className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
             <input
               name="message"
@@ -390,6 +550,36 @@ export default function OwnerPage() {
               Post it
             </button>
           </form>
+        </div>
+
+        {/* Unpurchased memberships */}
+        <div className="mt-8">
+          <h2 className="text-lg font-bold">🪪 Verified, no card yet</h2>
+          {unpurchased.length === 0 ? (
+            <p className="mt-2 text-sm text-zinc-500">
+              Everyone verified has a card. Quiet night at the exchange.
+            </p>
+          ) : (
+            <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {unpurchased.map((p) => (
+                <div
+                  key={p.id}
+                  className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3"
+                >
+                  <p className="font-bold text-white">
+                    {p.display_name ?? 'Unnamed member'}
+                  </p>
+                  <p className="mt-0.5 text-xs text-zinc-500">
+                    Verified{' '}
+                    {p.verified_at
+                      ? new Date(p.verified_at).toLocaleDateString()
+                      : '—'}{' '}
+                    · no card
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Grant directly */}
@@ -479,6 +669,149 @@ export default function OwnerPage() {
             </div>
           </div>
         </div>
+
+        {/* The Mint — right-hand drawer that prints what the member needs */}
+        {mintOpen && (
+          <div
+            className="fixed inset-0 z-50 bg-black/60"
+            onClick={() => setMintOpen(false)}
+          >
+            <div
+              className="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto border-l border-zinc-800 bg-zinc-950 p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-extrabold">⚒️ The Mint</h2>
+                <button
+                  onClick={() => setMintOpen(false)}
+                  className="text-zinc-400 hover:text-white"
+                >
+                  ✕
+                </button>
+              </div>
+              <p className="mt-1 text-sm text-zinc-500">
+                Pick what a member needs — one code prints it all.
+              </p>
+
+              {/* Presets */}
+              <div className="mt-5 grid grid-cols-2 gap-2">
+                {PRESETS.map((p) => (
+                  <button
+                    key={p.label}
+                    onClick={() => applyPreset(p)}
+                    className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-xs font-bold text-zinc-200 transition hover:border-gold hover:text-gold"
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Bundle builder */}
+              <div className="mt-5 space-y-2">
+                {mintRows.map((row) => (
+                  <div key={row.id} className="flex items-center gap-2">
+                    <select
+                      value={row.kind}
+                      onChange={(e) =>
+                        setMintRow(row.id, {
+                          kind: e.target.value as 'tokens' | 'gift' | 'membership'
+                        })
+                      }
+                      className="w-28 rounded-lg border border-zinc-700 bg-zinc-900 p-2 text-xs text-white"
+                    >
+                      <option value="tokens">Tokens</option>
+                      <option value="gift">Gift</option>
+                      <option value="membership">Card</option>
+                    </select>
+                    <input
+                      value={row.value}
+                      onChange={(e) => setMintRow(row.id, { value: e.target.value })}
+                      list="mint-values"
+                      placeholder={
+                        row.kind === 'gift'
+                          ? 'teddy'
+                          : row.kind === 'membership'
+                            ? 'gold'
+                            : '5'
+                      }
+                      className="flex-1 rounded-lg border border-zinc-700 bg-zinc-900 p-2 text-sm text-white"
+                    />
+                    <button
+                      onClick={() => removeMintRow(row.id)}
+                      className="text-zinc-600 hover:text-club"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+                <datalist id="mint-values">
+                  <option value="teddy" />
+                  <option value="golden_roses" />
+                  <option value="jewelry" />
+                  <option value="champagne" />
+                  <option value="gift_basket" />
+                  <option value="gold" />
+                  <option value="platinum" />
+                  <option value="diamond" />
+                </datalist>
+                <button
+                  onClick={addMintRow}
+                  className="text-xs font-bold text-club hover:text-club-cotton"
+                >
+                  + Add a benefit
+                </button>
+              </div>
+
+              {/* Count + notes */}
+              <div className="mt-5 grid grid-cols-3 gap-2">
+                <input
+                  type="number"
+                  min={1}
+                  max={100}
+                  value={mintCount}
+                  onChange={(e) => setMintCount(Number(e.target.value) || 1)}
+                  title="How many codes"
+                  className="rounded-lg border border-zinc-700 bg-zinc-900 p-2 text-sm text-white"
+                />
+                <input
+                  value={mintNotes}
+                  onChange={(e) => setMintNotes(e.target.value)}
+                  placeholder="notes (optional)"
+                  className="col-span-2 rounded-lg border border-zinc-700 bg-zinc-900 p-2 text-sm text-white"
+                />
+              </div>
+
+              <button
+                onClick={printMint}
+                disabled={busy}
+                className="mt-4 w-full rounded-lg bg-gold px-6 py-3 font-extrabold text-black transition hover:bg-gold/80 disabled:opacity-40"
+              >
+                🖨️ Print {mintCount > 1 ? `${mintCount} ` : ''}code
+                {mintCount > 1 ? 's' : ''}
+              </button>
+
+              {mintFresh.length > 0 && (
+                <div className="mt-5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.3em] text-emerald-400">
+                    Printed — hand these out
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {mintFresh.map((c) => (
+                      <button
+                        key={c}
+                        onClick={() => copy(c)}
+                        title="Click to copy"
+                        className="rounded-md border border-emerald-500/40 bg-zinc-900 px-3 py-1.5 font-mono text-sm text-emerald-300 hover:border-emerald-400"
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

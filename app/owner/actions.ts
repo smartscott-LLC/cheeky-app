@@ -35,39 +35,71 @@ export async function ownerFetchState(input: {
   codes?: unknown[];
   grants?: unknown[];
   flags?: unknown[];
+  announcement?: unknown;
+  unpurchased?: { id: string; display_name: string | null; verified_at: string | null }[];
   error?: string;
 }> {
   if (!(await authorized(input.key))) return { error: 'forbidden' };
-  const [config, rules, codes, grants, flags] = await Promise.all([
-    supabaseAdmin.from('promo_config').select('engine_enabled').maybeSingle(),
-    supabaseAdmin
-      .from('swag_rules')
-      .select('benefit_type, benefit_value, owner_only, weekly_limit')
-      .order('benefit_type')
-      .order('benefit_value'),
-    supabaseAdmin
-      .from('swag_codes')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(40),
-    supabaseAdmin
-      .from('benefit_grants')
-      .select('*, profiles(display_name)')
-      .order('created_at', { ascending: false })
-      .limit(25),
-    supabaseAdmin
-      .from('swag_flags')
-      .select('*, profiles(display_name), characters(name)')
-      .eq('status', 'open')
-      .order('created_at', { ascending: false })
-      .limit(25)
-  ]);
+  const [config, rules, codes, grants, flags, announcement, profiles, activeSubs] =
+    await Promise.all([
+      supabaseAdmin.from('promo_config').select('engine_enabled').maybeSingle(),
+      supabaseAdmin
+        .from('swag_rules')
+        .select('benefit_type, benefit_value, owner_only, weekly_limit')
+        .order('benefit_type')
+        .order('benefit_value'),
+      supabaseAdmin
+        .from('swag_codes')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(40),
+      supabaseAdmin
+        .from('benefit_grants')
+        .select('*, profiles(display_name)')
+        .order('created_at', { ascending: false })
+        .limit(25),
+      supabaseAdmin
+        .from('swag_flags')
+        .select('*, profiles(display_name), characters(name)')
+        .eq('status', 'open')
+        .order('created_at', { ascending: false })
+        .limit(25),
+      supabaseAdmin
+        .from('announcements')
+        .select('*')
+        .eq('active', true)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      supabaseAdmin
+        .from('profiles')
+        .select('id, display_name, verified_at, created_at')
+        .not('verified_at', 'is', null)
+        .order('verified_at', { ascending: false })
+        .limit(50),
+      supabaseAdmin
+        .from('subscriptions')
+        .select('user_id')
+        .in('status', ['trialing', 'active'])
+    ]);
+
+  const paidUsers = new Set((activeSubs.data ?? []).map((s) => s.user_id));
+  const unpurchased = (profiles.data ?? []).filter(
+    (p) => !paidUsers.has(p.id)
+  );
+
   return {
     engineEnabled: config.data?.engine_enabled ?? true,
     rules: (rules.data ?? []) as never,
     codes: codes.data ?? [],
     grants: grants.data ?? [],
-    flags: flags.data ?? []
+    flags: flags.data ?? [],
+    announcement: announcement.data ?? null,
+    unpurchased: unpurchased.map((p) => ({
+      id: p.id,
+      display_name: p.display_name,
+      verified_at: p.verified_at
+    }))
   };
 }
 

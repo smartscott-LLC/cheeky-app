@@ -1,7 +1,7 @@
 import 'server-only';
 import { supabaseAdmin } from '@/utils/supabase/admin';
 
-export type SwagBenefitType = 'membership' | 'tokens' | 'gift';
+export type SwagBenefitType = 'membership' | 'tokens' | 'gift' | 'bundle';
 export type SwagActorType = 'owner' | 'character' | 'system';
 
 /**
