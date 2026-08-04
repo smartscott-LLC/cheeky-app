@@ -194,3 +194,52 @@ export async function ownerToggleEngine(input: {
   if (error) return { error: error.message };
   return { enabled: input.enabled };
 }
+
+/** Posts the floor announcement (or clears it) — the marquee goes live
+ * on the floors within a minute. One live announcement at a time. */
+export async function ownerPostAnnouncement(input: {
+  key?: string;
+  message?: string;
+  displayStyle?: 'scroll' | 'roll' | 'fade';
+  hours?: number;
+  clear?: boolean;
+}): Promise<{ error?: string }> {
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
+
+  if (input.clear) {
+    const { error } = await supabaseAdmin
+      .from('announcements')
+      .update({ active: false })
+      .eq('active', true);
+    return error ? { error: error.message } : {};
+  }
+
+  const message = input.message?.trim();
+  if (!message) return { error: 'message required' };
+  const style =
+    input.displayStyle === 'roll' || input.displayStyle === 'fade'
+      ? input.displayStyle
+      : 'scroll';
+
+  // One marquee at a time — the new announcement is THE announcement.
+  await supabaseAdmin
+    .from('announcements')
+    .update({ active: false })
+    .eq('active', true);
+
+  const supabase = await createClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  const { error } = await supabaseAdmin.from('announcements').insert({
+    message,
+    display_style: style,
+    ends_at:
+      input.hours && input.hours > 0
+        ? new Date(Date.now() + input.hours * 3_600_000).toISOString()
+        : null,
+    created_by: user?.id ?? null
+  });
+  return error ? { error: error.message } : {};
+}

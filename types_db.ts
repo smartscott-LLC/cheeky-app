@@ -9,6 +9,42 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      announcements: {
+        Row: {
+          active: boolean
+          created_at: string
+          created_by: string | null
+          display_style: string
+          ends_at: string | null
+          id: number
+          link: string | null
+          message: string
+          starts_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          display_style?: string
+          ends_at?: string | null
+          id?: never
+          link?: string | null
+          message: string
+          starts_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          display_style?: string
+          ends_at?: string | null
+          id?: never
+          link?: string | null
+          message?: string
+          starts_at?: string
+        }
+        Relationships: []
+      }
       badge_catalog: {
         Row: {
           created_at: string

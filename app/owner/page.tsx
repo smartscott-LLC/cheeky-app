@@ -6,7 +6,8 @@ import {
   ownerGenerateCodes,
   ownerGrantDirect,
   ownerResolveFlag,
-  ownerToggleEngine
+  ownerToggleEngine,
+  ownerPostAnnouncement
 } from '@/app/owner/actions';
 
 type BenefitType = 'membership' | 'tokens' | 'gift';
@@ -171,6 +172,30 @@ export default function OwnerPage() {
     notice(true, res.enabled ? 'Engine ON' : 'Engine OFF (fail-closed)');
   };
 
+  const postAnnounce = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    setBusy(true);
+    const res = await ownerPostAnnouncement({
+      key,
+      message: String(fd.get('message') ?? ''),
+      displayStyle: String(fd.get('style') ?? 'scroll') as 'scroll' | 'roll' | 'fade',
+      hours: Number(fd.get('hours') ?? 0)
+    });
+    setBusy(false);
+    if (res.error) return notice(false, res.error);
+    e.currentTarget.reset();
+    notice(true, 'Announcement posted — the floors pick it up within a minute');
+  };
+
+  const clearAnnounce = async () => {
+    setBusy(true);
+    const res = await ownerPostAnnouncement({ key, clear: true });
+    setBusy(false);
+    if (res.error) return notice(false, res.error);
+    notice(true, 'Announcement cleared');
+  };
+
   const copy = (text: string) => navigator.clipboard?.writeText(text);
 
   if (!unlocked) {
@@ -322,6 +347,47 @@ export default function OwnerPage() {
               className="col-span-2 rounded-lg bg-club px-6 py-2.5 font-bold text-white transition hover:bg-club-cotton disabled:opacity-40 sm:col-span-4"
             >
               Generate
+            </button>
+          </form>
+        </div>
+
+        {/* Announcement — the floor marquee */}
+        <div className="mt-6 rounded-xl border border-gold/30 bg-zinc-900/50 p-6">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="font-bold">📢 Floor announcement</h2>
+            <button
+              onClick={clearAnnounce}
+              disabled={busy}
+              className="rounded-lg border border-zinc-600 px-3 py-1.5 text-xs font-bold text-zinc-300 hover:border-zinc-400 disabled:opacity-40"
+            >
+              Clear it
+            </button>
+          </div>
+          <form onSubmit={postAnnounce} className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <input
+              name="message"
+              required
+              placeholder="Tonight: Rooftop at 11 — dress to impress"
+              className="col-span-2 rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white sm:col-span-4"
+            />
+            <select name="style" defaultValue="scroll" className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white">
+              <option value="scroll">Ticker (right→left)</option>
+              <option value="roll">Roll up</option>
+              <option value="fade">Fade</option>
+            </select>
+            <input
+              name="hours"
+              type="number"
+              min={0}
+              placeholder="hours (0 = until cleared)"
+              className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white"
+            />
+            <button
+              type="submit"
+              disabled={busy}
+              className="col-span-2 rounded-lg bg-gold px-6 py-2.5 font-bold text-black transition hover:bg-gold/80 disabled:opacity-40"
+            >
+              Post it
             </button>
           </form>
         </div>

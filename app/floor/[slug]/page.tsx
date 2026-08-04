@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { notFound } from 'next/navigation';
 import { floorBySlug } from '@/utils/floors';
 import FloorLayout from '@/components/ui/Club/FloorLayout';
+import AnnouncementBanner from '@/components/ui/AnnouncementBanner/AnnouncementBanner';
 
 export default async function FloorPage({
   params
@@ -74,6 +75,9 @@ export default async function FloorPage({
               The {floor.name} floor
             </p>
             <p className="mx-auto mt-2 max-w-xl text-zinc-400">{floor.tagline}</p>
+            <div className="mt-5">
+              <AnnouncementBanner />
+            </div>
           </div>
           <div className="pt-6">
             <FloorLayout background={floor.art} spots={floor.rooms} />
