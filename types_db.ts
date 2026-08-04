@@ -675,6 +675,27 @@ export type Database = {
         }
         Relationships: []
       }
+      floor_closures: {
+        Row: {
+          created_at: string
+          floor: string
+          reason: string | null
+          until: string | null
+        }
+        Insert: {
+          created_at?: string
+          floor: string
+          reason?: string | null
+          until?: string | null
+        }
+        Update: {
+          created_at?: string
+          floor?: string
+          reason?: string | null
+          until?: string | null
+        }
+        Relationships: []
+      }
       gem_catalog: {
         Row: {
           active: boolean
@@ -1034,6 +1055,27 @@ export type Database = {
           count?: number
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      model_config: {
+        Row: {
+          cast_model: string
+          id: boolean
+          updated_at: string
+          watchdog_model: string
+        }
+        Insert: {
+          cast_model?: string
+          id?: boolean
+          updated_at?: string
+          watchdog_model?: string
+        }
+        Update: {
+          cast_model?: string
+          id?: boolean
+          updated_at?: string
+          watchdog_model?: string
         }
         Relationships: []
       }

@@ -7,7 +7,9 @@ import {
   ownerGrantDirect,
   ownerResolveFlag,
   ownerToggleEngine,
-  ownerPostAnnouncement
+  ownerPostAnnouncement,
+  ownerUpdateModels,
+  ownerSetFloorClosure
 } from '@/app/owner/actions';
 
 type BenefitType = 'membership' | 'tokens' | 'gift';
@@ -128,6 +130,14 @@ export default function OwnerPage() {
   const [catalog, setCatalog] = useState<
     { id: string; slug: string; name: string; emoji: string; token_cost: number }[]
   >([]);
+  // Emergency controls — model failover + floor closures.
+  const [castModel, setCastModel] = useState('deepseek-chat');
+  const [watchdogModel, setWatchdogModel] = useState(
+    'nvidia/nemotron-nano-12b-v2-vl:free'
+  );
+  const [closures, setClosures] = useState<
+    { floor: string; reason: string | null; until: string | null }[]
+  >([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [fresh, setFresh] = useState<string[]>([]);
@@ -193,6 +203,11 @@ export default function OwnerPage() {
     setEvents((res.events ?? []) as typeof events);
     setLedger((res.ledger ?? []) as typeof ledger);
     setCatalog((res.catalog ?? []) as typeof catalog);
+    setCastModel(res.castModel ?? 'deepseek-chat');
+    setWatchdogModel(
+      res.watchdogModel ?? 'nvidia/nemotron-nano-12b-v2-vl:free'
+    );
+    setClosures((res.closures ?? []) as typeof closures);
     setUnlocked(true);
   };
 
@@ -233,6 +248,11 @@ export default function OwnerPage() {
       setEvents((res.events ?? []) as typeof events);
       setLedger((res.ledger ?? []) as typeof ledger);
       setCatalog((res.catalog ?? []) as typeof catalog);
+      setCastModel(res.castModel ?? 'deepseek-chat');
+      setWatchdogModel(
+        res.watchdogModel ?? 'nvidia/nemotron-nano-12b-v2-vl:free'
+      );
+      setClosures((res.closures ?? []) as typeof closures);
     }
   };
 
@@ -397,6 +417,28 @@ export default function OwnerPage() {
     setBusy(false);
     if (res.error) return notice(false, res.error);
     notice(true, 'Announcement cleared');
+  };
+
+  const saveModels = async () => {
+    setBusy(true);
+    const res = await ownerUpdateModels({ key, castModel, watchdogModel });
+    setBusy(false);
+    if (res.error) return notice(false, res.error);
+    notice(true, 'Models saved — live on the next request');
+  };
+
+  const setFloor = async (
+    floor: string,
+    closed: boolean,
+    reason: string,
+    hours: number
+  ) => {
+    setBusy(true);
+    const res = await ownerSetFloorClosure({ key, floor, closed, reason, hours });
+    setBusy(false);
+    if (res.error) return notice(false, res.error);
+    notice(true, closed ? `${floor} is under construction` : `${floor} is open`);
+    refresh();
   };
 
   const copy = (text: string) => navigator.clipboard?.writeText(text);
@@ -639,6 +681,159 @@ export default function OwnerPage() {
               Post it
             </button>
           </form>
+        </div>
+
+        {/* Model switch — failover without a redeploy */}
+        <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
+          <h2 className="font-bold">🤖 Model switch</h2>
+          <p className="mt-1 text-xs text-zinc-500">
+            Swap a down model in seconds. Keys stay in env — this only
+            changes which model is called.
+          </p>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <label className="block">
+              <span className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+                Cast (floor chat)
+              </span>
+              <input
+                value={castModel}
+                onChange={(e) => setCastModel(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 font-mono text-sm text-white"
+              />
+              <span className="mt-1.5 flex flex-wrap gap-1.5">
+                {['deepseek-chat', 'deepseek-reasoner'].map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => setCastModel(m)}
+                    className="rounded border border-zinc-700 px-2 py-0.5 text-[11px] text-zinc-400 hover:border-gold hover:text-gold"
+                  >
+                    {m}
+                  </button>
+                ))}
+              </span>
+            </label>
+            <label className="block">
+              <span className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+                Watchdog (image review)
+              </span>
+              <input
+                value={watchdogModel}
+                onChange={(e) => setWatchdogModel(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 font-mono text-sm text-white"
+              />
+              <span className="mt-1.5 flex flex-wrap gap-1.5">
+                {[
+                  'nvidia/nemotron-nano-12b-v2-vl:free',
+                  'qwen/qwen2.5-vl-72b-instruct',
+                  'meta-llama/llama-3.2-90b-vision-instruct'
+                ].map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => setWatchdogModel(m)}
+                    className="rounded border border-zinc-700 px-2 py-0.5 text-[11px] text-zinc-400 hover:border-gold hover:text-gold"
+                  >
+                    {m}
+                  </button>
+                ))}
+              </span>
+            </label>
+          </div>
+          <button
+            onClick={saveModels}
+            disabled={busy}
+            className="mt-4 rounded-lg bg-club px-6 py-2.5 font-bold text-white transition hover:bg-club-cotton disabled:opacity-40"
+          >
+            Save models
+          </button>
+        </div>
+
+        {/* Floor status — close a section */}
+        <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
+          <h2 className="font-bold">🚧 Floor status</h2>
+          <p className="mt-1 text-xs text-zinc-500">
+            Put a floor under construction — the elevators show the notice
+            instead of the room.
+          </p>
+          <div className="mt-4 space-y-2">
+            {[
+              { slug: 'silver', name: 'Silver' },
+              { slug: 'gold', name: 'Gold' },
+              { slug: 'platinum', name: 'Platinum' },
+              { slug: 'diamond', name: 'Diamond' }
+            ].map((f) => {
+              const c = closures.find((x) => x.floor === f.slug);
+              const closed = c && (!c.until || new Date(c.until) > new Date());
+              return (
+                <div
+                  key={f.slug}
+                  className="flex flex-wrap items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2"
+                >
+                  <span
+                    className={`w-20 font-bold capitalize ${
+                      closed ? 'text-club' : 'text-white'
+                    }`}
+                  >
+                    {f.name}
+                  </span>
+                  {closed ? (
+                    <>
+                      <span className="text-xs font-bold uppercase text-club">
+                        🔧 under construction
+                        {c.until
+                          ? ` until ${new Date(c.until).toLocaleTimeString()}`
+                          : ''}
+                      </span>
+                      <button
+                        onClick={() => setFloor(f.slug, false, '', 0)}
+                        disabled={busy}
+                        className="ml-auto rounded border border-zinc-600 px-3 py-1 text-xs font-bold text-zinc-300 hover:border-zinc-400 disabled:opacity-40"
+                      >
+                        Reopen
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <input
+                        name={`reason-${f.slug}`}
+                        id={`reason-${f.slug}`}
+                        placeholder="reason (optional)"
+                        className="flex-1 rounded border border-zinc-700 bg-zinc-900 px-2 py-1 text-xs text-white"
+                      />
+                      <input
+                        name={`hours-${f.slug}`}
+                        id={`hours-${f.slug}`}
+                        type="number"
+                        min={0}
+                        placeholder="hrs"
+                        className="w-14 rounded border border-zinc-700 bg-zinc-900 px-2 py-1 text-xs text-white"
+                      />
+                      <button
+                        onClick={() => {
+                          const reason = (
+                            document.getElementById(
+                              `reason-${f.slug}`
+                            ) as HTMLInputElement | null
+                          )?.value;
+                          const hours = Number(
+                            (
+                              document.getElementById(
+                                `hours-${f.slug}`
+                              ) as HTMLInputElement | null
+                            )?.value ?? 0
+                          );
+                          setFloor(f.slug, true, reason ?? '', hours);
+                        }}
+                        disabled={busy}
+                        className="rounded bg-club px-3 py-1 text-xs font-bold text-white hover:bg-club-cotton disabled:opacity-40"
+                      >
+                        Close
+                      </button>
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* Unpurchased memberships */}

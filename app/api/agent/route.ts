@@ -31,6 +31,19 @@ ${context}
 ${HOUSE_RULES}`;
 }
 
+/**
+ * The cast model comes from the Lions Den (model_config) so a down model
+ * can be swapped without a redeploy — env DEEPSEEK_MODEL is the fallback.
+ */
+async function getCastModel(): Promise<string> {
+  const { data } = await supabaseAdmin
+    .from('model_config')
+    .select('cast_model')
+    .eq('id', true)
+    .maybeSingle();
+  return data?.cast_model ?? process.env.DEEPSEEK_MODEL ?? 'deepseek-chat';
+}
+
 function describeError(err: unknown): string {
   const msg = err instanceof Error ? err.message : '';
   const detail = (err as Error & { detail?: string }).detail;
@@ -169,7 +182,7 @@ export async function POST(req: Request) {
     if (directKey) {
       const stream = await streamDeepseekDirect({
         apiKey: directKey,
-        model: process.env.DEEPSEEK_MODEL ?? 'deepseek-chat',
+        model: await getCastModel(),
         system: fullSystem,
         messages
       });

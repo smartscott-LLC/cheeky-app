@@ -1,5 +1,6 @@
 import 'server-only';
 import OpenAI from 'openai';
+import { supabaseAdmin } from '@/utils/supabase/admin';
 
 // DateSafe — Club Cheeky's automated safety reviewer. One component that
 // sits in the back and does nothing but complaints: when a report lands, it
@@ -12,8 +13,23 @@ const client = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY || ''
 });
 
-const VISION_MODEL =
-  process.env.DATESAFE_VISION_MODEL ?? 'nvidia/nemotron-nano-12b-v2-vl:free';
+/**
+ * The watchdog model comes from the Lions Den (model_config) so a down or
+ * unavailable vision model can be swapped without a redeploy — env
+ * DATESAFE_VISION_MODEL is the fallback.
+ */
+async function getWatchdogModel(): Promise<string> {
+  const { data } = await supabaseAdmin
+    .from('model_config')
+    .select('watchdog_model')
+    .eq('id', true)
+    .maybeSingle();
+  return (
+    data?.watchdog_model ??
+    process.env.DATESAFE_VISION_MODEL ??
+    'nvidia/nemotron-nano-12b-v2-vl:free'
+  );
+}
 
 export interface DateSafeVerdict {
   verdict: 'violation' | 'clean' | 'inconclusive';
@@ -48,7 +64,7 @@ async function complete(
   // `reasoning` is an OpenRouter extension (deep-thinking pass); the SDK
   // types don't know it yet, hence the assertion.
   return client.chat.completions.create({
-    model: VISION_MODEL,
+    model: await getWatchdogModel(),
     messages,
     reasoning: REASONING
   } as OpenAI.Chat.Completions.ChatCompletionCreateParamsNonStreaming);

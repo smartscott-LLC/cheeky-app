@@ -32,6 +32,40 @@ export default async function FloorPage({
     tier === 'gold' ? 1 : tier === 'platinum' ? 2 : tier === 'diamond' ? 3 : 0;
   const locked = floor.rank > rank;
 
+  // Under construction? The Den closes a floor and the elevators say so.
+  const { data: closure } = await supabase
+    .from('floor_closures')
+    .select('reason, until')
+    .eq('floor', slug)
+    .maybeSingle();
+  const closed =
+    closure && (!closure.until || new Date(closure.until) > new Date());
+
+  if (closed) {
+    return (
+      <div className="bg-black">
+        <div className="mx-auto max-w-2xl px-6 py-16 text-center">
+          <p className="text-5xl">🚧</p>
+          <h1 className="mt-6 text-3xl font-extrabold">
+            The {floor.name} floor is under construction
+          </h1>
+          <p className="mx-auto mt-3 max-w-md text-zinc-400">
+            {closure?.reason ??
+              'The crew is setting up the room — come back soon.'}
+          </p>
+          <div className="mt-8">
+            <Link
+              href="/floors"
+              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-zinc-200 transition hover:border-zinc-500 hover:text-white"
+            >
+              ← Back to the elevators
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-6xl px-6 pt-10">

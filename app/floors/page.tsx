@@ -18,6 +18,16 @@ export default async function FloorsPage() {
   const rank =
     tier === 'gold' ? 1 : tier === 'platinum' ? 2 : tier === 'diamond' ? 3 : 0;
 
+  // Floors the Den has put under construction — show it on the card.
+  const { data: closureRows } = await supabase
+    .from('floor_closures')
+    .select('floor, until');
+  const closedFloors = new Set(
+    (closureRows ?? [])
+      .filter((c) => !c.until || new Date(c.until) > new Date())
+      .map((c) => c.floor)
+  );
+
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-5xl px-6 py-16">
@@ -65,6 +75,10 @@ export default async function FloorsPage() {
                     <p className="mt-2 text-sm font-bold text-gold">
                       Come see what&apos;s on these floors with a {floor.name}{' '}
                       card today.
+                    </p>
+                  ) : closedFloors.has(floor.slug) ? (
+                    <p className="mt-2 text-sm font-bold text-club">
+                      🚧 Under construction
                     </p>
                   ) : (
                     <p className="mt-2 text-sm font-bold text-club opacity-0 transition group-hover:opacity-100">

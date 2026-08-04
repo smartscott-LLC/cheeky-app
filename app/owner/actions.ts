@@ -64,6 +64,9 @@ export async function ownerFetchState(input: {
     created_at: string;
   }[];
   catalog?: { id: string; slug: string; name: string; emoji: string; token_cost: number }[];
+  castModel?: string;
+  watchdogModel?: string;
+  closures?: { floor: string; reason: string | null; until: string | null }[];
   error?: string;
 }> {
   if (!(await authorized(input.key))) return { error: 'forbidden' };
@@ -91,7 +94,9 @@ export async function ownerFetchState(input: {
     countMsgs,
     events,
     ledger,
-    catalog
+    catalog,
+    modelRow,
+    closures
   ] = await Promise.all([
     supabaseAdmin.from('promo_config').select('engine_enabled').maybeSingle(),
     supabaseAdmin
@@ -168,7 +173,9 @@ export async function ownerFetchState(input: {
       .select('id, slug, name, emoji, token_cost')
       .eq('active', true)
       .order('token_cost')
-      .limit(30)
+      .limit(30),
+    supabaseAdmin.from('model_config').select('cast_model, watchdog_model').eq('id', true).maybeSingle(),
+    supabaseAdmin.from('floor_closures').select('floor, reason, until')
   ]);
 
   const paidUsers = new Set((activeSubs.data ?? []).map((s) => s.user_id));
@@ -223,8 +230,60 @@ export async function ownerFetchState(input: {
       entrants: entryCounts.get(e.id) ?? 0
     })),
     ledger: (ledger.data ?? []) as never,
-    catalog: (catalog.data ?? []) as never
+    catalog: (catalog.data ?? []) as never,
+    castModel: modelRow.data?.cast_model ?? 'deepseek-chat',
+    watchdogModel:
+      modelRow.data?.watchdog_model ?? 'nvidia/nemotron-nano-12b-v2-vl:free',
+    closures: (closures.data ?? []) as never
   };
+}
+
+/** Swaps the cast + watchdog models from the Den — no redeploy needed. */
+export async function ownerUpdateModels(input: {
+  key?: string;
+  castModel: string;
+  watchdogModel: string;
+}): Promise<{ error?: string }> {
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
+  const { error } = await supabaseAdmin
+    .from('model_config')
+    .update({
+      cast_model: input.castModel.trim() || 'deepseek-chat',
+      watchdog_model:
+        input.watchdogModel.trim() || 'nvidia/nemotron-nano-12b-v2-vl:free',
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', true);
+  return error ? { error: error.message } : {};
+}
+
+/** Closes or reopens a floor from the Den (under-construction notice). */
+export async function ownerSetFloorClosure(input: {
+  key?: string;
+  floor: string;
+  closed: boolean;
+  reason?: string;
+  hours?: number;
+}): Promise<{ error?: string }> {
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
+  if (!['silver', 'gold', 'platinum', 'diamond'].includes(input.floor))
+    return { error: 'unknown floor' };
+  if (input.closed) {
+    const { error } = await supabaseAdmin.from('floor_closures').upsert({
+      floor: input.floor,
+      reason: input.reason?.trim() || null,
+      until:
+        input.hours && input.hours > 0
+          ? new Date(Date.now() + input.hours * 3_600_000).toISOString()
+          : null
+    });
+    return error ? { error: error.message } : {};
+  }
+  const { error } = await supabaseAdmin
+    .from('floor_closures')
+    .delete()
+    .eq('floor', input.floor);
+  return error ? { error: error.message } : {};
 }
 
 /** Generates one or more codes (owner path — anything goes). */
