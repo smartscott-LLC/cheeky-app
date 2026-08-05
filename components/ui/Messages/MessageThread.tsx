@@ -14,7 +14,6 @@ import {
 import { startDateNight } from '@/app/date-night/actions';
 import DateNightPanel from '@/components/ui/DateNight/DateNightPanel';
 import { startDJ, toggleDJ, unlockDJ } from '@/utils/audio/dj';
-import posthog from 'posthog-js';
 
 interface Message {
   id: number;
@@ -186,9 +185,6 @@ export default function MessageThread({
       setError(describeError(res.error));
       return;
     }
-    posthog.capture('message_sent', {
-      channel: songMode ? 'event' : 'standard'
-    });
     setInput('');
     await refresh();
   };
@@ -203,7 +199,6 @@ export default function MessageThread({
       return;
     }
     if (res.gameId) {
-      posthog.capture('date_night_started');
       setDateNightGame(res.gameId);
     }
   };

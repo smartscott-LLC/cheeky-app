@@ -5,8 +5,7 @@ import { SignOut } from '@/utils/auth-helpers/server';
 import { handleRequest } from '@/utils/auth-helpers/client';
 import { usePathname, useRouter } from 'next/navigation';
 import { getRedirectMethod } from '@/utils/auth-helpers/settings';
-import posthog from 'posthog-js';
-import { type FormEvent, useEffect } from 'react';
+import { type FormEvent } from 'react';
 import s from './Navbar.module.css';
 
 interface NavlinksProps {
@@ -26,24 +25,12 @@ export default function Navlinks({ user }: NavlinksProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  useEffect(() => {
-    if (!user?.id) return;
-
-    posthog.identify(user.id, {
-      ...(user.email ? { email: user.email } : {}),
-      ...(typeof user.user_metadata?.full_name === 'string'
-        ? { name: user.user_metadata.full_name }
-        : {})
-    });
-  }, [user?.id, user?.email, user?.user_metadata?.full_name]);
-
   const handleSignOut = async (e: FormEvent<HTMLFormElement>) => {
     const result = await handleRequest(
       e,
       SignOut,
       getRedirectMethod() === 'client' ? router : null
     );
-    posthog.reset();
     return result;
   };
 

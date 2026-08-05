@@ -46,6 +46,10 @@ points — every push to `main` is production.
   every visitor; it now loads only when a price is picked. Responsive image variants
   (`scripts/resize-art.mjs`): navbar/footer logo 206→3 KiB, hero entrance 206→70 KiB, landing
   floor cards ~170→42 KiB each (full-res kept for the room backgrounds).
+- **PostHog removed entirely** (founder's call — underused, heavy, and the config headaches
+  weren't paying for it): `posthog-js`/`posthog-node` dropped, all capture/identify calls and
+  the client init gone, env vars + docs cleaned. Sentry stays for errors; Stripe + GA can cover
+  analytics when we actually need funnels.
 
 ## [v1.1-docs-locked] — 2026-08-05
 

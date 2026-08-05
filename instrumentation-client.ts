@@ -1,31 +1,7 @@
-// This file configures client-side analytics and error tracking.
+// This file configures client-side error tracking.
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
-import posthog from 'posthog-js';
 import * as Sentry from '@sentry/nextjs';
-
-// NEXT_PUBLIC_POSTHOG_KEY is the canonical name (what the founder's env.new
-// and Vercel use); NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN is accepted as the
-// legacy alias from the original wiring. The host defaults to PostHog US
-// cloud — the one setting that was missing and silently stopped init.
-const posthogKey =
-  process.env.NEXT_PUBLIC_POSTHOG_KEY ??
-  process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
-const posthogHost =
-  process.env.NEXT_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com';
-
-if (posthogKey) {
-  posthog.init(posthogKey, {
-    api_host: posthogHost,
-    defaults: '2026-01-30',
-    capture_exceptions: true,
-    debug: process.env.NODE_ENV === 'development'
-  });
-} else if (process.env.NODE_ENV === 'development') {
-  throw new Error(
-    'NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN (or NEXT_PUBLIC_POSTHOG_KEY) is missing — PostHog events would be silently dropped.'
-  );
-}
 
 Sentry.init({
   // Public by design (see sentry.server.config.ts).

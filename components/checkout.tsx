@@ -1,13 +1,9 @@
 'use client';
 
 import { useCallback } from 'react';
-import {
-  EmbeddedCheckout,
-  EmbeddedCheckoutProvider
-} from '@stripe/react-stripe-js';
+import { EmbeddedCheckout, EmbeddedCheckoutProvider } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { startCheckoutSession } from '@/app/actions/stripe';
-import posthog from 'posthog-js';
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
@@ -23,7 +19,6 @@ export default function Checkout({
   const fetchClientSecret = useCallback(async () => {
     const res = await startCheckoutSession(priceId);
     if (res.error) throw new Error(res.error);
-    posthog.capture('checkout_session_started');
     return res.clientSecret!;
   }, [priceId]);
 

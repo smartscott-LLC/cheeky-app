@@ -69,7 +69,6 @@ report/block from any chat, honeypots for bots.
 - **Stripe** — subscriptions, checkout, and Identity (verification).
 - **DeepSeek** (`/api/agent`) — the crew's brains; persona prompts live in
   the `characters` table.
-- **PostHog** — product analytics (`instrumentation-client.ts`).
 - **Sentry** — error tracking (wizard setup).
 - **Vercel** — the only build gate: every push to `main` builds, deploys,
   and fails loud.
@@ -95,7 +94,7 @@ pnpm stripe:fixtures               # bootstrap products/prices from fixtures/
 ```
 
 The crew's chat needs `DEEPSEEK_API_KEY`. Verification needs real Stripe
-keys. PostHog/Sentry are optional locally.
+keys. Sentry is optional locally.
 
 ## Environment variables
 
@@ -114,7 +113,6 @@ The full set (see `.env.local.example` for the core local-dev values).
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` · `STRIPE_SECRET_KEY` · `STRIPE_WEBHOOK_SECRET` | Stripe                                                                                                        |
 | `DEEPSEEK_API_KEY`                                                                   | `/api/agent` — the crew's chat engine                                                                         |
 | `OPENROUTER_API_KEY`                                                                 | DateSafe — the image-review watchdog (vision model)                                                           |
-| `NEXT_PUBLIC_POSTHOG_KEY`                                                            | PostHog analytics (canonical; legacy alias `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`; `_HOST` defaults to US cloud) |
 | `RESEND_API_KEY` · `REGISTERED_DOMAIN`                                               | Transactional mail — welcome, apology, ban notices                                                            |
 | `SENTRY_AUTH_TOKEN`                                                                  | Sentry source-map uploads                                                                                     |
 | `VERCEL_OIDC_TOKEN`                                                                  | Created by `vercel link` for CI builds                                                                        |

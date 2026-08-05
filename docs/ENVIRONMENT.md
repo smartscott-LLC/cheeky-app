@@ -48,10 +48,7 @@ accepts both names, so whatever the dashboard hands out works.
 
 | Variable                            | Public | Used for                                                          |
 | ----------------------------------- | ------ | ----------------------------------------------------------------- |
-| `NEXT_PUBLIC_POSTHOG_KEY`           | public | PostHog project key (`phc_…`). **Canonical name.**                |
-| `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` | public | Legacy alias for the same key (accepted by the init)              |
-| `NEXT_PUBLIC_POSTHOG_HOST`          | public | Optional; defaults to `https://us.i.posthog.com`                  |
-| `NEXT_PUBLIC_SENTRY_DSN`            | public | Sentry DSN override (public by design; hardcoded fallback exists) |
+| `NEXT_PUBLIC_SENTRY_DSN` | public | Sentry DSN override (public by design; hardcoded fallback exists) |
 | `SENTRY_AUTH_TOKEN`                 | secret | Sentry source-map uploads at build                                |
 | `SENTRY_ORG` / `SENTRY_PROJECT`     | secret | Sentry org/project for uploads                                    |
 
