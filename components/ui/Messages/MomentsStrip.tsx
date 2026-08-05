@@ -85,7 +85,7 @@ export default function MomentsStrip() {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <span className="flex h-full w-full items-center justify-center text-sm font-bold text-zinc-500">
+                <span className="flex h-full w-full items-center justify-center text-sm font-bold text-green">
                   {m.characters?.name?.charAt(0) ?? '?'}
                 </span>
               )}
@@ -95,12 +95,12 @@ export default function MomentsStrip() {
                 <span className="font-bold text-white">
                   {m.characters?.name ?? 'The Crew'}
                 </span>
-                <span className="text-xs text-zinc-500">
+                <span className="text-xs text-green">
                   {MILESTONE_LABEL[m.milestone] ?? m.milestone} ·{' '}
                   {new Date(m.created_at).toLocaleString()}
                 </span>
               </p>
-              <p className="mt-0.5 text-sm text-zinc-300">{m.message}</p>
+              <p className="mt-0.5 text-sm text-green">{m.message}</p>
             </div>
           </div>
         ))}

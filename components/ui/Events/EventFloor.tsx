@@ -316,7 +316,7 @@ export default function EventFloor({
                 : 'The floor is moving'}
         </p>
         <h2 className="mt-2 text-2xl font-extrabold">{statusBanner.title}</h2>
-        <p className="mt-1 text-zinc-400">{statusBanner.body}</p>
+        <p className="mt-1 text-green">{statusBanner.body}</p>
 
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
           {!joined && eventStatus === 'open' && (
@@ -331,7 +331,7 @@ export default function EventFloor({
           {joined && eventStatus === 'open' && (
             <button
               onClick={handleLeave}
-              className="rounded-lg border border-zinc-700 px-5 py-2.5 text-sm font-semibold text-zinc-300 hover:border-zinc-500"
+              className="rounded-lg border border-zinc-700 px-5 py-2.5 text-sm font-semibold text-green hover:border-zinc-500"
             >
               Leave (hold released)
             </button>
@@ -347,7 +347,7 @@ export default function EventFloor({
 
         {error && <p className="mt-3 text-sm text-club">{error}</p>}
         {joined && eventStatus !== 'running' && eventStatus !== 'closed' && (
-          <p className="mt-3 text-xs text-zinc-500">
+          <p className="mt-3 text-xs text-green">
             {participants.length} on the floor now. Needs {event.minFill} to
             run.
           </p>
@@ -390,7 +390,7 @@ export default function EventFloor({
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <span className="text-4xl font-extrabold text-zinc-600">
+                    <span className="text-4xl font-extrabold text-green">
                       {(p.profile?.display_name || '?').charAt(0).toUpperCase()}
                     </span>
                   )}
@@ -440,7 +440,7 @@ export default function EventFloor({
       </div>
 
       {participants.length === 0 && (
-        <p className="mt-10 text-center text-zinc-500">
+        <p className="mt-10 text-center text-green">
           No one on the floor yet. Be the first through the door.
         </p>
       )}

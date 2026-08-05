@@ -194,13 +194,13 @@ export default function Concierge() {
           <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-900 px-4 py-3">
             <p className="text-sm font-bold">
               {chaz.name}{' '}
-              <span className="text-xs font-semibold text-zinc-500">
+              <span className="text-xs font-semibold text-green">
                 · Club Manager
               </span>
             </p>
             <button
               onClick={() => setOpen(false)}
-              className="text-zinc-500 hover:text-white"
+              className="text-green hover:text-white"
               aria-label="Close"
             >
               ✕
@@ -219,7 +219,7 @@ export default function Concierge() {
             </div>
             <div>
               <p className="font-bold">{chaz.name}</p>
-              <p className="text-xs text-zinc-500">{chaz.role}</p>
+              <p className="text-xs text-green">{chaz.role}</p>
             </div>
           </div>
 
@@ -230,7 +230,7 @@ export default function Concierge() {
             className="flex-1 space-y-3 overflow-y-auto p-4"
           >
             {messages.length === 0 && (
-              <p className="pt-6 text-center text-sm text-zinc-500">
+              <p className="pt-6 text-center text-sm text-green">
                 {chaz.tagline ?? `Talk to ${chaz.name}.`}
               </p>
             )}
@@ -243,7 +243,7 @@ export default function Concierge() {
                   className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm ${
                     m.role === 'user'
                       ? 'bg-club text-white'
-                      : 'bg-zinc-800 text-zinc-100'
+                      : 'bg-zinc-800 text-green'
                   }`}
                 >
                   {m.content}
@@ -251,7 +251,7 @@ export default function Concierge() {
               </div>
             ))}
             {busy && (
-              <p className="text-sm text-zinc-500">{TYPING[typingIdx]}…</p>
+              <p className="text-sm text-green">{TYPING[typingIdx]}…</p>
             )}
           </div>
 

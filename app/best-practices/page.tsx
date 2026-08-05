@@ -48,7 +48,7 @@ export default function BestPracticesPage() {
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
           🛡️ Best Practices
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
+        <p className="mx-auto mt-3 max-w-xl text-center text-green">
           How to stay safe and get the most out of the club. Brutus enforces the
           door — these keep you steady on the floor.
         </p>
@@ -61,14 +61,14 @@ export default function BestPracticesPage() {
             >
               <p className="text-2xl">{p.emoji}</p>
               <h2 className="mt-2 font-bold">{p.title}</h2>
-              <p className="mt-2 text-sm text-zinc-400">{p.body}</p>
+              <p className="mt-2 text-sm text-green">{p.body}</p>
             </div>
           ))}
         </div>
 
         <div className="mt-10 rounded-xl border border-club/30 bg-club/5 p-6">
           <h2 className="text-xl font-bold">Meeting in person</h2>
-          <p className="mt-2 text-sm text-zinc-300">
+          <p className="mt-2 text-sm text-green">
             If you decide to meet someone in person, exchange physical phone
             numbers, or interact outside the app:
           </p>
@@ -76,7 +76,7 @@ export default function BestPracticesPage() {
             {MEET_SAFE.map((tip) => (
               <li
                 key={tip}
-                className="flex items-start gap-3 text-sm text-zinc-300"
+                className="flex items-start gap-3 text-sm text-green"
               >
                 <span className="text-club">✓</span>
                 {tip}
@@ -85,7 +85,7 @@ export default function BestPracticesPage() {
           </ul>
         </div>
 
-        <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-sm text-zinc-400">
+        <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-sm text-green">
           <h2 className="font-bold text-white">📄 Disclaimer</h2>
           <p className="mt-2">
             Club Cheeky is an in-app club. If you choose to meet someone in
@@ -95,7 +95,7 @@ export default function BestPracticesPage() {
             and the tools — your safety in the real world is in your own hands.
             Meet smart, and come back.
           </p>
-          <p className="mt-4 text-xs text-zinc-500">
+          <p className="mt-4 text-xs text-green">
             You acknowledged this at signup (Best Practices v1). Policy:
             docs/Governance/best-practices.md.
           </p>
@@ -103,7 +103,7 @@ export default function BestPracticesPage() {
 
         <div className="mt-6 rounded-xl border border-platinum/30 bg-platinum/5 p-6 text-sm">
           <h2 className="font-bold text-white">📮 Something feel off?</h2>
-          <p className="mt-2 text-zinc-300">
+          <p className="mt-2 text-green">
             If something happened that made you feel unsafe — on the app or on a
             date — write the front desk at{' '}
             <a

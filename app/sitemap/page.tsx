@@ -56,7 +56,7 @@ export default function SitemapPage() {
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
           🗺️ The Map of the Club
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
+        <p className="mx-auto mt-3 max-w-xl text-center text-green">
           Every room in the building, one list. If you can walk it, it&apos;s
           here.
         </p>
@@ -77,7 +77,7 @@ export default function SitemapPage() {
                       <span className="block font-semibold text-white group-hover:text-gold">
                         {item.label}
                       </span>
-                      <span className="block text-sm text-zinc-400">
+                      <span className="block text-sm text-green">
                         {item.note}
                       </span>
                     </Link>

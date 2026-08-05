@@ -64,7 +64,7 @@ export default async function ChatPage({
             <h1 className="mt-6 text-3xl font-extrabold">
               {char.name} is behind the rope.
             </h1>
-            <p className="mx-auto mt-3 max-w-md text-zinc-400">
+            <p className="mx-auto mt-3 max-w-md text-green">
               Come see what&apos;s on this floor with a {floor} card today —
               they&apos;re worth meeting.
             </p>
@@ -77,7 +77,7 @@ export default async function ChatPage({
               </Link>
               <Link
                 href={lastFloorHref}
-                className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-zinc-200 transition hover:border-zinc-500 hover:text-white"
+                className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-green transition hover:border-zinc-500 hover:text-white"
               >
                 ← Back to the floor
               </Link>
@@ -93,7 +93,7 @@ export default async function ChatPage({
       <div className="mx-auto max-w-3xl px-6 pt-10">
         <Link
           href={floorHref}
-          className="text-sm font-semibold text-zinc-500 hover:text-white"
+          className="text-sm font-semibold text-green hover:text-white"
         >
           ← Back to the floor
         </Link>

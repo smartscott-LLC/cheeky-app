@@ -30,6 +30,10 @@ points — every push to `main` is production.
   runtime; originals live outside the repo (founder's backups). The UI style guide moved to
   `docs/UI-STYLE-GUIDE.txt` as the working design spec. The unused `public/video/` MP4s also
   removed. Served `public/` is now ~6.8MB total (was ~73MB with all the originals).
+- **Contrast pass**: every `text-zinc-*` (333 usages) → the new `green` token (`#00FF40`, electric
+  club neon) — gray-on-black text was the accessibility weak spot (some shades ~3.5:1); green on
+  black is 15.4:1. Light-surface exceptions keep dark text (white buttons, light toasts); hover
+  accents stay gold.
 
 ## [v1.1-docs-locked] — 2026-08-05
 

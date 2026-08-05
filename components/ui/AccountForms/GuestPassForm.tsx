@@ -34,7 +34,7 @@ export default function GuestPassForm() {
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
       <h2 className="text-xl font-bold">Guest pass</h2>
-      <p className="mt-1 text-sm text-zinc-400">
+      <p className="mt-1 text-sm text-green">
         Bring a friend up to your floor for 24 hours. They see the club from
         your seats — and your tier gets them in.
       </p>

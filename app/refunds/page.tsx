@@ -56,7 +56,7 @@ export default function RefundsPage() {
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
           💸 Refund Policy
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
+        <p className="mx-auto mt-3 max-w-xl text-center text-green">
           Tokens, no-match refunds, canceled events, and where the money belongs
           when it goes sideways.
         </p>
@@ -75,7 +75,7 @@ export default function RefundsPage() {
                 {s.items.map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-3 text-sm text-zinc-400"
+                    className="flex items-start gap-3 text-sm text-green"
                   >
                     <span className="text-club">✓</span>
                     {item}
@@ -86,7 +86,7 @@ export default function RefundsPage() {
           ))}
         </div>
 
-        <p className="mt-8 text-sm text-zinc-400">
+        <p className="mt-8 text-sm text-green">
           Questions? Write{' '}
           <a
             href={`mailto:${CONTACT.helpdesk}`}

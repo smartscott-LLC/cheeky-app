@@ -97,7 +97,7 @@ export default async function CoatCheckPage() {
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
           🧥 The Coat Check
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
+        <p className="mx-auto mt-3 max-w-xl text-center text-green">
           &quot;Nothing gets lost in my care.&quot; Your collection lives here —
           check in daily, the coat you hand me is your day with the club.
         </p>
@@ -114,7 +114,7 @@ export default async function CoatCheckPage() {
         {/* Gems */}
         <div className="mt-10">
           <h2 className="text-xl font-bold">💎 Gems</h2>
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-green">
             The vault. Limited collectibles.
           </p>
           <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -131,7 +131,7 @@ export default async function CoatCheckPage() {
                 >
                   <p className="text-4xl">{g.emoji}</p>
                   <p className="mt-2 font-bold">{g.name}</p>
-                  <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-500">
+                  <p className="text-[10px] uppercase tracking-[0.25em] text-green">
                     {g.rarity}
                   </p>
                   {owned ? (
@@ -142,7 +142,7 @@ export default async function CoatCheckPage() {
                         : 'in the vault'}
                     </p>
                   ) : (
-                    <p className="mt-2 text-xs text-zinc-500">
+                    <p className="mt-2 text-xs text-green">
                       {g.how_to_earn}
                     </p>
                   )}
@@ -155,7 +155,7 @@ export default async function CoatCheckPage() {
         {/* Badges */}
         <div className="mt-10">
           <h2 className="text-xl font-bold">🎖️ Badges</h2>
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-green">
             What you&apos;ve earned on the floor.
           </p>
           <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
@@ -172,7 +172,7 @@ export default async function CoatCheckPage() {
                 >
                   <p className="text-4xl">{b.emoji}</p>
                   <p className="mt-2 font-bold">{b.name}</p>
-                  <p className="mt-1 text-[11px] text-zinc-500">
+                  <p className="mt-1 text-[11px] text-green">
                     {owned
                       ? badgeDate(b.id)
                         ? `Earned ${new Date(badgeDate(b.id) as string).toLocaleDateString()}`
@@ -189,10 +189,10 @@ export default async function CoatCheckPage() {
           {/* The stash */}
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
             <h2 className="font-bold">🎁 The stash</h2>
-            <p className="text-sm text-zinc-500">Gifts waiting to go out.</p>
+            <p className="text-sm text-green">Gifts waiting to go out.</p>
             <div className="mt-3 space-y-2">
               {stash.length === 0 && (
-                <p className="text-sm text-zinc-500">
+                <p className="text-sm text-green">
                   Empty. The Gift Store is that way.
                 </p>
               )}
@@ -213,12 +213,12 @@ export default async function CoatCheckPage() {
           {/* People you've met */}
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
             <h2 className="font-bold">🪪 People you&apos;ve met</h2>
-            <p className="text-sm text-zinc-500">
+            <p className="text-sm text-green">
               Certificates from Speed Dating + special interests.
             </p>
             <div className="mt-3 space-y-2">
               {certPartnerIds.length === 0 && partnerIds.length === 0 && (
-                <p className="text-sm text-zinc-500">
+                <p className="text-sm text-green">
                   No certificates yet. Speed Dating is how you earn them.
                 </p>
               )}
@@ -252,7 +252,7 @@ export default async function CoatCheckPage() {
         {/* The crew — bonds */}
         <div className="mt-10">
           <h2 className="text-xl font-bold">🎭 The crew</h2>
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-green">
             Characters, not real people — each with a job in the club. Get to
             know them.
           </p>
@@ -273,18 +273,18 @@ export default async function CoatCheckPage() {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <span className="flex h-full w-full items-center justify-center text-xl font-bold text-zinc-500">
+                      <span className="flex h-full w-full items-center justify-center text-xl font-bold text-green">
                         {c.name.charAt(0)}
                       </span>
                     )}
                   </div>
                   <p className="mt-2 text-sm font-bold">{c.name}</p>
-                  <p className="text-[11px] text-zinc-500">{c.role}</p>
+                  <p className="text-[11px] text-green">{c.role}</p>
                   <p className="mt-1 text-xs">
                     {level > 0 ? (
                       <span className="text-club">Bond level {level}</span>
                     ) : (
-                      <span className="text-zinc-600">Not bonded yet</span>
+                      <span className="text-green">Not bonded yet</span>
                     )}
                   </p>
                 </div>
@@ -296,7 +296,7 @@ export default async function CoatCheckPage() {
         <p className="mt-8">
           <Link
             href={floorHref}
-            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-zinc-200 transition hover:border-zinc-500 hover:text-white"
+            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-green transition hover:border-zinc-500 hover:text-white"
           >
             ← Back to the floor
           </Link>

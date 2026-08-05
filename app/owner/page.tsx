@@ -559,7 +559,7 @@ export default function OwnerPage() {
           <h1 className="mt-4 text-center text-3xl font-extrabold">
             The Lions Den
           </h1>
-          <p className="mt-2 text-center text-sm text-zinc-400">
+          <p className="mt-2 text-center text-sm text-green">
             The owner&apos;s office. If this is you, it opens on its own — no
             key needed.
           </p>
@@ -574,18 +574,18 @@ export default function OwnerPage() {
           <button
             onClick={() => unlock(key)}
             disabled={busy}
-            className="mt-3 w-full rounded-lg border border-zinc-700 px-6 py-2.5 font-bold text-zinc-200 transition hover:border-zinc-500 disabled:opacity-40"
+            className="mt-3 w-full rounded-lg border border-zinc-700 px-6 py-2.5 font-bold text-green transition hover:border-zinc-500 disabled:opacity-40"
           >
             Unlock
           </button>
 
-          <div className="my-6 flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-zinc-600">
+          <div className="my-6 flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-green">
             <div className="h-px flex-1 bg-zinc-800" />
             not the owner?
             <div className="h-px flex-1 bg-zinc-800" />
           </div>
 
-          <p className="text-center text-sm text-zinc-300">
+          <p className="text-center text-sm text-green">
             The door&apos;s still open. Leave a message and the owner gets back
             to you.
           </p>
@@ -640,7 +640,7 @@ export default function OwnerPage() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-3xl font-extrabold">🦁 The Lions Den</h1>
-            <p className="mt-1 text-sm text-zinc-500">
+            <p className="mt-1 text-sm text-green">
               The club from one seat — mint, announce, and keep the floors
               moving.
             </p>
@@ -690,7 +690,7 @@ export default function OwnerPage() {
               <p className="text-2xl font-extrabold text-white">
                 {m.icon} {m.value.toLocaleString()}
               </p>
-              <p className="mt-1 text-[11px] uppercase tracking-wider text-zinc-500">
+              <p className="mt-1 text-[11px] uppercase tracking-wider text-green">
                 {m.label}
               </p>
             </div>
@@ -722,7 +722,7 @@ export default function OwnerPage() {
         <div className="mt-8">
           <h2 className="text-lg font-bold">🚩 The flag job</h2>
           {flags.length === 0 ? (
-            <p className="mt-2 text-sm text-zinc-500">
+            <p className="mt-2 text-sm text-green">
               No open flags. The cast hasn&apos;t needed the owner.
             </p>
           ) : (
@@ -745,10 +745,10 @@ export default function OwnerPage() {
                       {f.profiles?.display_name ?? 'a member'}
                     </span>
                   </p>
-                  <p className="mt-1 text-sm italic text-zinc-400">
+                  <p className="mt-1 text-sm italic text-green">
                     “{f.reason}”
                   </p>
-                  <p className="mt-1 text-xs text-zinc-600">
+                  <p className="mt-1 text-xs text-green">
                     {new Date(f.created_at).toLocaleString()}
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -769,7 +769,7 @@ export default function OwnerPage() {
                     <button
                       onClick={() => resolveFlag(f.id, 'dismiss')}
                       disabled={busy}
-                      className="rounded-lg border border-zinc-600 px-4 py-1.5 text-sm font-bold text-zinc-300 hover:border-zinc-400 disabled:opacity-40"
+                      className="rounded-lg border border-zinc-600 px-4 py-1.5 text-sm font-bold text-green hover:border-zinc-400 disabled:opacity-40"
                     >
                       Dismiss
                     </button>
@@ -783,11 +783,11 @@ export default function OwnerPage() {
         {/* The safety desk — reports needing a human */}
         <div className="mt-8">
           <h2 className="text-lg font-bold">🛡️ The safety desk</h2>
-          <p className="mt-1 text-sm text-zinc-500">
+          <p className="mt-1 text-sm text-green">
             Reports DateSafe couldn&apos;t settle — your call is the final word.
           </p>
           {reports.length === 0 ? (
-            <p className="mt-2 text-sm text-zinc-500">
+            <p className="mt-2 text-sm text-green">
               Nothing on the desk. DateSafe cleared the queue.
             </p>
           ) : (
@@ -799,12 +799,12 @@ export default function OwnerPage() {
                 >
                   <p className="text-sm">
                     <span className="font-bold">Report #{r.id}</span>{' '}
-                    <span className="text-zinc-500">
+                    <span className="text-green">
                       · {new Date(r.created_at).toLocaleString()}
                     </span>
                   </p>
                   <p className="mt-1 text-sm">“{r.reason}”</p>
-                  <p className="mt-1 text-xs text-zinc-500">
+                  <p className="mt-1 text-xs text-green">
                     {r.verdict === 'violation'
                       ? '🛑 flagged as violation'
                       : '❔ inconclusive'}{' '}
@@ -814,7 +814,7 @@ export default function OwnerPage() {
                       : ''}
                     {r.review_summary ? ` — ${r.review_summary}` : ''}
                   </p>
-                  <p className="mt-0.5 font-mono text-[10px] text-zinc-600">
+                  <p className="mt-0.5 font-mono text-[10px] text-green">
                     member {r.reported_id.slice(0, 8)}…
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -828,7 +828,7 @@ export default function OwnerPage() {
                     <button
                       onClick={() => resolveReport(r.id, 'dismissed')}
                       disabled={busy}
-                      className="rounded-lg border border-zinc-600 px-4 py-1.5 text-sm font-bold text-zinc-300 hover:border-zinc-400 disabled:opacity-40"
+                      className="rounded-lg border border-zinc-600 px-4 py-1.5 text-sm font-bold text-green hover:border-zinc-400 disabled:opacity-40"
                     >
                       Dismiss — lift the hold
                     </button>
@@ -842,7 +842,7 @@ export default function OwnerPage() {
         {/* The banned list — the door refuses these emails */}
         <div className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="font-bold">⛔ The banned list</h2>
-          <p className="mt-1 text-xs text-zinc-500">
+          <p className="mt-1 text-xs text-green">
             The door checks this at signup and sign-in. 0 years = lifetime.
           </p>
           <form
@@ -884,7 +884,7 @@ export default function OwnerPage() {
                   className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2 text-sm"
                 >
                   <span className="font-mono text-club">{b.email}</span>
-                  <span className="flex-1 text-xs text-zinc-500">
+                  <span className="flex-1 text-xs text-green">
                     {b.reason} ·{' '}
                     {b.banned_until
                       ? `until ${new Date(b.banned_until).toLocaleDateString()}`
@@ -905,7 +905,7 @@ export default function OwnerPage() {
                       );
                     }}
                     disabled={busy}
-                    className="rounded border border-zinc-600 px-3 py-1 text-xs font-bold text-zinc-300 hover:border-zinc-400 disabled:opacity-40"
+                    className="rounded border border-zinc-600 px-3 py-1 text-xs font-bold text-green hover:border-zinc-400 disabled:opacity-40"
                   >
                     Pardon
                   </button>
@@ -981,7 +981,7 @@ export default function OwnerPage() {
             <button
               onClick={clearAnnounce}
               disabled={busy}
-              className="rounded-lg border border-zinc-600 px-3 py-1.5 text-xs font-bold text-zinc-300 hover:border-zinc-400 disabled:opacity-40"
+              className="rounded-lg border border-zinc-600 px-3 py-1.5 text-xs font-bold text-green hover:border-zinc-400 disabled:opacity-40"
             >
               Clear it
             </button>
@@ -1034,13 +1034,13 @@ export default function OwnerPage() {
         {/* Model switch — failover without a redeploy */}
         <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="font-bold">🤖 Model switch</h2>
-          <p className="mt-1 text-xs text-zinc-500">
+          <p className="mt-1 text-xs text-green">
             Swap a down model in seconds. Keys stay in env — this only changes
             which model is called.
           </p>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <label className="block">
-              <span className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+              <span className="text-xs font-bold uppercase tracking-wider text-green">
                 Cast (floor chat)
               </span>
               <input
@@ -1053,7 +1053,7 @@ export default function OwnerPage() {
                   <button
                     key={m}
                     onClick={() => setCastModel(m)}
-                    className="rounded border border-zinc-700 px-2 py-0.5 text-[11px] text-zinc-400 hover:border-gold hover:text-gold"
+                    className="rounded border border-zinc-700 px-2 py-0.5 text-[11px] text-green hover:border-gold hover:text-gold"
                   >
                     {m}
                   </button>
@@ -1061,7 +1061,7 @@ export default function OwnerPage() {
               </span>
             </label>
             <label className="block">
-              <span className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+              <span className="text-xs font-bold uppercase tracking-wider text-green">
                 Watchdog (image review)
               </span>
               <input
@@ -1078,7 +1078,7 @@ export default function OwnerPage() {
                   <button
                     key={m}
                     onClick={() => setWatchdogModel(m)}
-                    className="rounded border border-zinc-700 px-2 py-0.5 text-[11px] text-zinc-400 hover:border-gold hover:text-gold"
+                    className="rounded border border-zinc-700 px-2 py-0.5 text-[11px] text-green hover:border-gold hover:text-gold"
                   >
                     {m}
                   </button>
@@ -1098,7 +1098,7 @@ export default function OwnerPage() {
         {/* Floor status — close a section */}
         <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="font-bold">🚧 Floor status</h2>
-          <p className="mt-1 text-xs text-zinc-500">
+          <p className="mt-1 text-xs text-green">
             Put a floor under construction — the elevators show the notice
             instead of the room.
           </p>
@@ -1134,7 +1134,7 @@ export default function OwnerPage() {
                       <button
                         onClick={() => setFloor(f.slug, false, '', 0)}
                         disabled={busy}
-                        className="ml-auto rounded border border-zinc-600 px-3 py-1 text-xs font-bold text-zinc-300 hover:border-zinc-400 disabled:opacity-40"
+                        className="ml-auto rounded border border-zinc-600 px-3 py-1 text-xs font-bold text-green hover:border-zinc-400 disabled:opacity-40"
                       >
                         Reopen
                       </button>
@@ -1188,7 +1188,7 @@ export default function OwnerPage() {
         <div className="mt-8">
           <h2 className="text-lg font-bold">🪪 Verified, no card yet</h2>
           {unpurchased.length === 0 ? (
-            <p className="mt-2 text-sm text-zinc-500">
+            <p className="mt-2 text-sm text-green">
               Everyone verified has a card. Quiet night at the exchange.
             </p>
           ) : (
@@ -1201,7 +1201,7 @@ export default function OwnerPage() {
                   <p className="font-bold text-white">
                     {p.display_name ?? 'Unnamed member'}
                   </p>
-                  <p className="mt-0.5 text-xs text-zinc-500">
+                  <p className="mt-0.5 text-xs text-green">
                     Verified{' '}
                     {p.verified_at
                       ? new Date(p.verified_at).toLocaleDateString()
@@ -1271,7 +1271,7 @@ export default function OwnerPage() {
           <h2 className="text-lg font-bold">📋 The rule set</h2>
           <div className="mt-3 overflow-x-auto rounded-xl border border-zinc-800">
             <table className="w-full text-sm">
-              <thead className="bg-zinc-900 text-left text-xs uppercase tracking-wider text-zinc-500">
+              <thead className="bg-zinc-900 text-left text-xs uppercase tracking-wider text-green">
                 <tr>
                   <th className="px-4 py-2">Item</th>
                   <th className="px-4 py-2">Cast weekly cap</th>
@@ -1305,7 +1305,7 @@ export default function OwnerPage() {
           <h2 className="text-lg font-bold">📅 Events on the floor</h2>
           <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {events.length === 0 && (
-              <p className="text-sm text-zinc-500">
+              <p className="text-sm text-green">
                 Nothing scheduled in the next 6 hours.
               </p>
             )}
@@ -1317,7 +1317,7 @@ export default function OwnerPage() {
                 <p className="text-sm font-bold capitalize text-white">
                   {e.kind.replace(/_/g, ' ')} · {e.floor}
                 </p>
-                <p className="mt-0.5 text-xs text-zinc-500">
+                <p className="mt-0.5 text-xs text-green">
                   {new Date(e.starts_at).toLocaleString()} · {e.token_cost}{' '}
                   tokens · {e.entrants} in ·{' '}
                   <span className="uppercase">{e.status}</span>
@@ -1332,7 +1332,7 @@ export default function OwnerPage() {
           <h2 className="text-lg font-bold">🪙 Loot ledger</h2>
           <div className="mt-3 space-y-1.5">
             {ledger.length === 0 && (
-              <p className="text-sm text-zinc-500">No movement yet.</p>
+              <p className="text-sm text-green">No movement yet.</p>
             )}
             {ledger.map((r) => (
               <div
@@ -1346,11 +1346,11 @@ export default function OwnerPage() {
                 >
                   {r.delta > 0 ? `+${r.delta}` : r.delta} tokens
                 </span>
-                <span className="text-xs text-zinc-500">
+                <span className="text-xs text-green">
                   {r.reason}
                   {r.ref ? ` · ${String(r.ref).slice(0, 18)}` : ''}
                 </span>
-                <span className="text-xs text-zinc-600">
+                <span className="text-xs text-green">
                   {new Date(r.created_at).toLocaleString()}
                 </span>
               </div>
@@ -1369,7 +1369,7 @@ export default function OwnerPage() {
               >
                 <p className="text-2xl">{g.emoji}</p>
                 <p className="mt-1 text-xs font-bold text-white">{g.name}</p>
-                <p className="text-xs text-zinc-500">{g.token_cost} tokens</p>
+                <p className="text-xs text-green">{g.token_cost} tokens</p>
               </div>
             ))}
           </div>
@@ -1381,7 +1381,7 @@ export default function OwnerPage() {
             <h2 className="text-lg font-bold">🎟️ Recent codes</h2>
             <div className="mt-3 space-y-2">
               {codes.length === 0 && (
-                <p className="text-sm text-zinc-500">None yet.</p>
+                <p className="text-sm text-green">None yet.</p>
               )}
               {codes.map((c) => (
                 <div
@@ -1396,12 +1396,12 @@ export default function OwnerPage() {
                     >
                       {c.code}
                     </button>
-                    <span className="ml-2 text-zinc-500">
+                    <span className="ml-2 text-green">
                       {label(c.benefit_type, c.benefit_value)} · {c.actor_type}
                       {c.actor_ref ? `/${c.actor_ref}` : ''}
                     </span>
                   </div>
-                  <span className="text-xs text-zinc-500">
+                  <span className="text-xs text-green">
                     {c.used_count}/{c.max_uses} used
                   </span>
                 </div>
@@ -1412,7 +1412,7 @@ export default function OwnerPage() {
             <h2 className="text-lg font-bold">📜 Recent grants</h2>
             <div className="mt-3 space-y-2">
               {grants.length === 0 && (
-                <p className="text-sm text-zinc-500">None yet.</p>
+                <p className="text-sm text-green">None yet.</p>
               )}
               {grants.map((g) => (
                 <div
@@ -1428,7 +1428,7 @@ export default function OwnerPage() {
                       {label(g.benefit_type, g.benefit_value)}
                     </span>
                   </p>
-                  <p className="text-xs text-zinc-500">
+                  <p className="text-xs text-green">
                     {g.reason} · {g.actor_type}
                     {g.actor_ref ? `/${g.actor_ref}` : ''} ·{' '}
                     {new Date(g.created_at).toLocaleString()}
@@ -1453,12 +1453,12 @@ export default function OwnerPage() {
                 <h2 className="text-xl font-extrabold">⚒️ The Mint</h2>
                 <button
                   onClick={() => setMintOpen(false)}
-                  className="text-zinc-400 hover:text-white"
+                  className="text-green hover:text-white"
                 >
                   ✕
                 </button>
               </div>
-              <p className="mt-1 text-sm text-zinc-500">
+              <p className="mt-1 text-sm text-green">
                 Pick what a member needs — one code prints it all.
               </p>
 
@@ -1468,7 +1468,7 @@ export default function OwnerPage() {
                   <button
                     key={p.label}
                     onClick={() => applyPreset(p)}
-                    className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-xs font-bold text-zinc-200 transition hover:border-gold hover:text-gold"
+                    className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-xs font-bold text-green transition hover:border-gold hover:text-gold"
                   >
                     {p.label}
                   </button>
@@ -1510,7 +1510,7 @@ export default function OwnerPage() {
                     />
                     <button
                       onClick={() => removeMintRow(row.id)}
-                      className="text-zinc-600 hover:text-club"
+                      className="text-green hover:text-club"
                     >
                       ✕
                     </button>

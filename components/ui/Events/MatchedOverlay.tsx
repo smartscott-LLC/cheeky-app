@@ -78,24 +78,24 @@ export default function MatchedOverlay({ onDone }: MatchedOverlayProps) {
         >
           MATCHED
         </h1>
-        <p className="mt-6 text-xl text-zinc-300 sm:text-2xl">
+        <p className="mt-6 text-xl text-green sm:text-2xl">
           You have <span className="font-bold text-club">one song</span> to make
           this count.
         </p>
-        <p className="mt-2 text-lg uppercase tracking-[0.3em] text-zinc-500">
+        <p className="mt-2 text-lg uppercase tracking-[0.3em] text-green">
           Get… your… groove… on!
         </p>
       </div>
       <div className="absolute bottom-10 flex items-center gap-4">
         <button
           onClick={() => setMuted(toggleDJ())}
-          className="rounded-full border border-zinc-700 px-4 py-2 text-sm text-zinc-300 hover:border-zinc-500"
+          className="rounded-full border border-zinc-700 px-4 py-2 text-sm text-green hover:border-zinc-500"
         >
           {muted ? '🔇 DJ muted' : '🎧 DJ live'}
         </button>
         <button
           onClick={skip}
-          className="rounded-full border border-zinc-700 px-4 py-2 text-sm text-zinc-400 hover:border-club hover:text-club"
+          className="rounded-full border border-zinc-700 px-4 py-2 text-sm text-green hover:border-club hover:text-club"
         >
           Skip →
         </button>

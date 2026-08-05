@@ -3,7 +3,7 @@
 }
 
 .link {
-  @apply inline-flex items-center text-[12px] font-bold uppercase tracking-[0.16em] transition ease-in-out duration-75 cursor-pointer text-zinc-300 rounded-md px-2 py-1.5 hover:text-gold;
+  @apply inline-flex items-center text-[12px] font-bold uppercase tracking-[0.16em] transition ease-in-out duration-75 cursor-pointer text-green rounded-md px-2 py-1.5 hover:text-gold;
 }
 
 .link:hover {

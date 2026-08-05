@@ -23,8 +23,11 @@ module.exports = {
         script: ['var(--font-script)', 'cursive']
       },
       // Floor palettes — source of truth: styles/palettes/*.scss, brand
-      // values from the Club Cheeky UI Style Guide (persona_assets/).
+      // values from the Club Cheeky UI Style Guide (docs/UI-STYLE-GUIDE.txt).
       colors: {
+        green: {
+          DEFAULT: '#00FF40' // electric green — the high-contrast text accent (club neon)
+        },
         club: {
           DEFAULT: '#FF2D9B', // neon pink (style guide)
           pink: '#FF2D9B',

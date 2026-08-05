@@ -40,7 +40,7 @@ export default function BrowseCard({
           The floor just cleared for you two
         </p>
         <h2 className="mt-4 text-4xl font-extrabold">It&apos;s a match!</h2>
-        <p className="mt-3 text-zinc-300">
+        <p className="mt-3 text-green">
           You and{' '}
           <span className="font-bold text-white">
             {matched.display_name || 'your match'}
@@ -59,7 +59,7 @@ export default function BrowseCard({
               setMatched(null);
               setIndex((i) => i + 1);
             }}
-            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-zinc-200 transition hover:border-zinc-500 hover:text-white"
+            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-green transition hover:border-zinc-500 hover:text-white"
           >
             Keep browsing
           </button>
@@ -72,7 +72,7 @@ export default function BrowseCard({
     return (
       <div className="mx-auto max-w-xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-10 text-center">
         <h2 className="text-2xl font-extrabold">You&apos;ve seen the room.</h2>
-        <p className="mt-3 text-zinc-400">
+        <p className="mt-3 text-green">
           Everyone&apos;s been shown. Check back when the club&apos;s busier —
           new faces land here.
         </p>
@@ -103,7 +103,7 @@ export default function BrowseCard({
             className="h-full w-full object-cover"
           />
         ) : (
-          <span className="text-6xl font-extrabold text-zinc-600">
+          <span className="text-6xl font-extrabold text-green">
             {(person.display_name || '?').charAt(0).toUpperCase()}
           </span>
         )}
@@ -119,14 +119,14 @@ export default function BrowseCard({
             </span>
           )}
         </div>
-        <p className="mt-2 text-zinc-400">
+        <p className="mt-2 text-green">
           {person.one_liner || person.bio || 'Just got through the door.'}
         </p>
       </div>
       <div className="flex gap-3 p-6 pt-0">
         <button
           onClick={() => openConversation(person.id)}
-          className="rounded-lg border border-zinc-700 px-3 py-3 text-sm font-semibold text-zinc-300 transition hover:border-zinc-500 hover:text-white"
+          className="rounded-lg border border-zinc-700 px-3 py-3 text-sm font-semibold text-green transition hover:border-zinc-500 hover:text-white"
         >
           Message
         </button>
@@ -137,7 +137,7 @@ export default function BrowseCard({
           className={`rounded-lg px-3 py-3 text-sm font-bold transition ${
             waved.has(person.id)
               ? 'bg-platinum/15 text-platinum'
-              : 'border border-zinc-700 text-zinc-300 hover:border-platinum hover:text-platinum'
+              : 'border border-zinc-700 text-green hover:border-platinum hover:text-platinum'
           }`}
         >
           {waved.has(person.id) ? 'Waved ✓' : '👋'}
@@ -145,7 +145,7 @@ export default function BrowseCard({
         <button
           onClick={() => setIndex((i) => i + 1)}
           disabled={busy}
-          className="flex-1 rounded-lg border border-zinc-700 px-4 py-3 font-semibold text-zinc-200 transition hover:border-zinc-500 hover:text-white"
+          className="flex-1 rounded-lg border border-zinc-700 px-4 py-3 font-semibold text-green transition hover:border-zinc-500 hover:text-white"
         >
           Pass
         </button>

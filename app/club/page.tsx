@@ -95,7 +95,7 @@ export default async function ClubPage() {
           <h1 className="mt-6 text-3xl font-extrabold">
             The velvet rope is up.
           </h1>
-          <p className="mt-3 text-zinc-400">
+          <p className="mt-3 text-green">
             Brutus needs your ID before you walk the floor — free, quick, and
             the VIP badge comes with it.
           </p>
@@ -120,7 +120,7 @@ export default async function ClubPage() {
         <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
           The hour spins on
         </p>
-        <p className="mx-auto mt-3 max-w-2xl text-lg text-zinc-400">
+        <p className="mx-auto mt-3 max-w-2xl text-lg text-green">
           The Dance Floor at :00, Themed Night at :15, Speed Dating at :30, the
           Rooftop at :45 — the Event Center holds the whole playlist.
         </p>

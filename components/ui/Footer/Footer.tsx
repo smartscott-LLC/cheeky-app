@@ -26,7 +26,7 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/#membership"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 Membership
               </Link>
@@ -34,7 +34,7 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/pricing"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 Pricing
               </Link>
@@ -42,7 +42,7 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/signin"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 Sign in
               </Link>
@@ -50,7 +50,7 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/account"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 Account
               </Link>
@@ -58,7 +58,7 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/swag"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 Swag Shop
               </Link>
@@ -66,7 +66,7 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/coat-check"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 Coat Check
               </Link>
@@ -76,14 +76,14 @@ export default function Footer() {
         <div className="col-span-1 lg:col-span-2">
           <ul className="flex flex-col flex-initial md:flex-1">
             <li className="py-3 md:py-0 md:pb-4">
-              <p className="font-bold text-white transition duration-150 ease-in-out hover:text-zinc-200">
+              <p className="font-bold text-white transition duration-150 ease-in-out hover:text-green">
                 LEGAL
               </p>
             </li>
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/privacy"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 Privacy Policy
               </Link>
@@ -91,7 +91,7 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/best-practices"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 Best Practices
               </Link>
@@ -99,7 +99,7 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/terms"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 Terms of Use
               </Link>
@@ -107,7 +107,7 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/aup"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 Acceptable Use
               </Link>
@@ -115,7 +115,7 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/refunds"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 Refund Policy
               </Link>
@@ -123,7 +123,7 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/law-enforcement"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 Law Enforcement
               </Link>
@@ -131,7 +131,7 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/sitemap"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 Sitemap
               </Link>
@@ -141,14 +141,14 @@ export default function Footer() {
         <div className="col-span-1 lg:col-span-2">
           <ul className="flex flex-col flex-initial md:flex-1">
             <li className="py-3 md:py-0 md:pb-4">
-              <p className="font-bold text-white transition duration-150 ease-in-out hover:text-zinc-200">
+              <p className="font-bold text-white transition duration-150 ease-in-out hover:text-green">
                 CONTACT
               </p>
             </li>
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/contact"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 Contact us
               </Link>
@@ -156,7 +156,7 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/owner"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 🦁 The Lions Den
               </Link>
@@ -164,7 +164,7 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <a
                 href={`mailto:${CONTACT.info}`}
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 {CONTACT.info}
               </a>
@@ -172,7 +172,7 @@ export default function Footer() {
             <li className="py-3 md:py-0 md:pb-4">
               <a
                 href={`mailto:${CONTACT.helpdesk}`}
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+                className="text-white transition duration-150 ease-in-out hover:text-green"
               >
                 {CONTACT.helpdesk}
               </a>

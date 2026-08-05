@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 const LogoCloud = () => (
   <div>
-    <p className="mt-24 text-xs uppercase text-zinc-400 text-center font-bold tracking-[0.3em]">
+    <p className="mt-24 text-xs uppercase text-green text-center font-bold tracking-[0.3em]">
       Powered by
     </p>
     <div className="flex flex-col items-center mt-5 space-y-2 sm:space-y-0 sm:flex-row sm:justify-center sm:space-x-10">

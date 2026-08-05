@@ -48,7 +48,7 @@ export default async function EventRoomPage({
           <h1 className="mt-6 text-3xl font-extrabold">
             {meta.name} is behind the rope.
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-zinc-400">
+          <p className="mx-auto mt-3 max-w-md text-green">
             Come see what&apos;s on this floor with a {meta.floor} card today —
             the room&apos;s worth it.
           </p>
@@ -61,7 +61,7 @@ export default async function EventRoomPage({
             </Link>
             <Link
               href="/events"
-              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-zinc-200 transition hover:border-zinc-500 hover:text-white"
+              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-green transition hover:border-zinc-500 hover:text-white"
             >
               The Event Center
             </Link>
@@ -171,13 +171,13 @@ export default async function EventRoomPage({
         <div className="flex flex-wrap items-center gap-4">
           <Link
             href="/events"
-            className="text-sm font-semibold text-zinc-500 hover:text-white"
+            className="text-sm font-semibold text-green hover:text-white"
           >
             ← The Event Center
           </Link>
           <Link
             href={floorHref}
-            className="text-sm font-semibold text-zinc-500 hover:text-white"
+            className="text-sm font-semibold text-green hover:text-white"
           >
             ← Back to the floor
           </Link>
@@ -199,7 +199,7 @@ export default async function EventRoomPage({
               <h2 className="text-2xl font-extrabold">
                 {meta.emoji} {meta.name}
               </h2>
-              <p className="mt-1 text-sm text-zinc-400">
+              <p className="mt-1 text-sm text-green">
                 Next slot {timeLabel(roomEvent.starts_at)} · {meta.tagline}
               </p>
             </div>
@@ -228,7 +228,7 @@ export default async function EventRoomPage({
           <h2 className="mt-6 text-2xl font-extrabold">
             The room&apos;s between sets.
           </h2>
-          <p className="mt-3 text-zinc-400">
+          <p className="mt-3 text-green">
             The next {meta.name} spins up on the hour. Check the Event Center
             for the playlist.
           </p>

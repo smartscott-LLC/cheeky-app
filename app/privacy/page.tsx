@@ -52,7 +52,7 @@ export default function PrivacyPage() {
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
           🛡️ What the Bouncer Knows
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
+        <p className="mx-auto mt-3 max-w-xl text-center text-green">
           Privacy Policy. The club keeps the door, not your secrets — here is
           exactly what we hold and why.
         </p>
@@ -68,7 +68,7 @@ export default function PrivacyPage() {
                 {s.items.map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-3 text-sm text-zinc-400"
+                    className="flex items-start gap-3 text-sm text-green"
                   >
                     <span className="text-club">✓</span>
                     {item}
@@ -79,12 +79,12 @@ export default function PrivacyPage() {
           ))}
         </div>
 
-        <p className="mt-8 text-xs text-zinc-600">
+        <p className="mt-8 text-xs text-green">
           Policy source: docs/Governance/privacy.md (binding on the build).
           Living document — refined as the club grows.
         </p>
 
-        <p className="mt-4 text-sm text-zinc-400">
+        <p className="mt-4 text-sm text-green">
           Questions about your data or your rights? Email{' '}
           <a
             href={`mailto:${CONTACT.info}`}

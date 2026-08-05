@@ -40,7 +40,7 @@ export default async function SwagPage() {
         <h1 className="text-3xl font-extrabold sm:text-4xl">
           🎟️ The Swag Shop
         </h1>
-        <p className="mt-2 text-sm text-zinc-500">
+        <p className="mt-2 text-sm text-green">
           Free stuff, on the house. Got a code from the cast — or from the club
           — drop it in and it&apos;s yours. No payment, no catch.
         </p>
@@ -51,7 +51,7 @@ export default async function SwagPage() {
           <h2 className="text-lg font-bold">Your swag</h2>
           <div className="mt-3 space-y-2">
             {(grants ?? []).length === 0 && (
-              <p className="text-sm text-zinc-500">
+              <p className="text-sm text-green">
                 Nothing yet. Codes come from the cast and the club — keep an eye
                 out.
               </p>
@@ -65,9 +65,9 @@ export default async function SwagPage() {
                   <p className="font-bold text-club">
                     {describe(g.benefit_type, g.benefit_value)}
                   </p>
-                  <p className="text-xs text-zinc-500">{g.reason}</p>
+                  <p className="text-xs text-green">{g.reason}</p>
                 </div>
-                <p className="text-xs text-zinc-500">
+                <p className="text-xs text-green">
                   {new Date(g.created_at).toLocaleString()}
                 </p>
               </div>
@@ -78,7 +78,7 @@ export default async function SwagPage() {
         <p className="mt-8">
           <Link
             href={floorHref}
-            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-zinc-200 transition hover:border-zinc-500 hover:text-white"
+            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-green transition hover:border-zinc-500 hover:text-white"
           >
             ← Back to the floor
           </Link>

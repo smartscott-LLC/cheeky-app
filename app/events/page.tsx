@@ -53,14 +53,14 @@ export default async function EventsPage() {
       <div className="mx-auto max-w-6xl px-6 py-16">
         <Link
           href={floorHref}
-          className="text-sm font-semibold text-zinc-500 hover:text-white"
+          className="text-sm font-semibold text-green hover:text-white"
         >
           ← Back to the floor
         </Link>
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
           The Event Center
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
+        <p className="mx-auto mt-3 max-w-xl text-center text-green">
           The hourly playlist. Four floors. Four rooms — every hour, on the
           quarter. Join any room any time; your spot is held for the next set.
         </p>
@@ -73,9 +73,9 @@ export default async function EventsPage() {
             </p>
             <ul className="divide-y divide-zinc-800">
               {(announcements ?? []).map((a, i) => (
-                <li key={i} className="px-4 py-2 text-sm text-zinc-300">
+                <li key={i} className="px-4 py-2 text-sm text-green">
                   {a.body}{' '}
-                  <span className="text-xs text-zinc-600">
+                  <span className="text-xs text-green">
                     {new Date(a.created_at).toLocaleTimeString([], {
                       hour: 'numeric',
                       minute: '2-digit'
@@ -122,12 +122,12 @@ export default async function EventsPage() {
                       {meta.floor}
                     </span>
                   </div>
-                  <p className="mt-1 text-xs text-zinc-500">
+                  <p className="mt-1 text-xs text-green">
                     {next
                       ? `${timeLabel(next.starts_at)} · ${next.token_cost} tokens`
                       : 'Between sets'}
                   </p>
-                  <p className="mt-2 text-xs text-zinc-400">{meta.tagline}</p>
+                  <p className="mt-2 text-xs text-green">{meta.tagline}</p>
                   {locked ? (
                     <p className="mt-4 text-sm font-bold text-gold">
                       Behind the rope. Come see what&apos;s on these floors with

@@ -84,7 +84,7 @@ export default function StoreClient({
       <section>
         <div className="flex items-end justify-between gap-4">
           <h2 className="text-xl font-extrabold text-white">💳 Your card</h2>
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-green">
             Your tab:{' '}
             <span className="font-bold text-club">{tokenBalance} tokens</span>
           </p>
@@ -102,14 +102,14 @@ export default function StoreClient({
                 className="flex flex-col rounded-xl border border-zinc-800 bg-zinc-900/60 p-6"
               >
                 <h3 className="text-lg font-bold text-white">{product.name}</h3>
-                <p className="mt-1 flex-1 text-sm text-zinc-400">
+                <p className="mt-1 flex-1 text-sm text-green">
                   {product.description}
                 </p>
                 <p className="mt-4">
                   <span className="text-3xl font-extrabold text-white">
                     {money(price)}
                   </span>
-                  <span className="ml-1 text-sm text-zinc-400">/mo</span>
+                  <span className="ml-1 text-sm text-green">/mo</span>
                 </p>
                 <Button
                   variant="slim"
@@ -134,7 +134,7 @@ export default function StoreClient({
       {tokenPacks.length > 0 && (
         <section>
           <h2 className="text-xl font-extrabold text-white">🪙 Tokens</h2>
-          <p className="mt-1 text-sm text-zinc-400">
+          <p className="mt-1 text-sm text-green">
             Fuel the Dance Floor, events, and gifts. Never messaging.
           </p>
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -173,7 +173,7 @@ export default function StoreClient({
             </p>
             <button
               onClick={() => setSelectedPrice(null)}
-              className="text-sm text-zinc-400 hover:text-white"
+              className="text-sm text-green hover:text-white"
             >
               Cancel
             </button>

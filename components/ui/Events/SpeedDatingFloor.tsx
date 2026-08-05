@@ -288,7 +288,7 @@ export default function SpeedDatingFloor({
       <div className="mx-auto max-w-xl rounded-xl border border-club/60 bg-zinc-900/80 p-10 text-center">
         <div className="text-5xl">🏆</div>
         <h2 className="mt-4 text-3xl font-extrabold">You matched!</h2>
-        <p className="mt-3 text-zinc-300">
+        <p className="mt-3 text-green">
           {result.matchedName
             ? `You and ${result.matchedName} picked each other first.`
             : 'You two picked each other first.'}{' '}
@@ -335,7 +335,7 @@ export default function SpeedDatingFloor({
               ? 'Who would you pick again?'
               : `Session ${slotIndex + 1} of ${maxSlot + 1}`}
         </h2>
-        <p className="mt-1 text-zinc-400">
+        <p className="mt-1 text-green">
           {!joined
             ? `Entry is ${event.tokenCost} tokens (reserved — back if no match). Platinum floor.`
             : selectionPhase
@@ -369,7 +369,7 @@ export default function SpeedDatingFloor({
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <span className="font-bold text-zinc-500">
+                <span className="font-bold text-green">
                   {(partner.profile?.display_name || '?').charAt(0)}
                 </span>
               )}
@@ -390,7 +390,7 @@ export default function SpeedDatingFloor({
           </div>
           <div className="h-48 space-y-2 overflow-y-auto p-4">
             {messages.length === 0 && (
-              <p className="pt-14 text-center text-zinc-500">
+              <p className="pt-14 text-center text-green">
                 Ninety seconds — make it memorable.
               </p>
             )}
@@ -405,7 +405,7 @@ export default function SpeedDatingFloor({
                   className={`max-w-[75%] rounded-2xl px-3 py-1.5 text-sm ${
                     m.sender_id === myUserId
                       ? 'bg-club text-white'
-                      : 'bg-zinc-800 text-zinc-100'
+                      : 'bg-zinc-800 text-green'
                   }`}
                 >
                   {m.body}
@@ -435,7 +435,7 @@ export default function SpeedDatingFloor({
       {/* Selection phase */}
       {joined && selectionPhase && (
         <div className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-green">
             Pick your top choice and one alternate from your group. Mutual top
             picks get the certificate.
           </p>
@@ -457,7 +457,7 @@ export default function SpeedDatingFloor({
                     className={`rounded-md px-3 py-1 text-xs font-bold ${
                       topPick === p.userId
                         ? 'bg-club text-white'
-                        : 'border border-zinc-700 text-zinc-300'
+                        : 'border border-zinc-700 text-green'
                     }`}
                   >
                     Top pick
@@ -470,7 +470,7 @@ export default function SpeedDatingFloor({
                     className={`rounded-md px-3 py-1 text-xs font-bold ${
                       altPick === p.userId
                         ? 'bg-zinc-200 text-black'
-                        : 'border border-zinc-700 text-zinc-300'
+                        : 'border border-zinc-700 text-green'
                     }`}
                   >
                     Alternate
@@ -479,7 +479,7 @@ export default function SpeedDatingFloor({
               </div>
             ))}
           </div>
-          <p className="mt-4 text-xs text-zinc-500">
+          <p className="mt-4 text-xs text-green">
             Results land when the room closes — we&apos;ll announce the matches.
           </p>
         </div>
@@ -487,7 +487,7 @@ export default function SpeedDatingFloor({
 
       {/* Waiting for the room */}
       {joined && !selectionPhase && !partner && eventStatus === 'running' && (
-        <p className="mt-10 text-center text-zinc-500">
+        <p className="mt-10 text-center text-green">
           Finding your next seat…
         </p>
       )}
