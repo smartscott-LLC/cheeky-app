@@ -14,7 +14,7 @@ const floors = [
     color: 'bg-zinc-300',
     image: '/floors/silver.png',
     gradient: 'from-club-indigo via-club to-club-cotton',
-    perks: ['Verified with ID', '20 tokens on entry', 'Hourly Dance Floor']
+    perks: ['Verified with ID', '20 tokens on entry', 'Hourly Dance Floor', 'Cheeky Chats + Spark List']
   },
   {
     name: 'Gold',
@@ -22,7 +22,7 @@ const floors = [
     color: 'bg-gold',
     image: '/floors/gold.png',
     gradient: 'from-gold-graphite via-gold to-gold-royal',
-    perks: ['Themed nights', 'More events', 'Message down to Silver']
+    perks: ['Theme nights', 'More events', 'Message your floor & below']
   },
   {
     name: 'Platinum',
@@ -30,7 +30,7 @@ const floors = [
     color: 'bg-platinum-navy',
     image: '/floors/platinum.png',
     gradient: 'from-platinum-navy via-platinum to-platinum-alice',
-    perks: ['Speed Dating', 'Upper floors', 'Message everyone below']
+    perks: ['Speed Dating', 'Upper floors', 'Message your floor & everyone below']
   },
   {
     name: 'Diamond',
@@ -171,8 +171,8 @@ export default async function LandingPage() {
             The floors
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-lg text-zinc-400">
-            The only price of admission is being a real person. Money buys
-            floors, not entry.
+            The only price of admission is being a real person. Every person
+            with an ID is a VIP.
           </p>
           <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {floors.map((floor) => (

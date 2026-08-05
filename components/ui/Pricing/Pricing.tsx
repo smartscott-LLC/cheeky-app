@@ -90,8 +90,8 @@ export default function Pricing({
               Get your card
             </h1>
             <p className="max-w-2xl m-auto mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl">
-              Everyone gets in with a verified ID — free. Then climb the floors
-              for events, access, and the rooftop. No gouging, ever.
+              Everyone gets in with a verified ID — free. Expand your options
+              by obtaining membership to the higher floors.
             </p>
             <div className="relative self-center mt-6 bg-zinc-900 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
               {intervals.includes('month') && (
