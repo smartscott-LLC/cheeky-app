@@ -22,8 +22,13 @@ config({ path: 'env.new' });
 
 const RUN_LIVE = process.env.RUN_LIVE_TESTS === '1';
 const URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// Accept both Supabase key namings (anon vs the newer publishable) — the
+// same fallback the app uses in utils/supabase/keys.ts.
+const SERVICE_KEY =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_SECRET_KEY;
+const ANON_KEY =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 const POOL_URL = process.env.POSTGRES_URL; // pgbouncer pooler, like production
 const N = parseInt(process.env.STRESS_N ?? '20', 10);
 
