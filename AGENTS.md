@@ -54,28 +54,39 @@ A dating app built like a nightclub. Three pillars:
   - Stripe is the source of truth for products/prices; the webhook syncs them into `products`/`prices` tables.
   - Checkout runs server-side (`utils/stripe/server.ts`); subscriptions gate floors via `subscriptions` + entitlements.
   - Stripe Identity is the candidate for verification (keeps the stack unified) — confirm before Phase 1.
-- **Tokens (when built):** integer microcurrency, atomic server-side ledger, RLS-protected; refunds for no-match events; never computed from client state.
+- **Tokens:** integer microcurrency, atomic server-side ledger, RLS-protected; refunds for no-match events; never computed from client state.
+- **Testing:** `node:test` suite in `tests/` (zero deps). `pnpm test` runs the safe tests in CI; live suites (`webhook`, `token-engine`, `ai-probe`) run behind `RUN_LIVE_TESTS=1` and hit production with throwaway members that clean up after themselves. The token-engine burst (`STRESS_N=1000`) is the pre-launch check for anything touching events/tokens. See `tests/README.md`.
 - **Money display:** format with `Intl.NumberFormat` (already the pattern in `Pricing.tsx`); store amounts as integers (cents).
 
 ## Repo map
 
 ```
-app/            Next.js routes: / (landing), /signin, /account, /api
-components/     ui primitives + feature components (icons/, ui/)
-utils/          supabase clients + queries, stripe client/server, auth helpers
-supabase/       local config + migrations
-scripts/        dev utilities (migrate-hosted, backfill-profiles)
+app/            Next.js routes: / (landing), /signin, /account, /club, /floors, /events,
+                /crew, /gifts, /coat-check, /swag, /browse, /messages, /verify, /owner, /api
+components/     ui primitives (ui/) + feature components (Agent, Club, Events, Gifts,
+                Messages, Audio, Swag, Navbar, Footer) — see docs/COMPONENT-LIBRARY.md
+utils/          supabase clients + queries, stripe client/server, auth helpers, floors map,
+                characters, events config, swag, rate limits, token-amount
+supabase/       migrations (48) — apply to hosted with scripts/migrate-hosted.mjs
+scripts/        dev utilities (migrate-hosted, backfill-*, check-*, smoke-*)
 styles/         global css (main.css) + floor palettes (styles/palettes/*.scss)
-docs/           PRD-foundation.md + Governance/ policies + future feature PRDs
+docs/           PRD-foundation.md + Governance/ policies + COMPONENT-LIBRARY.md +
+                ENVIRONMENT.md + floor-map.md + future feature PRDs
 fixtures/       Stripe fixture JSON for bootstrapping products/prices
+persona_assets/ founder's source art, style guides, personas, audio (originals)
+tests/          node:test suite — safe (pnpm test) + live (RUN_LIVE_TESTS=1)
+public/         served assets: brand/, personas/, audio/, video/, icons/, .well-known/
 schema.sql      reference schema (mirrors migrations)
 types_db.ts     generated Supabase types — commit after regenerating
+CHANGELOG.md    milestone changelog — keep [Unreleased] current
+CONTRIBUTING.md the discipline doc: standing rule, migrations, testing, secrets
 ```
 
 ## Validation checklist (before any PR)
 
 - [ ] `pnpm lint` passes
+- [ ] `pnpm test` passes (safe suite; run the live suites if the change touches events/tokens/webhooks)
 - [ ] `pnpm build` passes
 - [ ] Affected user flow manually verified (signup, verification, checkout, event)
 - [ ] No template-branding leftovers (grep for "ACME", "Subscription Starter", "vercel.com" in app code)
-- [ ] PRD/doc updated if behavior changed
+- [ ] PRD/doc updated + `CHANGELOG.md` entry if behavior changed

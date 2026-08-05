@@ -5,7 +5,6 @@ import { Toaster } from '@/components/ui/Toasts/toaster';
 import Concierge from '@/components/ui/Agent/Concierge';
 import ClubAudio from '@/components/ui/Audio/ClubAudio';
 import ServiceWorkerRegister from '@/components/ui/PWA/ServiceWorkerRegister';
-import PostHogProvider from '@/components/PostHogProvider';
 import { PropsWithChildren, Suspense } from 'react';
 import { getURL } from '@/utils/helpers';
 import { Great_Vibes } from 'next/font/google';
@@ -55,7 +54,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         <Suspense>
           <ClubAudio />
         </Suspense>
-        <PostHogProvider />
       </body>
     </html>
   );

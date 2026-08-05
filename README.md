@@ -76,12 +76,14 @@ report/block from any chat, honeypots for bots.
 
 ## Develop locally
 
+> **There is no local database.** Everything targets the hosted Supabase project — migrations
+> are applied to hosted directly, then types regenerated. Running the app locally only needs
+> the keys in `.env.local`.
+
 ```bash
 pnpm install
 cp .env.local.example .env.local   # fill in your keys (see below)
-pnpm supabase:start                # local Postgres + auth (Docker)
-pnpm supabase:reset                # apply migrations + seed
-pnpm dev                           # http://localhost:3000
+pnpm dev                            # http://localhost:3000
 ```
 
 For local Stripe webhooks (needed for product/subscription sync):
@@ -108,8 +110,10 @@ The full set (see `.env.local.example` for the core local-dev values):
 | `POSTGRES_URL` (+ `_NON_POOLING`, `_PRISMA_URL`, `_DATABASE`, `_PASSWORD`, `_HOST`) | Hosted Postgres |
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` · `STRIPE_SECRET_KEY` · `STRIPE_WEBHOOK_SECRET` | Stripe |
 | `DEEPSEEK_API_KEY` | `/api/agent` — the crew's chat engine |
-| `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` · `NEXT_PUBLIC_POSTHOG_HOST` | PostHog analytics |
-| `SENTRY_AUTH_TOKEN` · `SENTRY_API_KEY` | Sentry source-map uploads |
+| `OPENROUTER_API_KEY` | DateSafe — the image-review watchdog (vision model) |
+| `NEXT_PUBLIC_POSTHOG_KEY` | PostHog analytics (canonical; legacy alias `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`; `_HOST` defaults to US cloud) |
+| `RESEND_API_KEY` · `REGISTERED_DOMAIN` | Transactional mail — welcome, apology, ban notices |
+| `SENTRY_AUTH_TOKEN` | Sentry source-map uploads |
 | `VERCEL_OIDC_TOKEN` | Created by `vercel link` for CI builds |
 
 ## Scripts
@@ -117,9 +121,10 @@ The full set (see `.env.local.example` for the core local-dev values):
 | Command | What it does |
 |---|---|
 | `pnpm dev` / `pnpm build` / `pnpm lint` | Dev server (turbo) / production build / lint |
+| `pnpm test` | Safe test suite (`node:test`, zero deps). Live suites with `RUN_LIVE_TESTS=1` — see `tests/README.md` |
 | `pnpm prettier-fix` | Format everything (Prettier is enforced) |
 | `pnpm stripe:listen` / `pnpm stripe:fixtures` | Local webhooks / bootstrap products |
-| `pnpm supabase:start` / `stop` / `reset` | Local Postgres + auth lifecycle |
+| `pnpm supabase:start` / `stop` / `reset` | Local Postgres + auth lifecycle (optional — the default workflow is hosted) |
 | `pnpm supabase:generate-types` | Regenerate `types_db.ts` after schema changes — commit the diff |
 | `pnpm supabase:generate-migration` | Diff local schema into `supabase/migrations/` |
 | `pnpm supabase:push` / `pull` | Schema sync against the linked project |
@@ -128,10 +133,10 @@ The full set (see `.env.local.example` for the core local-dev values):
 
 ## Database & migrations
 
-- Schema changes go through `supabase/migrations/` (41 and counting).
-- Apply migrations **both** hosted (`node scripts/migrate-hosted.mjs <name>`)
-  **and** local (`pnpm supabase:reset`), then regenerate types and commit the
-  diff.
+- Schema changes go through `supabase/migrations/` (48 and counting).
+- **Apply to hosted, then regenerate types** — that's the whole workflow:
+  `node scripts/migrate-hosted.mjs <name>` then `pnpm supabase:generate-types`, and commit the
+  diff. (Local Supabase is optional; it is not the default path.)
 - **RLS is mandatory** on every table. Service role for server writes; the
   client only ever uses the anon key.
 - Money is stored as integers (cents); token amounts are server-side ledger
@@ -152,13 +157,16 @@ app/            Next.js routes (landing, signin, account, club, floors, events,
                 chat, crew, gifts, coat-check, swag, browse, messages, verify,
                 owner, api/)
 components/     ui primitives (ui/) + feature components (Agent, Club, Events,
-                Gifts, Messages, Audio, Swag, Navbar, Footer)
+                Gifts, Messages, Audio, Swag, Navbar, Footer) — see
+                docs/COMPONENT-LIBRARY.md
 utils/          supabase clients + queries, stripe, auth helpers, floors map,
-                characters map, events config, swag, helpers
-supabase/       local config + migrations (41)
+                characters, events config, swag, rate limits, token-amount
+supabase/       migrations (48) — apply to hosted with scripts/migrate-hosted.mjs
 scripts/        dev utilities (migrate-hosted, backfill-*, check-*, test-*)
 styles/         global css (main.css) + floor palettes (styles/palettes/*.scss)
-docs/           PRD-foundation.md + PRDs + Governance/ + floor-map.md
+docs/           PRD-foundation.md + PRDs + Governance/ + COMPONENT-LIBRARY.md +
+                ENVIRONMENT.md + floor-map.md
+tests/          node:test suite — safe (pnpm test) + live (RUN_LIVE_TESTS=1)
 fixtures/       Stripe fixture JSON for bootstrapping products/prices
 persona_assets/ founder's source art, style guides, personas, audio (originals)
 public/         served assets: brand/ (floor art, entrance), personas/ (crew
@@ -181,11 +189,13 @@ types_db.ts     generated Supabase types — commit after regenerating
 Read [`AGENTS.md`](AGENTS.md) — the working guidelines — and
 [`docs/PRD-foundation.md`](docs/PRD-foundation.md) — the product spec.
 [`docs/floor-map.md`](docs/floor-map.md) is the source of truth for what
-belongs on every floor.
+belongs on every floor. [`CONTRIBUTING.md`](CONTRIBUTING.md) is the process
+discipline — the standing rule, migrations, testing, secrets.
 
 ## Validation checklist
 
 - [ ] `pnpm lint` passes
+- [ ] `pnpm test` passes (safe suite; run live suites if the change touches events/tokens/webhooks)
 - [ ] `pnpm build` passes
 - [ ] Affected user flow manually verified (signup, verification, checkout, event)
 - [ ] No template-branding leftovers (grep for "ACME", "Subscription Starter", "vercel.com")

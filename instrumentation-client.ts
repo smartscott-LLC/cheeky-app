@@ -4,10 +4,17 @@
 import posthog from 'posthog-js';
 import * as Sentry from '@sentry/nextjs';
 
-const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
-const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST;
+// NEXT_PUBLIC_POSTHOG_KEY is the canonical name (what the founder's env.new
+// and Vercel use); NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN is accepted as the
+// legacy alias from the original wiring. The host defaults to PostHog US
+// cloud — the one setting that was missing and silently stopped init.
+const posthogKey =
+  process.env.NEXT_PUBLIC_POSTHOG_KEY ??
+  process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
+const posthogHost =
+  process.env.NEXT_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com';
 
-if (posthogKey && posthogHost) {
+if (posthogKey) {
   posthog.init(posthogKey, {
     api_host: posthogHost,
     defaults: '2026-01-30',
@@ -15,11 +22,8 @@ if (posthogKey && posthogHost) {
     debug: process.env.NODE_ENV === 'development'
   });
 } else if (process.env.NODE_ENV === 'development') {
-  const missingVariable = !posthogKey
-    ? 'NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN'
-    : 'NEXT_PUBLIC_POSTHOG_HOST';
   throw new Error(
-    `${missingVariable} variable required by PostHog is missing or un-configured, this causes events to be silently missed. This error stops appearing once ${missingVariable} is configured`
+    'NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN (or NEXT_PUBLIC_POSTHOG_KEY) is missing — PostHog events would be silently dropped.'
   );
 }
 
