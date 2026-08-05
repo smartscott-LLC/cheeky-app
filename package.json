@@ -30,7 +30,7 @@
     "@stripe/stripe-js": "9.12.1",
     "@supabase/ssr": "^0.1.0",
     "@supabase/supabase-js": "2.45.4",
-    "ai": "^7.0.47",
+    "ai": "^7.0.48",
     "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
