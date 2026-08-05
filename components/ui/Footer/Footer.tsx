@@ -128,6 +128,14 @@ export default function Footer() {
                 Law Enforcement
               </Link>
             </li>
+            <li className="py-3 md:py-0 md:pb-4">
+              <Link
+                href="/sitemap"
+                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+              >
+                Sitemap
+              </Link>
+            </li>
           </ul>
         </div>
         <div className="col-span-1 lg:col-span-2">

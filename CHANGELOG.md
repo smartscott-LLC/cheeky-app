@@ -18,6 +18,8 @@ points — every push to `main` is production.
   junk removed; governance PDFs committed under `docs/Governance/`. Repo maps updated.
 - **Formatting pass**: Prettier run across the whole repo (`.mmd` ignored — no parser), lint +
   test + build re-verified green after.
+- **SEO**: `/sitemap` (the HTML map of the club, footer-linked), `/sitemap.xml` for Search
+  Console, and `/robots.txt` (members-only rooms + the Den disallowed).
 
 ## [v1.1-docs-locked] — 2026-08-05
 
