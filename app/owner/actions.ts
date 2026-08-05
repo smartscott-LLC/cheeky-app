@@ -3,6 +3,7 @@
 import { createClient } from '@/utils/supabase/server';
 import { supabaseAdmin } from '@/utils/supabase/admin';
 import { generateSwagCode, type SwagBenefitType } from '@/utils/swag';
+import { sendClubMail } from '@/utils/email';
 
 /**
  * The Owner's Back Door: authorized if the signed-in user IS the owner
@@ -341,7 +342,20 @@ export async function ownerSetBan(input: {
             ).toISOString()
           : null
     });
-    return error ? { error: error.message } : {};
+    if (error) return { error: error.message };
+    // Best-effort notice — the door will refuse this email.
+    await sendClubMail({
+      to: email,
+      subject: 'Club Cheeky — account notice',
+      text: `This account has been closed per club policy${
+        input.years && input.years > 0 ? ` for ${input.years} year(s)` : ''
+      }.
+
+The decision can be appealed through the support desk at helpdesk@smartscott.online.
+
+— The club`
+    });
+    return {};
   }
   const { error } = await supabaseAdmin
     .from('banned_accounts')

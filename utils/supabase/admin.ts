@@ -5,6 +5,7 @@ import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 import type { Database, Tables, TablesInsert } from 'types_db';
 import { supabaseUrl, supabaseServiceKey } from '@/utils/supabase/keys';
+import { sendClubMail } from '@/utils/email';
 
 type Product = Tables<'products'>;
 type Price = Tables<'prices'>;
@@ -131,6 +132,30 @@ const applyVerificationResult = async (userId: string, sessionId: string) => {
       p_user: userId,
       p_slug: 'verified'
     });
+
+    // Welcome to the club — best-effort, mail must never fail the webhook.
+    try {
+      const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(
+        userId
+      );
+      const email = authUser?.user?.email;
+      if (email && process.env.RESEND_API_KEY) {
+        await sendClubMail({
+          to: email,
+          subject: 'Welcome to Club Cheeky',
+          text: `You're through the door. Your Silver card is live, and 20 tokens are already on your tab for the Dance Floor.
+
+Head to the club when you're ready — the DJ spins every hour, and the crew is around to say hi.
+
+— The club`
+        });
+      }
+    } catch (mailErr) {
+      console.error(
+        'Welcome mail failed:',
+        mailErr instanceof Error ? mailErr.message : mailErr
+      );
+    }
   }
 
   const { error: profileError } = await supabaseAdmin

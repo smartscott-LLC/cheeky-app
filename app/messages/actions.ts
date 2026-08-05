@@ -3,6 +3,7 @@
 import { createClient } from '@/utils/supabase/server';
 import { supabaseAdmin } from '@/utils/supabase/admin';
 import { runDateSafe } from '@/utils/datesafe';
+import { sendClubMail } from '@/utils/email';
 import { Database } from '@/types_db';
 import { redirect } from 'next/navigation';
 
@@ -67,6 +68,29 @@ async function runDateSafeForReport(
     updates.held_at = null;
     updates.status = 'reviewed';
     updates.outcome = 'no_action';
+
+    // The apology email — best-effort, never fail the review for mail.
+    try {
+      const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(
+        reportedId
+      );
+      if (authUser?.user?.email && process.env.RESEND_API_KEY) {
+        await sendClubMail({
+          to: authUser.user.email,
+          subject: 'An apology from the club',
+          text: `Something came to the desk about your profile, and after review it was cleared. The block is lifted — nothing to worry about.
+
+Sorry for the interruption. The safety desk looks at everything, and this one came back in your favor.
+
+— The club`
+        });
+      }
+    } catch (mailErr) {
+      console.error(
+        'Apology mail failed:',
+        mailErr instanceof Error ? mailErr.message : mailErr
+      );
+    }
   } else if (verdict.verdict === 'violation') {
     // Confirmed violation — the hold stays; the ban ladder is human-led.
     updates.status = 'reviewed';
