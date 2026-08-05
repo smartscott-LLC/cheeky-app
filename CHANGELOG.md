@@ -20,6 +20,9 @@ points — every push to `main` is production.
   test + build re-verified green after.
 - **SEO**: `/sitemap` (the HTML map of the club, footer-linked), `/sitemap.xml` for Search
   Console, and `/robots.txt` (members-only rooms + the Den disallowed).
+- **Perf (LCP)**: the served floor/entrance art converted PNG → WebP — **20MB → 1.75MB
+  (91% smaller)** with `sharp`; imports switched; unused diagram/demo/deploy assets and
+  stray `cast.png` grids removed.
 
 ## [v1.1-docs-locked] — 2026-08-05
 

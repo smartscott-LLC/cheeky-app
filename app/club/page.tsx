@@ -113,7 +113,7 @@ export default async function ClubPage() {
   return (
     <div className="bg-black">
       {/* The lobby — the base room, filled in with floor 1's rooms. */}
-      <FloorLayout background="/brand/club-interior.png" spots={SPOTS} />
+      <FloorLayout background="/brand/club-interior.webp" spots={SPOTS} />
 
       {/* Where the floors lead */}
       <div className="mx-auto max-w-6xl px-6 py-10 text-center">

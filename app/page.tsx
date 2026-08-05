@@ -12,7 +12,7 @@ const floors = [
     name: 'Silver',
     price: 'Free',
     color: 'bg-zinc-300',
-    image: '/floors/silver.png',
+    image: '/floors/silver.webp',
     gradient: 'from-club-indigo via-club to-club-cotton',
     perks: [
       'Verified with ID',
@@ -25,7 +25,7 @@ const floors = [
     name: 'Gold',
     price: '$9.99/mo',
     color: 'bg-gold',
-    image: '/floors/gold.png',
+    image: '/floors/gold.webp',
     gradient: 'from-gold-graphite via-gold to-gold-royal',
     perks: ['Theme nights', 'More events', 'Message your floor & below']
   },
@@ -33,7 +33,7 @@ const floors = [
     name: 'Platinum',
     price: '$19.99/mo',
     color: 'bg-platinum-navy',
-    image: '/floors/platinum.png',
+    image: '/floors/platinum.webp',
     gradient: 'from-platinum-navy via-platinum to-platinum-alice',
     perks: [
       'Speed Dating',
@@ -45,7 +45,7 @@ const floors = [
     name: 'Diamond',
     price: '$29.99/mo',
     color: 'bg-diamond',
-    image: '/floors/diamond.png',
+    image: '/floors/diamond.webp',
     gradient: 'from-diamond-raspberry via-diamond to-diamond-mist',
     perks: ['The Penthouse', 'Rooftop pool', 'Whole-building access']
   }
@@ -86,7 +86,7 @@ export default async function LandingPage() {
             <div className="overflow-hidden rounded-2xl border-2 border-gold shadow-[0_0_45px_rgba(255,215,0,0.25),0_0_90px_rgba(255,45,155,0.18)]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/brand/entrance.png"
+                src="/brand/entrance.webp"
                 alt="The entrance to Club Cheeky"
                 className="h-72 w-56 object-cover sm:h-96 sm:w-72"
               />

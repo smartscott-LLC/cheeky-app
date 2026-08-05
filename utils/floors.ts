@@ -119,7 +119,7 @@ export const FLOORS: FloorMeta[] = [
     slug: 'silver',
     name: 'Silver',
     rank: 0,
-    art: '/brand/floor-free.png',
+    art: '/brand/floor-free.webp',
     tagline:
       'The base of the club — free, and it stays fun. The Dance Floor spins every hour.',
     accent: 'text-silver border-silver/50',
@@ -145,7 +145,7 @@ export const FLOORS: FloorMeta[] = [
     slug: 'gold',
     name: 'Gold',
     rank: 1,
-    art: '/brand/floor-gold.png',
+    art: '/brand/floor-gold.webp',
     tagline: 'Themed nights, deeper crowds, more to do.',
     accent: 'text-gold border-gold/50',
     rooms: [
@@ -170,7 +170,7 @@ export const FLOORS: FloorMeta[] = [
     slug: 'platinum',
     name: 'Platinum',
     rank: 2,
-    art: '/brand/floor-platinum.png',
+    art: '/brand/floor-platinum.webp',
     tagline: 'Speed Dating at its finest, plus the upper rooms.',
     accent: 'text-platinum border-platinum/50',
     rooms: [
@@ -195,7 +195,7 @@ export const FLOORS: FloorMeta[] = [
     slug: 'diamond',
     name: 'Diamond',
     rank: 3,
-    art: '/brand/floor-diamond.png',
+    art: '/brand/floor-diamond.webp',
     tagline: 'The penthouse. The Rooftop, the whole building.',
     accent: 'text-diamond border-diamond/50',
     rooms: [

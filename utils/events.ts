@@ -21,7 +21,7 @@ export const KIND_META: Record<string, KindMeta> = {
     emoji: '🪩',
     tagline: 'Hourly. 2 minutes to pick. One song to make it count.',
     accent: 'text-club border-club/40',
-    image: '/brand/floor-free.png',
+    image: '/brand/floor-free.webp',
     gradient: 'from-club-indigo via-club to-club-cotton',
     cta: 'bg-club text-white hover:bg-club-cotton'
   },
@@ -32,7 +32,7 @@ export const KIND_META: Record<string, KindMeta> = {
     emoji: '🎭',
     tagline: 'The floor, dressed up. A pricier ticket, a deeper crowd.',
     accent: 'text-gold border-gold/40',
-    image: '/brand/floor-gold.png',
+    image: '/brand/floor-gold.webp',
     gradient: 'from-gold-graphite via-gold to-gold-royal',
     cta: 'bg-gold text-black hover:bg-gold-royal'
   },
@@ -43,7 +43,7 @@ export const KIND_META: Record<string, KindMeta> = {
     emoji: '💘',
     tagline: 'Rotations. Ranked picks. A certificate for the ones that click.',
     accent: 'text-platinum border-platinum/40',
-    image: '/brand/floor-platinum.png',
+    image: '/brand/floor-platinum.webp',
     gradient: 'from-platinum-navy via-platinum to-platinum-alice',
     cta: 'bg-platinum text-platinum-navy hover:bg-platinum-alice'
   },
@@ -54,7 +54,7 @@ export const KIND_META: Record<string, KindMeta> = {
     emoji: '🌇',
     tagline: 'The penthouse pool. Closer, higher, fewer.',
     accent: 'text-diamond border-diamond/40',
-    image: '/brand/floor-diamond.png',
+    image: '/brand/floor-diamond.webp',
     gradient: 'from-diamond-raspberry via-diamond to-diamond-mist',
     cta: 'bg-diamond text-white hover:bg-diamond-mist hover:text-diamond-navy'
   }
