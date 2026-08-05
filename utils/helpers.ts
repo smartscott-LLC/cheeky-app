@@ -15,6 +15,14 @@ export const getURL = (path: string = '') => {
         : // If neither is set, default to localhost for local development.
           'http://localhost:3000/';
 
+  // Production must never silently ship localhost links (verification
+  // emails redirect there). Fail loud in the logs instead.
+  if (url === 'http://localhost:3000/' && process.env.NODE_ENV === 'production') {
+    console.warn(
+      '[getURL] NEXT_PUBLIC_SITE_URL is missing in production — emails and redirects are falling back to localhost.'
+    );
+  }
+
   // Trim the URL and remove trailing slash if exists.
   url = url.replace(/\/+$/, '');
   // Make sure to include `https://` when not localhost.
