@@ -1,4 +1,5 @@
 const { fontFamily } = require('tailwindcss/defaultTheme');
+const palette = require('./styles/palette-colors');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -24,7 +25,23 @@ module.exports = {
       },
       // Floor palettes — source of truth: styles/palettes/*.scss, brand
       // values from the Club Cheeky UI Style Guide (docs/UI-STYLE-GUIDE.txt).
+      // Full 50-950 scales: styles/tailwind_color_scales.md -> palette-colors.js.
       colors: {
+        // The club neon kit — full scales + legacy sub-tokens kept so existing
+        // classes (text-gold, bg-cyan, from-gold-graphite, ...) keep resolving.
+        gold: {
+          ...palette.gold,
+          DEFAULT: '#FFD700', // primary gold (style guide)
+          royal: '#FFE44D',
+          graphite: '#434041',
+          mocha: '#3E2E33'
+        },
+        cyan: {
+          ...palette.cyan,
+          DEFAULT: '#00F5FF' // neon cyan (style guide)
+        },
+        'bubblegum-fizz': palette['bubblegum-fizz'],
+        'blue-violet': palette['blue-violet'],
         green: {
           DEFAULT: '#00FF40' // electric green — the high-contrast text accent (club neon)
         },
@@ -35,18 +52,9 @@ module.exports = {
           indigo: '#6C089B',
           canary: '#F1F15E'
         },
-        gold: {
-          DEFAULT: '#FFD700', // primary gold (style guide)
-          royal: '#FFE44D',
-          graphite: '#434041',
-          mocha: '#3E2E33'
-        },
         purple: {
           DEFAULT: '#2D0A4E', // deep purple (style guide)
           neon: '#9B59B6'
-        },
-        cyan: {
-          DEFAULT: '#00F5FF' // neon cyan (style guide)
         },
         silver: {
           DEFAULT: '#C0C0C0' // chrome silver (style guide)
