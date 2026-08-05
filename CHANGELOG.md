@@ -7,7 +7,11 @@ points — every push to `main` is production.
 
 ## [Unreleased]
 
-(Add entries here as work lands — they roll into the next release heading.)
+### Changed
+- **One env, period**: every script and live test now reads `env.new` (the master vault)
+  instead of `.env.local` — the stale hybrid from the pre-wipe era was the source of the
+  PostHog-key and pooler-ref mixups. `.env.local` is now a generated copy refreshed by
+  `node scripts/sync-env.mjs`; never hand-edit it.
 
 ## [v1.1-docs-locked] — 2026-08-05
 

@@ -12,7 +12,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { config } from 'dotenv';
 
-config({ path: '.env.local' });
+config({ path: 'env.new' });
 
 const RUN_LIVE = process.env.RUN_LIVE_TESTS === '1';
 const KEY = process.env.DEEPSEEK_API_KEY;

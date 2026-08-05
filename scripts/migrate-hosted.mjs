@@ -10,7 +10,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import postgres from 'postgres';
 
-config({ path: '.env.local' });
+config({ path: 'env.new' });
 
 const url = process.env.POSTGRES_URL_NON_POOLING;
 if (!url) {

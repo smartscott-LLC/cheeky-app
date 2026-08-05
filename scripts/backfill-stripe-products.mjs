@@ -6,7 +6,7 @@ import { config } from 'dotenv';
 import postgres from 'postgres';
 import Stripe from 'stripe';
 
-config({ path: '.env.local' });
+config({ path: 'env.new' });
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const sql = postgres(process.env.POSTGRES_URL_NON_POOLING, {

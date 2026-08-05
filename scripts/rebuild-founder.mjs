@@ -8,7 +8,7 @@ import { config } from 'dotenv';
 import { randomBytes } from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
 
-config({ path: '.env.local' });
+config({ path: 'env.new' });
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY;

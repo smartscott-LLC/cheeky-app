@@ -99,7 +99,10 @@ keys. PostHog/Sentry are optional locally.
 
 ## Environment variables
 
-The full set (see `.env.local.example` for the core local-dev values):
+The full set (see `.env.local.example` for the core local-dev values).
+`env.new` is the master vault — scripts and live tests read it directly;
+`.env.local` (for `pnpm dev`) is generated from it with
+`node scripts/sync-env.mjs`.
 
 | Variable | Used for |
 |---|---|
@@ -129,6 +132,7 @@ The full set (see `.env.local.example` for the core local-dev values):
 | `pnpm supabase:generate-migration` | Diff local schema into `supabase/migrations/` |
 | `pnpm supabase:push` / `pull` | Schema sync against the linked project |
 | `node scripts/migrate-hosted.mjs <name>` | Apply one migration to the **hosted** database |
+| `node scripts/sync-env.mjs` | Refresh `.env.local` from `env.new` (the master vault) |
 | `node scripts/backfill-*.mjs` / `check-*.mjs` / `test-*.mjs` | Ops utilities (see `scripts/`) |
 
 ## Database & migrations

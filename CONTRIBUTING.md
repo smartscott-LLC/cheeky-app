@@ -78,13 +78,13 @@ See `tests/README.md` for the full matrix.
 
 ## Environment & secrets
 
-- `env.new` is the founder's key vault — **gitignored, never commit it**.
-- Secrets live in `.env.local` (local) and Vercel (production). Only public keys
-  (`NEXT_PUBLIC_*`) may appear in tracked files or CI.
+- **`env.new` is the master vault** — gitignored, never commit it. Every script and live test
+  reads it directly (`config({ path: 'env.new' })`), so there is exactly one source of truth.
+- `.env.local` exists only for `pnpm dev` locally (Next auto-loads it). It is a generated
+  copy: `node scripts/sync-env.mjs` refreshes it from `env.new`. Never hand-edit `.env.local`.
+- Only public keys (`NEXT_PUBLIC_*`) may appear in tracked files or CI.
 - The env reference is `docs/ENVIRONMENT.md`; `.env.local.example` is the scaffold for a fresh
   clone. If you add an env var, update both.
-- If a tool reads the wrong value, suspect the env first: `.env.local` has drifted before
-  (stale project refs, old keys). `env.new` is the source of truth.
 
 ## Branching, tagging, and safety valves
 

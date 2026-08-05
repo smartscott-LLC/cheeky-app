@@ -18,7 +18,7 @@ import { config } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import postgres from 'postgres';
 
-config({ path: '.env.local' });
+config({ path: 'env.new' });
 
 const RUN_LIVE = process.env.RUN_LIVE_TESTS === '1';
 const URL = process.env.NEXT_PUBLIC_SUPABASE_URL;

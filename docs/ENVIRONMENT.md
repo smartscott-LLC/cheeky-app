@@ -27,9 +27,6 @@ accepts both names, so whatever the dashboard hands out works.
 | `POSTGRES_URL_NON_POOLING` | Direct (5432) — `migrate-hosted`, `generate-types` |
 | `POSTGRES_HOST` | Hostname reference |
 
-> ⚠️ These have drifted before (stale project refs). `env.new` is the source of truth; a stale
-> `POSTGRES_URL` shows up as `tenant/user ... not found` in tests.
-
 ## Stripe
 
 | Variable | Public | Used for |
@@ -73,10 +70,18 @@ accepts both names, so whatever the dashboard hands out works.
 
 ## Where the values live
 
-- **`env.new`** — the founder's staging vault (gitignored). Always current; treat as the master.
-- **`.env.local`** — local dev + scripts (gitignored). Keep in sync with `env.new`.
-- **`.env.local.example`** — the tracked scaffold; update it when adding a variable.
+- **`env.new`** — THE master vault (gitignored). Every script and live test reads it directly
+  (`config({ path: 'env.new' })`). Edit here, never anywhere else.
+- **`.env.local`** — exists only because Next.js auto-loads it for `pnpm dev`/`pnpm build`
+  locally. It is a generated copy — `node scripts/sync-env.mjs` refreshes it from `env.new`.
+  **Never hand-edit `.env.local`**; if it looks stale, re-run sync-env.
+- **`.env.local.example`** — the tracked scaffold (blank values, comments); update it when
+  adding a variable.
 - **Vercel** — production. `NEXT_PUBLIC_*` vars are inlined at build; changing them requires a
-  redeploy. Secrets are runtime env on the serverless functions.
+  redeploy. Secrets are runtime env on the serverless functions. Keep it in sync with `env.new`.
 - **CI** — only public keys (`NEXT_PUBLIC_SITE_URL`, Supabase URL + anon + publishable). No
   secrets ever enter `.github/workflows/ci.yml`.
+
+> History: the original `.env.local` carried pre-wipe keys (old project refs, old PostHog
+> project) after the founder deleted every integration and started fresh with `env.new`. That
+> hybrid is exactly the drift this discipline kills — scripts read `env.new`, period.

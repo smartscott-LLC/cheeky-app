@@ -6,7 +6,7 @@ import { config } from 'dotenv';
 import { spawnSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 
-config({ path: '.env.local' });
+config({ path: 'env.new' });
 
 const url = process.env.POSTGRES_URL_NON_POOLING;
 if (!url) {
