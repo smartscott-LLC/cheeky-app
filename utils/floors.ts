@@ -75,7 +75,7 @@ const CENTER = {
 // they're visible without scrolling. The floor map doc lists who is where.
 const DJ = {
   href: '/chat/dj',
-  image: '/personas/dj/crowd.png',
+  image: '/personas/dj/crowd.webp',
   emoji: '🎧',
   name: 'The DJ',
   sub: 'D34D_B34T on the decks',
@@ -85,7 +85,7 @@ const DJ = {
 };
 const ROXY = {
   href: '/chat/bartender',
-  image: '/personas/bartender/fullbody.png',
+  image: '/personas/bartender/fullbody.webp',
   emoji: '🍸',
   name: 'Roxy',
   sub: 'The mixologist',
@@ -95,7 +95,7 @@ const ROXY = {
 };
 const TRIXIE = {
   href: '/chat/trixie',
-  image: '/personas/trixie/fullbody.png',
+  image: '/personas/trixie/fullbody.webp',
   emoji: '🛎️',
   name: 'Trixie',
   sub: 'The waitress',
@@ -105,7 +105,7 @@ const TRIXIE = {
 };
 const VALENTINA = {
   href: '/chat/hostess',
-  image: '/personas/hostess/fullbody.png',
+  image: '/personas/hostess/fullbody.webp',
   emoji: '💎',
   name: 'Valentina',
   sub: 'The hostess',

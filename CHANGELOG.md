@@ -23,6 +23,9 @@ points — every push to `main` is production.
 - **Perf (LCP)**: the served floor/entrance art converted PNG → WebP — **20MB → 1.75MB
   (91% smaller)** with `sharp`; imports switched; unused diagram/demo/deploy assets and
   stray `cast.png` grids removed.
+- **Perf (round two)**: every persona converted too — **24.5MB → 1.5MB (94%)**, DB character
+  paths migrated to `.webp` (applied to hosted), static crew refs switched. The raster-in-SVG
+  twins purged; only the real vector logos (github/stripe/nextjs/supabase/vercel) remain.
 
 ## [v1.1-docs-locked] — 2026-08-05
 

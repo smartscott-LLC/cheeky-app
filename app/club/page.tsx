@@ -10,7 +10,7 @@ import FloorLayout, { FloorSpot } from '@/components/ui/Club/FloorLayout';
 const SPOTS: FloorSpot[] = [
   {
     href: '/chat/brutus',
-    image: '/personas/brutus/door.png',
+    image: '/personas/brutus/door.webp',
     emoji: '💪',
     name: 'Brutus',
     sub: 'The bouncer',
