@@ -6,6 +6,7 @@ import Stripe from 'stripe';
 import type { Database, Tables, TablesInsert } from 'types_db';
 import { supabaseUrl, supabaseServiceKey } from '@/utils/supabase/keys';
 import { sendClubMail } from '@/utils/email';
+import { parseTokenAmount } from '@/utils/token-amount';
 
 type Product = Tables<'products'>;
 type Price = Tables<'prices'>;
@@ -467,12 +468,11 @@ const creditTokenPurchase = async (session: Stripe.Checkout.Session) => {
     console.log('Token purchase: no line-item product to credit.');
     return;
   }
-  const match = /(\d+)\s*Tokens?/i.exec(product.name);
-  if (!match) {
+  const amount = parseTokenAmount(product.name);
+  if (amount === null) {
     console.log(`Token purchase: "${product.name}" is not a token product.`);
     return;
   }
-  const amount = parseInt(match[1], 10);
   const { data: customerRow } = await supabaseAdmin
     .from('customers')
     .select('id')

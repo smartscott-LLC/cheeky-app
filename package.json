@@ -5,6 +5,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "node --test --experimental-strip-types tests/*.test.mjs",
     "prettier-fix": "prettier --write .",
     "stripe:login": "stripe login",
     "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks",
