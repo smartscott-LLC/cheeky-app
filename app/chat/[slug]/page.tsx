@@ -48,7 +48,13 @@ export default async function ChatPage({
     });
     const tier = (tierData as string) ?? 'standard';
     const myRank =
-      tier === 'gold' ? 1 : tier === 'platinum' ? 2 : tier === 'diamond' ? 3 : 0;
+      tier === 'gold'
+        ? 1
+        : tier === 'platinum'
+          ? 2
+          : tier === 'diamond'
+            ? 3
+            : 0;
     if (myRank < rank) {
       const floor = characterFloorLabel(slug);
       return (

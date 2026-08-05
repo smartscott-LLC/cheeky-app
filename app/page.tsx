@@ -14,7 +14,12 @@ const floors = [
     color: 'bg-zinc-300',
     image: '/floors/silver.png',
     gradient: 'from-club-indigo via-club to-club-cotton',
-    perks: ['Verified with ID', '20 tokens on entry', 'Hourly Dance Floor', 'Cheeky Chats + Spark List']
+    perks: [
+      'Verified with ID',
+      '20 tokens on entry',
+      'Hourly Dance Floor',
+      'Cheeky Chats + Spark List'
+    ]
   },
   {
     name: 'Gold',
@@ -30,7 +35,11 @@ const floors = [
     color: 'bg-platinum-navy',
     image: '/floors/platinum.png',
     gradient: 'from-platinum-navy via-platinum to-platinum-alice',
-    perks: ['Speed Dating', 'Upper floors', 'Message your floor & everyone below']
+    perks: [
+      'Speed Dating',
+      'Upper floors',
+      'Message your floor & everyone below'
+    ]
   },
   {
     name: 'Diamond',
@@ -85,7 +94,8 @@ export default async function LandingPage() {
           </div>
 
           <p className="mt-12 text-2xl font-extrabold sm:text-3xl">
-            At Club Cheeky&apos;s, <span className="text-club">you are the VIP.</span>
+            At Club Cheeky&apos;s,{' '}
+            <span className="text-club">you are the VIP.</span>
           </p>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-zinc-400">
             Everyone with an ID starts their own VIP adventure. It&apos;s free
@@ -157,15 +167,18 @@ export default async function LandingPage() {
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-lg text-zinc-400">
             Four floors, four rooms, one hour — a Diamond plays the whole set.
-            Everyone&apos;s photo hits the grid. Pick the ones you like. When two
-            people pick each other — instant match, center floor, announced.
+            Everyone&apos;s photo hits the grid. Pick the ones you like. When
+            two people pick each other — instant match, center floor, announced.
             No match? Your tokens come back. Quietly.
           </p>
         </div>
       </section>
 
       {/* Floors */}
-      <section id="membership" className="scroll-mt-24 border-t border-zinc-900">
+      <section
+        id="membership"
+        className="scroll-mt-24 border-t border-zinc-900"
+      >
         <div className="mx-auto max-w-6xl px-6 py-20">
           <h2 className="text-center text-3xl font-extrabold sm:text-4xl">
             The floors
@@ -186,7 +199,9 @@ export default async function LandingPage() {
                   alt={`The ${floor.name} floor at Club Cheeky`}
                   className="aspect-video w-full object-cover"
                 />
-                <div className={`h-1.5 w-full bg-gradient-to-r ${floor.gradient}`} />
+                <div
+                  className={`h-1.5 w-full bg-gradient-to-r ${floor.gradient}`}
+                />
                 <div className="p-6">
                   <div className={`h-3 w-3 rounded-full ${floor.color}`} />
                   <h3 className="mt-4 text-xl font-bold">{floor.name}</h3>

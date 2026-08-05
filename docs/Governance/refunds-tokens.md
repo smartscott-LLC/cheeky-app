@@ -12,21 +12,21 @@ In-app currency for events (and later, gifts). Tokens are:
 
 ## Earning
 
-| How | Amount |
-|---|---|
-| Verification (one-time) | +20 |
-| Verified referral | +20 |
-| Giveaways | Variable (we love giveaways — tokens cost us nothing and drive the economy) |
+| How                     | Amount                                                                      |
+| ----------------------- | --------------------------------------------------------------------------- |
+| Verification (one-time) | +20                                                                         |
+| Verified referral       | +20                                                                         |
+| Giveaways               | Variable (we love giveaways — tokens cost us nothing and drive the economy) |
 
 ## Buying
 
-| Pack | Price | Rate |
-|---|---|---|
-| 100 tokens | $4.99 | 5¢/token |
+| Pack        | Price | Rate     |
+| ----------- | ----- | -------- |
+| 100 tokens  | $4.99 | 5¢/token |
 | 1000 tokens | $9.99 | 1¢/token |
 
 Ratios are deliberate: the small pack serves the first floor and Gold; the bulk
-pack serves Platinum/Diamond. Token *price* signals status; real money per
+pack serves Platinum/Diamond. Token _price_ signals status; real money per
 event stays fair. No pay-to-win feel — whales and $10 spenders look the same
 on the surface.
 

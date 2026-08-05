@@ -8,7 +8,8 @@ const ERRORS: Record<string, string> = {
   honeypot: 'Please complete the form to enter.',
   gender: 'The club needs to know who you are — gentleman or lady?',
   form: 'Check your email and password and try again.',
-  taken: 'That email is already in the club. Sign in instead — or use a different address.',
+  taken:
+    'That email is already in the club. Sign in instead — or use a different address.',
   signup: 'Something went wrong at the door. Please try again.'
 };
 
@@ -31,8 +32,8 @@ export default function CheckInForm({ error }: { error?: string | null }) {
       </div>
 
       <p className="mt-4 text-sm text-zinc-400">
-        One stop: your details and your consents right here, then the ID
-        check — then you&apos;re in. Everything at the door, nothing twice.
+        One stop: your details and your consents right here, then the ID check —
+        then you&apos;re in. Everything at the door, nothing twice.
       </p>
 
       {error && ERRORS[error] && (
@@ -159,8 +160,8 @@ export default function CheckInForm({ error }: { error?: string | null }) {
               className="mt-1 h-4 w-4 accent-club"
             />
             <span>
-              I understand the club is in-app — meeting up or moving outside
-              the app is my choice, on me. Read the{' '}
+              I understand the club is in-app — meeting up or moving outside the
+              app is my choice, on me. Read the{' '}
               <Link href="/best-practices" className="text-club underline">
                 Best Practices
               </Link>{' '}
@@ -177,8 +178,8 @@ export default function CheckInForm({ error }: { error?: string | null }) {
             <span>
               I consent to identity verification via Stripe Identity. My name,
               date of birth, and government ID number are checked against
-              government and third-party databases, and are never stored by
-              Club Cheeky. (Verification policy v1)
+              government and third-party databases, and are never stored by Club
+              Cheeky. (Verification policy v1)
             </span>
           </label>
         </div>
@@ -193,7 +194,10 @@ export default function CheckInForm({ error }: { error?: string | null }) {
 
       <p className="mt-4 text-center text-sm text-zinc-500">
         Already a member?{' '}
-        <Link href="/signin" className="font-semibold text-club hover:underline">
+        <Link
+          href="/signin"
+          className="font-semibold text-club hover:underline"
+        >
           Sign in
         </Link>
       </p>

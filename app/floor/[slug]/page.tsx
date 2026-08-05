@@ -84,8 +84,8 @@ export default async function FloorPage({
             The {floor.name} floor is behind the rope.
           </h1>
           <p className="mx-auto mt-3 max-w-md text-zinc-400">
-            Come see what&apos;s on these floors with a {floor.name} card
-            today — the view&apos;s worth it.
+            Come see what&apos;s on these floors with a {floor.name} card today
+            — the view&apos;s worth it.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
@@ -105,10 +105,14 @@ export default async function FloorPage({
       ) : (
         <>
           <div className="mx-auto max-w-6xl px-6 pt-6 text-center">
-            <p className={`text-sm font-bold uppercase tracking-[0.3em] ${floor.accent}`}>
+            <p
+              className={`text-sm font-bold uppercase tracking-[0.3em] ${floor.accent}`}
+            >
               The {floor.name} floor
             </p>
-            <p className="mx-auto mt-2 max-w-xl text-zinc-400">{floor.tagline}</p>
+            <p className="mx-auto mt-2 max-w-xl text-zinc-400">
+              {floor.tagline}
+            </p>
             <div className="mt-5">
               <AnnouncementBanner />
             </div>

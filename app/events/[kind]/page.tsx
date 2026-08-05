@@ -49,8 +49,8 @@ export default async function EventRoomPage({
             {meta.name} is behind the rope.
           </h1>
           <p className="mx-auto mt-3 max-w-md text-zinc-400">
-            Come see what&apos;s on this floor with a {meta.floor} card today
-            — the room&apos;s worth it.
+            Come see what&apos;s on this floor with a {meta.floor} card today —
+            the room&apos;s worth it.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link

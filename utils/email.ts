@@ -24,7 +24,10 @@ export async function sendClubMail(opts: {
     });
     return { ok: true };
   } catch (err) {
-    console.error('club mail failed:', err instanceof Error ? err.message : err);
+    console.error(
+      'club mail failed:',
+      err instanceof Error ? err.message : err
+    );
     return { ok: false };
   }
 }

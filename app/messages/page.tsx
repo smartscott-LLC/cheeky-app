@@ -56,10 +56,7 @@ export default async function MessagesPage() {
 
   if (convs.length > 0) {
     const [{ data: profiles }, { data: lastMessages }] = await Promise.all([
-      supabase
-        .from('profiles')
-        .select('id, display_name')
-        .in('id', otherIds),
+      supabase.from('profiles').select('id, display_name').in('id', otherIds),
       supabase
         .from('messages')
         .select('conversation_id, body, created_at')
@@ -124,7 +121,9 @@ export default async function MessagesPage() {
                           />
                         ) : (
                           <span className="flex h-full w-full items-center justify-center font-bold text-zinc-500">
-                            {(profile?.display_name || '?').charAt(0).toUpperCase()}
+                            {(profile?.display_name || '?')
+                              .charAt(0)
+                              .toUpperCase()}
                           </span>
                         )}
                       </div>

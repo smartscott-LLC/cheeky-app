@@ -66,29 +66,39 @@ test(
       assert.equal(res.status, 400);
     });
 
-    await t.test('pre-flight: deployed handler knows the webhook secret', async () => {
-      const body = makeEvent(`evt_preflight_${Date.now()}`, 'charge.succeeded', {
-        id: 'ch_test'
-      });
-      const res = await post(body, sign(body));
-      if (res.status === 400) {
-        const text = await res.text();
-        assert.notEqual(
-          text,
-          'Webhook secret not found.',
-          'The deployed webhook cannot find STRIPE_WEBHOOK_SECRET — add it to Vercel for Production and redeploy, then re-run.'
+    await t.test(
+      'pre-flight: deployed handler knows the webhook secret',
+      async () => {
+        const body = makeEvent(
+          `evt_preflight_${Date.now()}`,
+          'charge.succeeded',
+          {
+            id: 'ch_test'
+          }
         );
+        const res = await post(body, sign(body));
+        if (res.status === 400) {
+          const text = await res.text();
+          assert.notEqual(
+            text,
+            'Webhook secret not found.',
+            'The deployed webhook cannot find STRIPE_WEBHOOK_SECRET — add it to Vercel for Production and redeploy, then re-run.'
+          );
+        }
+        assert.equal(res.status, 200);
       }
-      assert.equal(res.status, 200);
-    });
+    );
 
-    await t.test('accepts a valid signature on an unhandled event type', async () => {
-      const body = makeEvent(`evt_test_${Date.now()}`, 'charge.succeeded', {
-        id: 'ch_test'
-      });
-      const res = await post(body, sign(body));
-      assert.equal(res.status, 200);
-    });
+    await t.test(
+      'accepts a valid signature on an unhandled event type',
+      async () => {
+        const body = makeEvent(`evt_test_${Date.now()}`, 'charge.succeeded', {
+          id: 'ch_test'
+        });
+        const res = await post(body, sign(body));
+        assert.equal(res.status, 200);
+      }
+    );
 
     await t.test(
       'idempotency: replaying the same event is acknowledged, never reprocessed',
@@ -104,21 +114,22 @@ test(
       }
     );
 
-    await t.test('handles a burst of concurrent requests without error', async () => {
-      // 15 valid events in flight at once — exercises the idempotency store
-      // (mark_webhook_processed) under real concurrency.
-      const bodies = Array.from(
-        { length: 15 },
-        (_, i) =>
+    await t.test(
+      'handles a burst of concurrent requests without error',
+      async () => {
+        // 15 valid events in flight at once — exercises the idempotency store
+        // (mark_webhook_processed) under real concurrency.
+        const bodies = Array.from({ length: 15 }, (_, i) =>
           makeEvent(`evt_test_burst_${i}_${Date.now()}`, 'charge.succeeded', {
             id: 'ch_test'
           })
-      );
-      const results = await Promise.all(bodies.map((b) => post(b, sign(b))));
-      assert.ok(
-        results.every((r) => r.status === 200),
-        `burst responses: ${results.map((r) => r.status).join(',')}`
-      );
-    });
+        );
+        const results = await Promise.all(bodies.map((b) => post(b, sign(b))));
+        assert.ok(
+          results.every((r) => r.status === 200),
+          `burst responses: ${results.map((r) => r.status).join(',')}`
+        );
+      }
+    );
   }
 );

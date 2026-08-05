@@ -1,11 +1,7 @@
 import GiftShop from '@/components/ui/Gifts/GiftShop';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
-import {
-  getUser,
-  getProfile,
-  getTokenBalance
-} from '@/utils/supabase/queries';
+import { getUser, getProfile, getTokenBalance } from '@/utils/supabase/queries';
 import { getReturnFloor } from '@/utils/return-floor';
 import { redirect } from 'next/navigation';
 
@@ -32,34 +28,38 @@ export default async function GiftsPage() {
           ? 'Diamond'
           : 'Silver';
 
-  const [{ data: catalog }, { data: stashRows }, { data: incomingRows }, { data: sentRows }] =
-    await Promise.all([
-      supabase
-        .from('gift_catalog')
-        .select('id, slug, name, emoji, floor, token_cost, kind')
-        .eq('active', true)
-        .order('token_cost'),
-      supabase
-        .from('gift_inventory')
-        .select('id, catalog_id, status')
-        .eq('user_id', user.id)
-        .eq('status', 'available'),
-      supabase
-        .from('gift_sends')
-        .select(
-          'id, status, sender_id, catalog_id, gift_catalog!inner(name, emoji)'
-        )
-        .eq('recipient_id', user.id)
-        .eq('status', 'sent')
-        .order('sent_at', { ascending: false }),
-      supabase
-        .from('gift_sends')
-        .select(
-          'id, status, recipient_id, catalog_id, gift_catalog!inner(name, emoji)'
-        )
-        .eq('sender_id', user.id)
-        .order('sent_at', { ascending: false })
-    ]);
+  const [
+    { data: catalog },
+    { data: stashRows },
+    { data: incomingRows },
+    { data: sentRows }
+  ] = await Promise.all([
+    supabase
+      .from('gift_catalog')
+      .select('id, slug, name, emoji, floor, token_cost, kind')
+      .eq('active', true)
+      .order('token_cost'),
+    supabase
+      .from('gift_inventory')
+      .select('id, catalog_id, status')
+      .eq('user_id', user.id)
+      .eq('status', 'available'),
+    supabase
+      .from('gift_sends')
+      .select(
+        'id, status, sender_id, catalog_id, gift_catalog!inner(name, emoji)'
+      )
+      .eq('recipient_id', user.id)
+      .eq('status', 'sent')
+      .order('sent_at', { ascending: false }),
+    supabase
+      .from('gift_sends')
+      .select(
+        'id, status, recipient_id, catalog_id, gift_catalog!inner(name, emoji)'
+      )
+      .eq('sender_id', user.id)
+      .order('sent_at', { ascending: false })
+  ]);
 
   // Who can I send to? Your matches + your conversations.
   const floorHref = await getReturnFloor();
@@ -177,8 +177,8 @@ export default async function GiftsPage() {
           🎁 The Gift Shop
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
-          Buy something for someone. The club hears the cork pop — but only
-          they know it was you.
+          Buy something for someone. The club hears the cork pop — but only they
+          know it was you.
         </p>
         <div className="mt-10">
           <GiftShop

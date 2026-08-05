@@ -72,9 +72,8 @@ async function runDateSafeForReport(
 
     // The apology email — best-effort, never fail the review for mail.
     try {
-      const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(
-        reportedId
-      );
+      const { data: authUser } =
+        await supabaseAdmin.auth.admin.getUserById(reportedId);
       if (authUser?.user?.email && process.env.RESEND_API_KEY) {
         await sendClubMail({
           to: authUser.user.email,
@@ -191,7 +190,10 @@ export async function reportUser(
   if (report?.id) {
     void runDateSafeForReport(report.id, reportedId, reason, context).catch(
       (e: unknown) =>
-        console.error('DateSafe review failed:', e instanceof Error ? e.message : e)
+        console.error(
+          'DateSafe review failed:',
+          e instanceof Error ? e.message : e
+        )
     );
   }
   return {};

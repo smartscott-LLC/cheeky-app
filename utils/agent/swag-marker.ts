@@ -41,7 +41,8 @@ async function handleMarker(
   allowed: string[]
 ): Promise<string> {
   if (allowed.includes(slug)) {
-    const isMembership = slug === 'gold' || slug === 'platinum' || slug === 'diamond';
+    const isMembership =
+      slug === 'gold' || slug === 'platinum' || slug === 'diamond';
     const { code, error } = await generateSwagCode({
       benefitType: isMembership ? 'membership' : 'gift',
       benefitValue: slug,

@@ -132,7 +132,9 @@ export default function DateNightPanel({
         {total > 0 && (
           <p className="mt-1 text-sm text-zinc-400">
             You beat {beaten} of {total} couples on this pack
-            {beaten >= total / 2 ? ' — the floor noticed. 🏆' : ' — keep training.'}
+            {beaten >= total / 2
+              ? ' — the floor noticed. 🏆'
+              : ' — keep training.'}
           </p>
         )}
         <p className="mt-3 inline-block rounded-full border border-club/40 bg-club/10 px-3 py-1 text-xs font-bold text-club">
@@ -212,7 +214,9 @@ export default function DateNightPanel({
             They picked differently — hash it out in the chat, then re-pick.
           </p>
         ) : partnerPicked ? (
-          <p className="text-zinc-500">They&apos;ve picked — match them to lock it.</p>
+          <p className="text-zinc-500">
+            They&apos;ve picked — match them to lock it.
+          </p>
         ) : (
           <p className="text-zinc-500">
             Your pick is in. Waiting on {otherName}…

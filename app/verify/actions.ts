@@ -46,8 +46,7 @@ export async function checkInAtTheDoor(formData: FormData) {
 
   if (gender !== 'gentleman' && gender !== 'lady')
     return redirect('/verify?error=gender');
-  if (!isValidEmail(email) || !password)
-    return redirect('/verify?error=form');
+  if (!isValidEmail(email) || !password) return redirect('/verify?error=form');
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
@@ -86,10 +85,12 @@ export async function checkInAtTheDoor(formData: FormData) {
     ['verification', CONSENT_VERSION]
   ] as const;
   for (const [type, version] of consents) {
-    await supabase.from('consents').upsert(
-      { user_id: userId, consent_type: type, version },
-      { onConflict: 'user_id,consent_type' }
-    );
+    await supabase
+      .from('consents')
+      .upsert(
+        { user_id: userId, consent_type: type, version },
+        { onConflict: 'user_id,consent_type' }
+      );
   }
   if (fullName) {
     await supabase

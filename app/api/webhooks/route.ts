@@ -55,7 +55,9 @@ export async function POST(req: Request) {
 
     if (idemError) {
       console.error('Idempotency store failed:', idemError.message);
-      return new Response('Webhook handler failed (idempotency store).', { status: 500 });
+      return new Response('Webhook handler failed (idempotency store).', {
+        status: 500
+      });
     }
     if (firstSeen === false) {
       console.log(`🔁 Duplicate webhook event ignored: ${event.id}`);
@@ -63,9 +65,10 @@ export async function POST(req: Request) {
     }
     if (firstSeen !== true) {
       console.error('Unexpected idempotency response:', firstSeen);
-      return new Response('Webhook handler failed (idempotency store).', { status: 500 });
+      return new Response('Webhook handler failed (idempotency store).', {
+        status: 500
+      });
     }
-
   } catch (err: any) {
     console.log(`❌ Error message: ${err.message}`);
     return new Response(`Webhook Error: ${err.message}`, { status: 400 });
@@ -113,8 +116,8 @@ export async function POST(req: Request) {
           }
           break;
         case 'identity.verification_session.verified':
-          const verificationSession =
-            event.data.object as Stripe.Identity.VerificationSession;
+          const verificationSession = event.data
+            .object as Stripe.Identity.VerificationSession;
           const userId = verificationSession.metadata?.supabaseUUID;
           if (userId) {
             await applyVerificationResult(userId, verificationSession.id);
@@ -126,8 +129,8 @@ export async function POST(req: Request) {
           break;
         case 'identity.verification_session.requires_input':
         case 'identity.verification_session.canceled': {
-          const failedSession =
-            event.data.object as Stripe.Identity.VerificationSession;
+          const failedSession = event.data
+            .object as Stripe.Identity.VerificationSession;
           const failedUserId = failedSession.metadata?.supabaseUUID;
           if (failedUserId) {
             await handleVerificationFailure(failedUserId);

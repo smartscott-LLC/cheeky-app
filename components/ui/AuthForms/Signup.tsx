@@ -88,8 +88,8 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               <option value="lady">Lady</option>
             </select>
             <p className="text-xs text-zinc-500">
-              The club pairs real gentlemen and real ladies — no surprises.
-              This tells the floor who you are.
+              The club pairs real gentlemen and real ladies — no surprises. This
+              tells the floor who you are.
             </p>
             <label htmlFor="interestedIn">Dating preference</label>
             <select

@@ -7,10 +7,7 @@ export default function Footer() {
     <footer className="mx-auto max-w-[1920px] px-6 bg-zinc-900">
       <div className="grid grid-cols-1 gap-8 py-12 text-white transition-colors duration-150 border-b lg:grid-cols-12 border-zinc-600 bg-zinc-900">
         <div className="col-span-1 lg:col-span-3">
-          <Link
-            href="/"
-            className="flex items-center flex-initial md:mr-24"
-          >
+          <Link href="/" className="flex items-center flex-initial md:mr-24">
             <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-gold shadow-[0_0_14px_rgba(255,215,0,0.35)]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img

@@ -13,11 +13,7 @@ import {
 } from '@/app/messages/actions';
 import { startDateNight } from '@/app/date-night/actions';
 import DateNightPanel from '@/components/ui/DateNight/DateNightPanel';
-import {
-  startDJ,
-  toggleDJ,
-  unlockDJ
-} from '@/utils/audio/dj';
+import { startDJ, toggleDJ, unlockDJ } from '@/utils/audio/dj';
 import posthog from 'posthog-js';
 
 interface Message {
@@ -190,7 +186,9 @@ export default function MessageThread({
       setError(describeError(res.error));
       return;
     }
-    posthog.capture('message_sent', { channel: songMode ? 'event' : 'standard' });
+    posthog.capture('message_sent', {
+      channel: songMode ? 'event' : 'standard'
+    });
     setInput('');
     await refresh();
   };
@@ -348,7 +346,8 @@ export default function MessageThread({
                 This room is yours for the next two hours
                 {giftFloor && giftFloor !== 'standard' && giftFloor !== 'silver'
                   ? ` — explore the ${giftFloor} floor together`
-                  : ' — make it count'}.
+                  : ' — make it count'}
+                .
               </p>
             </div>
             <span className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs font-semibold text-gold">
@@ -406,9 +405,7 @@ export default function MessageThread({
       {/* Post-song decision */}
       {songOver && !declined && !blocked && (
         <div className="border-b border-zinc-800 bg-zinc-900 p-4 text-center">
-          <p className="text-sm font-bold">
-            The song&apos;s over. What now?
-          </p>
+          <p className="text-sm font-bold">The song&apos;s over. What now?</p>
           <div className="mt-3 flex justify-center gap-3">
             <button
               onClick={() => handleResolve(true)}
@@ -430,8 +427,8 @@ export default function MessageThread({
 
       {declined && (
         <p className="border-b border-zinc-800 px-4 py-2 text-center text-xs text-zinc-500">
-          The song is over and the chat is closed. No follow-ups — that&apos;s the
-          rule of the floor.
+          The song is over and the chat is closed. No follow-ups — that&apos;s
+          the rule of the floor.
         </p>
       )}
 
@@ -544,7 +541,9 @@ export default function MessageThread({
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder={songMode ? 'Say it while the song plays…' : 'Say something…'}
+              placeholder={
+                songMode ? 'Say it while the song plays…' : 'Say something…'
+              }
               className="flex-1 rounded-lg bg-zinc-800 p-3 text-sm text-white outline-none ring-club/50 focus:ring-2"
             />
             <button

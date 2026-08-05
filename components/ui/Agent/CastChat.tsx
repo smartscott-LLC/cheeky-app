@@ -38,7 +38,8 @@ export default function CastChat({ character }: { character: CastCharacter }) {
   const handleScroll = () => {
     const el = scrollRef.current;
     if (!el) return;
-    nearBottomRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 120;
+    nearBottomRef.current =
+      el.scrollHeight - el.scrollTop - el.clientHeight < 120;
   };
 
   useEffect(() => {
@@ -49,7 +50,10 @@ export default function CastChat({ character }: { character: CastCharacter }) {
 
   useEffect(() => {
     if (!busy) return;
-    const t = setInterval(() => setTypingIdx((i) => (i + 1) % TYPING.length), 800);
+    const t = setInterval(
+      () => setTypingIdx((i) => (i + 1) % TYPING.length),
+      800
+    );
     return () => clearInterval(t);
   }, [busy]);
 
@@ -147,7 +151,9 @@ export default function CastChat({ character }: { character: CastCharacter }) {
               </div>
             </div>
           ))}
-          {busy && <p className="text-sm text-zinc-500">{TYPING[typingIdx]}…</p>}
+          {busy && (
+            <p className="text-sm text-zinc-500">{TYPING[typingIdx]}…</p>
+          )}
         </div>
 
         {error && (

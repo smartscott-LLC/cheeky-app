@@ -30,8 +30,7 @@ export default function EmailForm({
     <div className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
       <h2 className="text-xl font-bold">Your email</h2>
       <p className="mt-1 text-sm text-zinc-400">
-        Used for login and club contact. Personal — never shown on your
-        profile.
+        Used for login and club contact. Personal — never shown on your profile.
       </p>
       <form
         id="emailForm"

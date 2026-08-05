@@ -27,8 +27,8 @@ export default async function SpeedDatingPage() {
             Speed Dating is behind the rope.
           </h1>
           <p className="mx-auto mt-3 max-w-md text-zinc-400">
-            Come see what&apos;s on this floor with a Platinum card today —
-            the room&apos;s worth it.
+            Come see what&apos;s on this floor with a Platinum card today — the
+            room&apos;s worth it.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
@@ -85,7 +85,9 @@ export default async function SpeedDatingPage() {
       ids.length > 0
         ? await supabase
             .from('profiles')
-            .select('id, display_name, verified_at, photos(storage_path, is_primary)')
+            .select(
+              'id, display_name, verified_at, photos(storage_path, is_primary)'
+            )
             .in('id', ids)
             .filter('photos.held_at', 'is', 'null')
         : { data: [] };

@@ -79,8 +79,8 @@ export default function MatchedOverlay({ onDone }: MatchedOverlayProps) {
           MATCHED
         </h1>
         <p className="mt-6 text-xl text-zinc-300 sm:text-2xl">
-          You have <span className="font-bold text-club">one song</span> to
-          make this count.
+          You have <span className="font-bold text-club">one song</span> to make
+          this count.
         </p>
         <p className="mt-2 text-lg uppercase tracking-[0.3em] text-zinc-500">
           Get… your… groove… on!

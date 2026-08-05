@@ -10,7 +10,7 @@
 Club Cheeky is **production-ready for its current scale** — a well-architected,
 security-disciplined codebase with no critical findings. It is a real product
 with a real payment rail, real verification, a real content-safety pipeline,
-and a governance layer that is *binding on the build* (docs match code). The
+and a governance layer that is _binding on the build_ (docs match code). The
 honest caveat: at 4 members / 2 verified / 0 paid, **nothing is battle-tested
 at volume**. The risks that matter are operational (alerting, human review
 loops, email delivery), not architectural.
@@ -23,19 +23,19 @@ repo · 11 service-role touchpoints, all server-side.
 
 ## 1. What shipped (the inventory)
 
-| Area | What exists | Where |
-|---|---|---|
-| Identity | Signup (gender/preference/18+/consent/honeypot), email confirm → Door Check (Stripe Identity ID+selfie, 18+ gate), verified badge, 20-token bonus | `/verify`, webhook `identity.*` |
-| The club | Landing → lobby → 4 floors (Silver/Gold/Platinum/Diamond) with art, crew, elevators; floor closures ("under construction") | `/`, `/club`, `/floor/[slug]`, `/floors` |
-| Events | Hourly playlist (Dance Floor, Themed Night, Speed Dating, Rooftop); auto-generated schedule; entries, song phase, no-match auto-refund | `/events/*`, `event_engine` |
-| Crew | 6 AI characters with personas; floor-gated chat; streaming DeepSeek; moments; swag delivery in-character | `/crew`, `/chat/[slug]`, `/api/agent` |
-| Commerce | Stripe subscriptions (memberships), one-time token packs; **The Exchange** store on every floor; token ledger server-side | `/store`, `/pricing`, webhook `checkout.session.completed` |
-| Generosity | Swag codes (SWAG-XXXXXXXX), bundles (tokens+gifts+card in one code), cast budgets, owner mint, flags | `/swag`, `swag_*` tables, `redeem_swag_code` RPC |
-| Safety | Report/block in chat, **DateSafe** AI image review (OpenRouter vision, immediate hold on report), human confirm columns | `/api/agent` hooks, `utils/datesafe.ts`, `reports` table |
-| Governance | Terms, Privacy, AUP, Refunds, Law Enforcement, Contact, Best Practices, Pricing — all live and footer-linked | `/terms`, `/privacy`, `/aup`, `/refunds`, `/law-enforcement`, `/contact` |
-| The Lions Den | Owner cockpit: Mint drawer (presets + bundle builder), announcement board, model failover, floor closures, pulse metrics, events/ledger/catalog boards, flags/grants/rules, engine kill-switch | `/owner` |
-| Marquee | Floor announcement banner (ticker / roll / fade) under each floor's name | `AnnouncementBanner`, `announcements` table |
-| Ops | Sentry (client/server/edge), PostHog, Vercel auto-deploy on push, milestone tags | — |
+| Area          | What exists                                                                                                                                                                                    | Where                                                                    |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Identity      | Signup (gender/preference/18+/consent/honeypot), email confirm → Door Check (Stripe Identity ID+selfie, 18+ gate), verified badge, 20-token bonus                                              | `/verify`, webhook `identity.*`                                          |
+| The club      | Landing → lobby → 4 floors (Silver/Gold/Platinum/Diamond) with art, crew, elevators; floor closures ("under construction")                                                                     | `/`, `/club`, `/floor/[slug]`, `/floors`                                 |
+| Events        | Hourly playlist (Dance Floor, Themed Night, Speed Dating, Rooftop); auto-generated schedule; entries, song phase, no-match auto-refund                                                         | `/events/*`, `event_engine`                                              |
+| Crew          | 6 AI characters with personas; floor-gated chat; streaming DeepSeek; moments; swag delivery in-character                                                                                       | `/crew`, `/chat/[slug]`, `/api/agent`                                    |
+| Commerce      | Stripe subscriptions (memberships), one-time token packs; **The Exchange** store on every floor; token ledger server-side                                                                      | `/store`, `/pricing`, webhook `checkout.session.completed`               |
+| Generosity    | Swag codes (SWAG-XXXXXXXX), bundles (tokens+gifts+card in one code), cast budgets, owner mint, flags                                                                                           | `/swag`, `swag_*` tables, `redeem_swag_code` RPC                         |
+| Safety        | Report/block in chat, **DateSafe** AI image review (OpenRouter vision, immediate hold on report), human confirm columns                                                                        | `/api/agent` hooks, `utils/datesafe.ts`, `reports` table                 |
+| Governance    | Terms, Privacy, AUP, Refunds, Law Enforcement, Contact, Best Practices, Pricing — all live and footer-linked                                                                                   | `/terms`, `/privacy`, `/aup`, `/refunds`, `/law-enforcement`, `/contact` |
+| The Lions Den | Owner cockpit: Mint drawer (presets + bundle builder), announcement board, model failover, floor closures, pulse metrics, events/ledger/catalog boards, flags/grants/rules, engine kill-switch | `/owner`                                                                 |
+| Marquee       | Floor announcement banner (ticker / roll / fade) under each floor's name                                                                                                                       | `AnnouncementBanner`, `announcements` table                              |
+| Ops           | Sentry (client/server/edge), PostHog, Vercel auto-deploy on push, milestone tags                                                                                                               | —                                                                        |
 
 ## 2. Security posture (verified, not assumed)
 
@@ -95,6 +95,7 @@ Gifts out **0** · Codes redeemed **0** · New this week **4** · Messages today
 ## 6. Known gaps & risks (honest, prioritized)
 
 **P1 — build before real traffic:**
+
 1. **Email delivery is spec-only.** Apology/ban/welcome notices are documented
    but not automated (no email provider wired). Human process covers it today;
    a transactional email provider (e.g., Resend) is the fix. The mailboxes
@@ -106,23 +107,16 @@ Gifts out **0** · Codes redeemed **0** · New this week **4** · Messages today
    documented (5-year/permanent) but the registry consulted at signup is not
    built.
 
-**P2 — operational hardening:**
-4. **Alerting.** Webhook failures and agent failures log to Sentry, but no
-   alerts are configured; a dead webhook would silently break token credits.
-5. **Rate/abuse limits** on the report endpoint and agent route are not yet
-   stress-tested.
-6. **Mobile nav crowding** (six items on small screens) — cosmetic, pre-existing.
-7. **LogoCloud `<img>` warnings** (3) — the only lint warnings; the trust row is
-   intentional, but they could move to `next/image`.
+**P2 — operational hardening:** 4. **Alerting.** Webhook failures and agent failures log to Sentry, but no
+alerts are configured; a dead webhook would silently break token credits. 5. **Rate/abuse limits** on the report endpoint and agent route are not yet
+stress-tested. 6. **Mobile nav crowding** (six items on small screens) — cosmetic, pre-existing. 7. **LogoCloud `<img>` warnings** (3) — the only lint warnings; the trust row is
+intentional, but they could move to `next/image`.
 
-**P3 — hygiene:**
-8. **Dependency updates.** Dependabot PRs once broke the build; updates should
-   run with a lint+build gate before merge (now the standing rule).
-9. **PostHog token on Vercel** — flagged in CONFIG-AUDIT as missing; app runs
-   fine without it; confirm when convenient.
-10. **Stripe catalog hygiene** — the 1000-token bundle was a monthly-recurring
-    landmine (billed forever, granted nothing); now corrected to one-time and
-    the webhook credits it. Any future products should be verified at creation.
+**P3 — hygiene:** 8. **Dependency updates.** Dependabot PRs once broke the build; updates should
+run with a lint+build gate before merge (now the standing rule). 9. **PostHog token on Vercel** — flagged in CONFIG-AUDIT as missing; app runs
+fine without it; confirm when convenient. 10. **Stripe catalog hygiene** — the 1000-token bundle was a monthly-recurring
+landmine (billed forever, granted nothing); now corrected to one-time and
+the webhook credits it. Any future products should be verified at creation.
 
 ## 7. Recommendations (the short list)
 
@@ -143,5 +137,5 @@ Nothing in this audit is a blocker for launch at current scale.
 
 ---
 
-*Audit performed read-only against the live hosted DB and the `v1.0-den-locked`
-tree. No changes made during the audit beyond this document.*
+_Audit performed read-only against the live hosted DB and the `v1.0-den-locked`
+tree. No changes made during the audit beyond this document._

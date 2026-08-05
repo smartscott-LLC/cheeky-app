@@ -120,9 +120,7 @@ export function announce(lines: string[], onDone?: () => void) {
     u.pitch = 1.05;
     u.volume = 1;
     const voices = synth.getVoices();
-    const en = voices.find(
-      (v) => v.lang.startsWith('en') && v.localService
-    );
+    const en = voices.find((v) => v.lang.startsWith('en') && v.localService);
     if (en) u.voice = en;
     u.onend = speakNext;
     u.onerror = speakNext;

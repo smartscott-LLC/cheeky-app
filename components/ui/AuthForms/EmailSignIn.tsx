@@ -24,7 +24,11 @@ export default function EmailSignIn({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setIsSubmitting(true); // Disable the button while the request is being handled
-    await handleRequest(e, signInWithEmail, redirectMethod === 'client' ? router : null);
+    await handleRequest(
+      e,
+      signInWithEmail,
+      redirectMethod === 'client' ? router : null
+    );
     setIsSubmitting(false);
   };
 

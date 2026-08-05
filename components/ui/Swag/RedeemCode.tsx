@@ -23,7 +23,9 @@ export default function RedeemCode() {
   const router = useRouter();
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<{ ok: boolean; text: string } | null>(null);
+  const [result, setResult] = useState<{ ok: boolean; text: string } | null>(
+    null
+  );
 
   const submit = async () => {
     const trimmed = code.trim().toUpperCase();
@@ -76,7 +78,9 @@ export default function RedeemCode() {
         </button>
       </div>
       {result && (
-        <p className={`mt-3 text-sm ${result.ok ? 'text-emerald-400' : 'text-club'}`}>
+        <p
+          className={`mt-3 text-sm ${result.ok ? 'text-emerald-400' : 'text-club'}`}
+        >
           {result.text}
         </p>
       )}

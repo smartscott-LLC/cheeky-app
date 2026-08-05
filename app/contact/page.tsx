@@ -60,8 +60,8 @@ export default function ContactPage() {
         <p className="mt-8 text-xs text-zinc-600">
           Emails are fielded through our parent mailbox (smartscott.com) and
           routed to the right desk. If it&apos;s an emergency involving someone
-         &apos;s immediate safety, contact local emergency services first — then
-          report it in-app.
+          &apos;s immediate safety, contact local emergency services first —
+          then report it in-app.
         </p>
 
         <div className="mt-8 text-center">

@@ -41,13 +41,13 @@ flowchart TD
 Per-item rules enforced **centrally in the engine**, so it doesn't matter who
 is asking — a confused AI and a hacked caller both get flagged the same way.
 
-| Item | Who | Weekly cap (cast) |
-|---|---|---|
-| Gold membership | cast + owner | 3/week |
-| Platinum / Diamond membership | owner only | — |
-| Token bags (20 / 50 / 100) | cast + owner | 5 / 3 / 1 per week |
+| Item                                | Who          | Weekly cap (cast)   |
+| ----------------------------------- | ------------ | ------------------- |
+| Gold membership                     | cast + owner | 3/week              |
+| Platinum / Diamond membership       | owner only   | —                   |
+| Token bags (20 / 50 / 100)          | cast + owner | 5 / 3 / 1 per week  |
 | Teddy bear / Golden roses / Jewelry | cast + owner | 10 / 5 / 2 per week |
-| Champagne / Gift basket | owner only | — |
+| Champagne / Gift basket             | owner only   | —                   |
 
 - Anything **not listed is owner-only** (fail-closed).
 - The cap counts codes generated that week — generate one, one less left.
@@ -74,12 +74,12 @@ is asking — a confused AI and a hacked caller both get flagged the same way.
 
 ## 5. Actor access
 
-| Actor | Can do | Enforcement |
-|---|---|---|
-| **Owner** | Generate any code, grant directly by email, resolve flags, toggle engine | ADMIN_KEY-gated Booth (`/owner`) + service-role RPCs |
-| **Character (cast)** | Small items within rule-set caps, via `[[SWAG:slug]]` in conversation | Service-role route + DB rule set (hard backstop) |
-| **System** | Anything (automation) | Service-role only |
-| **Member** | Redeem codes they've been given | Authenticated RPC; can never mint or read codes |
+| Actor                | Can do                                                                   | Enforcement                                          |
+| -------------------- | ------------------------------------------------------------------------ | ---------------------------------------------------- |
+| **Owner**            | Generate any code, grant directly by email, resolve flags, toggle engine | ADMIN_KEY-gated Booth (`/owner`) + service-role RPCs |
+| **Character (cast)** | Small items within rule-set caps, via `[[SWAG:slug]]` in conversation    | Service-role route + DB rule set (hard backstop)     |
+| **System**           | Anything (automation)                                                    | Service-role only                                    |
+| **Member**           | Redeem codes they've been given                                          | Authenticated RPC; can never mint or read codes      |
 
 ## 6. The Owner's Booth (`/owner`)
 
@@ -111,12 +111,12 @@ says so in-character.
 
 ## 9. Club emails (LOCKED)
 
-| Address | Purpose | Surfaced on |
-|---|---|---|
-| `info@smartscott.online` | General, data/privacy | Footer, Privacy |
-| `date.safely@smartscott.online` | Safety | Best Practices |
-| `club.cheeky@smartscott.online` | Rules / club questions | Terms |
-| `helpdesk@smartscott.online` | Support | Footer, Verification escalation |
+| Address                         | Purpose                | Surfaced on                     |
+| ------------------------------- | ---------------------- | ------------------------------- |
+| `info@smartscott.online`        | General, data/privacy  | Footer, Privacy                 |
+| `date.safely@smartscott.online` | Safety                 | Best Practices                  |
+| `club.cheeky@smartscott.online` | Rules / club questions | Terms                           |
+| `helpdesk@smartscott.online`    | Support                | Footer, Verification escalation |
 
 Single source of truth: `utils/contact.ts`. Routed to the founder's Zoho/CRM.
 No mail client (founder's form server later).

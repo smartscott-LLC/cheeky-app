@@ -24,40 +24,54 @@ export default async function Account() {
     return redirect('/signin');
   }
 
-  const [profile, tokenBalance, photos, tierData, grants, passes, certRows, interestRows] =
-    await Promise.all([
-      getProfile(supabase, user.id),
-      getTokenBalance(supabase),
-      supabase
-        .from('photos')
-        .select('id, storage_path, is_primary, position')
-        .eq('user_id', user.id)
-        .order('position', { ascending: true }),
-      supabase.rpc('current_tier', { p_user: user.id }),
-      supabase
-        .from('entitlement_grants')
-        .select('tier, reason, expires_at')
-        .order('created_at', { ascending: false }),
-      supabase
-        .from('guest_passes')
-        .select('tier, expires_at')
-        .order('created_at', { ascending: false }),
-      supabase
-        .from('certificates')
-        .select('id, kind, issued_at, matches!inner(id, user_id_a, user_id_b)')
-        .eq('user_id', user.id)
-        .order('issued_at', { ascending: false }),
-      supabase
-        .from('special_interests')
-        .select('id, interest_user_id, created_at')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-    ]);
+  const [
+    profile,
+    tokenBalance,
+    photos,
+    tierData,
+    grants,
+    passes,
+    certRows,
+    interestRows
+  ] = await Promise.all([
+    getProfile(supabase, user.id),
+    getTokenBalance(supabase),
+    supabase
+      .from('photos')
+      .select('id, storage_path, is_primary, position')
+      .eq('user_id', user.id)
+      .order('position', { ascending: true }),
+    supabase.rpc('current_tier', { p_user: user.id }),
+    supabase
+      .from('entitlement_grants')
+      .select('tier, reason, expires_at')
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('guest_passes')
+      .select('tier, expires_at')
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('certificates')
+      .select('id, kind, issued_at, matches!inner(id, user_id_a, user_id_b)')
+      .eq('user_id', user.id)
+      .order('issued_at', { ascending: false }),
+    supabase
+      .from('special_interests')
+      .select('id, interest_user_id, created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+  ]);
 
   const tier = (tierData?.data as string) ?? 'standard';
   const floorHref = await getReturnFloor();
   const tierLabel =
-    tier === 'gold' ? 'Gold' : tier === 'platinum' ? 'Platinum' : tier === 'diamond' ? 'Diamond' : 'Silver';
+    tier === 'gold'
+      ? 'Gold'
+      : tier === 'platinum'
+        ? 'Platinum'
+        : tier === 'diamond'
+          ? 'Diamond'
+          : 'Silver';
   const cardLabel =
     tier === 'diamond'
       ? '💎 Your Diamond card'
@@ -92,19 +106,21 @@ export default async function Account() {
 
   const partnerProfiles =
     partnerIds.length > 0
-      ? ((await supabase
-          .from('profiles')
-          .select('id, display_name')
-          .in('id', partnerIds)).data ?? [])
+      ? ((
+          await supabase
+            .from('profiles')
+            .select('id, display_name')
+            .in('id', partnerIds)
+        ).data ?? [])
       : [];
   const myConvos =
     partnerIds.length > 0
-      ? ((await supabase
-          .from('conversations')
-          .select('id, user_id_a, user_id_b')
-          .or(
-            `user_id_a.eq.${user.id},user_id_b.eq.${user.id}`
-          )).data ?? [])
+      ? ((
+          await supabase
+            .from('conversations')
+            .select('id, user_id_a, user_id_b')
+            .or(`user_id_a.eq.${user.id},user_id_b.eq.${user.id}`)
+        ).data ?? [])
       : [];
 
   const nameOf = (id: string) =>
@@ -167,7 +183,11 @@ export default async function Account() {
             </div>
           </div>
         </div>
-        <CustomerPortalForm subscription={subscription} tier={tier} tierLabel={tierLabel} />
+        <CustomerPortalForm
+          subscription={subscription}
+          tier={tier}
+          tierLabel={tierLabel}
+        />
         <div className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="text-xl font-bold">Your floor</h2>
           <p className="mt-1 text-zinc-400">
@@ -201,9 +221,7 @@ export default async function Account() {
               (profile?.interested_in as 'women' | 'men' | 'everyone') ??
               'everyone'
             }
-            gender={
-              (profile?.gender as 'gentleman' | 'lady' | null) ?? null
-            }
+            gender={(profile?.gender as 'gentleman' | 'lady' | null) ?? null}
             oneLiner={profile?.one_liner ?? null}
             photos={(photos?.data ?? []).map((p) => ({
               id: p.id,

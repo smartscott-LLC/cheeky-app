@@ -26,7 +26,9 @@ const res = spawnSync(
 );
 
 if (res.status !== 0) {
-  console.error(res.stderr || res.stdout || `supabase gen types exited ${res.status}`);
+  console.error(
+    res.stderr || res.stdout || `supabase gen types exited ${res.status}`
+  );
   process.exit(1);
 }
 

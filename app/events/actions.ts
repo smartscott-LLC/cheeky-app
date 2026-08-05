@@ -2,9 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server';
 
-export async function joinEvent(
-  eventId: string
-): Promise<{ error?: string }> {
+export async function joinEvent(eventId: string): Promise<{ error?: string }> {
   const supabase = await createClient();
   const { error } = await supabase.rpc('join_event', {
     p_event_id: eventId
@@ -16,9 +14,7 @@ export async function joinEvent(
   return {};
 }
 
-export async function leaveEvent(
-  eventId: string
-): Promise<{ error?: string }> {
+export async function leaveEvent(eventId: string): Promise<{ error?: string }> {
   const supabase = await createClient();
   const { error } = await supabase.rpc('leave_event', { p_event_id: eventId });
   if (error) {

@@ -42,7 +42,13 @@ const ROUND_SECONDS = 120;
 // the floor (Dance Floor = club pink, Themed Night = gold, Rooftop = diamond).
 const ACCENTS: Record<
   string,
-  { kicker: string; cta: string; lockedBorder: string; lockedText: string; verified: string }
+  {
+    kicker: string;
+    cta: string;
+    lockedBorder: string;
+    lockedText: string;
+    verified: string;
+  }
 > = {
   dance_floor: {
     kicker: 'text-club',
@@ -107,27 +113,27 @@ export default function EventFloor({
   const [spotlightIds, setSpotlightIds] = useState(initialSpotlightIds);
 
   const refresh = async () => {
-    const [{ data: ev }, { data: entries }, { data: picks }, { data: spotlights }] =
-      await Promise.all([
-        supabase
-          .from('events')
-          .select('status')
-          .eq('id', event.id)
-          .maybeSingle(),
-        supabase
-          .from('event_entries')
-          .select('user_id, status')
-          .eq('event_id', event.id),
-        supabase
-          .from('event_picks')
-          .select('id')
-          .eq('event_id', event.id)
-          .eq('picker_id', myUserId),
-        supabase
-          .from('center_stage')
-          .select('user_id')
-          .gt('center_stage_until', new Date().toISOString())
-      ]);
+    const [
+      { data: ev },
+      { data: entries },
+      { data: picks },
+      { data: spotlights }
+    ] = await Promise.all([
+      supabase.from('events').select('status').eq('id', event.id).maybeSingle(),
+      supabase
+        .from('event_entries')
+        .select('user_id, status')
+        .eq('event_id', event.id),
+      supabase
+        .from('event_picks')
+        .select('id')
+        .eq('event_id', event.id)
+        .eq('picker_id', myUserId),
+      supabase
+        .from('center_stage')
+        .select('user_id')
+        .gt('center_stage_until', new Date().toISOString())
+    ]);
 
     if (ev?.status) setEventStatus(ev.status);
     if (spotlights) setSpotlightIds(spotlights.map((s) => s.user_id));
@@ -137,7 +143,9 @@ export default function EventFloor({
       ids.length > 0
         ? await supabase
             .from('profiles')
-            .select('id, display_name, verified_at, photos(storage_path, is_primary)')
+            .select(
+              'id, display_name, verified_at, photos(storage_path, is_primary)'
+            )
             .in('id', ids)
         : { data: [] };
 
@@ -186,7 +194,9 @@ export default function EventFloor({
   const mm = Math.floor(secondsToRound / 60);
   const ss = String(secondsToRound % 60).padStart(2, '0');
 
-  const joined = Boolean(myEntry && myEntry.status !== 'released' && myEntry.status !== 'canceled');
+  const joined = Boolean(
+    myEntry && myEntry.status !== 'released' && myEntry.status !== 'canceled'
+  );
   const dancing = myEntry?.status === 'locked';
 
   const handleJoin = async () => {
@@ -249,9 +259,15 @@ export default function EventFloor({
   // ---- Status banner ----
   const statusBanner = (() => {
     if (eventStatus === 'canceled')
-      return { title: 'Canceled', body: 'Not enough heads. Your tokens are back.' };
+      return {
+        title: 'Canceled',
+        body: 'Not enough heads. Your tokens are back.'
+      };
     if (dancing)
-      return { title: "You're dancing!", body: 'Head to the song. Make it count.' };
+      return {
+        title: "You're dancing!",
+        body: 'Head to the song. Make it count.'
+      };
     if (joined && eventStatus === 'running')
       return {
         title: 'Picking time',
@@ -277,14 +293,18 @@ export default function EventFloor({
       {match && (
         <MatchedOverlay
           onDone={() =>
-            router.push(match.convId ? `/messages/${match.convId}` : '/messages')
+            router.push(
+              match.convId ? `/messages/${match.convId}` : '/messages'
+            )
           }
         />
       )}
 
       {/* Banner */}
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
-        <p className={`text-sm font-bold uppercase tracking-[0.3em] ${accent.kicker}`}>
+        <p
+          className={`text-sm font-bold uppercase tracking-[0.3em] ${accent.kicker}`}
+        >
           {eventStatus === 'running'
             ? `Round closes in ${Math.floor(secondsLeftInRound / 60)}:${String(
                 secondsLeftInRound % 60
@@ -317,7 +337,9 @@ export default function EventFloor({
             </button>
           )}
           {dancing && (
-            <span className={`rounded-lg px-5 py-2.5 font-bold text-white ${accent.cta}`}>
+            <span
+              className={`rounded-lg px-5 py-2.5 font-bold text-white ${accent.cta}`}
+            >
               💃 One song. Make it count.
             </span>
           )}
@@ -326,7 +348,8 @@ export default function EventFloor({
         {error && <p className="mt-3 text-sm text-club">{error}</p>}
         {joined && eventStatus !== 'running' && eventStatus !== 'closed' && (
           <p className="mt-3 text-xs text-zinc-500">
-            {participants.length} on the floor now. Needs {event.minFill} to run.
+            {participants.length} on the floor now. Needs {event.minFill} to
+            run.
           </p>
         )}
       </div>
@@ -340,71 +363,80 @@ export default function EventFloor({
             return sa - sb;
           })
           .map((p) => {
-          const locked = p.status === 'locked';
-          const spotlight = spotlightIds.includes(p.userId);
-          const canPick =
-            pickable && p.userId !== myUserId && !locked && p.status === 'reserved';
-          return (
-            <div
-              key={p.userId}
-              className={`overflow-hidden rounded-xl border bg-zinc-900/50 ${
-                locked
-                  ? accent.lockedBorder
-                  : spotlight
-                    ? 'border-gold/70 shadow-[0_0_24px_rgba(210,148,54,0.35)]'
-                    : 'border-zinc-800'
-              }`}
-            >
-              <div className="flex aspect-square items-center justify-center bg-zinc-800">
-                {p.profile?.photo ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={`${photoBase}${p.profile.photo}`}
-                    alt={p.profile.display_name || 'Member'}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <span className="text-4xl font-extrabold text-zinc-600">
-                    {(p.profile?.display_name || '?').charAt(0).toUpperCase()}
-                  </span>
-                )}
-                {locked && (
-                  <span className={`absolute m-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase text-white ${accent.cta}`}>
-                    Dancing
-                  </span>
-                )}
-                {spotlight && !locked && (
-                  <span className="absolute m-1 rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase text-black">
-                    🌟 Center Stage
-                  </span>
-                )}
-              </div>
-              <div className="p-3">
-                <p className="truncate text-sm font-bold">
-                  {p.profile?.display_name || 'Member'}
-                </p>
-                <div className="mt-2 flex items-center justify-between">
-                  {p.profile?.verified_at && (
-                    <span className={`text-[10px] font-bold uppercase tracking-wide ${accent.verified}`}>
-                      ✓
+            const locked = p.status === 'locked';
+            const spotlight = spotlightIds.includes(p.userId);
+            const canPick =
+              pickable &&
+              p.userId !== myUserId &&
+              !locked &&
+              p.status === 'reserved';
+            return (
+              <div
+                key={p.userId}
+                className={`overflow-hidden rounded-xl border bg-zinc-900/50 ${
+                  locked
+                    ? accent.lockedBorder
+                    : spotlight
+                      ? 'border-gold/70 shadow-[0_0_24px_rgba(210,148,54,0.35)]'
+                      : 'border-zinc-800'
+                }`}
+              >
+                <div className="flex aspect-square items-center justify-center bg-zinc-800">
+                  {p.profile?.photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={`${photoBase}${p.profile.photo}`}
+                      alt={p.profile.display_name || 'Member'}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-4xl font-extrabold text-zinc-600">
+                      {(p.profile?.display_name || '?').charAt(0).toUpperCase()}
                     </span>
                   )}
-                  {canPick ? (
-                    <button
-                      onClick={() => handlePick(p.userId)}
-                      disabled={busy}
-                      className={`ml-auto rounded-md px-3 py-1 text-xs font-bold text-white transition ${accent.cta}`}
+                  {locked && (
+                    <span
+                      className={`absolute m-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase text-white ${accent.cta}`}
                     >
-                      Pick
-                    </button>
-                  ) : locked ? (
-                    <span className={`ml-auto text-xs ${accent.lockedText}`}>💃</span>
-                  ) : null}
+                      Dancing
+                    </span>
+                  )}
+                  {spotlight && !locked && (
+                    <span className="absolute m-1 rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase text-black">
+                      🌟 Center Stage
+                    </span>
+                  )}
+                </div>
+                <div className="p-3">
+                  <p className="truncate text-sm font-bold">
+                    {p.profile?.display_name || 'Member'}
+                  </p>
+                  <div className="mt-2 flex items-center justify-between">
+                    {p.profile?.verified_at && (
+                      <span
+                        className={`text-[10px] font-bold uppercase tracking-wide ${accent.verified}`}
+                      >
+                        ✓
+                      </span>
+                    )}
+                    {canPick ? (
+                      <button
+                        onClick={() => handlePick(p.userId)}
+                        disabled={busy}
+                        className={`ml-auto rounded-md px-3 py-1 text-xs font-bold text-white transition ${accent.cta}`}
+                      >
+                        Pick
+                      </button>
+                    ) : locked ? (
+                      <span className={`ml-auto text-xs ${accent.lockedText}`}>
+                        💃
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
 
       {participants.length === 0 && (

@@ -14,7 +14,8 @@ const SPOTS: FloorSpot[] = [
     emoji: '💪',
     name: 'Brutus',
     sub: 'The bouncer',
-    color: 'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+    color:
+      'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
     pos: 'left-[6%] top-[8%]'
   },
   {
@@ -22,7 +23,8 @@ const SPOTS: FloorSpot[] = [
     emoji: '👑',
     name: 'VIP area',
     sub: 'The silver floor',
-    color: 'text-cyan border-cyan/50 hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
+    color:
+      'text-cyan border-cyan/50 hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
     pos: 'left-[6%] top-[42%]'
   },
   {
@@ -30,7 +32,8 @@ const SPOTS: FloorSpot[] = [
     emoji: '🎁',
     name: 'Gift Shop',
     sub: 'Buy something',
-    color: 'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+    color:
+      'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
     pos: 'right-[6%] top-[42%]'
   },
   {
@@ -38,7 +41,8 @@ const SPOTS: FloorSpot[] = [
     emoji: '💬',
     name: 'Cheeky Chats',
     sub: 'Your conversations',
-    color: 'text-club border-club/50 hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+    color:
+      'text-club border-club/50 hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
     pos: 'left-[36%] top-[30%]'
   },
   {
@@ -46,7 +50,8 @@ const SPOTS: FloorSpot[] = [
     emoji: '⚡',
     name: 'The Spark List',
     sub: 'Who\u2019s out tonight',
-    color: 'text-club border-club/50 hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+    color:
+      'text-club border-club/50 hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
     pos: 'right-[36%] top-[30%]'
   },
   {
@@ -54,7 +59,8 @@ const SPOTS: FloorSpot[] = [
     emoji: '🛗',
     name: 'Elevators',
     sub: 'Gold · Platinum · Diamond',
-    color: 'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+    color:
+      'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
     pos: 'right-[5%] top-[8%]'
   },
   {
@@ -62,7 +68,8 @@ const SPOTS: FloorSpot[] = [
     emoji: '🧥',
     name: 'Coat Check',
     sub: 'Your collection',
-    color: 'text-purple-neon border-purple-neon/50 hover:shadow-[0_0_24px_rgba(155,89,182,0.25)]',
+    color:
+      'text-purple-neon border-purple-neon/50 hover:shadow-[0_0_24px_rgba(155,89,182,0.25)]',
     pos: 'right-[6%] bottom-[10%]'
   }
 ];
@@ -85,7 +92,9 @@ export default async function ClubPage() {
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-club/50 bg-zinc-900 text-3xl">
             💪
           </div>
-          <h1 className="mt-6 text-3xl font-extrabold">The velvet rope is up.</h1>
+          <h1 className="mt-6 text-3xl font-extrabold">
+            The velvet rope is up.
+          </h1>
           <p className="mt-3 text-zinc-400">
             Brutus needs your ID before you walk the floor — free, quick, and
             the VIP badge comes with it.
@@ -112,8 +121,8 @@ export default async function ClubPage() {
           The hour spins on
         </p>
         <p className="mx-auto mt-3 max-w-2xl text-lg text-zinc-400">
-          The Dance Floor at :00, Themed Night at :15, Speed Dating at :30,
-          the Rooftop at :45 — the Event Center holds the whole playlist.
+          The Dance Floor at :00, Themed Night at :15, Speed Dating at :30, the
+          Rooftop at :45 — the Event Center holds the whole playlist.
         </p>
       </div>
     </div>

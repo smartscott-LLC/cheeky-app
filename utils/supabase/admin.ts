@@ -16,10 +16,7 @@ const TRIAL_PERIOD_DAYS = 0;
 
 // Note: supabaseAdmin uses the SERVICE_ROLE_KEY which you must only use in a secure server-side context
 // as it has admin privileges and overwrites RLS policies!
-const supabaseAdmin = createClient<Database>(
-  supabaseUrl,
-  supabaseServiceKey
-);
+const supabaseAdmin = createClient<Database>(supabaseUrl, supabaseServiceKey);
 
 export { supabaseAdmin };
 
@@ -136,9 +133,8 @@ const applyVerificationResult = async (userId: string, sessionId: string) => {
 
     // Welcome to the club — best-effort, mail must never fail the webhook.
     try {
-      const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(
-        userId
-      );
+      const { data: authUser } =
+        await supabaseAdmin.auth.admin.getUserById(userId);
       const email = authUser?.user?.email;
       if (email && process.env.RESEND_API_KEY) {
         await sendClubMail({
@@ -164,7 +160,9 @@ Head to the club when you're ready — the DJ spins every hour, and the crew is 
     .update({ verified_at: new Date().toISOString() })
     .eq('id', userId);
   if (profileError)
-    throw new Error(`Profile verification update failed: ${profileError.message}`);
+    throw new Error(
+      `Profile verification update failed: ${profileError.message}`
+    );
 
   const { error: privateError } = await supabaseAdmin
     .from('profile_private')
@@ -183,9 +181,7 @@ Head to the club when you're ready — the DJ spins every hour, and the crew is 
  * never enters it twice (Stripe and Supabase share what Stripe collected).
  * Best-effort: age is already enforced by the ID check itself.
  */
-async function verifiedDob(
-  sessionId: string
-): Promise<{ birthday?: string }> {
+async function verifiedDob(sessionId: string): Promise<{ birthday?: string }> {
   try {
     const vs = await stripe.identity.verificationSessions.retrieve(sessionId, {
       expand: ['last_verification_report']
@@ -240,7 +236,8 @@ const deletePriceRecord = async (price: Stripe.Price) => {
     .from('prices')
     .delete()
     .eq('id', price.id);
-  if (deletionError) throw new Error(`Price deletion failed: ${deletionError.message}`);
+  if (deletionError)
+    throw new Error(`Price deletion failed: ${deletionError.message}`);
   console.log(`Price deleted: ${price.id}`);
 };
 
@@ -250,7 +247,9 @@ const upsertCustomerToSupabase = async (uuid: string, customerId: string) => {
     .upsert([{ id: uuid, stripe_customer_id: customerId }]);
 
   if (upsertError)
-    throw new Error(`Supabase customer record creation failed: ${upsertError.message}`);
+    throw new Error(
+      `Supabase customer record creation failed: ${upsertError.message}`
+    );
 
   return customerId;
 };
@@ -357,7 +356,8 @@ const copyBillingDetailsToCustomer = async (
       payment_method: { ...payment_method[payment_method.type] }
     })
     .eq('id', uuid);
-  if (updateError) throw new Error(`Customer update failed: ${updateError.message}`);
+  if (updateError)
+    throw new Error(`Customer update failed: ${updateError.message}`);
 };
 
 const manageSubscriptionStatusChange = async (
@@ -419,7 +419,9 @@ const manageSubscriptionStatusChange = async (
     .from('subscriptions')
     .upsert([subscriptionData]);
   if (upsertError)
-    throw new Error(`Subscription insert/update failed: ${upsertError.message}`);
+    throw new Error(
+      `Subscription insert/update failed: ${upsertError.message}`
+    );
   console.log(
     `Inserted/updated subscription [${subscription.id}] for user [${uuid}]`
   );

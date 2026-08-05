@@ -37,7 +37,9 @@ export default async function BrowsePage() {
 
   const { data: candidates } = await supabase
     .from('profiles')
-    .select('id, display_name, bio, one_liner, verified_at, gender, interested_in, photos(id, storage_path, position, is_primary)')
+    .select(
+      'id, display_name, bio, one_liner, verified_at, gender, interested_in, photos(id, storage_path, position, is_primary)'
+    )
     .is('bot_flagged_at', null)
     .filter('photos.held_at', 'is', 'null')
     .limit(50);
@@ -61,9 +63,7 @@ export default async function BrowsePage() {
           : 3;
 
   const people: BrowsePerson[] = (candidates ?? [])
-    .filter(
-      (p) => !exclude.has(p.id) && isCompatible(myProfile, p)
-    )
+    .filter((p) => !exclude.has(p.id) && isCompatible(myProfile, p))
     .slice(0, 30)
     .map((p) => ({
       id: p.id,
@@ -71,12 +71,10 @@ export default async function BrowsePage() {
       bio: p.bio,
       one_liner: p.one_liner,
       verified_at: p.verified_at,
-      photos: (p.photos ?? [])
-        .slice(0, photoLimit)
-        .map((photo) => ({
-          storage_path: photo.storage_path,
-          is_primary: photo.is_primary
-        }))
+      photos: (p.photos ?? []).slice(0, photoLimit).map((photo) => ({
+        storage_path: photo.storage_path,
+        is_primary: photo.is_primary
+      }))
     }));
 
   const photoBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`;
@@ -99,7 +97,11 @@ export default async function BrowsePage() {
           back, it&apos;s instant. No waiting, no wondering.
         </p>
         <div className="mt-10">
-          <BrowseCard people={people} photoBase={photoBase} wavedIds={wavedIds} />
+          <BrowseCard
+            people={people}
+            photoBase={photoBase}
+            wavedIds={wavedIds}
+          />
         </div>
       </div>
     </div>

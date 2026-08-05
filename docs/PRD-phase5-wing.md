@@ -27,9 +27,9 @@ swapped, never patched.
 
 - Incumbents abandon users at the match ("leave you to your own demise").
 - Club Cheeky unlocks **matched-only content** — stuff couples can do that
-  unmatched users cannot, which makes matching the *entry point*, not the finish.
+  unmatched users cannot, which makes matching the _entry point_, not the finish.
 - The **game side** (characters, badges, atmosphere) keeps non-daters and
-  dry-spell users coming back: the club is a place to *be*, not a feed to check.
+  dry-spell users coming back: the club is a place to _be_, not a feed to check.
 - Word of mouth: "I was on Club Cheeky for three hours" — time-in-app is the
   marketing engine.
 
@@ -59,13 +59,13 @@ Two tiers per floor: **✨ featured** (announces on the ticker; accept = 2-hour
 pass + date room) and **🎁 mini** (silent gesture; accept just opens the
 chat). Five items per floor (1 featured + 4 minis) + the basket.
 
-| Floor | Featured (announces + pass) | Minis (silent gestures) |
-|---|---|---|
-| Silver | 🧸 Stuffed Bear — 25 | 🦆 Rubber Duck 10 · 🍭 Candy Hearts 12 · 🐰 Plush Bunny 15 · 🐻 Mini Bear 20 |
-| Gold | 🌹 Golden Bouquet — 50 | 🎲 Golden Dice 25 · 🍫 Gold Bar 30 · 🕶️ Gold Shades 35 · ✒️ Gold Pen 40 |
-| Platinum | 💎 Jewelry — 100 | 🖊️ Metal Pen 45 · 🔑 Platinum Keychain 55 · 🎩 Velvet Bow Tie 65 · 🥃 Pocket Flask 75 |
-| Diamond | 🍾 Champagne — 200 | 👓 Diamond Shades 80 · 🖋️ Fountain Pen 100 · 🎩 Top Hat 120 · 💎 Crystal Heart 150 |
-| **Every floor** | 🧺 The Gift Basket — **300** (all four, 75 off) | — |
+| Floor           | Featured (announces + pass)                     | Minis (silent gestures)                                                               |
+| --------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Silver          | 🧸 Stuffed Bear — 25                            | 🦆 Rubber Duck 10 · 🍭 Candy Hearts 12 · 🐰 Plush Bunny 15 · 🐻 Mini Bear 20          |
+| Gold            | 🌹 Golden Bouquet — 50                          | 🎲 Golden Dice 25 · 🍫 Gold Bar 30 · 🕶️ Gold Shades 35 · ✒️ Gold Pen 40               |
+| Platinum        | 💎 Jewelry — 100                                | 🖊️ Metal Pen 45 · 🔑 Platinum Keychain 55 · 🎩 Velvet Bow Tie 65 · 🥃 Pocket Flask 75 |
+| Diamond         | 🍾 Champagne — 200                              | 👓 Diamond Shades 80 · 🖋️ Fountain Pen 100 · 🎩 Top Hat 120 · 💎 Crystal Heart 150    |
+| **Every floor** | 🧺 The Gift Basket — **300** (all four, 75 off) | —                                                                                     |
 
 - Minis are the icebreaker: show interest without the first-line anxiety.
   They are priced under their floor's featured gift and never announce.
@@ -140,13 +140,13 @@ collectible relationships over time. The game side keeps non-daters coming back.
 
 ### 5.2 Cast (founder-driven)
 
-| Character | Role | Where they live |
-|---|---|---|
-| **Brutus** | The Bouncer — verification, consent, safety | Door / verification flow |
-| **The DJ** | The Floor — announcements, song chat energy | Events / matches |
-| **The Bartender** | The Store — gifts come from behind his bar | Gift store |
-| **The Hostess** | The Calendar — events, trivia nights | Events / date nights |
-| **The Coat Check** | Inventory — "check your coats" (gifts stash) | Inventory UI |
+| Character          | Role                                         | Where they live          |
+| ------------------ | -------------------------------------------- | ------------------------ |
+| **Brutus**         | The Bouncer — verification, consent, safety  | Door / verification flow |
+| **The DJ**         | The Floor — announcements, song chat energy  | Events / matches         |
+| **The Bartender**  | The Store — gifts come from behind his bar   | Gift store               |
+| **The Hostess**    | The Calendar — events, trivia nights         | Events / date nights     |
+| **The Coat Check** | Inventory — "check your coats" (gifts stash) | Inventory UI             |
 
 ### 5.3 Mechanics (small first — OPEN details)
 
@@ -156,7 +156,7 @@ collectible relationships over time. The game side keeps non-daters coming back.
   and occasional ambient moments. Scripted and cheap now; DeepSeek-backed
   conversational characters later (connector already linked in Vercel).
 - **Collectible character cards** — feed Phase 5 Gems/collectibles economy.
-- **Guardrail:** characters are *clearly* characters (like the DJ's
+- **Guardrail:** characters are _clearly_ characters (like the DJ's
   announcements). No NPC-driven fake engagement, no fake likes from
   characters. Scripted fun is honest fun.
 
@@ -207,7 +207,7 @@ collectible relationships over time. The game side keeps non-daters coming back.
 - **Stale events get swapped, not patched**: retire a kind → the scheduler
   stops creating it → the new hot thing takes the slot (mimic what's popping
   IRL).
-- This is why everything stays modular *now*, while it's cheap: the building
+- This is why everything stays modular _now_, while it's cheap: the building
   can change its whole personality without a remodel.
 
 ## 6.5 Module 4 — Center Stage (miss-streak rescue)
@@ -218,7 +218,7 @@ triggers a rescue:
 
 - **What happens (OPEN):** a "center stage" moment — featured placement in
   the next grid, a hype announcement, a spotlight badge. The goal is to get
-  hype *around* them and give them a genuine boost, never a pity signal
+  hype _around_ them and give them a genuine boost, never a pity signal
   (silent to everyone else — see Honest + Encouraging).
 - **Trigger (OPEN):** consecutive no-match events threshold (5 proposed);
   denied-gift runs; configurable per floor.
@@ -245,12 +245,12 @@ triggers a rescue:
 - **Phase 5 — Economy+** (`PRD-foundation.md` §11): Gems/collectibles, gifts,
   giveaways, referral dashboard. The Store Wing is Phase 5's anchor.
 - Build order (LOCKED): **Characters schema + asset pipeline** (shipped
-   2026-08-02 — tables, seed cast, `public/personas/{slug}/` contract) →
-   **Gift Store** (shipped 2026-08-02 — catalog incl. mini tier, inventory,
-   sends, ticker, date rooms) → **Couple Trivia** (shipped 2026-08-02 —
-   25-question bank, 5 packs, mutual-tap engine, in-chat Date Night panel,
-   couples leaderboard) → **Center Stage** (shipped 2026-08-02 — 5-miss
-   streak triggers a 24h public spotlight in the grid; streak stays private;
-   a match clears it).
+  2026-08-02 — tables, seed cast, `public/personas/{slug}/` contract) →
+  **Gift Store** (shipped 2026-08-02 — catalog incl. mini tier, inventory,
+  sends, ticker, date rooms) → **Couple Trivia** (shipped 2026-08-02 —
+  25-question bank, 5 packs, mutual-tap engine, in-chat Date Night panel,
+  couples leaderboard) → **Center Stage** (shipped 2026-08-02 — 5-miss
+  streak triggers a 24h public spotlight in the grid; streak stays private;
+  a match clears it).
 - The Hourly Playlist (v0.4) already proves the modular calendar; these
   modules extend it.

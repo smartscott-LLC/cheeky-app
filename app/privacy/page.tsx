@@ -66,7 +66,10 @@ export default function PrivacyPage() {
               <h2 className="font-bold">{s.title}</h2>
               <ul className="mt-3 space-y-2">
                 {s.items.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm text-zinc-400">
+                  <li
+                    key={item}
+                    className="flex items-start gap-3 text-sm text-zinc-400"
+                  >
                     <span className="text-club">✓</span>
                     {item}
                   </li>
@@ -77,8 +80,8 @@ export default function PrivacyPage() {
         </div>
 
         <p className="mt-8 text-xs text-zinc-600">
-          Policy source: docs/Governance/privacy.md (binding on the build). Living
-          document — refined as the club grows.
+          Policy source: docs/Governance/privacy.md (binding on the build).
+          Living document — refined as the club grows.
         </p>
 
         <p className="mt-4 text-sm text-zinc-400">

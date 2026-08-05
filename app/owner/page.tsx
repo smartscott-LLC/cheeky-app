@@ -131,7 +131,13 @@ export default function OwnerPage() {
     }[]
   >([]);
   const [catalog, setCatalog] = useState<
-    { id: string; slug: string; name: string; emoji: string; token_cost: number }[]
+    {
+      id: string;
+      slug: string;
+      name: string;
+      emoji: string;
+      token_cost: number;
+    }[]
   >([]);
   // Emergency controls — model failover + floor closures.
   const [castModel, setCastModel] = useState('deepseek-chat');
@@ -155,7 +161,12 @@ export default function OwnerPage() {
     }[]
   >([]);
   const [banned, setBanned] = useState<
-    { email: string; reason: string; banned_until: string | null; created_at: string }[]
+    {
+      email: string;
+      reason: string;
+      banned_until: string | null;
+      created_at: string;
+    }[]
   >([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
@@ -316,8 +327,11 @@ export default function OwnerPage() {
   ];
 
   const applyPreset = (p: (typeof PRESETS)[number]) => {
-    const rows: { id: number; kind: 'tokens' | 'gift' | 'membership'; value: string }[] =
-      [];
+    const rows: {
+      id: number;
+      kind: 'tokens' | 'gift' | 'membership';
+      value: string;
+    }[] = [];
     let id = 1;
     if (typeof p.payload.tokens === 'number')
       rows.push({ id: id++, kind: 'tokens', value: String(p.payload.tokens) });
@@ -333,10 +347,7 @@ export default function OwnerPage() {
   };
 
   const addMintRow = () =>
-    setMintRows((r) => [
-      ...r,
-      { id: Date.now(), kind: 'tokens', value: '' }
-    ]);
+    setMintRows((r) => [...r, { id: Date.now(), kind: 'tokens', value: '' }]);
   const removeMintRow = (id: number) =>
     setMintRows((r) => (r.length > 1 ? r.filter((x) => x.id !== id) : r));
   const setMintRow = (
@@ -345,13 +356,15 @@ export default function OwnerPage() {
   ) => setMintRows((r) => r.map((x) => (x.id === id ? { ...x, ...patch } : x)));
 
   const printMint = async () => {
-    const payload: { tokens?: number; gifts?: string[]; membership?: string } = {};
+    const payload: { tokens?: number; gifts?: string[]; membership?: string } =
+      {};
     const gifts: string[] = [];
     for (const row of mintRows) {
       const v = row.value.trim();
       if (!v) continue;
       if (row.kind === 'tokens')
-        payload.tokens = (payload.tokens ?? 0) + Math.max(1, parseInt(v, 10) || 1);
+        payload.tokens =
+          (payload.tokens ?? 0) + Math.max(1, parseInt(v, 10) || 1);
       else if (row.kind === 'gift') gifts.push(v);
       else payload.membership = v;
     }
@@ -408,15 +421,24 @@ export default function OwnerPage() {
     refresh();
   };
 
-  const resolveFlag = async (flagId: string, action: 'grant' | 'give-code' | 'dismiss') => {
+  const resolveFlag = async (
+    flagId: string,
+    action: 'grant' | 'give-code' | 'dismiss'
+  ) => {
     setBusy(true);
     const res = await ownerResolveFlag({ key, flagId, action });
     setBusy(false);
     if (res.error) return notice(false, res.error);
     if (res.code) {
-      notice(true, `Code minted for the cast: ${res.code} — they'll hand it over in chat`);
+      notice(
+        true,
+        `Code minted for the cast: ${res.code} — they'll hand it over in chat`
+      );
     } else {
-      notice(true, action === 'grant' ? 'Flag granted — member got it' : 'Flag dismissed');
+      notice(
+        true,
+        action === 'grant' ? 'Flag granted — member got it' : 'Flag dismissed'
+      );
     }
     refresh();
   };
@@ -437,7 +459,8 @@ export default function OwnerPage() {
     const res = await ownerPostAnnouncement({
       key,
       message: String(fd.get('message') ?? ''),
-      displayStyle: String(fd.get('style') ?? 'scroll') as 'scroll' | 'roll' | 'fade',
+      displayStyle: String(fd.get('style') ?? 'scroll') as
+        'scroll' | 'roll' | 'fade',
       hours: Number(fd.get('hours') ?? 0)
     });
     setBusy(false);
@@ -469,19 +492,36 @@ export default function OwnerPage() {
     hours: number
   ) => {
     setBusy(true);
-    const res = await ownerSetFloorClosure({ key, floor, closed, reason, hours });
+    const res = await ownerSetFloorClosure({
+      key,
+      floor,
+      closed,
+      reason,
+      hours
+    });
     setBusy(false);
     if (res.error) return notice(false, res.error);
-    notice(true, closed ? `${floor} is under construction` : `${floor} is open`);
+    notice(
+      true,
+      closed ? `${floor} is under construction` : `${floor} is open`
+    );
     refresh();
   };
 
-  const resolveReport = async (reportId: number, verdict: 'upheld' | 'dismissed') => {
+  const resolveReport = async (
+    reportId: number,
+    verdict: 'upheld' | 'dismissed'
+  ) => {
     setBusy(true);
     const res = await ownerResolveReport({ key, reportId, verdict });
     setBusy(false);
     if (res.error) return notice(false, res.error);
-    notice(true, verdict === 'upheld' ? 'Report upheld — the hold stays' : 'Report dismissed — the hold lifted');
+    notice(
+      true,
+      verdict === 'upheld'
+        ? 'Report upheld — the hold stays'
+        : 'Report dismissed — the hold lifted'
+    );
     refresh();
   };
 
@@ -501,7 +541,10 @@ export default function OwnerPage() {
     });
     setBusy(false);
     if (res.error) return notice(false, res.error);
-    notice(true, banned ? 'Email banned — the door will refuse it' : 'Email pardoned');
+    notice(
+      true,
+      banned ? 'Email banned — the door will refuse it' : 'Email pardoned'
+    );
     e.currentTarget.reset();
     refresh();
   };
@@ -517,8 +560,8 @@ export default function OwnerPage() {
             The Lions Den
           </h1>
           <p className="mt-2 text-center text-sm text-zinc-400">
-            The owner&apos;s office. If this is you, it opens on its own — no key
-            needed.
+            The owner&apos;s office. If this is you, it opens on its own — no
+            key needed.
           </p>
           <input
             type="password"
@@ -566,7 +609,7 @@ export default function OwnerPage() {
               name="message"
               required
               rows={4}
-              placeholder="What&apos;s on your mind?"
+              placeholder="What's on your mind?"
               className="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-white outline-none focus:ring-2 focus:ring-club/50"
             />
             <button
@@ -621,7 +664,11 @@ export default function OwnerPage() {
         </div>
 
         {msg && (
-          <p className={`mt-3 text-sm ${msg.ok ? 'text-emerald-400' : 'text-club'}`}>{msg.text}</p>
+          <p
+            className={`mt-3 text-sm ${msg.ok ? 'text-emerald-400' : 'text-club'}`}
+          >
+            {msg.text}
+          </p>
         )}
 
         {/* The pulse — minimal metrics, no dashboards required */}
@@ -675,19 +722,35 @@ export default function OwnerPage() {
         <div className="mt-8">
           <h2 className="text-lg font-bold">🚩 The flag job</h2>
           {flags.length === 0 ? (
-            <p className="mt-2 text-sm text-zinc-500">No open flags. The cast hasn&apos;t needed the owner.</p>
+            <p className="mt-2 text-sm text-zinc-500">
+              No open flags. The cast hasn&apos;t needed the owner.
+            </p>
           ) : (
             <div className="mt-3 space-y-3">
               {flags.map((f) => (
-                <div key={f.id} className="rounded-xl border border-club/30 bg-zinc-900/60 p-4">
+                <div
+                  key={f.id}
+                  className="rounded-xl border border-club/30 bg-zinc-900/60 p-4"
+                >
                   <p className="text-sm">
-                    <span className="font-bold">{f.characters?.name ?? f.actor_ref ?? 'A cast member'}</span>{' '}
+                    <span className="font-bold">
+                      {f.characters?.name ?? f.actor_ref ?? 'A cast member'}
+                    </span>{' '}
                     wanted to give{' '}
-                    <span className="font-bold text-club">{label(f.benefit_type, f.benefit_value)}</span>{' '}
-                    to <span className="font-bold">{f.profiles?.display_name ?? 'a member'}</span>
+                    <span className="font-bold text-club">
+                      {label(f.benefit_type, f.benefit_value)}
+                    </span>{' '}
+                    to{' '}
+                    <span className="font-bold">
+                      {f.profiles?.display_name ?? 'a member'}
+                    </span>
                   </p>
-                  <p className="mt-1 text-sm italic text-zinc-400">“{f.reason}”</p>
-                  <p className="mt-1 text-xs text-zinc-600">{new Date(f.created_at).toLocaleString()}</p>
+                  <p className="mt-1 text-sm italic text-zinc-400">
+                    “{f.reason}”
+                  </p>
+                  <p className="mt-1 text-xs text-zinc-600">
+                    {new Date(f.created_at).toLocaleString()}
+                  </p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     <button
                       onClick={() => resolveFlag(f.id, 'grant')}
@@ -736,12 +799,19 @@ export default function OwnerPage() {
                 >
                   <p className="text-sm">
                     <span className="font-bold">Report #{r.id}</span>{' '}
-                    <span className="text-zinc-500">· {new Date(r.created_at).toLocaleString()}</span>
+                    <span className="text-zinc-500">
+                      · {new Date(r.created_at).toLocaleString()}
+                    </span>
                   </p>
                   <p className="mt-1 text-sm">“{r.reason}”</p>
                   <p className="mt-1 text-xs text-zinc-500">
-                    {r.verdict === 'violation' ? '🛑 flagged as violation' : '❔ inconclusive'} · {r.category ?? 'no category'} ·{' '}
-                    {r.confidence != null ? `${Math.round(r.confidence * 100)}% confident` : ''}
+                    {r.verdict === 'violation'
+                      ? '🛑 flagged as violation'
+                      : '❔ inconclusive'}{' '}
+                    · {r.category ?? 'no category'} ·{' '}
+                    {r.confidence != null
+                      ? `${Math.round(r.confidence * 100)}% confident`
+                      : ''}
                     {r.review_summary ? ` — ${r.review_summary}` : ''}
                   </p>
                   <p className="mt-0.5 font-mono text-[10px] text-zinc-600">
@@ -848,21 +918,52 @@ export default function OwnerPage() {
         {/* Generate codes */}
         <div className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="font-bold">🎟️ Generate swag codes</h2>
-          <form onSubmit={generate} className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <select name="type" defaultValue="gift" className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white">
+          <form
+            onSubmit={generate}
+            className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4"
+          >
+            <select
+              name="type"
+              defaultValue="gift"
+              className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white"
+            >
               <option value="gift">Gift</option>
               <option value="membership">Membership</option>
               <option value="tokens">Tokens</option>
             </select>
-            <input name="value" required list="swag-values" placeholder="teddy / gold / 50" className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white" />
+            <input
+              name="value"
+              required
+              list="swag-values"
+              placeholder="teddy / gold / 50"
+              className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white"
+            />
             <datalist id="swag-values">
-              <option value="teddy" /><option value="golden_roses" /><option value="jewelry" />
-              <option value="champagne" /><option value="gift_basket" />
-              <option value="gold" /><option value="platinum" /><option value="diamond" />
-              <option value="20" /><option value="50" /><option value="100" />
+              <option value="teddy" />
+              <option value="golden_roses" />
+              <option value="jewelry" />
+              <option value="champagne" />
+              <option value="gift_basket" />
+              <option value="gold" />
+              <option value="platinum" />
+              <option value="diamond" />
+              <option value="20" />
+              <option value="50" />
+              <option value="100" />
             </datalist>
-            <input name="count" type="number" min={1} max={100} defaultValue={1} className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white" />
-            <input name="notes" placeholder="notes (optional)" className="col-span-2 rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white sm:col-span-4" />
+            <input
+              name="count"
+              type="number"
+              min={1}
+              max={100}
+              defaultValue={1}
+              className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white"
+            />
+            <input
+              name="notes"
+              placeholder="notes (optional)"
+              className="col-span-2 rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white sm:col-span-4"
+            />
             <button
               type="submit"
               disabled={busy}
@@ -894,14 +995,21 @@ export default function OwnerPage() {
                 : 'until cleared'}
             </p>
           )}
-          <form onSubmit={postAnnounce} className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <form
+            onSubmit={postAnnounce}
+            className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4"
+          >
             <input
               name="message"
               required
               placeholder="Tonight: Rooftop at 11 — dress to impress"
               className="col-span-2 rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white sm:col-span-4"
             />
-            <select name="style" defaultValue="scroll" className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white">
+            <select
+              name="style"
+              defaultValue="scroll"
+              className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white"
+            >
               <option value="scroll">Ticker (right→left)</option>
               <option value="roll">Roll up</option>
               <option value="fade">Fade</option>
@@ -927,8 +1035,8 @@ export default function OwnerPage() {
         <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="font-bold">🤖 Model switch</h2>
           <p className="mt-1 text-xs text-zinc-500">
-            Swap a down model in seconds. Keys stay in env — this only
-            changes which model is called.
+            Swap a down model in seconds. Keys stay in env — this only changes
+            which model is called.
           </p>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <label className="block">
@@ -1109,17 +1217,50 @@ export default function OwnerPage() {
         {/* Grant directly */}
         <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="font-bold">🎁 Grant directly (no code)</h2>
-          <form onSubmit={grantDirect} className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <input name="email" required type="email" placeholder="member@email.com" className="col-span-2 rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white sm:col-span-2" />
-            <select name="type" defaultValue="tokens" className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white">
+          <form
+            onSubmit={grantDirect}
+            className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4"
+          >
+            <input
+              name="email"
+              required
+              type="email"
+              placeholder="member@email.com"
+              className="col-span-2 rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white sm:col-span-2"
+            />
+            <select
+              name="type"
+              defaultValue="tokens"
+              className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white"
+            >
               <option value="tokens">Tokens</option>
               <option value="membership">Membership</option>
               <option value="gift">Gift</option>
             </select>
-            <input name="value" required placeholder="100 / gold / teddy" className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white" />
-            <input name="days" type="number" min={1} defaultValue={30} title="Membership days" className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white" />
-            <input name="reason" placeholder="reason (optional)" className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white" />
-            <button type="submit" disabled={busy} className="col-span-2 rounded-lg bg-emerald-600 px-6 py-2.5 font-bold text-white transition hover:bg-emerald-500 disabled:opacity-40 sm:col-span-4">
+            <input
+              name="value"
+              required
+              placeholder="100 / gold / teddy"
+              className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white"
+            />
+            <input
+              name="days"
+              type="number"
+              min={1}
+              defaultValue={30}
+              title="Membership days"
+              className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white"
+            />
+            <input
+              name="reason"
+              placeholder="reason (optional)"
+              className="rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-white"
+            />
+            <button
+              type="submit"
+              disabled={busy}
+              className="col-span-2 rounded-lg bg-emerald-600 px-6 py-2.5 font-bold text-white transition hover:bg-emerald-500 disabled:opacity-40 sm:col-span-4"
+            >
               Grant
             </button>
           </form>
@@ -1139,10 +1280,19 @@ export default function OwnerPage() {
               </thead>
               <tbody>
                 {rules.map((r) => (
-                  <tr key={`${r.benefit_type}:${r.benefit_value}`} className="border-t border-zinc-800">
-                    <td className="px-4 py-2">{label(r.benefit_type, r.benefit_value)}</td>
-                    <td className="px-4 py-2">{r.owner_only ? '—' : r.weekly_limit ?? 'unlimited'}</td>
-                    <td className="px-4 py-2">{r.owner_only ? '🔒 owner' : 'cast ok'}</td>
+                  <tr
+                    key={`${r.benefit_type}:${r.benefit_value}`}
+                    className="border-t border-zinc-800"
+                  >
+                    <td className="px-4 py-2">
+                      {label(r.benefit_type, r.benefit_value)}
+                    </td>
+                    <td className="px-4 py-2">
+                      {r.owner_only ? '—' : (r.weekly_limit ?? 'unlimited')}
+                    </td>
+                    <td className="px-4 py-2">
+                      {r.owner_only ? '🔒 owner' : 'cast ok'}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -1230,11 +1380,20 @@ export default function OwnerPage() {
           <div>
             <h2 className="text-lg font-bold">🎟️ Recent codes</h2>
             <div className="mt-3 space-y-2">
-              {codes.length === 0 && <p className="text-sm text-zinc-500">None yet.</p>}
+              {codes.length === 0 && (
+                <p className="text-sm text-zinc-500">None yet.</p>
+              )}
               {codes.map((c) => (
-                <div key={c.id} className="flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2 text-sm">
+                <div
+                  key={c.id}
+                  className="flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2 text-sm"
+                >
                   <div>
-                    <button onClick={() => copy(c.code)} className="font-mono text-club hover:underline" title="Copy">
+                    <button
+                      onClick={() => copy(c.code)}
+                      className="font-mono text-club hover:underline"
+                      title="Copy"
+                    >
                       {c.code}
                     </button>
                     <span className="ml-2 text-zinc-500">
@@ -1252,16 +1411,27 @@ export default function OwnerPage() {
           <div>
             <h2 className="text-lg font-bold">📜 Recent grants</h2>
             <div className="mt-3 space-y-2">
-              {grants.length === 0 && <p className="text-sm text-zinc-500">None yet.</p>}
+              {grants.length === 0 && (
+                <p className="text-sm text-zinc-500">None yet.</p>
+              )}
               {grants.map((g) => (
-                <div key={g.id} className="rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2 text-sm">
+                <div
+                  key={g.id}
+                  className="rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2 text-sm"
+                >
                   <p>
-                    <span className="font-bold">{g.profiles?.display_name ?? 'a member'}</span>{' '}
-                    got <span className="text-club">{label(g.benefit_type, g.benefit_value)}</span>
+                    <span className="font-bold">
+                      {g.profiles?.display_name ?? 'a member'}
+                    </span>{' '}
+                    got{' '}
+                    <span className="text-club">
+                      {label(g.benefit_type, g.benefit_value)}
+                    </span>
                   </p>
                   <p className="text-xs text-zinc-500">
                     {g.reason} · {g.actor_type}
-                    {g.actor_ref ? `/${g.actor_ref}` : ''} · {new Date(g.created_at).toLocaleString()}
+                    {g.actor_ref ? `/${g.actor_ref}` : ''} ·{' '}
+                    {new Date(g.created_at).toLocaleString()}
                   </p>
                 </div>
               ))}
@@ -1313,7 +1483,8 @@ export default function OwnerPage() {
                       value={row.kind}
                       onChange={(e) =>
                         setMintRow(row.id, {
-                          kind: e.target.value as 'tokens' | 'gift' | 'membership'
+                          kind: e.target.value as
+                            'tokens' | 'gift' | 'membership'
                         })
                       }
                       className="w-28 rounded-lg border border-zinc-700 bg-zinc-900 p-2 text-xs text-white"
@@ -1324,7 +1495,9 @@ export default function OwnerPage() {
                     </select>
                     <input
                       value={row.value}
-                      onChange={(e) => setMintRow(row.id, { value: e.target.value })}
+                      onChange={(e) =>
+                        setMintRow(row.id, { value: e.target.value })
+                      }
                       list="mint-values"
                       placeholder={
                         row.kind === 'gift'

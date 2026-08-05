@@ -8,6 +8,7 @@ points — every push to `main` is production.
 ## [Unreleased]
 
 ### Changed
+
 - **One env, period**: every script and live test now reads `env.new` (the master vault)
   instead of `.env.local` — the stale hybrid from the pre-wipe era was the source of the
   PostHog-key and pooler-ref mixups. `.env.local` is now a generated copy refreshed by
@@ -15,10 +16,13 @@ points — every push to `main` is production.
 - **Repo organized**: historical audits + setup reports moved to `docs/archives/`;
   `first-floor-flow.mmd` lives in `docs/`; stale `schema.sql`, Stripe CSV exports, and build
   junk removed; governance PDFs committed under `docs/Governance/`. Repo maps updated.
+- **Formatting pass**: Prettier run across the whole repo (`.mmd` ignored — no parser), lint +
+  test + build re-verified green after.
 
 ## [v1.1-docs-locked] — 2026-08-05
 
 ### Added
+
 - **One-stop door**: `/verify` is the single entry — all four consents + account fields with
   Brutus in one form, then Stripe Identity, then straight to the lobby on email confirm.
 - **PWA/Android wrapper**: manifest, service worker, icons, `assetlinks.json`
@@ -38,6 +42,7 @@ points — every push to `main` is production.
   reference, AGENTS.md/README refresh.
 
 ### Fixed
+
 - **Bot-guard trigger was silently killing likes and event joins** (caught by the new test
   suite): `handle_bot_guard` read `new.sender_id` unconditionally, but `likes` (`liker_id`) and
   `event_entries` (`user_id`) have no such column — every like and every event join errored.
@@ -51,6 +56,7 @@ points — every push to `main` is production.
   cloud — the missing host was why analytics never fired.
 
 ### Changed
+
 - `parseTokenAmount` extracted to `utils/token-amount.ts` (shared by the webhook credit path and
   its unit test).
 - CI runs `pnpm test` on Node 24 alongside lint + build; `fixtures/node_modules` gitignored.
@@ -58,6 +64,7 @@ points — every push to `main` is production.
 ## [v1.0-den-locked] — 2026-08-04
 
 ### Added
+
 - **The Lions Den** (`/owner`): the owner cockpit — Mint (presets + bundle builder), announcement
   board, model failover, floor closures, pulse metrics, events/ledger/catalog boards, the 🛡️
   Safety Desk (human confirm loop for DateSafe), the banned-account registry, engine kill-switch.
@@ -77,6 +84,7 @@ points — every push to `main` is production.
 - PostHog analytics integration (`instrumentation-client.ts`).
 
 ### Fixed
+
 - Every inside-club exit returns to the floor you came from (`cc_last_floor` cookie).
 - Account membership card is tier-aware (grants, not just subscriptions).
 - 1000-token bundle was recurring in Stripe — corrected to one-time.
@@ -84,6 +92,7 @@ points — every push to `main` is production.
 ## [v0.1-dance-floor] — 2026-08-01
 
 ### Added
+
 - **The Event Engine**: hourly playlist — Dance Floor (:00), Themed Night (:15), Speed Dating
   (:30), Rooftop (:45); token holds (reserve, not debit), grid/rotation mechanics, instant
   mutual match, the song phase, no-match auto-refund.
@@ -95,6 +104,7 @@ points — every push to `main` is production.
 ## [v0.1-floor-1-locked] — 2026-07-31
 
 ### Added
+
 - **The club floor (Phase 1)**: signup with 18+ gate, retention picker, terms/privacy consents;
   Stripe Identity verification (ID + selfie, 18+ gate, result-only storage); profiles with
   photos (3-cap in DB); browse & match (likes, instant mutual match); chat & messaging with
@@ -104,6 +114,6 @@ points — every push to `main` is production.
 
 ---
 
-*Format: milestone-shaped during build-out. Before any release, entries above roll into the
+_Format: milestone-shaped during build-out. Before any release, entries above roll into the
 release heading with a date. Keep entries to what a user or operator would notice — "what and
-why", not how.*
+why", not how._

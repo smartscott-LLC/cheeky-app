@@ -105,14 +105,18 @@ export default async function CoatCheckPage() {
         {typeof streak === 'number' && streak > 0 && (
           <p className="mt-4 text-center text-sm text-club">
             🔥 {streak} day{streak === 1 ? '' : 's'} in a row
-            {streak >= 7 && streak < 30 ? ' — keep it going, the Pearl is at 30' : ''}
+            {streak >= 7 && streak < 30
+              ? ' — keep it going, the Pearl is at 30'
+              : ''}
           </p>
         )}
 
         {/* Gems */}
         <div className="mt-10">
           <h2 className="text-xl font-bold">💎 Gems</h2>
-          <p className="text-sm text-zinc-500">The vault. Limited collectibles.</p>
+          <p className="text-sm text-zinc-500">
+            The vault. Limited collectibles.
+          </p>
           <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
             {(gems ?? []).map((g) => {
               const owned = ownedGems.has(g.id);
@@ -138,7 +142,9 @@ export default async function CoatCheckPage() {
                         : 'in the vault'}
                     </p>
                   ) : (
-                    <p className="mt-2 text-xs text-zinc-500">{g.how_to_earn}</p>
+                    <p className="mt-2 text-xs text-zinc-500">
+                      {g.how_to_earn}
+                    </p>
                   )}
                 </div>
               );
@@ -149,7 +155,9 @@ export default async function CoatCheckPage() {
         {/* Badges */}
         <div className="mt-10">
           <h2 className="text-xl font-bold">🎖️ Badges</h2>
-          <p className="text-sm text-zinc-500">What you&apos;ve earned on the floor.</p>
+          <p className="text-sm text-zinc-500">
+            What you&apos;ve earned on the floor.
+          </p>
           <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             {(badges ?? []).map((b) => {
               const owned = ownedBadges.has(b.id);
@@ -184,7 +192,9 @@ export default async function CoatCheckPage() {
             <p className="text-sm text-zinc-500">Gifts waiting to go out.</p>
             <div className="mt-3 space-y-2">
               {stash.length === 0 && (
-                <p className="text-sm text-zinc-500">Empty. The Gift Store is that way.</p>
+                <p className="text-sm text-zinc-500">
+                  Empty. The Gift Store is that way.
+                </p>
               )}
               {stash.map((s) => (
                 <p key={s.id} className="text-sm">

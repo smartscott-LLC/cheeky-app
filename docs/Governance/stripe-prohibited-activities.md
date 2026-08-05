@@ -230,6 +230,6 @@ and, where required, referral to law enforcement.
 
 ---
 
-*Living document — refined as the club grows. Backed by the policy layer in
+_Living document — refined as the club grows. Backed by the policy layer in
 `docs/Governance/`. If automated content scanning is required by a platform
-or jurisdiction, it is a defined build we will ship and document here.*
+or jurisdiction, it is a defined build we will ship and document here._

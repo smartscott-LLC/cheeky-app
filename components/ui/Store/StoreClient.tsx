@@ -67,8 +67,8 @@ export default function StoreClient({
       {!verified && (
         <div className="rounded-xl border border-gold/40 bg-gold/10 p-5 text-center">
           <p className="text-sm font-semibold text-gold">
-            The card comes before the cash — pass the Door Check first. It&apos;s
-            free, and takes two minutes.
+            The card comes before the cash — pass the Door Check first.
+            It&apos;s free, and takes two minutes.
           </p>
           <Button
             variant="slim"
@@ -113,7 +113,9 @@ export default function StoreClient({
                 </p>
                 <Button
                   variant="slim"
-                  onClick={() => (isCurrent ? router.push('/account') : pick(price))}
+                  onClick={() =>
+                    isCurrent ? router.push('/account') : pick(price)
+                  }
                   className="mt-5 block w-full"
                 >
                   {isCurrent
@@ -142,7 +144,10 @@ export default function StoreClient({
                 className="flex flex-col rounded-xl border border-zinc-800 bg-zinc-900/60 p-6"
               >
                 <h3 className="text-lg font-bold text-white">
-                  {pack.productName.replace(/^Cheeky Token (Bag|Bundle) - /i, '')}
+                  {pack.productName.replace(
+                    /^Cheeky Token (Bag|Bundle) - /i,
+                    ''
+                  )}
                 </h3>
                 <p className="mt-4 text-3xl font-extrabold text-club">
                   {money(pack)}

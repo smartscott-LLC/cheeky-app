@@ -35,8 +35,8 @@ export default async function FloorsPage() {
           🛗 The floors
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
-          Every floor is its own room. Pick where you want to go — the
-          elevators take you there.
+          Every floor is its own room. Pick where you want to go — the elevators
+          take you there.
         </p>
 
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -47,7 +47,9 @@ export default async function FloorsPage() {
                 key={floor.slug}
                 href={`/floor/${floor.slug}`}
                 className={`group relative overflow-hidden rounded-2xl border transition ${
-                  locked ? 'border-zinc-800' : 'border-zinc-700 hover:border-gold'
+                  locked
+                    ? 'border-zinc-800'
+                    : 'border-zinc-700 hover:border-gold'
                 }`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}

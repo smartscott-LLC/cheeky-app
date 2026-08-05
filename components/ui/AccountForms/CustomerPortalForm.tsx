@@ -74,8 +74,8 @@ export default function CustomerPortalForm({
             </p>
           ) : (
             <p className="mt-1 text-zinc-400">
-              You&apos;re on the Silver floor — free, and it stays fun. When
-              you want the view from up top, the memberships are waiting.
+              You&apos;re on the Silver floor — free, and it stays fun. When you
+              want the view from up top, the memberships are waiting.
             </p>
           )}
         </div>

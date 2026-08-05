@@ -49,8 +49,8 @@ export default function BestPracticesPage() {
           🛡️ Best Practices
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
-          How to stay safe and get the most out of the club. Brutus enforces
-          the door — these keep you steady on the floor.
+          How to stay safe and get the most out of the club. Brutus enforces the
+          door — these keep you steady on the floor.
         </p>
 
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -74,7 +74,10 @@ export default function BestPracticesPage() {
           </p>
           <ul className="mt-4 space-y-2">
             {MEET_SAFE.map((tip) => (
-              <li key={tip} className="flex items-start gap-3 text-sm text-zinc-300">
+              <li
+                key={tip}
+                className="flex items-start gap-3 text-sm text-zinc-300"
+              >
                 <span className="text-club">✓</span>
                 {tip}
               </li>
@@ -93,15 +96,16 @@ export default function BestPracticesPage() {
             Meet smart, and come back.
           </p>
           <p className="mt-4 text-xs text-zinc-500">
-            You acknowledged this at signup (Best Practices v1). Policy: docs/Governance/best-practices.md.
+            You acknowledged this at signup (Best Practices v1). Policy:
+            docs/Governance/best-practices.md.
           </p>
         </div>
 
         <div className="mt-6 rounded-xl border border-platinum/30 bg-platinum/5 p-6 text-sm">
           <h2 className="font-bold text-white">📮 Something feel off?</h2>
           <p className="mt-2 text-zinc-300">
-            If something happened that made you feel unsafe — on the app or on
-            a date — write the front desk at{' '}
+            If something happened that made you feel unsafe — on the app or on a
+            date — write the front desk at{' '}
             <a
               href={`mailto:${CONTACT.dateSafely}`}
               className="text-club underline hover:text-club-cotton"

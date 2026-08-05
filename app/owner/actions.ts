@@ -29,16 +29,23 @@ async function authorized(key?: string): Promise<boolean> {
 }
 
 /** Fetches the full Booth state (engine, rules, codes, grants, flags). */
-export async function ownerFetchState(input: {
-  key?: string;
-}): Promise<{
+export async function ownerFetchState(input: { key?: string }): Promise<{
   engineEnabled?: boolean;
-  rules?: { benefit_type: string; benefit_value: string; owner_only: boolean; weekly_limit: number | null }[];
+  rules?: {
+    benefit_type: string;
+    benefit_value: string;
+    owner_only: boolean;
+    weekly_limit: number | null;
+  }[];
   codes?: unknown[];
   grants?: unknown[];
   flags?: unknown[];
   announcement?: unknown;
-  unpurchased?: { id: string; display_name: string | null; verified_at: string | null }[];
+  unpurchased?: {
+    id: string;
+    display_name: string | null;
+    verified_at: string | null;
+  }[];
   metrics?: {
     members: number;
     verified: number;
@@ -65,7 +72,13 @@ export async function ownerFetchState(input: {
     ref: string | null;
     created_at: string;
   }[];
-  catalog?: { id: string; slug: string; name: string; emoji: string; token_cost: number }[];
+  catalog?: {
+    id: string;
+    slug: string;
+    name: string;
+    emoji: string;
+    token_cost: number;
+  }[];
   castModel?: string;
   watchdogModel?: string;
   closures?: { floor: string; reason: string | null; until: string | null }[];
@@ -167,8 +180,12 @@ export async function ownerFetchState(input: {
       .select('id', { count: 'exact', head: true })
       .in('status', ['trialing', 'active']),
     supabaseAdmin.from('token_ledger').select('delta'),
-    supabaseAdmin.from('gift_inventory').select('id', { count: 'exact', head: true }),
-    supabaseAdmin.from('benefit_grants').select('id', { count: 'exact', head: true }),
+    supabaseAdmin
+      .from('gift_inventory')
+      .select('id', { count: 'exact', head: true }),
+    supabaseAdmin
+      .from('benefit_grants')
+      .select('id', { count: 'exact', head: true }),
     supabaseAdmin
       .from('profiles')
       .select('id', { count: 'exact', head: true })
@@ -194,11 +211,17 @@ export async function ownerFetchState(input: {
       .eq('active', true)
       .order('token_cost')
       .limit(30),
-    supabaseAdmin.from('model_config').select('cast_model, watchdog_model').eq('id', true).maybeSingle(),
+    supabaseAdmin
+      .from('model_config')
+      .select('cast_model, watchdog_model')
+      .eq('id', true)
+      .maybeSingle(),
     supabaseAdmin.from('floor_closures').select('floor, reason, until'),
     supabaseAdmin
       .from('reports')
-      .select('id, reason, verdict, category, confidence, review_summary, reported_id, created_at')
+      .select(
+        'id, reason, verdict, category, confidence, review_summary, reported_id, created_at'
+      )
       .is('human_confirmed_at', null)
       .order('created_at', { ascending: false })
       .limit(20),
@@ -210,9 +233,7 @@ export async function ownerFetchState(input: {
   ]);
 
   const paidUsers = new Set((activeSubs.data ?? []).map((s) => s.user_id));
-  const unpurchased = (profiles.data ?? []).filter(
-    (p) => !paidUsers.has(p.id)
-  );
+  const unpurchased = (profiles.data ?? []).filter((p) => !paidUsers.has(p.id));
 
   const eventIds = (events.data ?? []).map((e) => e.id);
   const { data: entries } =
@@ -337,7 +358,9 @@ export async function ownerLeaveMessage(
   const email = String(formData.get('email') ?? '').trim();
   const message = String(formData.get('message') ?? '').trim();
   if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email)) {
-    return { error: 'A real email, please — so the owner can get back to you.' };
+    return {
+      error: 'A real email, please — so the owner can get back to you.'
+    };
   }
   if (message.length < 5 || message.length > 2000) {
     return { error: 'A real message, please — a sentence or two is plenty.' };
@@ -518,7 +541,9 @@ export async function ownerResolveFlag(input: {
       p_user: flag.user_id,
       p_benefit_type: flag.benefit_type,
       p_benefit_value: flag.benefit_value,
-      p_reason: flag.reason ? `flag:${flag.actor_ref ?? 'cast'}:${flag.reason}` : `flag:${flag.actor_ref ?? 'cast'}`,
+      p_reason: flag.reason
+        ? `flag:${flag.actor_ref ?? 'cast'}:${flag.reason}`
+        : `flag:${flag.actor_ref ?? 'cast'}`,
       p_days: 30
     });
     if (error) return { error: error.message };
@@ -546,7 +571,10 @@ export async function ownerResolveFlag(input: {
 
   const { error } = await supabaseAdmin
     .from('swag_flags')
-    .update({ status: input.action === 'dismiss' ? 'dismissed' : 'granted', resolved_at: new Date().toISOString() })
+    .update({
+      status: input.action === 'dismiss' ? 'dismissed' : 'granted',
+      resolved_at: new Date().toISOString()
+    })
     .eq('id', input.flagId);
   if (error) return { error: error.message };
   return { code: minted };

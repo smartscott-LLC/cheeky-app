@@ -8,7 +8,7 @@
   to confirm 18+, and we never show it publicly).
 - **Profile:** photos, name, bio, preferences. Visible to other members by
   design — it's a club, not a vault.
-- **Verification result:** *result + timestamp + provider reference only*.
+- **Verification result:** _result + timestamp + provider reference only_.
   The ID documents, selfies, and ID numbers are processed by our verification
   provider (Stripe Identity) and are **never stored by us**.
 - **Messages:** stored to deliver and to keep the floor safe (see

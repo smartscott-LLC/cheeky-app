@@ -180,7 +180,11 @@ export async function signInWithPassword(formData: FormData) {
     );
   } else if (data.user) {
     cookieStore.set('preferredSignInView', 'password_signin', { path: '/' });
-    redirectPath = getStatusRedirect('/club', 'Success!', 'You are now signed in.');
+    redirectPath = getStatusRedirect(
+      '/club',
+      'Success!',
+      'You are now signed in.'
+    );
   } else {
     redirectPath = getErrorRedirect(
       '/signin/password_signin',
@@ -251,8 +255,7 @@ export async function signUp(formData: FormData) {
     const age =
       today.getFullYear() -
       dob.getFullYear() -
-      (today <
-      new Date(today.getFullYear(), dob.getMonth(), dob.getDate())
+      (today < new Date(today.getFullYear(), dob.getMonth(), dob.getDate())
         ? 1
         : 0);
     if (isNaN(dob.getTime()) || age < 18) {
@@ -302,7 +305,11 @@ export async function signUp(formData: FormData) {
       error.message
     );
   } else if (data.session) {
-    redirectPath = getStatusRedirect('/club', 'Success!', 'You are now signed in.');
+    redirectPath = getStatusRedirect(
+      '/club',
+      'Success!',
+      'You are now signed in.'
+    );
   } else if (
     data.user &&
     data.user.identities &&

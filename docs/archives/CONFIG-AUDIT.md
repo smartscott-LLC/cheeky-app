@@ -10,9 +10,9 @@
 Project: `ioqeddpgdilyyajsygmz` → **Project Settings → Authentication → URL Configuration**
 
 - **Site URL:** `https://smartscott.online`
-  - *This is the bug: the project default is `http://localhost:3000`, so every
+  - _This is the bug: the project default is `http://localhost:3000`, so every
     email link Supabase sends (email confirmation, magic links, password
-    reset) falls back to localhost. Setting this fixes them all at once.*
+    reset) falls back to localhost. Setting this fixes them all at once._
 - **Redirect URLs — add these three:**
   - `https://smartscott.online`
   - `https://smartscott.online/auth/callback`

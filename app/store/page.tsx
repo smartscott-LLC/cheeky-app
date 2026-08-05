@@ -39,8 +39,7 @@ export default async function StorePage() {
           🪙 The Exchange
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
-          Cards and tokens, right here on the floor — no need to leave the
-          club.
+          Cards and tokens, right here on the floor — no need to leave the club.
         </p>
 
         <StoreClient

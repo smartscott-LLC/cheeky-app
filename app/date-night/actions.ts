@@ -59,7 +59,10 @@ export async function tapDateNight(
   });
   if (error) {
     // Stale taps (question already advanced) are fine to ignore.
-    if (error.message === 'question_not_live' || error.message === 'game_finished') {
+    if (
+      error.message === 'question_not_live' ||
+      error.message === 'game_finished'
+    ) {
       return {};
     }
     console.error('tapDateNight failed:', error.message);

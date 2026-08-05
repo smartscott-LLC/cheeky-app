@@ -10,14 +10,14 @@ back whenever you want.
 
 ## Retention windows
 
-| Data | Kept while | After that |
-|---|---|---|
-| Profile (photos, bio, name) | Account active | Deleted on account deletion |
-| Messages | **Member-chosen retention (3 days–3 months), set at profile creation** | Purged per the stricter participant's window (v1) |
-| Token ledger | 7 years (financial records) | Archived per law |
-| Verification result | Account active | De-identified flag may remain for fraud/ban records |
-| Raw ID docs / selfies | Never stored by us | Provider processes and discards per their policy |
-| Reports / bans | As needed for safety | Reviewed for purge |
+| Data                        | Kept while                                                             | After that                                          |
+| --------------------------- | ---------------------------------------------------------------------- | --------------------------------------------------- |
+| Profile (photos, bio, name) | Account active                                                         | Deleted on account deletion                         |
+| Messages                    | **Member-chosen retention (3 days–3 months), set at profile creation** | Purged per the stricter participant's window (v1)   |
+| Token ledger                | 7 years (financial records)                                            | Archived per law                                    |
+| Verification result         | Account active                                                         | De-identified flag may remain for fraud/ban records |
+| Raw ID docs / selfies       | Never stored by us                                                     | Provider processes and discards per their policy    |
+| Reports / bans              | As needed for safety                                                   | Reviewed for purge                                  |
 
 ## Chat retention is your choice
 

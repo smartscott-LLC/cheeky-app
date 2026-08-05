@@ -9,10 +9,10 @@ want to hear about it.
 Only the current production deployment (`main` → smartscott.online) is
 supported. Everything else is development-only and unsupported.
 
-| Version | Supported |
-| ------- | --------- |
-| Production (live main) | ✅ |
-| Feature branches / staging | ❌ |
+| Version                    | Supported |
+| -------------------------- | --------- |
+| Production (live main)     | ✅        |
+| Feature branches / staging | ❌        |
 
 ## Reporting a vulnerability
 
@@ -20,8 +20,8 @@ supported. Everything else is development-only and unsupported.
 
 1. **GitHub private vulnerability reporting** (preferred):
    Repository → **Security** tab → **Report a vulnerability**.
-2. Or email the founder directly: *(founder to add a security contact email
-   here — e.g. security@yourdomain)*
+2. Or email the founder directly: _(founder to add a security contact email
+   here — e.g. security@yourdomain)_
 
 ### What to include
 

@@ -15,7 +15,7 @@ Club Cheeky is a dating app built like a nightclub. Everyone gets in **free with
 ## 3. Problem & Target Users
 
 - **The Saturday-night bored:** at home, wants a real shot at someone interesting, tired of swiping into a void and paying to talk.
-- **The premium dater:** willing to pay, but not $20/week for the privilege of messaging — wants status that *feels* like status and events worth attending.
+- **The premium dater:** willing to pay, but not $20/week for the privilege of messaging — wants status that _feels_ like status and events worth attending.
 - **The safety-conscious:** dating apps feel like spam and catfish factories; verification-as-entry is the fix.
 
 Pain points we kill: paywalled messaging, silent rejection, ghosting, post-rejection harassment, dead-end swipes.
@@ -33,16 +33,17 @@ Pain points we kill: paywalled messaging, silent rejection, ghosting, post-rejec
 
 ### Pillar 1: The Ladder
 
-| State | Access | What you get |
-|---|---|---|
-| **Guest** (no card) | Street / tutorial zone | 3 photos, birthday, terms. Club Floor: browse, swipe, match, chat. Matched = free chat. 5 outbound msgs/day to unmatched. **No events, no tokens** — window view only (marquee, blurred grid, live match ticker). |
-| **Silver** (verified, **free**) | Through the door | ID + selfie verification → Silver card + VIP badge + **20 tokens instantly**. Event access. Visible to all floors in events. Guest passes. |
-| **Gold** ($9.99/mo) | Floors 5–7 | Themed nights (5 tokens), more events, message down, boosted visibility. |
-| **Platinum** ($19.99/mo) | Upper floors | Speed Dating (25 tokens), more exclusive events, message everyone below. |
-| **Diamond** ($29.99/mo) | Penthouse (A floor) | Rooftop pool parties (~40 tokens), priority conversations, guest passes, whole-building access. |
-| **Gems** (later) | Collectibles | Ruby / Emerald / Sapphire / Topaz — limited, exclusive benefits, status. |
+| State                           | Access                 | What you get                                                                                                                                                                                                      |
+| ------------------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Guest** (no card)             | Street / tutorial zone | 3 photos, birthday, terms. Club Floor: browse, swipe, match, chat. Matched = free chat. 5 outbound msgs/day to unmatched. **No events, no tokens** — window view only (marquee, blurred grid, live match ticker). |
+| **Silver** (verified, **free**) | Through the door       | ID + selfie verification → Silver card + VIP badge + **20 tokens instantly**. Event access. Visible to all floors in events. Guest passes.                                                                        |
+| **Gold** ($9.99/mo)             | Floors 5–7             | Themed nights (5 tokens), more events, message down, boosted visibility.                                                                                                                                          |
+| **Platinum** ($19.99/mo)        | Upper floors           | Speed Dating (25 tokens), more exclusive events, message everyone below.                                                                                                                                          |
+| **Diamond** ($29.99/mo)         | Penthouse (A floor)    | Rooftop pool parties (~40 tokens), priority conversations, guest passes, whole-building access.                                                                                                                   |
+| **Gems** (later)                | Collectibles           | Ruby / Emerald / Sapphire / Topaz — limited, exclusive benefits, status.                                                                                                                                          |
 
 Rules that make it fair:
+
 - **Upper floors can message down.** A paid member can always engage a lower floor — the member initiates.
 - **Everyone's a VIP with an ID.** The only price of admission is being a real person. Money buys floors, not entry.
 - **Guest pass:** a member can bring a Guest up for 24 hours — free referral + FOMO loop.
@@ -54,11 +55,12 @@ The **Dance Floor is the reference event**; every floor reskins it with a pricie
 **The Hourly Playlist (locked):** every floor's signature event runs **hourly, staggered on the quarter** — :00 Dance Floor (Silver, 3), :15 Themed Night (Gold, 5), :30 Speed Dating (Platinum, 25), :45 Rooftop (Diamond, 40). Staggering means higher tiers never choose between events — a Diamond can play the whole set in one hour. Events are cheap for us to offer; the hold model makes them self-balancing (you only pay when you win).
 
 **Dance Floor spec (locked):**
+
 - Runs **every hour on the hour** — appointment commerce; timezone-proof; "next one in 40 minutes" keeps people idling in the club.
 - Entry: **reserve 3 tokens** (a hold, not a debit). Balance is pre-checked before reserving; insufficient → top-up path (buy a pack or earn via referral). No match or timeout → **hold released**; match → **hold converts to spend**. No refund race, no double-writes.
 - Grid: up to **10×10** of participant photos, badges visible (VIP, floors). 2-minute selection round.
 - **Click budget** (~10 favorites/round): scarce clicks make a match meaningful, prevent lottery degeneracy.
-- **First mutual click wins — instant match.** No post-round resolution. Once matched, both are locked out of the round and shown as *dancing* live in the grid — the pool thins, FOMO rises, the round gets hotter.
+- **First mutual click wins — instant match.** No post-round resolution. Once matched, both are locked out of the round and shown as _dancing_ live in the grid — the pool thins, FOMO rises, the round gets hotter.
 - The match: **one song (~3 min) private chat** — countdown, pre-loaded icebreakers, report/exit button, either side can end early.
 - After the song: **Continue** → becomes a normal match with the "Met on the Dance Floor" badge. **Decline** → chat closes, no follow-ups, no re-match in the next round.
 - Minimum fill (e.g., 20) or the event cancels with refunds.
@@ -70,13 +72,13 @@ The engine (events, entries + token holds, the minute-hand cron, matches,
 conversations, song chat, block/report, no-follow-up) is shared by every
 event kind. What differs per kind is a **mechanics config**:
 
-| Mechanic | Dance Floor (Silver, 3) | Themed Night (Gold, 5) | Speed Dating (Platinum, 25) | Rooftop (Diamond, 40) |
-|---|---|---|---|---|
-| Round structure | 2-min open grid, parallel | Grid reskin (same 2-min round) | Groups ≤ 10 by orientation preference; rotated 1:1 sessions, 1.5 min each (≈ 7.5 min round) | Grid reskin, closer/higher crowd |
-| Pairing | First mutual click, live, grid-wide | First mutual click, live | Rotation schedule by group | First mutual click, live |
-| Selection | 10-pick budget during round | 10-pick budget | **Ranked at the end**: top choice + one alternate | 10-pick budget |
-| Match trigger | Mutual pick = instant | Mutual pick = instant | Mutual top-choice → notified | Mutual pick = instant |
-| Reward | Match + "Met on the Dance Floor" badge | Match + "Met at Themed Night" badge | Match + **Speed Dating certificate** → decorated private chat + special-interests list | Match + "Met on the Rooftop" badge |
+| Mechanic        | Dance Floor (Silver, 3)                | Themed Night (Gold, 5)              | Speed Dating (Platinum, 25)                                                                 | Rooftop (Diamond, 40)              |
+| --------------- | -------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------- | ---------------------------------- |
+| Round structure | 2-min open grid, parallel              | Grid reskin (same 2-min round)      | Groups ≤ 10 by orientation preference; rotated 1:1 sessions, 1.5 min each (≈ 7.5 min round) | Grid reskin, closer/higher crowd   |
+| Pairing         | First mutual click, live, grid-wide    | First mutual click, live            | Rotation schedule by group                                                                  | First mutual click, live           |
+| Selection       | 10-pick budget during round            | 10-pick budget                      | **Ranked at the end**: top choice + one alternate                                           | 10-pick budget                     |
+| Match trigger   | Mutual pick = instant                  | Mutual pick = instant               | Mutual top-choice → notified                                                                | Mutual pick = instant              |
+| Reward          | Match + "Met on the Dance Floor" badge | Match + "Met at Themed Night" badge | Match + **Speed Dating certificate** → decorated private chat + special-interests list      | Match + "Met on the Rooftop" badge |
 
 Mechanics config fields: `round_type` (grid / rotation / …),
 `selection_model` (live_mutual / ranked / …), timing params (round length,
@@ -91,7 +93,7 @@ Certificates are a small reward entity on top of matches/conversations.
 
 - **Earn:** +20 on verification (one-time), +20 per verified referral, giveaways (we'll do lots — tokens cost nothing and drive the economy).
 - **Buy:** 100 tokens / $4.99 (5¢ each) and 1000 / $9.99 (1¢ each). Ratios are deliberate — small pack for floor-1/Gold spenders, bulk pack for whales.
-- **Spend:** events priced per floor. Token *price* scales steeply (3 → 5 → 25 → 40) while real *money* per event stays roughly flat — status costs what it looks like it costs. Spenders want to feel like spenders; whales and $10 spenders look the same on the surface — no pay-to-win feel.
+- **Spend:** events priced per floor. Token _price_ scales steeply (3 → 5 → 25 → 40) while real _money_ per event stays roughly flat — status costs what it looks like it costs. Spenders want to feel like spenders; whales and $10 spenders look the same on the surface — no pay-to-win feel.
 - **Design rule:** the 20/3 remainder trap is intentional (6 free events, then 2 tokens that can't buy anything). No 2-token events. Ever.
 
 ### Governance layer — "Brutus the Bouncer"
@@ -110,7 +112,7 @@ layer, not from process separation.
   how the next perk is surfaced — value-first, never dark patterns). Lives in
   `utils/` + core routes (account, verify, messages, browse).
 - **Floor modules (the spokes):** `app/(floors)/gold|platinum|diamond` — each
-  a *folder* (not a single file) with its own layout (importing the base
+  a _folder_ (not a single file) with its own layout (importing the base
   floor layout), skin (palette from `styles/palettes/`), entitlements,
   pricing, and rooms. The first floor (Silver/club) is the base itself.
 - **Base floor layout + config:** `layouts/floor-base.tsx` +
@@ -127,7 +129,7 @@ layer, not from process separation.
 
 ## 6. User Experience — Key Flows
 
-1. **Signup → Guest:** email signup, up to 3 photos, birthday, terms. Land on the street: marquee for the next event, blurred grid, ticker of live matches. Browse, swipe, match, chat with other Guests. The upgrade banner: *"Your ID gets you through the door. Get your Silver card — it's free."*
+1. **Signup → Guest:** email signup, up to 3 photos, birthday, terms. Land on the street: marquee for the next event, blurred grid, ticker of live matches. Browse, swipe, match, chat with other Guests. The upgrade banner: _"Your ID gets you through the door. Get your Silver card — it's free."_
 2. **Verify → Silver:** Brutus the Bouncer conducts the check — name + date of
    birth + government ID number via Stripe Identity (US SSN currently; selfie
    check available for international coverage), ~60 seconds, **20 tokens land
@@ -162,7 +164,7 @@ layer, not from process separation.
 ## 9. Open Questions
 
 1. Exact click budget (10 is a starting default) and grid min-fill threshold.
-2. Do Guests appear in event grids (blurred) or are they invisible? (Blurred = FOMO; invisible = clean.) 
+2. Do Guests appear in event grids (blurred) or are they invisible? (Blurred = FOMO; invisible = clean.)
 3. **Launch strategy** — **Resolved (founder):** giveaways seed the club. First 30 days after launch: **100 Gold + 50 Platinum + 10 Diamond complimentary memberships** + influencer founder-invites (FTC-disclosed). Purpose: seed premium density so free users experience upper-floor engagement from day one. Mechanics require a **complimentary-grant path** in Phase 3 entitlements (no payment). Compliance: posted giveaway rules (no-purchase-necessary), influencer disclosure required.
 4. ~~Verification provider choice & per-verify cost ceiling~~ **Resolved:** Stripe Identity, ID-number lookup (name + DOB + government ID, US SSN currently), ~$1.50/verify; selfie method (~$0.50) available to flip on for international coverage.
 5. Headliner event cadence once Gold+ lands (daily? themed by weekday?).
@@ -179,12 +181,12 @@ layer, not from process separation.
 
 ## 11. Roadmap
 
-| Phase | Ships | Status |
-|---|---|---|
-| 0 — Foundation | Rebrand off the template, docs (this PRD + AGENTS.md), infra in place | ✅ Done (tag `v0.1-door-open` at 1B) |
-| 1 — Club Floor | Profiles, verification (Stripe Identity), browse, match, chat, free-tier limits | ✅ Done (tag `v0.1-floor-1-locked`) |
-| 2 — Event Engine | Dance Floor: scheduling, grid, pairing, song chat, token wallet + refunds | ✅ Engine built (tag `v0.1-dance-floor`) — live validation this hour |
-| 3 — Entitlements | Subscription-gated floors at the data layer, guest passes | ⏳ |
-| 4 — The Floors | Gold/Platinum/Diamond events, themed nights, Speed Dating, rooftop, visibility boosts | ⏳ |
-| 5 — Economy+ | Gems/collectibles (incl. achievement badges — e.g. 30-day streak pearl badge — and founder/collector skins), gifts, giveaways, referral dashboard | ⏳ |
-| 6 — Mobile | iOS/Android from the desktop-proven product | ⏳ |
+| Phase            | Ships                                                                                                                                             | Status                                                               |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| 0 — Foundation   | Rebrand off the template, docs (this PRD + AGENTS.md), infra in place                                                                             | ✅ Done (tag `v0.1-door-open` at 1B)                                 |
+| 1 — Club Floor   | Profiles, verification (Stripe Identity), browse, match, chat, free-tier limits                                                                   | ✅ Done (tag `v0.1-floor-1-locked`)                                  |
+| 2 — Event Engine | Dance Floor: scheduling, grid, pairing, song chat, token wallet + refunds                                                                         | ✅ Engine built (tag `v0.1-dance-floor`) — live validation this hour |
+| 3 — Entitlements | Subscription-gated floors at the data layer, guest passes                                                                                         | ⏳                                                                   |
+| 4 — The Floors   | Gold/Platinum/Diamond events, themed nights, Speed Dating, rooftop, visibility boosts                                                             | ⏳                                                                   |
+| 5 — Economy+     | Gems/collectibles (incl. achievement badges — e.g. 30-day streak pearl badge — and founder/collector skins), gifts, giveaways, referral dashboard | ⏳                                                                   |
+| 6 — Mobile       | iOS/Android from the desktop-proven product                                                                                                       | ⏳                                                                   |

@@ -12,8 +12,7 @@ const nextConfig = {
 // Sentry source-map support engages only when an auth token exists (Vercel,
 // local). CI runs token-free — without a token, withSentryConfig would try
 // to upload source maps and fail the build, so we skip it entirely.
-const sentryToken =
-  process.env.SENTRY_API_KEY ?? process.env.SENTRY_AUTH_TOKEN;
+const sentryToken = process.env.SENTRY_API_KEY ?? process.env.SENTRY_AUTH_TOKEN;
 
 module.exports = sentryToken
   ? require('@sentry/nextjs').withSentryConfig(nextConfig, {

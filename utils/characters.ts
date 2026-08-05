@@ -16,7 +16,13 @@ export function characterFloorRank(slug: string): number {
 
 export function characterFloorLabel(slug: string): string {
   const rank = characterFloorRank(slug);
-  return rank === 1 ? 'Gold' : rank === 2 ? 'Platinum' : rank === 3 ? 'Diamond' : 'Silver';
+  return rank === 1
+    ? 'Gold'
+    : rank === 2
+      ? 'Platinum'
+      : rank === 3
+        ? 'Diamond'
+        : 'Silver';
 }
 
 const CHARACTER_FLOOR_NAMES: Record<string, string> = {

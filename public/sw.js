@@ -23,10 +23,7 @@ self.addEventListener('fetch', (event) => {
       const cache = await caches.open(CACHE);
       try {
         const fresh = await fetch(request);
-        if (
-          fresh.ok &&
-          new URL(request.url).origin === self.location.origin
-        ) {
+        if (fresh.ok && new URL(request.url).origin === self.location.origin) {
           cache.put(request, fresh.clone());
         }
         return fresh;

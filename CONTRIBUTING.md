@@ -1,7 +1,7 @@
 # Contributing to Club Cheeky
 
 How work happens in this repo — the discipline that keeps a production push safe.
-`AGENTS.md` is the working guidelines; this file is the *process*.
+`AGENTS.md` is the working guidelines; this file is the _process_.
 
 ## The standing rule
 
@@ -24,7 +24,7 @@ app. No exceptions — a bad push goes live.
    refactors, no renamed files/variables unless the task calls for it.
 3. **Ask when it's ambiguous.** When a product decision is unclear, ask rather than inventing an
    answer that contradicts the PRD.
-4. **Commit early, commit often** — with messages that say *what and why* (the repo averages a
+4. **Commit early, commit often** — with messages that say _what and why_ (the repo averages a
    commit every ~30 minutes during active builds).
 
 ## Commit messages
@@ -92,7 +92,7 @@ See `tests/README.md` for the full matrix.
   git history and milestone tags.
 - When an area is fluid and testable, **tag it as a save point** (`v0.1-floor-1-locked`,
   `v1.0-den-locked`, `v1.1-docs-locked`, …). Future work can reset to any tag.
-- Cut per-area branches (`feat/floor-1`) for the *next* area and merge back when fluid. Tag
+- Cut per-area branches (`feat/floor-1`) for the _next_ area and merge back when fluid. Tag
   before cutting so the branch has a safe anchor.
 - Never rewrite pushed history on `main`.
 

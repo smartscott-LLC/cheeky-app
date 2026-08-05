@@ -129,7 +129,14 @@ export default function ProfileForm({
       setSaving(false);
       return;
     }
-    const res = await updateProfile(name, bioText, pref, identity, oneLinerText, honeypot);
+    const res = await updateProfile(
+      name,
+      bioText,
+      pref,
+      identity,
+      oneLinerText,
+      honeypot
+    );
     setSaving(false);
     if (res.error) {
       setError(res.error);
@@ -232,8 +239,8 @@ export default function ProfileForm({
             className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
           />
           <p className="text-xs text-zinc-500">
-            A little insight goes a long way. The Spark List shows it under
-            your name.
+            A little insight goes a long way. The Spark List shows it under your
+            name.
           </p>
         </div>
         <div className="grid gap-1">
@@ -255,8 +262,8 @@ export default function ProfileForm({
             <option value="lady">Lady</option>
           </select>
           <p className="text-xs text-zinc-500">
-            The club pairs real gentlemen and real ladies. This tells the
-            floor who you are — required, and never shown as a label.
+            The club pairs real gentlemen and real ladies. This tells the floor
+            who you are — required, and never shown as a label.
           </p>
         </div>
         <div className="grid gap-1">

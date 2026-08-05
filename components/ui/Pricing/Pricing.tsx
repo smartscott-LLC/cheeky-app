@@ -90,8 +90,8 @@ export default function Pricing({
               Get your card
             </h1>
             <p className="max-w-2xl m-auto mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl">
-              Everyone gets in with a verified ID — free. Expand your options
-              by obtaining membership to the higher floors.
+              Everyone gets in with a verified ID — free. Expand your options by
+              obtaining membership to the higher floors.
             </p>
             <div className="relative self-center mt-6 bg-zinc-900 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
               {intervals.includes('month') && (
@@ -125,8 +125,7 @@ export default function Pricing({
           <div className="mt-12 space-y-0 sm:mt-16 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
             {products.map((product) => {
               const price = product?.prices?.find(
-                (p) =>
-                  p.interval === billingInterval || p.type === 'one_time'
+                (p) => p.interval === billingInterval || p.type === 'one_time'
               );
               if (!price) return null;
               const priceString = new Intl.NumberFormat('en-US', {
@@ -168,17 +167,19 @@ export default function Pricing({
                       variant="slim"
                       type="button"
                       onClick={() =>
-                        subscription ? router.push('/account') : handleSelect(price)
+                        subscription
+                          ? router.push('/account')
+                          : handleSelect(price)
                       }
                       className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
                     >
                       {subscription
-                                              ? 'Manage'
-                                              : product.name === 'Standard Membership'
-                                                ? 'Get Silver Card'
-                                                : price.type === 'one_time'
-                                                  ? 'Buy'
-                                                  : 'Join'}
+                        ? 'Manage'
+                        : product.name === 'Standard Membership'
+                          ? 'Get Silver Card'
+                          : price.type === 'one_time'
+                            ? 'Buy'
+                            : 'Join'}
                     </Button>
                   </div>
                 </div>
@@ -193,9 +194,9 @@ export default function Pricing({
               Messaging is never for sale
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-sm text-zinc-400">
-              You can&apos;t buy more messages. No message packs, no upsells,
-              no pay-to-talk — ever. Messaging is a membership perk, not a
-              product: it&apos;s the room you&apos;re in, and every card gets in.
+              You can&apos;t buy more messages. No message packs, no upsells, no
+              pay-to-talk — ever. Messaging is a membership perk, not a product:
+              it&apos;s the room you&apos;re in, and every card gets in.
             </p>
             <div className="mt-6 grid grid-cols-1 gap-3 text-left sm:grid-cols-2">
               <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">
@@ -203,8 +204,8 @@ export default function Pricing({
                   Silver — free
                 </p>
                 <p className="mt-1 text-sm text-zinc-300">
-                  30 messages + 5 new conversations a day. Generous on
-                  purpose, never shrunk.
+                  30 messages + 5 new conversations a day. Generous on purpose,
+                  never shrunk.
                 </p>
               </div>
               <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">

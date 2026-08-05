@@ -15,18 +15,15 @@ const url = get('SUPABASE_URL');
 const key = get('SUPABASE_SERVICE_ROLE_KEY');
 const body = 'storage api test';
 
-const res = await fetch(
-  `${url}/storage/v1/object/profiles/_admin-test.txt`,
-  {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${key}`,
-      apikey: key,
-      'Content-Type': 'text/plain'
-    },
-    body
-  }
-);
+const res = await fetch(`${url}/storage/v1/object/profiles/_admin-test.txt`, {
+  method: 'POST',
+  headers: {
+    Authorization: `Bearer ${key}`,
+    apikey: key,
+    'Content-Type': 'text/plain'
+  },
+  body
+});
 
 console.log('status:', res.status);
 console.log('body:', await res.text());

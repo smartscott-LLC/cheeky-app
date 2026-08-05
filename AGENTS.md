@@ -1,6 +1,6 @@
 # AGENTS.md — Club Cheeky Project Guidelines
 
-Guidelines for everyone working in this repo — humans and agents — so we stay aligned as we scale. The product spec is `docs/PRD-foundation.md`; that is the source of truth for *what* we build. This file is *how* we build it.
+Guidelines for everyone working in this repo — humans and agents — so we stay aligned as we scale. The product spec is `docs/PRD-foundation.md`; that is the source of truth for _what_ we build. This file is _how_ we build it.
 
 ## What Club Cheeky is
 
@@ -12,16 +12,16 @@ A dating app built like a nightclub. Three pillars:
 
 ## Domain vocabulary (use these terms exactly)
 
-| Term | Meaning |
-|---|---|
-| Guest | Unverified user on the street/tutorial zone. No events, no tokens. |
-| Silver card | Free verified tier. ID + selfie → badge, 20 tokens, event access. |
-| Gold / Platinum / Diamond | Paid floors with events, visibility, and messaging-down rights. |
-| Gems | Limited collectible cards (Ruby, Emerald, Sapphire, Topaz) — later phase. |
-| Tokens | In-app currency. Server-side ledger only; never trust the client. |
-| Dance Floor | Hourly event: 3 tokens, grid, 2-min pick, instant mutual match, one song. |
-| Guest pass | Member brings a Guest up for 24h. |
-| Floor | A subscription tier = a level of the club. |
+| Term                      | Meaning                                                                   |
+| ------------------------- | ------------------------------------------------------------------------- |
+| Guest                     | Unverified user on the street/tutorial zone. No events, no tokens.        |
+| Silver card               | Free verified tier. ID + selfie → badge, 20 tokens, event access.         |
+| Gold / Platinum / Diamond | Paid floors with events, visibility, and messaging-down rights.           |
+| Gems                      | Limited collectible cards (Ruby, Emerald, Sapphire, Topaz) — later phase. |
+| Tokens                    | In-app currency. Server-side ledger only; never trust the client.         |
+| Dance Floor               | Hourly event: 3 tokens, grid, 2-min pick, instant mutual match, one song. |
+| Guest pass                | Member brings a Guest up for 24h.                                         |
+| Floor                     | A subscription tier = a level of the club.                                |
 
 ## Mission guardrails (non-negotiable)
 
@@ -38,7 +38,7 @@ A dating app built like a nightclub. Three pillars:
 - **Surgical changes.** In existing code, do exactly what the task asks — no opportunistic refactors, no renamed files/variables unless the task calls for it.
 - **Ask when it's ambiguous.** When a product decision is unclear, ask rather than inventing an answer that contradicts the PRD.
 - **Build on main during construction.** We're in build-out: `main` is always current and every push auto-deploys to Vercel (`smartscott.online`). The safety valve is git history + milestone tags, not a stale main — when a floor/area is fluid and testable, tag it (e.g. `v0.1-floor-1-locked`) as a save spot, then cut per-area branches (`feat/floor-1`) for the next area and merge back when fluid. No PR ceremony until there are real users on the app.
-- **Commit messages describe *what and why*.** Never push a broken build — `pnpm lint` + `pnpm build` pass before pushing, because a bad push goes live on production.
+- **Commit messages describe _what and why_.** Never push a broken build — `pnpm lint` + `pnpm build` pass before pushing, because a bad push goes live on production.
 - **Validate before saying done.** `pnpm lint`, `pnpm build`, and a manual pass of the affected flow (auth / checkout / event).
 
 ## Engineering conventions

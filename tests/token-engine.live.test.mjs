@@ -104,11 +104,13 @@ test(
       // Bulk-delete everything this run touched, children before parents.
       const chunkIn = async (table, col, ids) => {
         for (let i = 0; i < ids.length; i += 100) {
-          await admin.from(table).delete().in(col, ids.slice(i, i + 100));
+          await admin
+            .from(table)
+            .delete()
+            .in(col, ids.slice(i, i + 100));
         }
       };
-      if (events.length)
-        await chunkIn('event_entries', 'event_id', events);
+      if (events.length) await chunkIn('event_entries', 'event_id', events);
       if (userIds.length) {
         for (const t of ['token_ledger', 'benefit_grants', 'gift_inventory']) {
           await chunkIn(t, 'user_id', userIds);
@@ -117,47 +119,55 @@ test(
         const chunk = 25;
         for (let i = 0; i < userIds.length; i += chunk) {
           await Promise.all(
-            userIds.slice(i, i + chunk).map((id) =>
-              admin.auth.admin.deleteUser(id).catch(() => {})
-            )
+            userIds
+              .slice(i, i + chunk)
+              .map((id) => admin.auth.admin.deleteUser(id).catch(() => {}))
           );
         }
       }
       for (const e of events) await admin.from('events').delete().eq('id', e);
-      for (const c of codes) await admin.from('swag_codes').delete().eq('code', c);
+      for (const c of codes)
+        await admin.from('swag_codes').delete().eq('code', c);
     });
 
-    await t.test('redeem_swag_code credits the exact amount, once', async () => {
-      const u = await makeUser(admin, anon, stamp, 'redeem');
-      userIds.push(u.id);
-      await credit(admin, u.id, 10);
+    await t.test(
+      'redeem_swag_code credits the exact amount, once',
+      async () => {
+        const u = await makeUser(admin, anon, stamp, 'redeem');
+        userIds.push(u.id);
+        await credit(admin, u.id, 10);
 
-      const { data: code, error: mintErr } = await admin.rpc(
-        'generate_swag_code',
-        {
-          p_benefit_type: 'tokens',
-          p_benefit_value: '25',
-          p_actor_type: 'owner',
-          p_max_uses: 1,
-          p_notes: `test:${stamp}`
-        }
-      );
-      assert.ok(!mintErr, mintErr?.message);
-      codes.push(code);
+        const { data: code, error: mintErr } = await admin.rpc(
+          'generate_swag_code',
+          {
+            p_benefit_type: 'tokens',
+            p_benefit_value: '25',
+            p_actor_type: 'owner',
+            p_max_uses: 1,
+            p_notes: `test:${stamp}`
+          }
+        );
+        assert.ok(!mintErr, mintErr?.message);
+        codes.push(code);
 
-      const { data: redeemed, error: rErr } = await rpc(u.token, 'redeem_swag_code', {
-        p_code: code
-      });
-      assert.ok(!rErr, rErr?.message);
-      assert.equal(redeemed[0].benefit_type, 'tokens');
-      assert.equal(redeemed[0].benefit_value, '25');
-      assert.equal(await balance(admin, u.id), 35, '10 + 25');
+        const { data: redeemed, error: rErr } = await rpc(
+          u.token,
+          'redeem_swag_code',
+          {
+            p_code: code
+          }
+        );
+        assert.ok(!rErr, rErr?.message);
+        assert.equal(redeemed[0].benefit_type, 'tokens');
+        assert.equal(redeemed[0].benefit_value, '25');
+        assert.equal(await balance(admin, u.id), 35, '10 + 25');
 
-      const { error: r2Err } = await rpc(u.token, 'redeem_swag_code', {
-        p_code: code
-      });
-      assert.ok(r2Err, 'second redeem must fail');
-    });
+        const { error: r2Err } = await rpc(u.token, 'redeem_swag_code', {
+          p_code: code
+        });
+        assert.ok(r2Err, 'second redeem must fail');
+      }
+    );
 
     await t.test(
       `${N} members join one event concurrently — all land, holds consistent`,
@@ -255,7 +265,9 @@ test(
         userIds.push(u.id);
         await credit(admin, u.id, 3); // exactly one event's worth
 
-        const startsAt = new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString();
+        const startsAt = new Date(
+          Date.now() + 2 * 60 * 60 * 1000
+        ).toISOString();
         const mk = async (kind) => {
           const { data, error } = await admin
             .from('events')

@@ -31,22 +31,29 @@ test(
         Array.from({ length: CONCURRENCY }, async () => {
           const t0 = Date.now();
           try {
-            const res = await fetch('https://api.deepseek.com/chat/completions', {
-              method: 'POST',
-              headers: {
-                'content-type': 'application/json',
-                authorization: `Bearer ${KEY}`
-              },
-              body: JSON.stringify({
-                model: MODEL,
-                messages: [
-                  { role: 'user', content: 'Reply with exactly: OK' }
-                ],
-                max_tokens: 5
-              })
-            });
+            const res = await fetch(
+              'https://api.deepseek.com/chat/completions',
+              {
+                method: 'POST',
+                headers: {
+                  'content-type': 'application/json',
+                  authorization: `Bearer ${KEY}`
+                },
+                body: JSON.stringify({
+                  model: MODEL,
+                  messages: [
+                    { role: 'user', content: 'Reply with exactly: OK' }
+                  ],
+                  max_tokens: 5
+                })
+              }
+            );
             const json = await res.json().catch(() => ({}));
-            return { status: res.status, ms: Date.now() - t0, usage: json.usage };
+            return {
+              status: res.status,
+              ms: Date.now() - t0,
+              usage: json.usage
+            };
           } catch (e) {
             return { status: 0, ms: Date.now() - t0, error: e.message };
           }

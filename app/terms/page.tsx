@@ -96,7 +96,10 @@ export default function TermsPage() {
               </h2>
               <ul className="mt-3 space-y-2">
                 {s.items.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm text-zinc-400">
+                  <li
+                    key={item}
+                    className="flex items-start gap-3 text-sm text-zinc-400"
+                  >
                     <span className="text-club">✓</span>
                     {item}
                   </li>

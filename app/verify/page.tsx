@@ -86,9 +86,7 @@ export default async function VerifyPage({
             profile={profile}
             tokenBalance={tokenBalance}
             error={error}
-            verificationAttempts={
-              privateData?.data?.verification_attempts ?? 0
-            }
+            verificationAttempts={privateData?.data?.verification_attempts ?? 0}
             escalated={Boolean(privateData?.data?.verification_escalated_at)}
           />
         </div>

@@ -73,13 +73,13 @@ function describe(code: string): string {
     case 'insufficient_tokens':
       return 'Not enough tokens for the bar. Buy a pack or earn some, then come back.';
     case 'tier_required':
-      return "That gift lives on a higher floor — climb the ladder first.";
+      return 'That gift lives on a higher floor — climb the ladder first.';
     case 'send_cooldown':
       return 'One gift offer per hour. The ticker needs a breather — try again soon.';
     case 'blocked':
       return 'This person blocked you, or you blocked them.';
     case 'gift_not_available':
-      return "That gift is already out of your hands.";
+      return 'That gift is already out of your hands.';
     default:
       return 'Could not do that. Try again.';
   }
@@ -98,7 +98,10 @@ export default function GiftShop({
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
-  const [sendFor, setSendFor] = useState<{ giftId: string; name: string } | null>(null);
+  const [sendFor, setSendFor] = useState<{
+    giftId: string;
+    name: string;
+  } | null>(null);
   const [recipient, setRecipient] = useState('');
 
   const run = async (
@@ -204,8 +207,8 @@ export default function GiftShop({
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="text-xl font-bold">🍸 The Bar</h2>
           <p className="mt-1 text-sm text-zinc-400">
-            {tokenBalance} tokens · {tierLabel} floor · you can buy your
-            floor and below
+            {tokenBalance} tokens · {tierLabel} floor · you can buy your floor
+            and below
           </p>
           <div className="mt-4 space-y-6">
             {FLOOR_ORDER.map((floor) => {
@@ -214,7 +217,9 @@ export default function GiftShop({
                 .sort((a, b) => {
                   const rank = (k: string) =>
                     k === 'featured' ? 0 : k === 'basket' ? 0 : 1;
-                  return rank(a.kind) - rank(b.kind) || a.token_cost - b.token_cost;
+                  return (
+                    rank(a.kind) - rank(b.kind) || a.token_cost - b.token_cost
+                  );
                 });
               const basket = catalog.find((g) => g.kind === 'basket');
               const showBasket = floor === 'silver' && basket;
@@ -273,14 +278,19 @@ export default function GiftShop({
                           </span>
                         </div>
                         <p className="mt-2 font-bold">{basket.name}</p>
-                        <p className="text-sm text-zinc-400">{giftPitch(basket)}</p>
+                        <p className="text-sm text-zinc-400">
+                          {giftPitch(basket)}
+                        </p>
                         <button
                           onClick={() =>
                             run(
                               `buy-${basket.slug}`,
                               () => buyGift(basket.slug),
                               'gift_purchased',
-                              { gift_kind: basket.kind, gift_floor: basket.floor }
+                              {
+                                gift_kind: basket.kind,
+                                gift_floor: basket.floor
+                              }
                             )
                           }
                           disabled={busy === `buy-${basket.slug}`}
@@ -337,9 +347,7 @@ export default function GiftShop({
 
             {sendFor && (
               <div className="mt-4 rounded-lg border border-platinum/30 bg-platinum/5 p-4">
-                <p className="text-sm font-bold">
-                  Send {sendFor.name} to…
-                </p>
+                <p className="text-sm font-bold">Send {sendFor.name} to…</p>
                 {people.length === 0 ? (
                   <p className="mt-2 text-sm text-zinc-500">
                     No one to send to yet — match or chat with someone first.
@@ -362,8 +370,9 @@ export default function GiftShop({
                   <button
                     onClick={() =>
                       recipient &&
-                      run(`send-${sendFor.giftId}`, () =>
-                        sendGift(sendFor.giftId, recipient),
+                      run(
+                        `send-${sendFor.giftId}`,
+                        () => sendGift(sendFor.giftId, recipient),
                         'gift_sent'
                       )
                     }

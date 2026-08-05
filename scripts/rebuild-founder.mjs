@@ -60,7 +60,8 @@ async function main() {
       one_liner: 'The owner. Built this place.'
     })
     .eq('id', userId);
-  if (upErr) console.log('profile update:', upErr.message, '(columns may vary)');
+  if (upErr)
+    console.log('profile update:', upErr.message, '(columns may vary)');
 
   // 3) Owner back door.
   const { error: oErr } = await sb

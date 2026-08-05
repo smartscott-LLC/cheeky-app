@@ -7,9 +7,7 @@ import { createClient } from '@/utils/supabase/server';
  * authenticated RPC — the engine validates the code, applies the benefit,
  * and writes the audit row.
  */
-export async function redeemSwagCode(
-  code: string
-): Promise<{
+export async function redeemSwagCode(code: string): Promise<{
   ok?: boolean;
   benefitType?: string;
   benefitValue?: string;

@@ -77,7 +77,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'not signed in' }, { status: 401 });
   }
 
-  let body: { character?: string; message?: string; history?: GatewayMessage[] };
+  let body: {
+    character?: string;
+    message?: string;
+    history?: GatewayMessage[];
+  };
   try {
     body = await req.json();
   } catch {
@@ -85,9 +89,14 @@ export async function POST(req: Request) {
   }
 
   const character = String(body.character ?? '').trim();
-  const message = String(body.message ?? '').trim().slice(0, 1000);
+  const message = String(body.message ?? '')
+    .trim()
+    .slice(0, 1000);
   if (!character || !message) {
-    return NextResponse.json({ error: 'character and message required' }, { status: 400 });
+    return NextResponse.json(
+      { error: 'character and message required' },
+      { status: 400 }
+    );
   }
 
   // The money gate: checked before anything expensive runs. Budget is
@@ -96,7 +105,11 @@ export async function POST(req: Request) {
     (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() ||
     'unknown';
   const [userOk, ipOk] = await Promise.all([
-    withinBudget(`agent:user:${user.id}`, AGENT_WINDOW_SECONDS, USER_HOURLY_BUDGET),
+    withinBudget(
+      `agent:user:${user.id}`,
+      AGENT_WINDOW_SECONDS,
+      USER_HOURLY_BUDGET
+    ),
     withinBudget(`agent:ip:${ip}`, AGENT_WINDOW_SECONDS, IP_HOURLY_BUDGET)
   ]);
   if (!userOk || !ipOk) {
@@ -109,31 +122,36 @@ export async function POST(req: Request) {
     );
   }
 
-  const [{ data: char }, { data: profile }, tierData, ledger, { data: events }] =
-    await Promise.all([
-      supabase
-        .from('characters')
-        .select('name, role, persona_prompt')
-        .eq('slug', character)
-        .eq('active', true)
-        .maybeSingle(),
-      supabase
-        .from('profiles')
-        .select('display_name, verified_at')
-        .eq('id', user.id)
-        .maybeSingle(),
-      supabase.rpc('current_tier', { p_user: user.id }),
-      supabase.from('token_ledger').select('delta').eq('user_id', user.id),
-      (async () => {
-        await supabase.rpc('ensure_floor_events', { p_hours: 2 });
-        return supabase
-          .from('events')
-          .select('kind, floor, starts_at, token_cost, status')
-          .gte('starts_at', new Date().toISOString())
-          .order('starts_at')
-          .limit(4);
-      })()
-    ]);
+  const [
+    { data: char },
+    { data: profile },
+    tierData,
+    ledger,
+    { data: events }
+  ] = await Promise.all([
+    supabase
+      .from('characters')
+      .select('name, role, persona_prompt')
+      .eq('slug', character)
+      .eq('active', true)
+      .maybeSingle(),
+    supabase
+      .from('profiles')
+      .select('display_name, verified_at')
+      .eq('id', user.id)
+      .maybeSingle(),
+    supabase.rpc('current_tier', { p_user: user.id }),
+    supabase.from('token_ledger').select('delta').eq('user_id', user.id),
+    (async () => {
+      await supabase.rpc('ensure_floor_events', { p_hours: 2 });
+      return supabase
+        .from('events')
+        .select('kind, floor, starts_at, token_cost, status')
+        .gte('starts_at', new Date().toISOString())
+        .order('starts_at')
+        .limit(4);
+    })()
+  ]);
 
   if (!char?.persona_prompt) {
     return NextResponse.json({ error: 'character not found' }, { status: 404 });

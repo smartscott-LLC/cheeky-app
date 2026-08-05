@@ -54,12 +54,11 @@ export default function VerificationPanel({
     return (
       <div className="mx-auto max-w-xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-center">
         <div className="text-5xl">🧑‍💼</div>
-        <h2 className="mt-4 text-2xl font-extrabold">
-          Brutus needs a human.
-        </h2>
+        <h2 className="mt-4 text-2xl font-extrabold">Brutus needs a human.</h2>
         <p className="mt-3 text-zinc-400">
-          Three checks didn&apos;t pass, so the door is taking this one upstairs.
-          Our support team will sort your ID check personally — no more loops.
+          Three checks didn&apos;t pass, so the door is taking this one
+          upstairs. Our support team will sort your ID check personally — no
+          more loops.
         </p>
         <p className="mt-4 text-sm text-zinc-500">
           Email the help desk at{' '}
@@ -90,8 +89,8 @@ export default function VerificationPanel({
       <p className="mt-6 text-zinc-300">
         Everyone&apos;s a VIP here — but everybody checks in at the door. One
         last hoop: name, date of birth, and your government ID number —
-        we&apos;ll have your email ready, and it takes two minutes. Brutus stamps
-        the card and you get{' '}
+        we&apos;ll have your email ready, and it takes two minutes. Brutus
+        stamps the card and you get{' '}
         <span className="font-bold text-club">20 tokens</span> on the spot.
       </p>
       <p className="mt-3 text-sm text-zinc-500">
@@ -126,8 +125,8 @@ export default function VerificationPanel({
           <span>
             I consent to identity verification via Stripe Identity. My name,
             date of birth, and government ID number are checked against
-            government and third-party databases, and are never stored by
-            Club Cheeky. (Verification policy v1)
+            government and third-party databases, and are never stored by Club
+            Cheeky. (Verification policy v1)
           </span>
         </label>
         <button

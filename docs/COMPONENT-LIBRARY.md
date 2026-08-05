@@ -23,52 +23,52 @@ the database directly.
 
 ### Primitives (presentational)
 
-| Component | What it is |
-|---|---|
-| `ui/Button/` | The button (variants incl. `slim`; loading state) |
-| `ui/Card/` | Card surface |
-| `ui/Input/` | Text inputs |
-| `ui/Toasts/` | Radix-powered toaster (`Toaster` mounted in the root layout) |
-| `ui/LoadingDots/` | Stream/loading indicator |
-| `ui/LogoCloud/` | The "Powered by" trust row (Next.js, Stripe, Supabase) |
-| `ui/Footer/` | Site footer — club links, legal pages, contact desks, 🦁 The Lions Den |
+| Component         | What it is                                                             |
+| ----------------- | ---------------------------------------------------------------------- |
+| `ui/Button/`      | The button (variants incl. `slim`; loading state)                      |
+| `ui/Card/`        | Card surface                                                           |
+| `ui/Input/`       | Text inputs                                                            |
+| `ui/Toasts/`      | Radix-powered toaster (`Toaster` mounted in the root layout)           |
+| `ui/LoadingDots/` | Stream/loading indicator                                               |
+| `ui/LogoCloud/`   | The "Powered by" trust row (Next.js, Stripe, Supabase)                 |
+| `ui/Footer/`      | Site footer — club links, legal pages, contact desks, 🦁 The Lions Den |
 
 ### Shell & navigation
 
-| Component | What it is |
-|---|---|
-| `ui/Navbar/` | The marquee — logo, centered links, Enter-the-club/Lobby switch, account, swag, sign-out |
-| `ui/PWA/` | `ServiceWorkerRegister` (offline shell for the Android wrapper) |
-| `ui/Audio/` | `ClubAudio` — the house DJ (synthesized fallback + the founder's tracks, crossfaded) |
+| Component                | What it is                                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------------------ |
+| `ui/Navbar/`             | The marquee — logo, centered links, Enter-the-club/Lobby switch, account, swag, sign-out   |
+| `ui/PWA/`                | `ServiceWorkerRegister` (offline shell for the Android wrapper)                            |
+| `ui/Audio/`              | `ClubAudio` — the house DJ (synthesized fallback + the founder's tracks, crossfaded)       |
 | `ui/AnnouncementBanner/` | The floor marquee — ticker/roll/fade, fed from the `announcements` table via the Lions Den |
 
 ### Identity & account
 
-| Component | What it is |
-|---|---|
-| `ui/AuthForms/` | Sign-in/sign-up forms (honeypots, OAuth) |
+| Component          | What it is                                                                                                            |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `ui/AuthForms/`    | Sign-in/sign-up forms (honeypots, OAuth)                                                                              |
 | `ui/Verification/` | Brutus and the door — `CheckInForm` (the one-stop: consents + account fields), `VerificationPanel` (mid-flow members) |
-| `ui/AccountForms/` | Profile form (avatar name, bio, one-liner, identity, photos, honeypot) |
+| `ui/AccountForms/` | Profile form (avatar name, bio, one-liner, identity, photos, honeypot)                                                |
 
 ### The club & events
 
-| Component | What it is |
-|---|---|
-| `ui/Club/` | `FloorLayout` — the shared room scene (art backdrop + positioned room spots); lobby + every floor render through it |
-| `ui/Events/` | `EventFloor` (grid room + song phase), `SpeedDatingFloor` (rotation/certificates), `MatchedOverlay` |
-| `ui/DateNight/` | Couple Trivia — the mutual-tap game in matched chats |
-| `ui/Browse/` | `BrowseCard` — the Spark List card (like/wave, match overlay) |
-| `ui/Messages/` | `MessageThread` — Cheeky Chats: composer, report/block, waves, Date Night, song mode |
+| Component       | What it is                                                                                                          |
+| --------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `ui/Club/`      | `FloorLayout` — the shared room scene (art backdrop + positioned room spots); lobby + every floor render through it |
+| `ui/Events/`    | `EventFloor` (grid room + song phase), `SpeedDatingFloor` (rotation/certificates), `MatchedOverlay`                 |
+| `ui/DateNight/` | Couple Trivia — the mutual-tap game in matched chats                                                                |
+| `ui/Browse/`    | `BrowseCard` — the Spark List card (like/wave, match overlay)                                                       |
+| `ui/Messages/`  | `MessageThread` — Cheeky Chats: composer, report/block, waves, Date Night, song mode                                |
 
 ### Cast & commerce
 
-| Component | What it is |
-|---|---|
-| `ui/Agent/` | `CastChat` (full-page character chat), `Concierge` (Chaz's floating panel) |
-| `ui/Store/` | The Exchange — membership cards + token packs (embedded Stripe checkout) |
-| `ui/Gifts/` | `GiftShop` — buy/send gifts with tokens, featured + gesture tiers |
-| `ui/Swag/` | The Swag Shop — redeem `SWAG-…` codes |
-| `ui/Pricing/` | The membership pricing surface (messaging-never-for-sale card) |
+| Component     | What it is                                                                 |
+| ------------- | -------------------------------------------------------------------------- |
+| `ui/Agent/`   | `CastChat` (full-page character chat), `Concierge` (Chaz's floating panel) |
+| `ui/Store/`   | The Exchange — membership cards + token packs (embedded Stripe checkout)   |
+| `ui/Gifts/`   | `GiftShop` — buy/send gifts with tokens, featured + gesture tiers          |
+| `ui/Swag/`    | The Swag Shop — redeem `SWAG-…` codes                                      |
+| `ui/Pricing/` | The membership pricing surface (messaging-never-for-sale card)             |
 
 ## Adding a component
 

@@ -24,8 +24,8 @@ export default async function PricingPage() {
           💎 Membership & Pricing
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-zinc-400">
-          The only price of admission is being a real person. Money buys
-          floors, never entry — the free tier is genuinely free.
+          The only price of admission is being a real person. Money buys floors,
+          never entry — the free tier is genuinely free.
         </p>
 
         <div className="mt-12">

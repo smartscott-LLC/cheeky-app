@@ -44,7 +44,8 @@ export default function Concierge() {
   const handleScroll = () => {
     const el = scrollRef.current;
     if (!el) return;
-    nearBottomRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 120;
+    nearBottomRef.current =
+      el.scrollHeight - el.scrollTop - el.clientHeight < 120;
   };
 
   useEffect(() => {
@@ -91,7 +92,10 @@ export default function Concierge() {
 
   useEffect(() => {
     if (!busy) return;
-    const t = setInterval(() => setTypingIdx((i) => (i + 1) % TYPING.length), 800);
+    const t = setInterval(
+      () => setTypingIdx((i) => (i + 1) % TYPING.length),
+      800
+    );
     return () => clearInterval(t);
   }, [busy]);
 
@@ -189,7 +193,10 @@ export default function Concierge() {
           {/* Header */}
           <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-900 px-4 py-3">
             <p className="text-sm font-bold">
-              {chaz.name} <span className="text-xs font-semibold text-zinc-500">· Club Manager</span>
+              {chaz.name}{' '}
+              <span className="text-xs font-semibold text-zinc-500">
+                · Club Manager
+              </span>
             </p>
             <button
               onClick={() => setOpen(false)}
@@ -246,7 +253,7 @@ export default function Concierge() {
             {busy && (
               <p className="text-sm text-zinc-500">{TYPING[typingIdx]}…</p>
             )}
-            </div>
+          </div>
 
           {error && (
             <p className="border-t border-zinc-800 px-4 py-2 text-xs text-club">

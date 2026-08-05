@@ -106,7 +106,9 @@ export default async function EventsPage() {
                   alt={meta.name}
                   className="h-28 w-full object-cover"
                 />
-                <div className={`h-1 w-full bg-gradient-to-r ${meta.gradient}`} />
+                <div
+                  className={`h-1 w-full bg-gradient-to-r ${meta.gradient}`}
+                />
                 <div className="p-5">
                   <div className="flex items-center justify-between">
                     <h3 className="text-lg font-extrabold">

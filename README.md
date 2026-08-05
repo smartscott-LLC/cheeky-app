@@ -10,21 +10,21 @@ Live at **[smartscott.online](https://smartscott.online)** — every push to
 
 Club Cheeky is a nightclub, not a menu. Members walk a real building:
 
-| Room | Route | What happens there |
-|---|---|---|
-| 🚪 The street / landing | `/` | The marquee. Enter the club. |
-| 🪪 The door (verification) | `/verify` | Stripe Identity ID + selfie → Silver card, VIP badge, 20 tokens. The velvet rope is up until you check in. |
-| 🏠 The lobby | `/club` | The entrance room — VIP area, Gift Shop, Chats, Spark List, Elevators, Coat Check, Brutus at the door. |
-| 🛗 The floors | `/floors` · `/floor/[slug]` | Silver → Gold → Platinum → Diamond. Each floor is its own room with its own art, its own event, and its own member of the crew. Locked floors show the rope, not a price. |
-| 📅 The Event Center | `/events` · `/events/[kind]` | The hourly playlist — Dance Floor (:00), Themed Night (:15), Speed Dating (:30), Rooftop (:45). Join any room any time; your spot is held for the next set. Rooms are lit up to your floor. |
-| 🎭 The crew | `/crew` · `/chat/[slug]` | Six AI characters who run the club. Meet them on their floors and chat. |
-| 🎁 The Gift Shop | `/gifts` | Buy gifts with tokens and send them to members. |
-| 🧥 Coat Check | `/coat-check` | Gems, badges, your daily streak, and crew bonds. |
-| 🎟️ Swag Shop | `/swag` | Redeem giveaway codes (SWAG-XXXXXXXX) — always in the nav. |
-| ⚡ The Spark List | `/browse` | Who's out tonight, filtered by mutual dating preference. |
-| 💬 Cheeky Chats | `/messages` | Conversations, waves, Date Night with matches. |
-| 👤 Account | `/account` | Your card (grant-aware), avatar name, one-liner, photos, billing. |
-| 🔑 Owner's back door | `/owner` | The founder's booth — swag codes, grants, flags (owner account only). |
+| Room                       | Route                        | What happens there                                                                                                                                                                          |
+| -------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 🚪 The street / landing    | `/`                          | The marquee. Enter the club.                                                                                                                                                                |
+| 🪪 The door (verification) | `/verify`                    | Stripe Identity ID + selfie → Silver card, VIP badge, 20 tokens. The velvet rope is up until you check in.                                                                                  |
+| 🏠 The lobby               | `/club`                      | The entrance room — VIP area, Gift Shop, Chats, Spark List, Elevators, Coat Check, Brutus at the door.                                                                                      |
+| 🛗 The floors              | `/floors` · `/floor/[slug]`  | Silver → Gold → Platinum → Diamond. Each floor is its own room with its own art, its own event, and its own member of the crew. Locked floors show the rope, not a price.                   |
+| 📅 The Event Center        | `/events` · `/events/[kind]` | The hourly playlist — Dance Floor (:00), Themed Night (:15), Speed Dating (:30), Rooftop (:45). Join any room any time; your spot is held for the next set. Rooms are lit up to your floor. |
+| 🎭 The crew                | `/crew` · `/chat/[slug]`     | Six AI characters who run the club. Meet them on their floors and chat.                                                                                                                     |
+| 🎁 The Gift Shop           | `/gifts`                     | Buy gifts with tokens and send them to members.                                                                                                                                             |
+| 🧥 Coat Check              | `/coat-check`                | Gems, badges, your daily streak, and crew bonds.                                                                                                                                            |
+| 🎟️ Swag Shop               | `/swag`                      | Redeem giveaway codes (SWAG-XXXXXXXX) — always in the nav.                                                                                                                                  |
+| ⚡ The Spark List          | `/browse`                    | Who's out tonight, filtered by mutual dating preference.                                                                                                                                    |
+| 💬 Cheeky Chats            | `/messages`                  | Conversations, waves, Date Night with matches.                                                                                                                                              |
+| 👤 Account                 | `/account`                   | Your card (grant-aware), avatar name, one-liner, photos, billing.                                                                                                                           |
+| 🔑 Owner's back door       | `/owner`                     | The founder's booth — swag codes, grants, flags (owner account only).                                                                                                                       |
 
 ### The three pillars
 
@@ -43,14 +43,14 @@ gated by the floor you can reach (a reward for membership, not a paywall).
 The crew can always greet any member (milestone messages fire regardless of
 tier). Chaz, the manager, rides the floating concierge on every page.
 
-| Member | Job | Floor |
-|---|---|---|
-| Brutus | Bouncer | The lobby |
-| The DJ (D34D_B34T) | Spins the floor | Silver |
-| Roxy | Mixologist | Gold |
-| Trixie | Waitress | Platinum |
-| Valentina | Hostess | Diamond |
-| Chaz Sterling | Club manager | Everywhere |
+| Member             | Job             | Floor      |
+| ------------------ | --------------- | ---------- |
+| Brutus             | Bouncer         | The lobby  |
+| The DJ (D34D_B34T) | Spins the floor | Silver     |
+| Roxy               | Mixologist      | Gold       |
+| Trixie             | Waitress        | Platinum   |
+| Valentina          | Hostess         | Diamond    |
+| Chaz Sterling      | Club manager    | Everywhere |
 
 ### Mission guardrails
 
@@ -104,36 +104,36 @@ The full set (see `.env.local.example` for the core local-dev values).
 `.env.local` (for `pnpm dev`) is generated from it with
 `node scripts/sync-env.mjs`.
 
-| Variable | Used for |
-|---|---|
-| `NEXT_PUBLIC_SITE_URL` | Canonical site URL |
-| `NEXT_PUBLIC_SUPABASE_URL` · `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Client (anon key only) |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-only writes (never in client code) |
-| `SUPABASE_ANON_KEY` · `SUPABASE_JWT_SECRET` | Local dev / server auth helpers |
-| `POSTGRES_URL` (+ `_NON_POOLING`, `_PRISMA_URL`, `_DATABASE`, `_PASSWORD`, `_HOST`) | Hosted Postgres |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` · `STRIPE_SECRET_KEY` · `STRIPE_WEBHOOK_SECRET` | Stripe |
-| `DEEPSEEK_API_KEY` | `/api/agent` — the crew's chat engine |
-| `OPENROUTER_API_KEY` | DateSafe — the image-review watchdog (vision model) |
-| `NEXT_PUBLIC_POSTHOG_KEY` | PostHog analytics (canonical; legacy alias `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`; `_HOST` defaults to US cloud) |
-| `RESEND_API_KEY` · `REGISTERED_DOMAIN` | Transactional mail — welcome, apology, ban notices |
-| `SENTRY_AUTH_TOKEN` | Sentry source-map uploads |
-| `VERCEL_OIDC_TOKEN` | Created by `vercel link` for CI builds |
+| Variable                                                                             | Used for                                                                                                      |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`                                                               | Canonical site URL                                                                                            |
+| `NEXT_PUBLIC_SUPABASE_URL` · `NEXT_PUBLIC_SUPABASE_ANON_KEY`                         | Client (anon key only)                                                                                        |
+| `SUPABASE_SERVICE_ROLE_KEY`                                                          | Server-only writes (never in client code)                                                                     |
+| `SUPABASE_ANON_KEY` · `SUPABASE_JWT_SECRET`                                          | Local dev / server auth helpers                                                                               |
+| `POSTGRES_URL` (+ `_NON_POOLING`, `_PRISMA_URL`, `_DATABASE`, `_PASSWORD`, `_HOST`)  | Hosted Postgres                                                                                               |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` · `STRIPE_SECRET_KEY` · `STRIPE_WEBHOOK_SECRET` | Stripe                                                                                                        |
+| `DEEPSEEK_API_KEY`                                                                   | `/api/agent` — the crew's chat engine                                                                         |
+| `OPENROUTER_API_KEY`                                                                 | DateSafe — the image-review watchdog (vision model)                                                           |
+| `NEXT_PUBLIC_POSTHOG_KEY`                                                            | PostHog analytics (canonical; legacy alias `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`; `_HOST` defaults to US cloud) |
+| `RESEND_API_KEY` · `REGISTERED_DOMAIN`                                               | Transactional mail — welcome, apology, ban notices                                                            |
+| `SENTRY_AUTH_TOKEN`                                                                  | Sentry source-map uploads                                                                                     |
+| `VERCEL_OIDC_TOKEN`                                                                  | Created by `vercel link` for CI builds                                                                        |
 
 ## Scripts
 
-| Command | What it does |
-|---|---|
-| `pnpm dev` / `pnpm build` / `pnpm lint` | Dev server (turbo) / production build / lint |
-| `pnpm test` | Safe test suite (`node:test`, zero deps). Live suites with `RUN_LIVE_TESTS=1` — see `tests/README.md` |
-| `pnpm prettier-fix` | Format everything (Prettier is enforced) |
-| `pnpm stripe:listen` / `pnpm stripe:fixtures` | Local webhooks / bootstrap products |
-| `pnpm supabase:start` / `stop` / `reset` | Local Postgres + auth lifecycle (optional — the default workflow is hosted) |
-| `pnpm supabase:generate-types` | Regenerate `types_db.ts` after schema changes — commit the diff |
-| `pnpm supabase:generate-migration` | Diff local schema into `supabase/migrations/` |
-| `pnpm supabase:push` / `pull` | Schema sync against the linked project |
-| `node scripts/migrate-hosted.mjs <name>` | Apply one migration to the **hosted** database |
-| `node scripts/sync-env.mjs` | Refresh `.env.local` from `env.new` (the master vault) |
-| `node scripts/backfill-*.mjs` / `check-*.mjs` / `test-*.mjs` | Ops utilities (see `scripts/`) |
+| Command                                                      | What it does                                                                                          |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| `pnpm dev` / `pnpm build` / `pnpm lint`                      | Dev server (turbo) / production build / lint                                                          |
+| `pnpm test`                                                  | Safe test suite (`node:test`, zero deps). Live suites with `RUN_LIVE_TESTS=1` — see `tests/README.md` |
+| `pnpm prettier-fix`                                          | Format everything (Prettier is enforced)                                                              |
+| `pnpm stripe:listen` / `pnpm stripe:fixtures`                | Local webhooks / bootstrap products                                                                   |
+| `pnpm supabase:start` / `stop` / `reset`                     | Local Postgres + auth lifecycle (optional — the default workflow is hosted)                           |
+| `pnpm supabase:generate-types`                               | Regenerate `types_db.ts` after schema changes — commit the diff                                       |
+| `pnpm supabase:generate-migration`                           | Diff local schema into `supabase/migrations/`                                                         |
+| `pnpm supabase:push` / `pull`                                | Schema sync against the linked project                                                                |
+| `node scripts/migrate-hosted.mjs <name>`                     | Apply one migration to the **hosted** database                                                        |
+| `node scripts/sync-env.mjs`                                  | Refresh `.env.local` from `env.new` (the master vault)                                                |
+| `node scripts/backfill-*.mjs` / `check-*.mjs` / `test-*.mjs` | Ops utilities (see `scripts/`)                                                                        |
 
 ## Database & migrations
 

@@ -30,33 +30,39 @@ export default async function ThreadPage({
       ? conversation.user_id_b
       : conversation.user_id_a;
 
-  const [{ data: otherProfile }, { data: messages }, { data: myBlocks }, { data: match }] =
-    await Promise.all([
-      supabase
-        .from('profiles')
-        .select('id, display_name, bio, verified_at, photos(storage_path, is_primary)')
-        .eq('id', otherId)
-        .filter('photos.held_at', 'is', 'null')
-        .maybeSingle(),
-      supabase
-        .from('messages')
-        .select('id, sender_id, body, created_at')
-        .eq('conversation_id', id)
-        .order('created_at', { ascending: true })
-        .limit(200),
-      supabase
-        .from('blocks')
-        .select('id')
-        .eq('blocker_id', user.id)
-        .eq('blocked_id', otherId),
-      supabase
-        .from('matches')
-        .select('id, source, status, created_at')
-        .or(
-          `and(user_id_a.eq.${user.id},user_id_b.eq.${otherId}),and(user_id_a.eq.${otherId},user_id_b.eq.${user.id})`
-        )
-        .maybeSingle()
-    ]);
+  const [
+    { data: otherProfile },
+    { data: messages },
+    { data: myBlocks },
+    { data: match }
+  ] = await Promise.all([
+    supabase
+      .from('profiles')
+      .select(
+        'id, display_name, bio, verified_at, photos(storage_path, is_primary)'
+      )
+      .eq('id', otherId)
+      .filter('photos.held_at', 'is', 'null')
+      .maybeSingle(),
+    supabase
+      .from('messages')
+      .select('id, sender_id, body, created_at')
+      .eq('conversation_id', id)
+      .order('created_at', { ascending: true })
+      .limit(200),
+    supabase
+      .from('blocks')
+      .select('id')
+      .eq('blocker_id', user.id)
+      .eq('blocked_id', otherId),
+    supabase
+      .from('matches')
+      .select('id, source, status, created_at')
+      .or(
+        `and(user_id_a.eq.${user.id},user_id_b.eq.${otherId}),and(user_id_a.eq.${otherId},user_id_b.eq.${user.id})`
+      )
+      .maybeSingle()
+  ]);
 
   const songEndsAt = match?.created_at
     ? new Date(match.created_at).getTime() + 3 * 60 * 1000
@@ -131,7 +137,9 @@ export default async function ThreadPage({
           giftRoomMode={Boolean(dateRoom)}
           giftFloor={dateRoom?.floor ?? null}
           giftExpiresAt={
-            dateRoom?.expires_at ? new Date(dateRoom.expires_at).getTime() : null
+            dateRoom?.expires_at
+              ? new Date(dateRoom.expires_at).getTime()
+              : null
           }
           photoBase={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`}
           currentUserId={user.id}

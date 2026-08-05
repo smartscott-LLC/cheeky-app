@@ -77,7 +77,8 @@ export default function SpeedDatingFloor({
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const startsAt = new Date(event.startsAt).getTime();
-  const maxSlot = sessions.length > 0 ? sessions[sessions.length - 1].slot_index : 0;
+  const maxSlot =
+    sessions.length > 0 ? sessions[sessions.length - 1].slot_index : 0;
   const rotationMs = (maxSlot + 1) * SESSION_SECONDS * 1000;
   const rotationEnds = startsAt + rotationMs;
   const slotIndex = Math.min(
@@ -94,8 +95,7 @@ export default function SpeedDatingFloor({
       ? currentSession.user_b
       : currentSession.user_a
     : null;
-  const partner =
-    participants.find((p) => p.userId === partnerId) ?? null;
+  const partner = participants.find((p) => p.userId === partnerId) ?? null;
   const group = participants.filter(
     (p) => p.groupNumber === myEntry?.groupNumber && p.userId !== myUserId
   );
@@ -137,7 +137,9 @@ export default function SpeedDatingFloor({
       ids.length > 0
         ? await supabase
             .from('profiles')
-            .select('id, display_name, verified_at, photos(storage_path, is_primary)')
+            .select(
+              'id, display_name, verified_at, photos(storage_path, is_primary)'
+            )
             .in('id', ids)
         : { data: [] };
     const profileMap = new Map(
@@ -161,7 +163,8 @@ export default function SpeedDatingFloor({
         profile: profileMap.get(e.user_id) ?? null
       }))
     );
-    const rawEntry = (entries ?? []).find((e) => e.user_id === myUserId) ?? null;
+    const rawEntry =
+      (entries ?? []).find((e) => e.user_id === myUserId) ?? null;
     setMyEntry(
       rawEntry
         ? { status: rawEntry.status, groupNumber: rawEntry.group_number }
@@ -305,7 +308,9 @@ export default function SpeedDatingFloor({
 
   const sessionLeft = Math.max(
     0,
-    Math.ceil((startsAt + (slotIndex + 1) * SESSION_SECONDS * 1000 - now) / 1000)
+    Math.ceil(
+      (startsAt + (slotIndex + 1) * SESSION_SECONDS * 1000 - now) / 1000
+    )
   );
 
   return (
@@ -475,8 +480,7 @@ export default function SpeedDatingFloor({
             ))}
           </div>
           <p className="mt-4 text-xs text-zinc-500">
-            Results land when the room closes — we&apos;ll announce the
-            matches.
+            Results land when the room closes — we&apos;ll announce the matches.
           </p>
         </div>
       )}

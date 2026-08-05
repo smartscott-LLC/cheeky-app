@@ -15,9 +15,7 @@ import Stripe from 'stripe';
  * DOB, and the ID number are Stripe's to collect for the ID match).
  */
 export const createVerificationSession = async (userId: string) => {
-  const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(
-    userId
-  );
+  const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(userId);
 
   const provided: Stripe.Identity.VerificationSessionCreateParams.ProvidedDetails =
     {};

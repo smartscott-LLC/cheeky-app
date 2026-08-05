@@ -2,10 +2,11 @@
 
 > **Status:** binding on the build (per the Governance README). Backs the
 > Stripe takedown-notice submission and the member-facing Acceptable Use
+>
 > > where the code does not yet automate a step (the banned
-> registry), the process below is the spec — operable today by human staff,
-> with automation to follow. Overclaims are the enemy: we describe what we
-> do and what we will build, never fiction.
+> > registry), the process below is the spec — operable today by human staff,
+> > with automation to follow. Overclaims are the enemy: we describe what we
+> > do and what we will build, never fiction.
 
 ## 1. How people report a policy-violating profile or content
 
@@ -24,8 +25,8 @@ Reporting is available through multiple, always-visible channels:
   - `info@smartscott.online` — general
   - `helpdesk@smartscott.online` — help and appeals
   - `date.safely@smartscott.online` — safety and reporting
-  - `report-anonymous@smartscott.online` — anonymous reporting *(created;
-    surfaced on the Contact page)*
+  - `report-anonymous@smartscott.online` — anonymous reporting _(created;
+    surfaced on the Contact page)_
 
 ## 2. How a submitted report is reviewed
 
@@ -90,13 +91,13 @@ Reporting is available through multiple, always-visible channels:
 
 ## 5. Cross-references
 
-| Doc | Relationship |
-|---|---|
-| `aup-enforcement.md` | Detection, escalation ladder, report/block mechanics |
-| `community-safety.md` | Conduct rules and the human-review process |
-| `terms.md` | Bouncing, conduct, liability |
-| `data-retention-deletion.md` | Retention windows and deletion |
-| `stripe-prohibited-activities.md` | The platform-level prohibited-activity submission |
+| Doc                               | Relationship                                         |
+| --------------------------------- | ---------------------------------------------------- |
+| `aup-enforcement.md`              | Detection, escalation ladder, report/block mechanics |
+| `community-safety.md`             | Conduct rules and the human-review process           |
+| `terms.md`                        | Bouncing, conduct, liability                         |
+| `data-retention-deletion.md`      | Retention windows and deletion                       |
+| `stripe-prohibited-activities.md` | The platform-level prohibited-activity submission    |
 
 ---
 

@@ -37,10 +37,12 @@ export default async function SwagPage() {
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-2xl px-6 py-16">
-        <h1 className="text-3xl font-extrabold sm:text-4xl">🎟️ The Swag Shop</h1>
+        <h1 className="text-3xl font-extrabold sm:text-4xl">
+          🎟️ The Swag Shop
+        </h1>
         <p className="mt-2 text-sm text-zinc-500">
-          Free stuff, on the house. Got a code from the cast — or from the
-          club — drop it in and it&apos;s yours. No payment, no catch.
+          Free stuff, on the house. Got a code from the cast — or from the club
+          — drop it in and it&apos;s yours. No payment, no catch.
         </p>
 
         <RedeemCode />
@@ -50,8 +52,8 @@ export default async function SwagPage() {
           <div className="mt-3 space-y-2">
             {(grants ?? []).length === 0 && (
               <p className="text-sm text-zinc-500">
-                Nothing yet. Codes come from the cast and the club — keep an
-                eye out.
+                Nothing yet. Codes come from the cast and the club — keep an eye
+                out.
               </p>
             )}
             {(grants ?? []).map((g) => (
