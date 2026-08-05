@@ -4,6 +4,7 @@ import Navbar from '@/components/ui/Navbar';
 import { Toaster } from '@/components/ui/Toasts/toaster';
 import Concierge from '@/components/ui/Agent/Concierge';
 import ClubAudio from '@/components/ui/Audio/ClubAudio';
+import ServiceWorkerRegister from '@/components/ui/PWA/ServiceWorkerRegister';
 import { PropsWithChildren, Suspense } from 'react';
 import { getURL } from '@/utils/helpers';
 import { Great_Vibes } from 'next/font/google';
@@ -35,6 +36,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en" className={script.variable}>
       <body className="bg-black">
+        <ServiceWorkerRegister />
         <Navbar />
         <main
           id="skip"
