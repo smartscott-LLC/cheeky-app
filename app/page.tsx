@@ -93,7 +93,7 @@ export default async function LandingPage() {
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
-              href="/signin/signup"
+              href="/verify"
               className="rounded-lg bg-club px-12 py-4 text-lg font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
             >
               Join now

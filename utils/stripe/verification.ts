@@ -27,7 +27,9 @@ export const createVerificationSession = async (userId: string) => {
     type: 'id_number',
     metadata: { supabaseUUID: userId },
     provided_details: provided,
-    return_url: `${getURL()}/verify`
+    // ?checked=1 tells /verify the member just left the ID check — show the
+    // 'check your email' step instead of the form again.
+    return_url: `${getURL()}/verify?checked=1`
   });
 
   return session;

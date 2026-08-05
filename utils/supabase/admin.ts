@@ -170,11 +170,43 @@ Head to the club when you're ready — the DJ spins every hour, and the crew is 
     .upsert({
       id: userId,
       verification_provider: 'stripe_identity',
-      verification_ref: sessionId
+      verification_ref: sessionId,
+      ...(await verifiedDob(sessionId))
     });
   if (privateError)
     throw new Error(`Verification record failed: ${privateError.message}`);
 };
+
+/**
+ * The DOB Stripe verified, pulled from the verification report — the member
+ * never enters it twice (Stripe and Supabase share what Stripe collected).
+ * Best-effort: age is already enforced by the ID check itself.
+ */
+async function verifiedDob(
+  sessionId: string
+): Promise<{ birthday?: string }> {
+  try {
+    const vs = await stripe.identity.verificationSessions.retrieve(sessionId, {
+      expand: ['last_verification_report']
+    });
+    const report = vs.last_verification_report;
+    if (report && typeof report !== 'string') {
+      const dob = report.id_number?.dob;
+      if (dob?.year && dob?.month && dob?.day) {
+        const birthday = `${dob.year}-${String(dob.month).padStart(2, '0')}-${String(
+          dob.day
+        ).padStart(2, '0')}`;
+        return { birthday };
+      }
+    }
+  } catch (err) {
+    console.error(
+      'DOB backfill failed:',
+      err instanceof Error ? err.message : err
+    );
+  }
+  return {};
+}
 
 /**
  * Records a failed verification attempt. After 3 attempts the member is
