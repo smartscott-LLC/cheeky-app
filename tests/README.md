@@ -17,7 +17,7 @@ are individually skippable:
 | File | Proves | Env needed | Knobs |
 |---|---|---|---|
 | `tests/webhook.live.test.mjs` | Signature rejection (no sig / forged), valid sig on unhandled types, **idempotency on replay**, 15 concurrent events through the idempotency store | `STRIPE_WEBHOOK_SECRET` | `WEBHOOK_TEST_ENDPOINT` (default `https://smartscott.online/api/webhooks`) |
-| `tests/token-engine.live.test.mjs` | `redeem_swag_code` credits the **exact** amount once and can't double-redeem; **N members join one event concurrently** and every hold lands consistently; a member with 3 tokens **cannot hold two 3-token events** (no over-commit) | Supabase URL + service role + anon | `STRESS_N` (default 20 — set 1000 for the full burst) |
+| `tests/token-engine.live.test.mjs` | `redeem_swag_code` credits the **exact** amount once and can't double-redeem; **N members join one event concurrently** and every hold lands consistently; a member with 3 tokens **cannot hold two 3-token events** (no over-commit) | Supabase URL + service role + anon + `POSTGRES_URL` (pooler) | `STRESS_N` (default 20 — set 1000 for the full burst; measured: 1000 joins in ~13s, all consistent) |
 | `tests/ai-probe.live.test.mjs` | How one DeepSeek key survives a concurrent burst — successes / 429s / failures / latency / token usage | `DEEPSEEK_API_KEY` | `PROBE_CONCURRENCY` (default 8) |
 
 Example — the full "thousand people at once" event burst:
