@@ -70,7 +70,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               required
               className="w-full p-3 rounded-md bg-zinc-800 [color-scheme:dark]"
             />
-            <p className="text-xs text-green">
+            <p className="text-xs text-cyan">
               You must be 18 or older. Brutus double-checks it at the door.
             </p>
             <label htmlFor="gender">What are you?</label>
@@ -87,7 +87,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               <option value="gentleman">Gentleman</option>
               <option value="lady">Lady</option>
             </select>
-            <p className="text-xs text-green">
+            <p className="text-xs text-cyan">
               The club pairs real gentlemen and real ladies — no surprises. This
               tells the floor who you are.
             </p>
@@ -102,7 +102,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               <option value="women">Ladies</option>
               <option value="men">Gentlemen</option>
             </select>
-            <p className="text-xs text-green">
+            <p className="text-xs text-cyan">
               Who you&apos;re here to meet. Personal, and never shown publicly.
             </p>
             <label htmlFor="messageRetentionDays">
@@ -119,11 +119,11 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               <option value="30">30 days</option>
               <option value="90">90 days</option>
             </select>
-            <p className="text-xs text-green">
+            <p className="text-xs text-cyan">
               Messages are purged after your window. In a chat, the stricter
               window wins.
             </p>
-            <label className="mt-2 flex items-start gap-3 text-sm text-green">
+            <label className="mt-2 flex items-start gap-3 text-sm text-cyan">
               <input
                 type="checkbox"
                 name="termsConsent"
@@ -132,7 +132,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               />
               <span>I agree to the Rules of the Club (Terms) v1.</span>
             </label>
-            <label className="flex items-start gap-3 text-sm text-green">
+            <label className="flex items-start gap-3 text-sm text-cyan">
               <input
                 type="checkbox"
                 name="privacyConsent"
@@ -141,7 +141,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               />
               <span>I&apos;ve read What the Bouncer Knows (Privacy) v1.</span>
             </label>
-            <label className="flex items-start gap-3 text-sm text-green">
+            <label className="flex items-start gap-3 text-sm text-cyan">
               <input
                 type="checkbox"
                 name="bestPracticesConsent"

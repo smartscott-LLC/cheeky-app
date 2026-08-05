@@ -136,7 +136,7 @@ export default async function Account() {
       <div className="max-w-6xl px-4 py-8 mx-auto sm:px-6 sm:pt-24 lg:px-8">
         <Link
           href={floorHref}
-          className="text-sm font-semibold text-green hover:text-white"
+          className="text-sm font-semibold text-cyan hover:text-white"
         >
           ← Back to the floor
         </Link>
@@ -144,7 +144,7 @@ export default async function Account() {
           <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
             Account
           </h1>
-          <p className="max-w-2xl m-auto mt-5 text-xl text-green sm:text-center sm:text-2xl">
+          <p className="max-w-2xl m-auto mt-5 text-xl text-cyan sm:text-center sm:text-2xl">
             We partnered with Stripe for a simplified billing.
           </p>
         </div>
@@ -154,7 +154,7 @@ export default async function Account() {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <h2 className="text-xl font-bold">{cardLabel}</h2>
-              <p className="mt-1 text-green">
+              <p className="mt-1 text-cyan">
                 {profile?.verified_at
                   ? 'Verified — VIP badge active.'
                   : 'Not verified yet. Brutus is at the door.'}
@@ -190,12 +190,12 @@ export default async function Account() {
         />
         <div className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="text-xl font-bold">Your floor</h2>
-          <p className="mt-1 text-green">
+          <p className="mt-1 text-cyan">
             Current floor:{' '}
             <span className="font-bold text-club">{tierLabel}</span>
             {tier !== 'standard' &&
               (grants?.data?.[0] || passes?.data?.[0]) && (
-                <span className="ml-2 text-sm text-green">
+                <span className="ml-2 text-sm text-cyan">
                   (
                   {grants?.data?.[0]
                     ? `grant — ${grantExpiry(grants.data[0].expires_at)}`
@@ -237,7 +237,7 @@ export default async function Account() {
           <h2 className="text-xl font-bold text-platinum-alice">
             💎 Certificates
           </h2>
-          <p className="mt-1 text-green">
+          <p className="mt-1 text-cyan">
             Speed Dating matches that made it count.
           </p>
           {certPartners.length > 0 ? (
@@ -251,7 +251,7 @@ export default async function Account() {
                     <p className="text-sm font-bold text-platinum-alice">
                       Speed Dating certificate
                     </p>
-                    <p className="text-sm text-green">
+                    <p className="text-sm text-cyan">
                       Matched with {nameOf(p.otherId)} ·{' '}
                       {new Date(p.issuedAt).toLocaleDateString()}
                     </p>
@@ -268,12 +268,12 @@ export default async function Account() {
               ))}
             </ul>
           ) : (
-            <p className="mt-3 text-sm text-green">
+            <p className="mt-3 text-sm text-cyan">
               No certificates yet. Meet someone at Speed Dating on the Platinum
               floor and this shelf lights up.
             </p>
           )}
-          <h3 className="mt-6 text-xs font-bold uppercase tracking-wide text-green">
+          <h3 className="mt-6 text-xs font-bold uppercase tracking-wide text-cyan">
             Special interests
           </h3>
           {interestRows?.data && interestRows.data.length > 0 ? (
@@ -288,7 +288,7 @@ export default async function Account() {
               ))}
             </ul>
           ) : (
-            <p className="mt-2 text-sm text-green">
+            <p className="mt-2 text-sm text-cyan">
               Nobody yet. Certificate matches can be added from the chat.
             </p>
           )}

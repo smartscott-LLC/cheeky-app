@@ -50,7 +50,7 @@ export default function AupPage() {
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
           ⚖️ Acceptable Use Policy
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-green">
+        <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
           How we keep the floor safe — what&apos;s allowed, what isn&apos;t, and
           what happens when someone crosses the line.
         </p>
@@ -69,7 +69,7 @@ export default function AupPage() {
                 {s.items.map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-3 text-sm text-green"
+                    className="flex items-start gap-3 text-sm text-cyan"
                   >
                     <span className="text-club">✓</span>
                     {item}

@@ -15,7 +15,7 @@
 }
 
 .loading {
-  @apply bg-zinc-700 text-green border-zinc-600 cursor-not-allowed;
+  @apply bg-zinc-700 text-cyan border-zinc-600 cursor-not-allowed;
 }
 
 .slim {
@@ -24,7 +24,7 @@
 
 .disabled,
 .disabled:hover {
-  @apply text-green border-zinc-600 bg-zinc-700 cursor-not-allowed;
+  @apply text-cyan border-zinc-600 bg-zinc-700 cursor-not-allowed;
   filter: grayscale(1);
   -webkit-transform: translateZ(0);
   -webkit-perspective: 1000;

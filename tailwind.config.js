@@ -42,9 +42,6 @@ module.exports = {
         },
         'bubblegum-fizz': palette['bubblegum-fizz'],
         'blue-violet': palette['blue-violet'],
-        green: {
-          DEFAULT: '#00FF40' // electric green — the high-contrast text accent (club neon)
-        },
         club: {
           DEFAULT: '#FF2D9B', // neon pink (style guide)
           pink: '#FF2D9B',

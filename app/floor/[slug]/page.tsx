@@ -49,14 +49,14 @@ export default async function FloorPage({
           <h1 className="mt-6 text-3xl font-extrabold">
             The {floor.name} floor is under construction
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-green">
+          <p className="mx-auto mt-3 max-w-md text-cyan">
             {closure?.reason ??
               'The crew is setting up the room — come back soon.'}
           </p>
           <div className="mt-8">
             <Link
               href="/floors"
-              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-green transition hover:border-zinc-500 hover:text-white"
+              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-cyan transition hover:border-zinc-500 hover:text-white"
             >
               ← Back to the elevators
             </Link>
@@ -71,7 +71,7 @@ export default async function FloorPage({
       <div className="mx-auto max-w-6xl px-6 pt-10">
         <Link
           href="/floors"
-          className="text-sm font-semibold text-green hover:text-white"
+          className="text-sm font-semibold text-cyan hover:text-white"
         >
           ← The floors
         </Link>
@@ -83,7 +83,7 @@ export default async function FloorPage({
           <h1 className="mt-6 text-3xl font-extrabold">
             The {floor.name} floor is behind the rope.
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-green">
+          <p className="mx-auto mt-3 max-w-md text-cyan">
             Come see what&apos;s on these floors with a {floor.name} card today
             — the view&apos;s worth it.
           </p>
@@ -96,7 +96,7 @@ export default async function FloorPage({
             </Link>
             <Link
               href="/club"
-              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-green transition hover:border-zinc-500 hover:text-white"
+              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-cyan transition hover:border-zinc-500 hover:text-white"
             >
               Back to the lobby
             </Link>
@@ -110,7 +110,7 @@ export default async function FloorPage({
             >
               The {floor.name} floor
             </p>
-            <p className="mx-auto mt-2 max-w-xl text-green">
+            <p className="mx-auto mt-2 max-w-xl text-cyan">
               {floor.tagline}
             </p>
             <div className="mt-5">

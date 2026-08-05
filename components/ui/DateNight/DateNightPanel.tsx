@@ -125,12 +125,12 @@ export default function DateNightPanel({
       <div className="rounded-xl border border-club/30 bg-gradient-to-b from-club/10 to-zinc-900 p-5 text-center">
         <p className="text-3xl">💘</p>
         <h3 className="mt-2 text-xl font-extrabold">Date Night complete</h3>
-        <p className="mt-1 text-green">
+        <p className="mt-1 text-cyan">
           {state.score} of {state.total} — you two locked {state.score}{' '}
           {state.score === 1 ? 'answer' : 'answers'} together.
         </p>
         {total > 0 && (
-          <p className="mt-1 text-sm text-green">
+          <p className="mt-1 text-sm text-cyan">
             You beat {beaten} of {total} couples on this pack
             {beaten >= total / 2
               ? ' — the floor noticed. 🏆'
@@ -154,7 +154,7 @@ export default function DateNightPanel({
 
   if (!live || !question || !state) {
     return (
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 text-center text-sm text-green">
+      <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 text-center text-sm text-cyan">
         Setting the table…
       </div>
     );
@@ -171,7 +171,7 @@ export default function DateNightPanel({
         </p>
         <span
           className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
-            left <= 10 ? 'bg-club/20 text-club' : 'bg-zinc-800 text-green'
+            left <= 10 ? 'bg-club/20 text-club' : 'bg-zinc-800 text-cyan'
           }`}
         >
           {mm}:{ss}
@@ -179,7 +179,7 @@ export default function DateNightPanel({
       </div>
 
       <p className="mt-3 text-sm font-bold text-white">{question.prompt}</p>
-      <p className="mt-1 text-xs text-green">
+      <p className="mt-1 text-xs text-cyan">
         Huddle with {otherName} in the chat — your answer only locks when you
         both pick the same one.
       </p>
@@ -194,10 +194,10 @@ export default function DateNightPanel({
               className={`rounded-lg border px-3 py-2 text-left text-sm transition ${
                 picked
                   ? 'border-club bg-club/20 font-bold text-club'
-                  : 'border-zinc-700 text-green hover:border-club/50'
+                  : 'border-zinc-700 text-cyan hover:border-club/50'
               }`}
             >
-              <span className="mr-2 font-mono text-xs text-green">
+              <span className="mr-2 font-mono text-xs text-cyan">
                 {String.fromCharCode(65 + i)}
               </span>
               {opt}
@@ -208,17 +208,17 @@ export default function DateNightPanel({
 
       <div className="mt-3 flex items-center justify-between text-xs">
         {myPick === null ? (
-          <p className="text-green">Pick an answer — then talk it out.</p>
+          <p className="text-cyan">Pick an answer — then talk it out.</p>
         ) : disagree ? (
           <p className="font-semibold text-gold">
             They picked differently — hash it out in the chat, then re-pick.
           </p>
         ) : partnerPicked ? (
-          <p className="text-green">
+          <p className="text-cyan">
             They&apos;ve picked — match them to lock it.
           </p>
         ) : (
-          <p className="text-green">
+          <p className="text-cyan">
             Your pick is in. Waiting on {otherName}…
           </p>
         )}

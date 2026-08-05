@@ -37,6 +37,10 @@ points — every push to `main` is production.
 - **Landing rhythm**: the all-green body below the hero now alternates green / pink (`text-club`)
   per section — How-it-works pink, Dance Floor green, Floors pink, Pricing green with the
   messaging card + token note pink. Headers stay as they were.
+- **Accent swap**: the text accent moved green → **cyan** (the founder's call — one hue, no
+  straying; cyan on black is ~21:1, the strongest contrast in the kit). The full 50–950 scales
+  for gold / cyan / bubblegum-fizz / blue-violet are wired in (`styles/palette-colors.js`,
+  mirrored from `styles/tailwind_color_scales.md`).
 
 ## [v1.1-docs-locked] — 2026-08-05
 

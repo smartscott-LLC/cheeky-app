@@ -27,11 +27,11 @@ export default function CheckInForm({ error }: { error?: string | null }) {
         </div>
         <div>
           <h2 className="text-2xl font-extrabold">Brutus the Bouncer</h2>
-          <p className="text-sm text-green">The Door Check</p>
+          <p className="text-sm text-cyan">The Door Check</p>
         </div>
       </div>
 
-      <p className="mt-4 text-sm text-green">
+      <p className="mt-4 text-sm text-cyan">
         One stop: your details and your consents right here, then the ID check —
         then you&apos;re in. Everything at the door, nothing twice.
       </p>
@@ -100,7 +100,7 @@ export default function CheckInForm({ error }: { error?: string | null }) {
             <option value="gentleman">Gentleman</option>
             <option value="lady">Lady</option>
           </select>
-          <p className="text-xs text-green">
+          <p className="text-xs text-cyan">
             The club pairs real gentlemen and real ladies — no surprises.
           </p>
 
@@ -134,7 +134,7 @@ export default function CheckInForm({ error }: { error?: string | null }) {
 
         {/* All four consents, in one place with Brutus */}
         <div className="space-y-3 rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
-          <label className="flex items-start gap-3 text-sm text-green">
+          <label className="flex items-start gap-3 text-sm text-cyan">
             <input
               type="checkbox"
               name="termsConsent"
@@ -143,7 +143,7 @@ export default function CheckInForm({ error }: { error?: string | null }) {
             />
             <span>I agree to the Rules of the Club (Terms) v1.</span>
           </label>
-          <label className="flex items-start gap-3 text-sm text-green">
+          <label className="flex items-start gap-3 text-sm text-cyan">
             <input
               type="checkbox"
               name="privacyConsent"
@@ -152,7 +152,7 @@ export default function CheckInForm({ error }: { error?: string | null }) {
             />
             <span>I&apos;ve read What the Bouncer Knows (Privacy) v1.</span>
           </label>
-          <label className="flex items-start gap-3 text-sm text-green">
+          <label className="flex items-start gap-3 text-sm text-cyan">
             <input
               type="checkbox"
               name="bestPracticesConsent"
@@ -168,7 +168,7 @@ export default function CheckInForm({ error }: { error?: string | null }) {
               (v1).
             </span>
           </label>
-          <label className="flex items-start gap-3 text-sm text-green">
+          <label className="flex items-start gap-3 text-sm text-cyan">
             <input
               type="checkbox"
               name="verificationConsent"
@@ -192,7 +192,7 @@ export default function CheckInForm({ error }: { error?: string | null }) {
         </button>
       </form>
 
-      <p className="mt-4 text-center text-sm text-green">
+      <p className="mt-4 text-center text-sm text-cyan">
         Already a member?{' '}
         <Link
           href="/signin"

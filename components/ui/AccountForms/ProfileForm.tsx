@@ -149,7 +149,7 @@ export default function ProfileForm({
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
       <h2 className="text-xl font-bold">Your profile</h2>
-      <p className="mt-1 text-sm text-green">
+      <p className="mt-1 text-sm text-cyan">
         Up to {photoLimit} photos on this floor. This is what the club sees.
       </p>
 
@@ -214,7 +214,7 @@ export default function ProfileForm({
           <label htmlFor="displayName" className="text-sm font-semibold">
             Choose your avatar name
           </label>
-          <p className="text-xs text-green">
+          <p className="text-xs text-cyan">
             This is the name the club calls you. Your real name stays private
             unless you put it here.
           </p>
@@ -238,7 +238,7 @@ export default function ProfileForm({
             placeholder="What's your best pickup line?"
             className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
           />
-          <p className="text-xs text-green">
+          <p className="text-xs text-cyan">
             A little insight goes a long way. The Spark List shows it under your
             name.
           </p>
@@ -261,7 +261,7 @@ export default function ProfileForm({
             <option value="gentleman">Gentleman</option>
             <option value="lady">Lady</option>
           </select>
-          <p className="text-xs text-green">
+          <p className="text-xs text-cyan">
             The club pairs real gentlemen and real ladies. This tells the floor
             who you are — required, and never shown as a label.
           </p>
@@ -282,7 +282,7 @@ export default function ProfileForm({
             <option value="women">Ladies</option>
             <option value="men">Gentlemen</option>
           </select>
-          <p className="text-xs text-green">
+          <p className="text-xs text-cyan">
             Who you&apos;re here to meet — personal, and never shown publicly.
             It groups you with the right company at events and guides the
             club&apos;s suggestions.

@@ -169,14 +169,14 @@ export default async function GiftsPage() {
       <div className="mx-auto max-w-6xl px-6 py-16">
         <Link
           href={floorHref}
-          className="text-sm font-semibold text-green hover:text-white"
+          className="text-sm font-semibold text-cyan hover:text-white"
         >
           ← Back to the floor
         </Link>
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
           🎁 The Gift Shop
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-green">
+        <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
           Buy something for someone. The club hears the cork pop — but only they
           know it was you.
         </p>

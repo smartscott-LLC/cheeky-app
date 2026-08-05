@@ -89,7 +89,7 @@ export default function Pricing({
             <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
               Get your card
             </h1>
-            <p className="max-w-2xl m-auto mt-5 text-xl text-green sm:text-center sm:text-2xl">
+            <p className="max-w-2xl m-auto mt-5 text-xl text-cyan sm:text-center sm:text-2xl">
               Everyone gets in with a verified ID — free. Expand your options by
               obtaining membership to the higher floors.
             </p>
@@ -101,7 +101,7 @@ export default function Pricing({
                   className={`${
                     billingInterval === 'month'
                       ? 'relative w-1/2 bg-zinc-700 border-zinc-800 shadow-sm text-white'
-                      : 'ml-0.5 relative w-1/2 border border-transparent text-green'
+                      : 'ml-0.5 relative w-1/2 border border-transparent text-cyan'
                   } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-club focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
                 >
                   Monthly billing
@@ -114,7 +114,7 @@ export default function Pricing({
                   className={`${
                     billingInterval === 'year'
                       ? 'relative w-1/2 bg-zinc-700 border-zinc-800 shadow-sm text-white'
-                      : 'ml-0.5 relative w-1/2 border border-transparent text-green'
+                      : 'ml-0.5 relative w-1/2 border border-transparent text-cyan'
                   } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-club focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
                 >
                   Yearly billing
@@ -152,12 +152,12 @@ export default function Pricing({
                     <h2 className="text-2xl font-semibold leading-6 text-white">
                       {product.name}
                     </h2>
-                    <p className="mt-4 text-green">{product.description}</p>
+                    <p className="mt-4 text-cyan">{product.description}</p>
                     <p className="mt-8">
                       <span className="text-5xl font-extrabold white">
                         {priceString}
                       </span>
-                      <span className="text-base font-medium text-green">
+                      <span className="text-base font-medium text-cyan">
                         {price.type === 'recurring'
                           ? `/${billingInterval}`
                           : ' one-time'}
@@ -203,7 +203,7 @@ export default function Pricing({
                 <p className="text-xs font-bold uppercase tracking-wide text-silver">
                   Silver — free
                 </p>
-                <p className="mt-1 text-sm text-green">
+                <p className="mt-1 text-sm text-cyan">
                   30 messages + 5 new conversations a day. Generous on purpose,
                   never shrunk.
                 </p>
@@ -212,7 +212,7 @@ export default function Pricing({
                 <p className="text-xs font-bold uppercase tracking-wide text-gold">
                   Gold
                 </p>
-                <p className="mt-1 text-sm text-green">
+                <p className="mt-1 text-sm text-cyan">
                   75 messages + 15 new people a day.
                 </p>
               </div>
@@ -220,7 +220,7 @@ export default function Pricing({
                 <p className="text-xs font-bold uppercase tracking-wide text-platinum">
                   Platinum
                 </p>
-                <p className="mt-1 text-sm text-green">
+                <p className="mt-1 text-sm text-cyan">
                   Unlimited messages + 40 new people a day.
                 </p>
               </div>
@@ -228,7 +228,7 @@ export default function Pricing({
                 <p className="text-xs font-bold uppercase tracking-wide text-diamond">
                   Diamond
                 </p>
-                <p className="mt-1 text-sm text-green">
+                <p className="mt-1 text-sm text-cyan">
                   Unlimited messages + 100 new people a day.
                 </p>
               </div>
@@ -246,7 +246,7 @@ export default function Pricing({
                 </p>
                 <button
                   onClick={() => setSelectedPrice(null)}
-                  className="text-sm text-green hover:text-white"
+                  className="text-sm text-cyan hover:text-white"
                 >
                   Cancel
                 </button>

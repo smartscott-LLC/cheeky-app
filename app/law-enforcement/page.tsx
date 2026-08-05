@@ -47,7 +47,7 @@ export default function LawEnforcementPage() {
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
           🛡️ Law Enforcement
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-green">
+        <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
           How official requests for Club Cheeky account data are handled.
         </p>
 
@@ -65,7 +65,7 @@ export default function LawEnforcementPage() {
                 {s.items.map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-3 text-sm text-green"
+                    className="flex items-start gap-3 text-sm text-cyan"
                   >
                     <span className="text-club">✓</span>
                     {item}
@@ -76,7 +76,7 @@ export default function LawEnforcementPage() {
           ))}
         </div>
 
-        <p className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 text-sm text-green">
+        <p className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 text-sm text-cyan">
           <span className="font-bold text-white">Legal contact:</span>{' '}
           <a
             href={`mailto:${CONTACT.info}`}

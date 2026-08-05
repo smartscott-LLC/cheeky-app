@@ -248,7 +248,7 @@ export default function MessageThread({
         <div className="flex items-center gap-3">
           <Link
             href="/browse"
-            className="text-xs font-semibold text-green hover:text-white"
+            className="text-xs font-semibold text-cyan hover:text-white"
           >
             ← The floor
           </Link>
@@ -261,7 +261,7 @@ export default function MessageThread({
                 className="h-full w-full object-cover"
               />
             ) : (
-              <span className="font-bold text-green">
+              <span className="font-bold text-cyan">
                 {other.display_name.charAt(0).toUpperCase()}
               </span>
             )}
@@ -285,7 +285,7 @@ export default function MessageThread({
               </p>
             )}
             {declined && (
-              <p className="text-xs text-green">Song over — chat closed</p>
+              <p className="text-xs text-cyan">Song over — chat closed</p>
             )}
           </div>
         </div>
@@ -303,7 +303,7 @@ export default function MessageThread({
             <button
               onClick={() => setDjMuted(toggleDJ())}
               title="DJ"
-              className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-green hover:border-zinc-500"
+              className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-cyan hover:border-zinc-500"
             >
               {djMuted ? '🔇' : '🎧'}
             </button>
@@ -311,7 +311,7 @@ export default function MessageThread({
           {!blocked && !declined && (
             <button
               onClick={() => setReportOpen((v) => !v)}
-              className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-green hover:border-zinc-500"
+              className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-cyan hover:border-zinc-500"
             >
               Report
             </button>
@@ -328,7 +328,7 @@ export default function MessageThread({
                   setBlocked(true);
                 }
               }}
-              className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-green hover:border-club/60 hover:text-club"
+              className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-cyan hover:border-club/60 hover:text-club"
             >
               Block
             </button>
@@ -342,7 +342,7 @@ export default function MessageThread({
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-sm font-bold text-gold">🍾 A Gift Date</p>
-              <p className="text-xs text-green">
+              <p className="text-xs text-cyan">
                 This room is yours for the next two hours
                 {giftFloor && giftFloor !== 'standard' && giftFloor !== 'silver'
                   ? ` — explore the ${giftFloor} floor together`
@@ -395,7 +395,7 @@ export default function MessageThread({
           </p>
           <button
             onClick={() => setPromptIdx((i) => (i + 1) % ICEBREAKERS.length)}
-            className="ml-auto rounded-full border border-zinc-700 px-3 py-1 text-xs text-green hover:border-club hover:text-club"
+            className="ml-auto rounded-full border border-zinc-700 px-3 py-1 text-xs text-cyan hover:border-club hover:text-club"
           >
             Another
           </button>
@@ -417,7 +417,7 @@ export default function MessageThread({
             <button
               onClick={() => handleResolve(false)}
               disabled={busy}
-              className="rounded-lg border border-zinc-700 px-5 py-2 text-sm font-semibold text-green hover:border-zinc-500"
+              className="rounded-lg border border-zinc-700 px-5 py-2 text-sm font-semibold text-cyan hover:border-zinc-500"
             >
               Move on — close it
             </button>
@@ -426,7 +426,7 @@ export default function MessageThread({
       )}
 
       {declined && (
-        <p className="border-b border-zinc-800 px-4 py-2 text-center text-xs text-green">
+        <p className="border-b border-zinc-800 px-4 py-2 text-center text-xs text-cyan">
           The song is over and the chat is closed. No follow-ups — that&apos;s
           the rule of the floor.
         </p>
@@ -453,7 +453,7 @@ export default function MessageThread({
                   setReported(true);
                   setReportOpen(false);
                 }}
-                className="rounded-full border border-zinc-700 px-3 py-1 text-xs text-green hover:border-club hover:text-club"
+                className="rounded-full border border-zinc-700 px-3 py-1 text-xs text-cyan hover:border-club hover:text-club"
               >
                 {reason}
               </button>
@@ -474,7 +474,7 @@ export default function MessageThread({
       {/* Messages */}
       <div className="flex-1 space-y-3 overflow-y-auto p-4">
         {messages.length === 0 && (
-          <p className="pt-10 text-center text-green">
+          <p className="pt-10 text-center text-cyan">
             {blocked
               ? 'This conversation is blocked.'
               : songMode
@@ -491,13 +491,13 @@ export default function MessageThread({
             >
               <div
                 className={`max-w-[75%] rounded-2xl px-4 py-2 text-sm ${
-                  mine ? 'bg-club text-white' : 'bg-zinc-800 text-green'
+                  mine ? 'bg-club text-white' : 'bg-zinc-800 text-cyan'
                 }`}
               >
                 <p>{m.body}</p>
                 <p
                   className={`mt-1 text-[10px] ${
-                    mine ? 'text-white/60' : 'text-green'
+                    mine ? 'text-white/60' : 'text-cyan'
                   }`}
                 >
                   {new Date(m.created_at).toLocaleTimeString([], {
@@ -527,7 +527,7 @@ export default function MessageThread({
       <div className="border-t border-zinc-800 p-4">
         {error && <p className="mb-2 text-xs text-club">{error}</p>}
         {blocked ? (
-          <p className="text-sm text-green">Blocked. No more messages.</p>
+          <p className="text-sm text-cyan">Blocked. No more messages.</p>
         ) : declined ? (
           <Link
             href="/events"

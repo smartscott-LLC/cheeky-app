@@ -86,7 +86,7 @@ export default async function MessagesPage() {
         <p className="mt-2">
           <Link
             href={floorHref}
-            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-green transition hover:border-zinc-500 hover:text-white"
+            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-cyan transition hover:border-zinc-500 hover:text-white"
           >
             ← Back to the floor
           </Link>
@@ -120,7 +120,7 @@ export default async function MessagesPage() {
                             className="h-full w-full object-cover"
                           />
                         ) : (
-                          <span className="flex h-full w-full items-center justify-center font-bold text-green">
+                          <span className="flex h-full w-full items-center justify-center font-bold text-cyan">
                             {(profile?.display_name || '?')
                               .charAt(0)
                               .toUpperCase()}
@@ -131,7 +131,7 @@ export default async function MessagesPage() {
                         <p className="font-bold">
                           {profile?.display_name || 'Member'}
                         </p>
-                        <p className="text-xs text-green">waved at you</p>
+                        <p className="text-xs text-cyan">waved at you</p>
                       </div>
                     </div>
                     <form action={openConversation.bind(null, w.sender_id)}>
@@ -151,7 +151,7 @@ export default async function MessagesPage() {
         {convs.length === 0 ? (
           <div className="mt-10 rounded-xl border border-zinc-800 bg-zinc-900/50 p-10 text-center">
             <h2 className="text-xl font-bold">No conversations yet.</h2>
-            <p className="mt-2 text-green">
+            <p className="mt-2 text-cyan">
               Hit the floor, pick someone you like — when they pick you back,
               the chatting starts here.
             </p>
@@ -180,13 +180,13 @@ export default async function MessagesPage() {
                       {profile?.display_name || 'Member'}
                     </p>
                     {last && (
-                      <p className="text-xs text-green">
+                      <p className="text-xs text-cyan">
                         {new Date(last.created_at).toLocaleString()}
                       </p>
                     )}
                   </div>
                   {last && (
-                    <p className="mt-1 truncate text-sm text-green">
+                    <p className="mt-1 truncate text-sm text-cyan">
                       {last.body}
                     </p>
                   )}

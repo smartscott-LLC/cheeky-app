@@ -77,7 +77,7 @@ export default async function LandingPage() {
           <h1 className="mx-auto mt-6 max-w-3xl text-5xl font-extrabold leading-tight sm:text-7xl">
             Looking for your next crush?
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-xl text-green sm:text-2xl">
+          <p className="mx-auto mt-4 max-w-2xl text-xl text-cyan sm:text-2xl">
             Find your next date in our virtual nightclub.
           </p>
 
@@ -97,7 +97,7 @@ export default async function LandingPage() {
             At Club Cheeky&apos;s,{' '}
             <span className="text-club">you are the VIP.</span>
           </p>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-green">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-cyan">
             Everyone with an ID starts their own VIP adventure. It&apos;s free
             to get your groove on — money buys floors, never entry.
           </p>
@@ -165,7 +165,7 @@ export default async function LandingPage() {
             Every hour, every quarter: the Dance Floor at :00, Themed Night at
             :15, Speed Dating at :30, the Rooftop at :45.
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-lg text-green">
+          <p className="mx-auto mt-5 max-w-xl text-lg text-cyan">
             Four floors, four rooms, one hour — a Diamond plays the whole set.
             Everyone&apos;s photo hits the grid. Pick the ones you like. When
             two people pick each other — instant match, center floor, announced.

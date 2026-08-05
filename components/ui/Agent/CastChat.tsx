@@ -117,7 +117,7 @@ export default function CastChat({ character }: { character: CastCharacter }) {
         </div>
         <div>
           <p className="text-lg font-extrabold">{character.name}</p>
-          <p className="text-sm text-green">{character.role}</p>
+          <p className="text-sm text-cyan">{character.role}</p>
         </div>
       </div>
 
@@ -129,7 +129,7 @@ export default function CastChat({ character }: { character: CastCharacter }) {
           className="flex-1 space-y-3 overflow-y-auto p-5"
         >
           {messages.length === 0 && (
-            <p className="pt-8 text-center text-sm text-green">
+            <p className="pt-8 text-center text-sm text-cyan">
               {character.tagline ?? `Talk to ${character.name}.`}
             </p>
           )}
@@ -144,7 +144,7 @@ export default function CastChat({ character }: { character: CastCharacter }) {
                 className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm ${
                   m.role === 'user'
                     ? 'bg-club text-white'
-                    : 'bg-zinc-800 text-green'
+                    : 'bg-zinc-800 text-cyan'
                 }`}
               >
                 {m.content}
@@ -152,7 +152,7 @@ export default function CastChat({ character }: { character: CastCharacter }) {
             </div>
           ))}
           {busy && (
-            <p className="text-sm text-green">{TYPING[typingIdx]}…</p>
+            <p className="text-sm text-cyan">{TYPING[typingIdx]}…</p>
           )}
         </div>
 

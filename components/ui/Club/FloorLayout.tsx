@@ -70,7 +70,7 @@ export default function FloorLayout({
             <p className="mt-1 text-sm font-extrabold uppercase tracking-[0.12em] group-hover:text-white">
               {spot.name}
             </p>
-            <p className="text-xs text-green">{spot.sub}</p>
+            <p className="text-xs text-cyan">{spot.sub}</p>
           </Link>
         ))}
         <Link
@@ -106,7 +106,7 @@ export default function FloorLayout({
               <p className="mt-1 text-sm font-extrabold uppercase tracking-[0.12em]">
                 {spot.name}
               </p>
-              <p className="text-xs text-green">{spot.sub}</p>
+              <p className="text-xs text-cyan">{spot.sub}</p>
             </Link>
           ))}
         </div>

@@ -23,7 +23,7 @@ export default async function PricingPage() {
         <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
           💎 Membership & Pricing
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-green">
+        <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
           The only price of admission is being a real person. Money buys floors,
           never entry — the free tier is genuinely free.
         </p>
@@ -37,7 +37,7 @@ export default async function PricingPage() {
           />
         </div>
 
-        <p className="mx-auto mt-8 max-w-xl text-center text-xs text-green">
+        <p className="mx-auto mt-8 max-w-xl text-center text-xs text-cyan">
           Cancel anytime in one click from your Account page — no phone calls,
           no retention scripts, no surprise charges. Tokens are never spent on
           messaging; they power events and gifts only.

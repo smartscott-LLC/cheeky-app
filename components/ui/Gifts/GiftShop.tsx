@@ -152,7 +152,7 @@ export default function GiftShop({
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <span className="font-bold text-green">
+                      <span className="font-bold text-cyan">
                         {(g.sender.display_name || '?').charAt(0).toUpperCase()}
                       </span>
                     )}
@@ -161,7 +161,7 @@ export default function GiftShop({
                     <p className="font-bold">
                       {g.sender.display_name || 'Member'}
                     </p>
-                    <p className="text-sm text-green">
+                    <p className="text-sm text-cyan">
                       sent you {g.emoji} {g.name}
                     </p>
                   </div>
@@ -191,7 +191,7 @@ export default function GiftShop({
                       )
                     }
                     disabled={busy === `deny-${g.id}`}
-                    className="rounded-lg border border-zinc-700 px-4 py-2 text-sm font-semibold text-green hover:border-zinc-500"
+                    className="rounded-lg border border-zinc-700 px-4 py-2 text-sm font-semibold text-cyan hover:border-zinc-500"
                   >
                     Pass
                   </button>
@@ -206,7 +206,7 @@ export default function GiftShop({
         {/* The store */}
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="text-xl font-bold">🍸 The Bar</h2>
-          <p className="mt-1 text-sm text-green">
+          <p className="mt-1 text-sm text-cyan">
             {tokenBalance} tokens · {tierLabel} floor · you can buy your floor
             and below
           </p>
@@ -226,7 +226,7 @@ export default function GiftShop({
               if (floorGifts.length === 0 && !showBasket) return null;
               return (
                 <div key={floor}>
-                  <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-green">
+                  <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-cyan">
                     {FLOOR_LABEL[floor]} floor
                   </h3>
                   <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -241,12 +241,12 @@ export default function GiftShop({
                       >
                         <div className="flex items-center justify-between">
                           <span className="text-2xl">{g.emoji}</span>
-                          <span className="text-xs font-bold uppercase tracking-wide text-green">
+                          <span className="text-xs font-bold uppercase tracking-wide text-cyan">
                             {g.kind === 'featured' ? '✨ Featured' : 'Gesture'}
                           </span>
                         </div>
                         <p className="mt-2 font-bold">{g.name}</p>
-                        <p className="text-sm text-green">{giftPitch(g)}</p>
+                        <p className="text-sm text-cyan">{giftPitch(g)}</p>
                         <button
                           onClick={() =>
                             run(
@@ -278,7 +278,7 @@ export default function GiftShop({
                           </span>
                         </div>
                         <p className="mt-2 font-bold">{basket.name}</p>
-                        <p className="text-sm text-green">
+                        <p className="text-sm text-cyan">
                           {giftPitch(basket)}
                         </p>
                         <button
@@ -313,12 +313,12 @@ export default function GiftShop({
         <div className="space-y-6">
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
             <h2 className="text-xl font-bold">🧥 My stash</h2>
-            <p className="mt-1 text-sm text-green">
+            <p className="mt-1 text-sm text-cyan">
               Your inventory. One offer per hour, and a denied gift comes right
               back here.
             </p>
             {stash.length === 0 ? (
-              <p className="mt-4 text-sm text-green">
+              <p className="mt-4 text-sm text-cyan">
                 Nothing in the stash yet — buy something from the bar.
               </p>
             ) : (
@@ -349,7 +349,7 @@ export default function GiftShop({
               <div className="mt-4 rounded-lg border border-platinum/30 bg-platinum/5 p-4">
                 <p className="text-sm font-bold">Send {sendFor.name} to…</p>
                 {people.length === 0 ? (
-                  <p className="mt-2 text-sm text-green">
+                  <p className="mt-2 text-sm text-cyan">
                     No one to send to yet — match or chat with someone first.
                   </p>
                 ) : (
@@ -383,7 +383,7 @@ export default function GiftShop({
                   </button>
                   <button
                     onClick={() => setSendFor(null)}
-                    className="rounded-lg border border-zinc-700 px-4 py-2 text-sm font-semibold text-green hover:border-zinc-500"
+                    className="rounded-lg border border-zinc-700 px-4 py-2 text-sm font-semibold text-cyan hover:border-zinc-500"
                   >
                     Cancel
                   </button>
@@ -409,7 +409,7 @@ export default function GiftShop({
                         s.status === 'accepted'
                           ? 'text-club'
                           : s.status === 'denied'
-                            ? 'text-green'
+                            ? 'text-cyan'
                             : 'text-platinum'
                       }`}
                     >
