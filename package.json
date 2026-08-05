@@ -35,7 +35,7 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "dotenv": "^17.4.2",
-    "lucide-react": "0.330.0",
+    "lucide-react": "1.28.0",
     "next": "^15.5.22",
     "openai": "^7.3.0",
     "postgres": "^3.4.9",
