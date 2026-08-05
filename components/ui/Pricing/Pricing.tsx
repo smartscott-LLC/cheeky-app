@@ -193,7 +193,7 @@ export default function Pricing({
             <h2 className="mt-3 text-xl font-extrabold">
               Messaging is never for sale
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm text-green">
+            <p className="mx-auto mt-3 max-w-xl text-sm text-club">
               You can&apos;t buy more messages. No message packs, no upsells, no
               pay-to-talk — ever. Messaging is a membership perk, not a product:
               it&apos;s the room you&apos;re in, and every card gets in.
@@ -233,7 +233,7 @@ export default function Pricing({
                 </p>
               </div>
             </div>
-            <p className="mt-5 text-xs text-green">
+            <p className="mt-5 text-xs text-club">
               Tokens power events and gifts only — never messaging.
             </p>
           </div>

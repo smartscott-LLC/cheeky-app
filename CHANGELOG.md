@@ -34,6 +34,9 @@ points — every push to `main` is production.
   club neon) — gray-on-black text was the accessibility weak spot (some shades ~3.5:1); green on
   black is 15.4:1. Light-surface exceptions keep dark text (white buttons, light toasts); hover
   accents stay gold.
+- **Landing rhythm**: the all-green body below the hero now alternates green / pink (`text-club`)
+  per section — How-it-works pink, Dance Floor green, Floors pink, Pricing green with the
+  messaging card + token note pink. Headers stay as they were.
 
 ## [v1.1-docs-locked] — 2026-08-05
 

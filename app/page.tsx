@@ -146,9 +146,9 @@ export default async function LandingPage() {
                 key={item.step}
                 className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8"
               >
-                <p className="text-sm font-bold text-club">{item.step}</p>
+                <p className="mt-3 text-sm font-bold text-club">{item.step}</p>
                 <h3 className="mt-3 text-xl font-bold">{item.title}</h3>
-                <p className="mt-3 text-green">{item.body}</p>
+                <p className="mt-3 text-club">{item.body}</p>
               </div>
             ))}
           </div>
@@ -183,7 +183,7 @@ export default async function LandingPage() {
           <h2 className="text-center text-3xl font-extrabold sm:text-4xl">
             The floors
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-center text-lg text-green">
+          <p className="mx-auto mt-4 max-w-2xl text-center text-lg text-club">
             The only price of admission is being a real person. Every person
             with an ID is a VIP.
           </p>
@@ -208,7 +208,7 @@ export default async function LandingPage() {
                   <p className="mt-1 text-sm font-semibold text-club">
                     {floor.price}
                   </p>
-                  <ul className="mt-4 space-y-2 text-sm text-green">
+                  <ul className="mt-4 space-y-2 text-sm text-club">
                     {floor.perks.map((perk) => (
                       <li key={perk}>• {perk}</li>
                     ))}
