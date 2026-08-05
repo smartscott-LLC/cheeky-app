@@ -169,13 +169,13 @@ supabase/       migrations (48) — apply to hosted with scripts/migrate-hosted.
 scripts/        dev utilities (migrate-hosted, backfill-*, check-*, test-*)
 styles/         global css (main.css) + floor palettes (styles/palettes/*.scss)
 docs/           PRD-foundation.md + PRDs + Governance/ + COMPONENT-LIBRARY.md +
-                ENVIRONMENT.md + floor-map.md
+                ENVIRONMENT.md + floor-map.md + first-floor-flow.mmd
+                (historical audits/setup reports live in docs/archives/)
 tests/          node:test suite — safe (pnpm test) + live (RUN_LIVE_TESTS=1)
 fixtures/       Stripe fixture JSON for bootstrapping products/prices
 persona_assets/ founder's source art, style guides, personas, audio (originals)
 public/         served assets: brand/ (floor art, entrance), personas/ (crew
                 images), audio/ (DJ tracks), video/ (track art)
-schema.sql      reference schema (mirrors migrations)
 types_db.ts     generated Supabase types — commit after regenerating
 ```
 

@@ -12,6 +12,9 @@ points — every push to `main` is production.
   instead of `.env.local` — the stale hybrid from the pre-wipe era was the source of the
   PostHog-key and pooler-ref mixups. `.env.local` is now a generated copy refreshed by
   `node scripts/sync-env.mjs`; never hand-edit it.
+- **Repo organized**: historical audits + setup reports moved to `docs/archives/`;
+  `first-floor-flow.mmd` lives in `docs/`; stale `schema.sql`, Stripe CSV exports, and build
+  junk removed; governance PDFs committed under `docs/Governance/`. Repo maps updated.
 
 ## [v1.1-docs-locked] — 2026-08-05
 

@@ -1,7 +1,0 @@
-Price ID,Product ID,Product Name,Product Statement Descriptor,Product Tax Code,Description,Created (UTC),Amount,Currency,Interval,Interval Count,Usage Type,Aggregate Usage,Billing Scheme,Trial Period Days,Tax Behavior
-price_1TzHXURdDFhPYcwB0I3VvqAj,prod_UzG3WnHAk9Kyvm,Cheeky Token Bundle - 1000 Tokens,,txcd_10000000,,2026-07-31 14:35,9.99,usd,month,1,licensed,,per_unit,,unspecified
-price_1TzHVdRdDFhPYcwBt1TsNCex,prod_UzG1lFon8kmzRE,Cheeky Token Bag - 100 Tokens,,txcd_10000000,,2026-07-31 14:34,4.99,usd,,,,,per_unit,,unspecified
-price_1TzGArRdDFhPYcwBAIZYrzxG,prod_UzEe11IW2EwYBz,Diamond Club Membership,,txcd_10000000,,2026-07-31 13:08,29.99,usd,month,1,licensed,,per_unit,,unspecified
-price_1TzG81RdDFhPYcwB2nWk3Vhy,prod_UzEbUw1G00Fa94,Platinum Membership,,txcd_10000000,,2026-07-31 13:05,19.99,usd,month,1,licensed,,per_unit,,unspecified
-price_1TzG3wRdDFhPYcwBYof2rXyt,prod_UzEXSa86gJFF5U,Gold Membership,,txcd_10000000,,2026-07-31 13:01,9.99,usd,month,1,licensed,,per_unit,,unspecified
-price_1TzFUGRdDFhPYcwB49GfX8u4,prod_UzDwhFWh2h8T6N,Standard Membership,,txcd_10000000,,2026-07-31 12:24,0.00,usd,month,1,licensed,,per_unit,,unspecified
