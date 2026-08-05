@@ -4,6 +4,7 @@ import { createClient } from '@/utils/supabase/server';
 import { supabaseAdmin } from '@/utils/supabase/admin';
 import { generateSwagCode, type SwagBenefitType } from '@/utils/swag';
 import { sendClubMail } from '@/utils/email';
+import { CONTACT } from '@/utils/contact';
 
 /**
  * The Owner's Back Door: authorized if the signed-in user IS the owner
@@ -318,6 +319,35 @@ export async function ownerResolveReport(input: {
       })
       .eq('id', report.id);
   }
+  return {};
+}
+
+/**
+ * The Den's open door: anyone who finds the office without the key can
+ * leave a message for the owner. Public on purpose — the message is the
+ * point (a turned-away visitor becomes a conversation). Honeypot-guarded;
+ * lands in the club's general desk inbox.
+ */
+export async function ownerLeaveMessage(
+  formData: FormData
+): Promise<{ error?: string }> {
+  if (String(formData.get('company') ?? '').trim()) {
+    return { error: 'nice try, robot' };
+  }
+  const email = String(formData.get('email') ?? '').trim();
+  const message = String(formData.get('message') ?? '').trim();
+  if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email)) {
+    return { error: 'A real email, please — so the owner can get back to you.' };
+  }
+  if (message.length < 5 || message.length > 2000) {
+    return { error: 'A real message, please — a sentence or two is plenty.' };
+  }
+
+  await sendClubMail({
+    to: CONTACT.info,
+    subject: '🦁 A message left at the Lions Den door',
+    text: `From: ${email}\n\n${message}`
+  });
   return {};
 }
 

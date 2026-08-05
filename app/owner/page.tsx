@@ -11,7 +11,8 @@ import {
   ownerUpdateModels,
   ownerSetFloorClosure,
   ownerResolveReport,
-  ownerSetBan
+  ownerSetBan,
+  ownerLeaveMessage
 } from '@/app/owner/actions';
 
 type BenefitType = 'membership' | 'tokens' | 'gift';
@@ -169,6 +170,18 @@ export default function OwnerPage() {
   const [mintFresh, setMintFresh] = useState<string[]>([]);
 
   const notice = (ok: boolean, text: string) => setMsg({ ok, text });
+
+  // The open door: no key, no problem — leave a message for the owner.
+  const leaveMessage = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    setBusy(true);
+    const res = await ownerLeaveMessage(fd);
+    setBusy(false);
+    if (res.error) return notice(false, res.error);
+    notice(true, 'Message sent — the owner will get back to you.');
+    e.currentTarget.reset();
+  };
 
   // Auto-unlock: if the signed-in account IS the owner, the Booth opens
   // with no key (the back door). The key input below is the fallback path.
@@ -498,10 +511,14 @@ export default function OwnerPage() {
   if (!unlocked) {
     return (
       <div className="bg-black">
-        <div className="mx-auto max-w-md px-6 py-24">
-          <h1 className="text-center text-3xl font-extrabold">🗝️ The Owner&apos;s Booth</h1>
-          <p className="mt-2 text-center text-sm text-zinc-500">
-            Keyed access. Swag generation, flags, and the engine switch live here.
+        <div className="mx-auto max-w-md px-6 py-20">
+          <p className="text-center text-5xl">🦁</p>
+          <h1 className="mt-4 text-center text-3xl font-extrabold">
+            The Lions Den
+          </h1>
+          <p className="mt-2 text-center text-sm text-zinc-400">
+            The owner&apos;s office. If this is you, it opens on its own — no key
+            needed.
           </p>
           <input
             type="password"
@@ -514,15 +531,58 @@ export default function OwnerPage() {
           <button
             onClick={() => unlock(key)}
             disabled={busy}
-            className="mt-3 w-full rounded-lg bg-club px-6 py-3 font-bold text-white transition hover:bg-club-cotton disabled:opacity-40"
+            className="mt-3 w-full rounded-lg border border-zinc-700 px-6 py-2.5 font-bold text-zinc-200 transition hover:border-zinc-500 disabled:opacity-40"
           >
             Unlock
           </button>
-          <p className="mt-3 text-center text-xs text-zinc-600">
-            Signed in as the owner? The Booth opens on its own — no key needed.
+
+          <div className="my-6 flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-zinc-600">
+            <div className="h-px flex-1 bg-zinc-800" />
+            not the owner?
+            <div className="h-px flex-1 bg-zinc-800" />
+          </div>
+
+          <p className="text-center text-sm text-zinc-300">
+            The door&apos;s still open. Leave a message and the owner gets back
+            to you.
           </p>
+          <form onSubmit={leaveMessage} className="mt-4 space-y-3">
+            <input
+              type="text"
+              name="company"
+              tabIndex={-1}
+              autoComplete="off"
+              className="hidden"
+              aria-hidden="true"
+            />
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="Your email"
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-white outline-none focus:ring-2 focus:ring-club/50"
+            />
+            <textarea
+              name="message"
+              required
+              rows={4}
+              placeholder="What&apos;s on your mind?"
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-white outline-none focus:ring-2 focus:ring-club/50"
+            />
+            <button
+              type="submit"
+              disabled={busy}
+              className="w-full rounded-lg bg-club px-6 py-3 font-bold text-white transition hover:bg-club-cotton disabled:opacity-40"
+            >
+              Leave a message for the owner
+            </button>
+          </form>
           {msg && (
-            <p className={`mt-3 text-center text-sm ${msg.ok ? 'text-zinc-400' : 'text-club'}`}>
+            <p
+              className={`mt-4 text-center text-sm ${
+                msg.ok ? 'text-emerald-400' : 'text-club'
+              }`}
+            >
               {msg.text}
             </p>
           )}

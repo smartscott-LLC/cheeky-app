@@ -15,7 +15,6 @@ interface NavlinksProps {
     email?: string | null;
     user_metadata?: Record<string, unknown>;
   } | null;
-  isOwner?: boolean;
 }
 
 /**
@@ -23,7 +22,7 @@ interface NavlinksProps {
  * club (/club) — the nav only carries the door: sign in, enter, account.
  * No event links, no floor links — those are found by walking the room.
  */
-export default function Navlinks({ user, isOwner = false }: NavlinksProps) {
+export default function Navlinks({ user }: NavlinksProps) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -85,12 +84,6 @@ export default function Navlinks({ user, isOwner = false }: NavlinksProps) {
         </Link>
         {user ? (
           <>
-            {/* The Lions Den — the owner's cockpit, only on the owner's marquee */}
-            {isOwner && (
-              <Link href="/owner" className={s.link} title="The Lions Den">
-                🦁 Den
-              </Link>
-            )}
             {/* The Exchange — cards and tokens, on every floor */}
             <Link href="/store" className={s.link} title="Buy cards & tokens">
               <span className="lg:hidden">🪙</span>
