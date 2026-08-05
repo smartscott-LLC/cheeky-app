@@ -60,7 +60,7 @@ export default function Navlinks({ user }: NavlinksProps) {
           <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-gold shadow-[0_0_14px_rgba(255,215,0,0.35)]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/brand/entrance.webp"
+              src="/brand/entrance-logo.webp"
               alt="Club Cheeky entrance"
               className="h-full w-full object-cover"
             />

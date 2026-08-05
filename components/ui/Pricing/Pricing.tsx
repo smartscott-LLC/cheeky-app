@@ -7,7 +7,13 @@ import { User } from '@supabase/supabase-js';
 import cn from 'classnames';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import Checkout from '@/components/checkout';
+import dynamic from 'next/dynamic';
+
+// Stripe's embedded checkout loads only when a member actually picks a
+// price — 265 KiB of third-party JS stays off the landing page otherwise.
+const Checkout = dynamic(() => import('@/components/checkout'), {
+  ssr: false
+});
 
 type Subscription = Tables<'subscriptions'>;
 type Product = Tables<'products'>;

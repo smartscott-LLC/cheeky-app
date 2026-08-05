@@ -41,6 +41,11 @@ points — every push to `main` is production.
   straying; cyan on black is ~21:1, the strongest contrast in the kit). The full 50–950 scales
   for gold / cyan / bubblegum-fizz / blue-violet are wired in (`styles/palette-colors.js`,
   mirrored from `styles/tailwind_color_scales.md`).
+- **Lighthouse pass**: Stripe's checkout is now lazy-loaded (`next/dynamic` in Pricing + the
+  Exchange) — 265 KiB + the two longest main-thread tasks were loading on the landing page for
+  every visitor; it now loads only when a price is picked. Responsive image variants
+  (`scripts/resize-art.mjs`): navbar/footer logo 206→3 KiB, hero entrance 206→70 KiB, landing
+  floor cards ~170→42 KiB each (full-res kept for the room backgrounds).
 
 ## [v1.1-docs-locked] — 2026-08-05
 

@@ -1,9 +1,14 @@
 'use client';
 
-import Checkout from '@/components/checkout';
+import dynamic from 'next/dynamic';
 import Button from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+
+// Stripe's checkout loads only when a pack/card is picked.
+const Checkout = dynamic(() => import('@/components/checkout'), {
+  ssr: false
+});
 
 interface StorePrice {
   id: string;

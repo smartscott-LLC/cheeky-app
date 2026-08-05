@@ -12,7 +12,7 @@ const floors = [
     name: 'Silver',
     price: 'Free',
     color: 'bg-zinc-300',
-    image: '/floors/silver.webp',
+    image: '/floors/card-silver.webp',
     gradient: 'from-club-indigo via-club to-club-cotton',
     perks: [
       'Verified with ID',
@@ -25,7 +25,7 @@ const floors = [
     name: 'Gold',
     price: '$9.99/mo',
     color: 'bg-gold',
-    image: '/floors/gold.webp',
+    image: '/floors/card-gold.webp',
     gradient: 'from-gold-graphite via-gold to-gold-royal',
     perks: ['Theme nights', 'More events', 'Message your floor & below']
   },
@@ -33,7 +33,7 @@ const floors = [
     name: 'Platinum',
     price: '$19.99/mo',
     color: 'bg-platinum-navy',
-    image: '/floors/platinum.webp',
+    image: '/floors/card-platinum.webp',
     gradient: 'from-platinum-navy via-platinum to-platinum-alice',
     perks: [
       'Speed Dating',
@@ -45,7 +45,7 @@ const floors = [
     name: 'Diamond',
     price: '$29.99/mo',
     color: 'bg-diamond',
-    image: '/floors/diamond.webp',
+    image: '/floors/card-diamond.webp',
     gradient: 'from-diamond-raspberry via-diamond to-diamond-mist',
     perks: ['The Penthouse', 'Rooftop pool', 'Whole-building access']
   }
