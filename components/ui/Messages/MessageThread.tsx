@@ -120,6 +120,7 @@ export default function MessageThread({
   const [declined, setDeclined] = useState(initiallyDeclined);
   const [reportOpen, setReportOpen] = useState(false);
   const [reported, setReported] = useState(false);
+  const [reportError, setReportError] = useState<string | null>(null);
   const [interestAdded, setInterestAdded] = useState(hasSpecialInterest);
   const [interestBusy, setInterestBusy] = useState(false);
   const [promptIdx, setPromptIdx] = useState(0);
@@ -442,7 +443,16 @@ export default function MessageThread({
               <button
                 key={reason}
                 onClick={async () => {
-                  await reportUser(other.id, reason, conversationId);
+                  const res = await reportUser(
+                    other.id,
+                    reason,
+                    conversationId
+                  );
+                  if (res?.error) {
+                    setReportError(res.error);
+                    return;
+                  }
+                  setReportError(null);
                   setReported(true);
                   setReportOpen(false);
                 }}
@@ -452,6 +462,9 @@ export default function MessageThread({
               </button>
             ))}
           </div>
+          {reportError && (
+            <p className="mt-2 text-xs text-amber-400">{reportError}</p>
+          )}
         </div>
       )}
 

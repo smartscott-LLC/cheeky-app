@@ -1324,6 +1324,24 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          bucket_start: string
+          calls: number
+          key: string
+        }
+        Insert: {
+          bucket_start?: string
+          calls?: number
+          key: string
+        }
+        Update: {
+          bucket_start?: string
+          calls?: number
+          key?: string
+        }
+        Relationships: []
+      }
       reports: {
         Row: {
           category: string | null
@@ -1863,6 +1881,14 @@ export type Database = {
           p_slug: string
         }
         Returns: undefined
+      }
+      bump_rate_limit: {
+        Args: {
+          p_key: string
+          p_window_seconds: number
+          p_max: number
+        }
+        Returns: boolean
       }
       buy_gift: {
         Args: {

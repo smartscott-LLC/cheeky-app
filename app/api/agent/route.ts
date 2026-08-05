@@ -11,6 +11,14 @@ import {
   swagSystemNote,
   swagMarkerTransform
 } from '@/utils/agent/swag-marker';
+import { withinBudget } from '@/utils/rate-limit';
+
+// Abuse budgets (audit #9): generous for real use, bounded for spend.
+// The cast calls cost real money per message, so a scripted hammer is
+// capped per member AND per IP (catches multi-account scripts).
+const AGENT_WINDOW_SECONDS = 60 * 60;
+const USER_HOURLY_BUDGET = 60;
+const IP_HOURLY_BUDGET = 200;
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -80,6 +88,25 @@ export async function POST(req: Request) {
   const message = String(body.message ?? '').trim().slice(0, 1000);
   if (!character || !message) {
     return NextResponse.json({ error: 'character and message required' }, { status: 400 });
+  }
+
+  // The money gate: checked before anything expensive runs. Budget is
+  // consumed only on valid requests, so typos never eat your allowance.
+  const ip =
+    (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() ||
+    'unknown';
+  const [userOk, ipOk] = await Promise.all([
+    withinBudget(`agent:user:${user.id}`, AGENT_WINDOW_SECONDS, USER_HOURLY_BUDGET),
+    withinBudget(`agent:ip:${ip}`, AGENT_WINDOW_SECONDS, IP_HOURLY_BUDGET)
+  ]);
+  if (!userOk || !ipOk) {
+    return NextResponse.json(
+      {
+        error:
+          'The cast is on a quick breather — you have been chatting a lot this hour. Give them a minute and pick it right back up.'
+      },
+      { status: 429 }
+    );
   }
 
   const [{ data: char }, { data: profile }, tierData, ledger, { data: events }] =

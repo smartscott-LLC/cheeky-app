@@ -6,6 +6,7 @@ import { runDateSafe } from '@/utils/datesafe';
 import { sendClubMail } from '@/utils/email';
 import { Database } from '@/types_db';
 import { redirect } from 'next/navigation';
+import { withinBudget } from '@/utils/rate-limit';
 
 /**
  * The DateSafe pipeline — runs in the back after a report lands. Finds the
@@ -153,6 +154,18 @@ export async function reportUser(
   } = await supabase.auth.getUser();
   if (!user) {
     return { error: 'not signed in' };
+  }
+
+  // The report desk has a budget too (audit #9): five per hour per member is
+  // already far beyond legitimate use, and each report spends a DateSafe
+  // vision review — this stops a flood from burying the desk or running up
+  // the reviewer bill. Budget is only consumed on an accepted report.
+  const allowed = await withinBudget(`report:user:${user.id}`, 60 * 60, 5);
+  if (!allowed) {
+    return {
+      error:
+        'The safety desk already has a few reports from you this hour — they are on it. Try again in about an hour.'
+    };
   }
 
   const { data: report, error } = await supabase
