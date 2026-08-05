@@ -88,10 +88,11 @@ export default function VerificationPanel({
       </div>
 
       <p className="mt-6 text-zinc-300">
-        Everyone&apos;s a VIP here — but everybody checks in at the door.
-        It&apos;s quick and painless: name, date of birth, and your government ID
-        number. Brutus runs it against the records, stamps your card, and you
-        get <span className="font-bold text-club">20 tokens</span> on the spot.
+        Everyone&apos;s a VIP here — but everybody checks in at the door. One
+        last hoop: name, date of birth, and your government ID number —
+        we&apos;ll have your email ready, and it takes two minutes. Brutus stamps
+        the card and you get{' '}
+        <span className="font-bold text-club">20 tokens</span> on the spot.
       </p>
       <p className="mt-3 text-sm text-zinc-500">
         Your ID number is processed by Stripe and never stored by us.

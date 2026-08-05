@@ -197,6 +197,7 @@ export async function signUp(formData: FormData) {
 
   const email = String(formData.get('email')).trim();
   const password = String(formData.get('password')).trim();
+  const fullName = String(formData.get('full_name') ?? '').trim();
   const birthday = String(formData.get('birthday') ?? '').trim();
   const retention = Number(formData.get('messageRetentionDays') ?? 90);
   const gender = String(formData.get('gender') ?? '').trim();
@@ -286,6 +287,7 @@ export async function signUp(formData: FormData) {
           interestedIn === 'women' || interestedIn === 'men'
             ? interestedIn
             : 'everyone',
+        full_name: fullName || undefined,
         terms_version: 'v1',
         privacy_version: 'v1',
         best_practices_version: 'v1'

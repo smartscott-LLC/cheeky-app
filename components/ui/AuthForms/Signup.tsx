@@ -44,6 +44,15 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               autoCorrect="off"
               className="w-full p-3 rounded-md bg-zinc-800"
             />
+            <label htmlFor="full_name">Your name</label>
+            <input
+              id="full_name"
+              placeholder="How the club will know you"
+              type="text"
+              name="full_name"
+              autoComplete="name"
+              className="w-full p-3 rounded-md bg-zinc-800"
+            />
             <label htmlFor="password">Password</label>
             <input
               id="password"

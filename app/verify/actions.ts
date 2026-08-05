@@ -44,6 +44,26 @@ export async function startVerification(formData: FormData) {
     }
   }
 
+  // Carry the name they gave at signup into the ID check — one entry, not
+  // two signups. Also save it as their display name if they haven't set one.
+  const fullName =
+    typeof user.user_metadata?.full_name === 'string'
+      ? user.user_metadata.full_name.trim()
+      : '';
+  if (fullName) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('display_name')
+      .eq('id', user.id)
+      .maybeSingle();
+    if (!profile?.display_name) {
+      await supabase
+        .from('profiles')
+        .update({ display_name: fullName })
+        .eq('id', user.id);
+    }
+  }
+
   const session = await createVerificationSession(user.id);
   return redirect(session.url!);
 }
