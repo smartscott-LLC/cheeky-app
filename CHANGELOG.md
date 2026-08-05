@@ -26,6 +26,10 @@ points — every push to `main` is production.
 - **Perf (round two)**: every persona converted too — **24.5MB → 1.5MB (94%)**, DB character
   paths migrated to `.webp` (applied to hosted), static crew refs switched. The raster-in-SVG
   twins purged; only the real vector logos (github/stripe/nextjs/supabase/vercel) remain.
+- **Repo light**: `persona_assets/` (58MB of source masters) removed — nothing references it at
+  runtime; originals live outside the repo (founder's backups). The UI style guide moved to
+  `docs/UI-STYLE-GUIDE.txt` as the working design spec. The unused `public/video/` MP4s also
+  removed. Served `public/` is now ~6.8MB total (was ~73MB with all the originals).
 
 ## [v1.1-docs-locked] — 2026-08-05
 

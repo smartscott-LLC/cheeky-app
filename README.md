@@ -173,10 +173,8 @@ docs/           PRD-foundation.md + PRDs + Governance/ + COMPONENT-LIBRARY.md +
                 (historical audits/setup reports live in docs/archives/)
 tests/          node:test suite — safe (pnpm test) + live (RUN_LIVE_TESTS=1)
 fixtures/       Stripe fixture JSON for bootstrapping products/prices
-persona_assets/ founder's source art, style guides, personas, audio (originals)
 public/         served assets: brand/ (floor art, entrance), personas/ (crew
-                images), audio/ (DJ tracks), video/ (track art)
-types_db.ts     generated Supabase types — commit after regenerating
+                images), audio/ (DJ tracks)
 ```
 
 ## Working here

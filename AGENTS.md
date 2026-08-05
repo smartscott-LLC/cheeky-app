@@ -74,9 +74,8 @@ docs/           PRD-foundation.md + Governance/ policies + COMPONENT-LIBRARY.md 
                 ENVIRONMENT.md + floor-map.md + first-floor-flow.mmd + future feature PRDs
                 (historical audits/setup reports live in docs/archives/)
 fixtures/       Stripe fixture JSON for bootstrapping products/prices
-persona_assets/ founder's source art, style guides, personas, audio (originals)
 tests/          node:test suite — safe (pnpm test) + live (RUN_LIVE_TESTS=1)
-public/         served assets: brand/, personas/, audio/, video/, icons/, .well-known/
+public/         served assets: brand/, personas/, audio/, icons/, .well-known/
 types_db.ts     generated Supabase types — commit after regenerating
 CHANGELOG.md    milestone changelog — keep [Unreleased] current
 CONTRIBUTING.md the discipline doc: standing rule, migrations, testing, secrets

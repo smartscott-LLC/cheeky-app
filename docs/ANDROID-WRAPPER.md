@@ -15,8 +15,9 @@ port) can be retired or repurposed — its package id is reused below.
 - **Service worker** — `public/sw.js`, registered by
   `components/ui/PWA/ServiceWorkerRegister.tsx` (network-first + cache
   fallback). Satisfies the installability criteria TWA requires.
-- **Icons** — `public/icons/icon-192.png` + `icon-512.png` (cropped from
-  `persona_assets/app.png` via sharp).
+- **Icons** — `public/icons/icon-192.png` + `icon-512.png` (cropped from the
+  founder's `app.png` source via sharp; the original lives outside the repo,
+  backed up with the rest of the source art).
 - **Digital Asset Links** — `public/.well-known/assetlinks.json`, package
   `com.clubcheeky.app`, with a placeholder fingerprint to fill in below.
 

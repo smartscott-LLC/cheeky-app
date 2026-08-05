@@ -1,7 +1,8 @@
 // Perf pass: converts every served PNG under public/ to WebP (quality 80).
-// The true originals live in persona_assets/ — the PNGs converted here are
-// the served copies only. public/icons/ is skipped on purpose: the PWA
-// manifest and Play Store listing require PNG icons.
+// The source art originals live outside the repo (the founder's backups);
+// the PNGs converted here are the served copies only. public/icons/ is
+// skipped on purpose: the PWA manifest and Play Store listing require PNG
+// icons.
 //
 // Usage: node scripts/convert-webp.mjs
 import { readFile, readdir } from 'node:fs/promises';
