@@ -181,3 +181,22 @@ export async function selectBlindTally(
   }
   return {};
 }
+
+/** Rooftop pool: fire a pick at the board (up to three per 10s round). */
+export async function submitRooftopPick(
+  eventId: string,
+  round: number,
+  pickeeId: string
+): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc('submit_rooftop_pick', {
+    p_event_id: eventId,
+    p_round: round,
+    p_pickee: pickeeId
+  });
+  if (error) {
+    console.error('submitRooftopPick failed:', error.message);
+    return { error: error.message };
+  }
+  return {};
+}

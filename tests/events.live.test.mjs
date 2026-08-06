@@ -182,8 +182,7 @@ test(
 
     for (const [kind, floor, cost] of [
       ['dance_floor', 'silver', 3],
-      ['themed_night', 'gold', 5],
-      ['rooftop', 'diamond', 40]
+      ['themed_night', 'gold', 5]
     ]) {
       await t.test(`${kind}: mutual pick -> match, holds -> debits`, async () => {
         const ev = await mkEvent(`${kind}_${stamp}`, floor, cost, 60);
@@ -235,6 +234,115 @@ test(
         );
       });
     }
+
+    await t.test(
+      'rooftop pool: 10s rounds, mutuals leave the board, final pair auto-matches, everyone pays 40',
+      async () => {
+        const ev = await mkEvent('rooftop', 'diamond', 40, 60);
+        const members = [];
+        for (let i = 0; i < 6; i++) {
+          const m = await makeUser(admin, stamp, `rt${i}`);
+          members.push(m);
+          userIds.push(m.id);
+          await credit(admin, m.id, 50);
+          await rpcAs(m.id, `select public.join_event('${ev}')`, []);
+        }
+        await startRound(ev); // running — the pool forms, closed bracket
+
+        const tick = async () => {
+          await pool`select public.tick_rooftop_events()`;
+        };
+        const rewind = async () => {
+          await pool`update public.rooftop_rounds set started_at = now() - interval '11 seconds' where event_id = ${ev} and resolved = false`;
+        };
+
+        await tick(); // round 0 created
+        // Round 0 picks: u0<->u1 and u2<->u3 mutual; u4/u5 stay quiet.
+        await rpcAs(members[0].id, `select public.submit_rooftop_pick('${ev}', 0, '${members[1].id}')`, []);
+        await rpcAs(members[1].id, `select public.submit_rooftop_pick('${ev}', 0, '${members[0].id}')`, []);
+        await rpcAs(members[2].id, `select public.submit_rooftop_pick('${ev}', 0, '${members[3].id}')`, []);
+        await rpcAs(members[3].id, `select public.submit_rooftop_pick('${ev}', 0, '${members[2].id}')`, []);
+        await rewind();
+        await tick(); // round 0 resolves: two couples escorted off; round 1 starts
+        await tick(); // two remain -> the final 1v1 auto-matches -> closed
+
+        const { data: evState } = await admin
+          .from('events')
+          .select('status')
+          .eq('id', ev)
+          .single();
+        assert.equal(evState.status, 'closed', 'pool closed after the final pair');
+
+        const { data: matches } = await admin
+          .from('matches')
+          .select('id')
+          .eq('source', 'rooftop')
+          .or(
+            `user_id_a.in.(${members.map((m) => m.id).join(',')}),user_id_b.in.(${members.map((m) => m.id).join(',')})`
+          );
+        assert.equal(matches.length, 3, 'three couples matched (2 rounds + the final 1v1)');
+
+        const { data: entries } = await admin
+          .from('event_entries')
+          .select('status')
+          .eq('event_id', ev);
+        assert.ok(
+          entries.every((e) => e.status === 'locked'),
+          'everyone locked after the pool'
+        );
+        for (const m of members) {
+          assert.equal(await balance(admin, m.id), 10, `${m.email} paid 40`);
+        }
+      }
+    );
+
+    await t.test('rooftop pool: an odd pool refunds the lone leftover', async () => {
+      const ev = await mkEvent('rooftop', 'diamond', 40, 60);
+      const members = [];
+      for (let i = 0; i < 7; i++) {
+        const m = await makeUser(admin, stamp, `rto${i}`);
+        members.push(m);
+        userIds.push(m.id);
+        await credit(admin, m.id, 50);
+        await rpcAs(m.id, `select public.join_event('${ev}')`, []);
+      }
+        await startRound(ev);
+
+        const tick = async () => {
+          await pool`select public.tick_rooftop_events()`;
+        };
+        const rewind = async () => {
+          await pool`update public.rooftop_rounds set started_at = now() - interval '11 seconds' where event_id = ${ev} and resolved = false`;
+        };
+
+        await tick();
+        // Three mutual couples in round 0; member 6 makes no picks.
+        for (const [a, b] of [[0, 1], [2, 3], [4, 5]]) {
+          await rpcAs(members[a].id, `select public.submit_rooftop_pick('${ev}', 0, '${members[b].id}')`, []);
+          await rpcAs(members[b].id, `select public.submit_rooftop_pick('${ev}', 0, '${members[a].id}')`, []);
+        }
+        await rewind();
+        await tick(); // round 0 resolves: three couples escorted off
+        await tick(); // one remains -> refunded, pool closed
+
+        const { data: evState } = await admin
+          .from('events')
+          .select('status')
+          .eq('id', ev)
+          .single();
+        assert.equal(evState.status, 'closed', 'pool closed');
+        const { data: leftover } = await admin
+          .from('event_entries')
+          .select('status')
+          .eq('event_id', ev)
+          .eq('user_id', members[6].id)
+          .single();
+        assert.equal(leftover.status, 'released', 'the lone leftover is refunded');
+        assert.equal(await balance(admin, members[6].id), 50, 'leftover untouched');
+        for (const m of members.slice(0, 6)) {
+          assert.equal(await balance(admin, m.id), 10, `${m.email} paid 40`);
+        }
+    });
 
     await t.test(
       'speed dating: full ranking, strongest mutuals match, everyone pays 25',

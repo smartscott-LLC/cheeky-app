@@ -74,6 +74,13 @@ points — every push to `main` is production.
   not clocked): `ensure_floor_events` stops minting it, `KIND_META`/floor/copy updated,
   open leftover slots cleared. The grid engine still supports the kind (mechanics stay
   tested).
+- **The Rooftop is the pool now** (PRD-event-logic §5): a closed bracket of up to 10 on
+  the Diamond floor — 10-second rounds, three picks each, mutuals match and are escorted
+  off the board (visible, the pool needs a board that shrinks), rounds repeat until
+  everyone's matched, and the final 1v1 auto-matches. A dedicated 10-second cron
+  (`cheeky_rooftop_tick`) drives the clock — the minute hand no longer treats rooftop as
+  a grid room. Everyone who matches pays the 40; an odd leftover (nobody left to pair
+  with) is refunded. New pool room at `/events/rooftop`.
 
 ### Fixed
 

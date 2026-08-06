@@ -21,6 +21,10 @@ export default async function EventRoomPage({
     // Speed dating has its own room at /events/speed.
     redirect('/events/speed');
   }
+  if (kind === 'rooftop') {
+    // The Rooftop is the pool now — its own room at /events/rooftop.
+    redirect('/events/rooftop');
+  }
 
   const supabase = await createClient();
   const user = await getUser(supabase);

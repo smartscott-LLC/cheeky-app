@@ -1484,6 +1484,73 @@ export type Database = {
         }
         Relationships: []
       }
+      rooftop_picks: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: number
+          pickee_id: string
+          picker_id: string
+          round_index: number
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: never
+          pickee_id: string
+          picker_id: string
+          round_index: number
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: never
+          pickee_id?: string
+          picker_id?: string
+          round_index?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rooftop_picks_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rooftop_rounds: {
+        Row: {
+          event_id: string
+          id: string
+          resolved: boolean
+          round_index: number
+          started_at: string
+        }
+        Insert: {
+          event_id: string
+          id?: string
+          resolved?: boolean
+          round_index: number
+          started_at?: string
+        }
+        Update: {
+          event_id?: string
+          id?: string
+          resolved?: boolean
+          round_index?: number
+          started_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rooftop_rounds_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       special_interests: {
         Row: {
           created_at: string
@@ -1953,6 +2020,12 @@ export type Database = {
         }
         Returns: undefined
       }
+      auto_match_rooftop: {
+        Args: {
+          p_event_id: string
+        }
+        Returns: undefined
+      }
       award_badge: {
         Args: {
           p_user: string
@@ -2277,12 +2350,24 @@ export type Database = {
         }
         Returns: undefined
       }
+      submit_rooftop_pick: {
+        Args: {
+          p_event_id: string
+          p_round: number
+          p_pickee: string
+        }
+        Returns: undefined
+      }
       tap_date_night: {
         Args: {
           p_game: string
           p_index: number
           p_pick: number
         }
+        Returns: undefined
+      }
+      tick_rooftop_events: {
+        Args: Record<PropertyKey, never>
         Returns: undefined
       }
       tier_rank: {
