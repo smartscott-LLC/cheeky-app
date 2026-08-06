@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Pricing from '@/components/ui/Pricing/Pricing';
 import { createClient } from '@/utils/supabase/server';
 import {
@@ -85,13 +84,11 @@ export default async function LandingPage() {
           {/* The entrance — velvet doors, gold trim, pink neon */}
           <div className="mx-auto mt-12 w-fit">
             <div className="overflow-hidden rounded-2xl border-2 border-gold shadow-[0_0_45px_rgba(255,215,0,0.25),0_0_90px_rgba(255,45,155,0.18)]">
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src="/brand/entrance.webp"
                 alt="The entrance to Club Cheeky"
-                width={576}
-                height={768}
-                priority
-                sizes="(min-width: 640px) 288px, 224px"
+                fetchPriority="high"
                 className="h-72 w-56 object-cover sm:h-96 sm:w-72"
               />
             </div>
@@ -198,12 +195,10 @@ export default async function LandingPage() {
                 key={floor.name}
                 className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50"
               >
-                <Image
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   src={floor.image}
                   alt={`The ${floor.name} floor at Club Cheeky`}
-                  width={640}
-                  height={360}
-                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                   className="aspect-video w-full object-cover"
                 />
                 <div
