@@ -51,6 +51,30 @@ points — every push to `main` is production.
   the client init gone, env vars + docs cleaned. Sentry stays for errors; Stripe + GA can cover
   analytics when we actually need funnels.
 
+### Fixed
+
+- **The minute hand never ran — `finalize_events` was dead on hosted** (found by the new
+  events suite): PL/pgSQL declared `e record` while the body aliased `public.events` as `e`,
+  so every run raised `record "e" is not assigned yet`. The minute cron had failed every
+  minute since the floor playlist shipped — 268 events sat in `open`, none had ever
+  transitioned (no round ever started, no hold ever released). The record variable is
+  renamed (`v_event`) so the table aliases win; the backlog swept to `canceled`, the cron is
+  green, and the wheel now actually turns.
+
+### Added
+
+- **Event-kind live suite** (`tests/events.live.test.mjs`): the hourly wheel (all four kinds
+  on the quarter + scheduler liveness), mutual-pick → match → debit for every grid kind
+  (dance_floor / themed_night / rooftop), and `finalize_events` under load (N members, one
+  cycle, all holds released, ledger untouched — deterministic: the event lives inside a
+  rollback transaction so the live minute-cron can't race it). Run with `RUN_LIVE_TESTS=1`.
+  Two subtests assert PRD-intended behavior production doesn't meet yet (speed dating
+  settlement, Date Night mutual lock) — tracked in `docs/PRD-event-logic.md`.
+- **Refined event logic spec** (`docs/PRD-event-logic.md`): the founder's locked decisions —
+  refunds on the Dance Floor only, Blind Date (Gold), Speed Dating "pay for the
+  opportunity" (full 1–N ranking, charge after selection, claims path), the Rooftop
+  multi-round pool, Icebreakers (Date Night) category, and monthly membership token grants.
+
 ## [v1.1-docs-locked] — 2026-08-05
 
 ### Added
