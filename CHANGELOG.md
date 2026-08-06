@@ -60,6 +60,20 @@ points — every push to `main` is production.
   transitioned (no round ever started, no hold ever released). The record variable is
   renamed (`v_event`) so the table aliases win; the backlog swept to `canceled`, the cron is
   green, and the wheel now actually turns.
+- **Speed Dating never settled — everyone's 25 tokens were held forever** (found by the
+  events suite): `resolve_speed_dating` created matches + certificates but never converted
+  holds to spend or released them — every entry stayed `reserved`, tokens locked
+  indefinitely. Now: **full 1–5 ranking** (rank everyone you met, not top+alternate),
+  **greedy strongest-mutual matching** (lowest rank-sum pairs first), and
+  **pay-for-the-opportunity settlement** — every participant's hold converts to the 25
+  token spend at resolution (no refunds; canceled events still refund). Idempotent.
+- **Date Night could never score** (found by the events suite): the round resolved on the
+  FIRST partner's tap (the other's unanswered pick read as a skip), advanced the question,
+  and the partner's tap landed on `question_not_live` and was silently dropped. Now the
+  round waits for both partners: mutual same-option locks + scores, a skip on either side
+  closes it as missed, differing picks keep the huddle open. Also fixed the dead-code uuid
+  cast in the scoring path (`->>` instead of `->` + `::text`) that would have crashed the
+  first correct answer.
 
 ### Added
 
@@ -68,8 +82,8 @@ points — every push to `main` is production.
   (dance_floor / themed_night / rooftop), and `finalize_events` under load (N members, one
   cycle, all holds released, ledger untouched — deterministic: the event lives inside a
   rollback transaction so the live minute-cron can't race it). Run with `RUN_LIVE_TESTS=1`.
-  Two subtests assert PRD-intended behavior production doesn't meet yet (speed dating
-  settlement, Date Night mutual lock) — tracked in `docs/PRD-event-logic.md`.
+  **Fully green (8/8)** including the speed dating settlement and Date Night mutual lock
+  (see Fixed).
 - **Refined event logic spec** (`docs/PRD-event-logic.md`): the founder's locked decisions —
   refunds on the Dance Floor only, Blind Date (Gold), Speed Dating "pay for the
   opportunity" (full 1–N ranking, charge after selection, claims path), the Rooftop

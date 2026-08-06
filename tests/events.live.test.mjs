@@ -7,9 +7,10 @@
 //
 // Requires Supabase env + POSTGRES_URL (pooler) in env.new.
 //
-// Two subtests assert PRD-intended settlement (speed dating "you pay when you
-// win", Date Night mutual lock) — they stay red until the gap migrations
-// land, exactly like the audit suite that caught live bugs before (ceb1d83).
+// Two subtests assert PRD-intended settlement (speed dating "pay for the
+// opportunity", Date Night mutual lock) — the rework migrations make them
+// green; red before that, exactly like the audit suite that caught live bugs
+// (ceb1d83).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { randomBytes } from 'node:crypto';
@@ -236,7 +237,7 @@ test(
     }
 
     await t.test(
-      'speed dating: mutual top choice -> match + certificate, matched pay 25, unmatched refunded',
+      'speed dating: full ranking, strongest mutuals match, everyone pays 25',
       async () => {
         const ev = await mkEvent(`speed_dating_${stamp}`, 'platinum', 25, 60);
         const u = [];
@@ -247,14 +248,17 @@ test(
           await credit(admin, m.id, 30);
           await rpcAs(m.id, `select public.join_event('${ev}')`, []);
         }
-        // Six members, one group (group cap is 6): u0<->u1, u2<->u3 mutual,
-        // u4/u5 make no selection (the no-match refund path).
+        // Six members, one group (group cap is 6). Full ranking: u0<->u1 and
+        // u2<->u3 are rank-1 mutuals (strongest); u4<->u5 are rank-2 mutuals
+        // and must still match after the stronger pairs are taken.
         await pool`select public.setup_speed_dating(${ev})`;
 
         await rpcAs(u[0].id, `select public.select_speed_rank('${ev}', 1::smallint, '${u[1].id}')`, []);
         await rpcAs(u[1].id, `select public.select_speed_rank('${ev}', 1::smallint, '${u[0].id}')`, []);
         await rpcAs(u[2].id, `select public.select_speed_rank('${ev}', 1::smallint, '${u[3].id}')`, []);
         await rpcAs(u[3].id, `select public.select_speed_rank('${ev}', 1::smallint, '${u[2].id}')`, []);
+        await rpcAs(u[4].id, `select public.select_speed_rank('${ev}', 2::smallint, '${u[5].id}')`, []);
+        await rpcAs(u[5].id, `select public.select_speed_rank('${ev}', 2::smallint, '${u[4].id}')`, []);
 
         await pool`select public.resolve_speed_dating(${ev})`;
 
@@ -262,10 +266,10 @@ test(
           .from('certificates')
           .select('user_id')
           .in('user_id', u.map((m) => m.id));
-        assert.equal(certs.length, 4, 'all four matched members hold a certificate');
+        assert.equal(certs.length, 6, 'all six matched members hold a certificate');
 
-        // PRD: "you only pay when you win" — matched pay the 25 ticket,
-        // unmatched get the hold released. (Red until the settlement lands.)
+        // PRD: pay for the opportunity — EVERY participant pays the 25, match
+        // or not. Holds convert to spend; entries lock out of the rotation.
         const { data: entries } = await admin
           .from('event_entries')
           .select('status, user_id')
@@ -273,25 +277,13 @@ test(
         const byUser = Object.fromEntries(
           (entries ?? []).map((e) => [e.user_id, e.status])
         );
-        for (const m of [u[0], u[1], u[2], u[3]]) {
+        for (const m of u) {
           assert.equal(
             byUser[m.id],
             'locked',
-            `matched member ${m.email} entry locked (hold spent)`
+            `member ${m.email} entry locked (hold spent)`
           );
-        }
-        for (const m of [u[4], u[5]]) {
-          assert.equal(
-            byUser[m.id],
-            'released',
-            `unmatched member ${m.email} entry released (hold refunded)`
-          );
-        }
-        for (const m of [u[0], u[1], u[2], u[3]]) {
           assert.equal(await balance(admin, m.id), 5, `${m.email} debited 25`);
-        }
-        for (const m of [u[4], u[5]]) {
-          assert.equal(await balance(admin, m.id), 30, `${m.email} untouched`);
         }
       }
     );

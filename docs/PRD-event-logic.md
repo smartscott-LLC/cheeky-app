@@ -15,7 +15,7 @@ Club Cheeky plays **defense**: instead of fighting the ratio, we **design events
 | Floor | Event | Time | Token cost | Round type |
 |---|---|---|---|---|
 | Silver (free) | **The Dance Floor** | :00 | 3 | 2-min grid, one round |
-| Gold | **Blind Date** | :15 | TBD (proposal: 15) | Panel Q&A — one chooser, several suitors |
+| Gold | **Blind Date** | :15 · host-driven | TBD (proposal: 15) | Grid engine — questions, marks, most-marks wins |
 | Platinum | **Speed Dating** | :30 | 25 | Rotating 1:1s → ranked selection |
 | Diamond | **The Rooftop** | :45 | 40 | Multi-round pool, fast rounds |
 
@@ -28,18 +28,23 @@ Club Cheeky plays **defense**: instead of fighting the ratio, we **design events
 - **Canceled events always refund** (all floors). Nobody played → everybody gets their hold back.
 - Speed Dating and the Rooftop are designed so the member is **almost always matched anyway**, which makes no-refund fair. Blind Date is the exception: **you're paying for a chance** — if you're not selected, that's on your answers.
 
-## 3. Blind Date (Gold, :15) — "you're paying for a chance"
+## 3. Blind Date (Gold) — "you're paying for a chance"
 
-**What it is:** one chooser on one side, 3–5 suitors on the other. She's deciding on **personality only** — she sees the suitors' photos **blurred**; they see her normally. This is the gender-defense event: 3–5 men in the room, one woman, and it feels like a fair game — not a sausage fest.
+**What it is:** one chooser on one side, up to 5 suitors on the other. She's deciding on **personality only** — she sees the suitors' photos **blurred**; they see her normally. The gender-defense event: several men in the room, one woman, and it feels like a fair game — not a sausage fest.
+
+**The engine:** Blind Date **rides the grid engine**. Same rounds, same selection — two small mechanic tweaks instead of auto-match:
+1. **A question component during the round** — the chooser asks a question; the suitors answer; her answer-pick for that round IS her selection.
+2. **Marks instead of instant rooms** — selecting someone does NOT open the private room; it gives them a **mark**. The match is whoever has the most marks **over several rounds** (not one mutual click).
 
 **The flow:**
 1. **Entry** — suitors pay the entry ticket for a chance. The chooser plays free — she's the one who decides, and she leaves with a match.
-2. **The room** — she can't see their faces, they can see her.
-3. **The rounds** — **4 regular rounds.** Each round: she asks ONE question, everyone answers privately (suitors **never** see each other's answers — only she does), she gives **one tally mark** to the answer she likes best.
-4. **The standing** — the room **does** see who received each tally. You have to know where you stand, because you can change your answers up in later rounds based on it. Answers stay private; the tally is public.
-5. **The final** — ties are designed to happen (that's why 4 rounds, not 5). A tie → a **final round, made a big deal** — one last question, one last tally, and it's decided.
-6. **The match** — most tallies wins the date: matched + private chat (and the room's badge). Everyone else: the ticket is spent, that's on their answers.
-7. **Cancels/edge** — under-filled room (fewer than 3 suitors, or no chooser) → canceled → refunds. Chooser disconnects mid-event → cancel + refund everyone (graceful failure).
+2. **Who hosts — always a real member. Never bots.** The room runs when a real woman opts in to host; the suitor side then fills. Demand-driven: a woman can host whenever — there can be multiples in a day. No AI/crew seats, ever — we're playing to the real percentages.
+3. **The room** — suitors don't see the chooser until they're **in-game** (no preview outside the room). In-game: she sees their faces blurred, they see her normally.
+4. **The rounds** — **4 regular rounds.** Each round: she asks ONE question, everyone answers privately (suitors **never** see each other's answers — only she does), she gives **one tally mark** to the answer she likes best.
+5. **The standing** — the room **does** see who received each tally. You have to know where you stand, because you can change your answers up in later rounds based on it. Answers stay private; the tally is public.
+6. **The final** — ties are designed to happen (that's why 4 rounds, not 5). A tie → a **final round, made a big deal** — one last question, one last tally, and it's decided.
+7. **The match** — most tallies wins the date: matched + private chat (and the room's badge). Everyone else: the ticket is spent, that's on their answers.
+8. **Cancels/edge** — under-filled room (fewer than 3 suitors, or no chooser) → canceled → refunds. Chooser disconnects mid-event → cancel + refund everyone (graceful failure).
 
 **Always one woman, men always pay.** That's the rule. Role reversal (a man choosing among women) only happens as a **special event** — e.g., a semi-famous/influencer seat that pulls a crowd — and even then the design keeps the man-heavy balance in mind so everyone stays busy.
 
@@ -104,12 +109,12 @@ Every paid membership comes with tokens, **every cycle** — this is what makes 
 ## 8. Open questions (not blocking the engine fix)
 
 1. **Blind Date ticket price** — proposal is **15 tokens** (above the 5 grid, below the 25 speed dating). Founder hasn't set it; 15 stands unless he says otherwise.
-2. **The chooser's seat at launch** — with few members online early, the :15 room may sit empty. Real members only, or do the crew AI characters hold a seat so the room is always playable? (Pending.)
+2. **The wheel slot vs. host-driven** — Blind Date runs when a real woman opts in to host (never bots). Whether the :15 wheel slot stays as a regular anchor (opening only when a host is in) or the event is purely host-triggered is an implementation detail to settle during the build.
 
 ## 9. Implementation delta (when greenlit)
 
 1. **`finalize_events` — the engine fix. IN PROGRESS.** Everything gets finalized across the board, every floor, refund or not. The minute hand is dead (variable `e` collides with the `events` alias; cron fails every minute; 264 events stuck open; no event has ever transitioned). Fix it, period.
-2. **Blind Date:** new event kind on the Gold slot (:15) — replaces Themed Night; new room (panel Q&A — not the grid engine); ticket + tally + final-round resolution; cancel/refund rules above.
+2. **Blind Date:** new kind on the Gold slot — **grid engine + two components**: a question round (chooser asks, suitors answer privately) and marks instead of auto-match (most marks over 4 rounds + tie-break final = the match). Demand-driven — runs when a real woman hosts (never bots); suitors see her only in-game, she sees them blurred. Ticket TBD (working number 15); canceled → refunds.
 3. **Membership token grants:** subscription webhook credits 100/200/500 per cycle, idempotent, ledger-only.
 4. **Speed Dating:** full 1–N ranking replaces top-plus-alternate; settlement = charge all participants after selection resolution (no refunds); claims path for disconnects; matches stay hidden.
 5. **The Rooftop:** new multi-round engine (10s rounds, 3 picks, pool elimination, visible pull-offs, automatic final-pair match, charge always).
