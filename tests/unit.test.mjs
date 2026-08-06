@@ -6,7 +6,8 @@ import assert from 'node:assert/strict';
 import { parseTokenAmount } from '../utils/token-amount.ts';
 import {
   membershipTokenGrant,
-  membershipGrantRef
+  membershipGrantRef,
+  membershipTierRank
 } from '../utils/membership-tokens.ts';
 
 test('parseTokenAmount extracts the token count from product names', () => {
@@ -49,4 +50,12 @@ test('membership token grants: every paid tier, every cycle', () => {
   assert.notEqual(a, b, 'renewal = new period = new ref');
   assert.notEqual(a, c, 'upgrade = new tier = new ref');
   assert.equal(a, membershipGrantRef('sub_1', '2026-08-06T00:00:00Z', 'price_g'));
+
+  // Tier ranks gate upgrades vs downgrades: only a HIGHER tier re-grants
+  // within the same period.
+  assert.equal(membershipTierRank('membership_gold'), 1);
+  assert.equal(membershipTierRank('membership_platinum'), 2);
+  assert.equal(membershipTierRank('membership_diamond'), 3);
+  assert.equal(membershipTierRank('membership_whatever'), 0);
+  assert.equal(membershipTierRank(null), 0);
 });

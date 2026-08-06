@@ -9,7 +9,8 @@ import { sendClubMail } from '@/utils/email';
 import { parseTokenAmount } from '@/utils/token-amount';
 import {
   membershipTokenGrant,
-  membershipGrantRef
+  membershipGrantRef,
+  membershipTierRank
 } from '@/utils/membership-tokens';
 
 type Product = Tables<'products'>;
@@ -507,17 +508,20 @@ const creditTokenPurchase = async (session: Stripe.Checkout.Session) => {
 /**
  * Membership token grants (PRD-event-logic §7): every paid membership comes
  * with tokens, every cycle — Gold 100, Platinum 200, Diamond 500. Resolves
- * the tier from the synced products table (no hardcoded price ids), grants
- * only for active/trialing subscriptions, and dedupes per subscription +
- * period + tier so the created/updated/checkout triple-fire can't
- * double-grant and a mid-cycle upgrade lands its new tier immediately.
+ * the tier from the synced products table (no hardcoded price ids).
+ *
+ * Grants start at the FIRST PAID cycle — trials grant nothing (tokens come
+ * with a purchase, not a promise). Idempotent per subscription + period +
+ * tier, and gated by tier rank: a mid-cycle UPGRADE lands its new tier's
+ * grant immediately, but a downgrade (or any repeat for the same period)
+ * never grants again.
  */
 const grantMembershipTokens = async (
   uuid: string,
   subscription: Stripe.Subscription
 ) => {
-  if (subscription.status !== 'active' && subscription.status !== 'trialing') {
-    return;
+  if (subscription.status !== 'active') {
+    return; // paid and current only — trials and past-due/canceled grant nothing
   }
   const price = subscription.items.data[0]?.price;
   if (!price) return;
@@ -537,15 +541,20 @@ const grantMembershipTokens = async (
 
   const periodStartIso = toDateTime(subscription.current_period_start).toISOString();
   const ref = membershipGrantRef(subscription.id, periodStartIso, price.id);
+  const grantRank = membershipTierRank(grant.reason);
 
+  // Already granted this period at this tier or higher? (repeat, renewal
+  // re-fire, or a downgrade) — skip. An upgrade (higher rank) passes.
   const { data: existing } = await supabaseAdmin
     .from('token_ledger')
-    .select('id')
+    .select('reason')
     .eq('user_id', uuid)
-    .eq('reason', grant.reason)
-    .eq('ref', ref)
-    .maybeSingle();
-  if (existing) return; // this cycle's grant already landed
+    .like('ref', `sub:${subscription.id}:${periodStartIso}:%`);
+  const existingRank = Math.max(
+    0,
+    ...(existing ?? []).map((e) => membershipTierRank(e.reason))
+  );
+  if (existingRank >= grantRank) return;
 
   const { error } = await supabaseAdmin.from('token_ledger').insert({
     user_id: uuid,
