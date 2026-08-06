@@ -168,6 +168,27 @@ export default async function EventsPage() {
           </div>
         </div>
 
+        {/* Icebreakers — not events: things matched couples do together. */}
+        <div className="mt-6 rounded-2xl border border-club/40 bg-zinc-900/50">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-5">
+            <div>
+              <h3 className="text-lg font-extrabold">🧊 Icebreakers</h3>
+              <p className="mt-1 text-xs text-cyan">
+                Not events — things for matched couples to do instead of
+                staring at empty chat. Date Night is the first one: five
+                questions, both of you tap the same answer to lock it. Free,
+                and it starts from any matched chat.
+              </p>
+            </div>
+            <Link
+              href="/messages"
+              className="rounded-lg bg-club px-6 py-2.5 text-sm font-extrabold text-white transition hover:bg-club-cotton"
+            >
+              Start one from a chat →
+            </Link>
+          </div>
+        </div>
+
         {/* The Gift Shop link */}
         <div className="mt-8 text-center">
           <Link
