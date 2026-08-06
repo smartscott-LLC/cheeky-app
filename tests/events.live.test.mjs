@@ -332,6 +332,132 @@ test(
     });
 
     await t.test(
+      'blind date: host asks, suitors answer, most tallies wins, suitors pay 15',
+      async () => {
+        const host = await makeUser(admin, stamp, 'bdh');
+        const suitors = [];
+        for (let i = 0; i < 3; i++) {
+          const s = await makeUser(admin, stamp, `bds${i}`);
+          suitors.push(s);
+          userIds.push(s.id);
+          await credit(admin, s.id, 20);
+        }
+        userIds.push(host.id);
+
+        // Gold gates the room (current_tier is the RPC-level check).
+        const grant = {
+          tier: 'gold',
+          reason: 'test',
+          expires_at: new Date(Date.now() + 24 * 3600 * 1000).toISOString()
+        };
+        await admin.from('entitlement_grants').insert({ user_id: host.id, ...grant });
+        for (const s of suitors)
+          await admin.from('entitlement_grants').insert({ user_id: s.id, ...grant });
+
+        const created = await rpcAs(
+          host.id,
+          `select public.create_blind_date() as eid`,
+          []
+        );
+        const ev = created[0].eid;
+        assert.ok(ev, 'room created');
+        events.push(ev);
+
+        for (const s of suitors) {
+          const j = await rpcAs(s.id, `select public.join_blind_date('${ev}')`, []);
+          assert.ok(j?.[0], `${s.email} joined`);
+        }
+
+        // The minute hand drives the phases; the test rewinds the round
+        // clock and calls advance directly. Deterministic: the event stays
+        // 'open' with a future starts_at, so the live cron never touches it.
+        const rewind = async () => {
+          await pool`update public.blind_date_rounds set phase_started_at = now() - interval '2 minutes' where event_id = ${ev}`;
+        };
+        const advance = async () => {
+          await pool`select public.advance_blind_date(${ev})`;
+        };
+
+        // Round 0: question -> answers -> tally to suitor 0.
+        await advance(); // creates round 0 (question phase)
+        await rpcAs(
+          host.id,
+          `select public.submit_blind_question('${ev}', 0, 'What is your spirit animal?')`,
+          []
+        );
+        await rewind();
+        await advance(); // -> answer phase
+        for (let i = 0; i < 3; i++) {
+          await rpcAs(
+            suitors[i].id,
+            `select public.submit_blind_answer('${ev}', 0, 'Answer ${i}')`,
+            []
+          );
+        }
+        await rewind();
+        await advance(); // -> selection phase
+        await rpcAs(
+          host.id,
+          `select public.select_blind_tally('${ev}', 0, '${suitors[0].id}')`,
+          []
+        );
+        await rewind();
+        await advance(); // round 0 done -> round 1 created
+
+        // Rounds 1-3: suitor 0 gets every tally -> 4-0 clean win.
+        for (let r = 1; r < 4; r++) {
+          await advance(); // the next tick creates the round
+          await rpcAs(
+            host.id,
+            `select public.submit_blind_question('${ev}', ${r}, 'Question ${r}?')`,
+            []
+          );
+          await rewind();
+          await advance();
+          for (let i = 0; i < 3; i++) {
+            await rpcAs(
+              suitors[i].id,
+              `select public.submit_blind_answer('${ev}', ${r}, 'Answer ${r}-${i}')`,
+              []
+            );
+          }
+          await rewind();
+          await advance();
+          await rpcAs(
+            host.id,
+            `select public.select_blind_tally('${ev}', ${r}, '${suitors[0].id}')`,
+            []
+          );
+          await rewind();
+          await advance();
+        }
+        // Round 3 done, standings decide: unique top -> resolution.
+        await advance();
+
+        const { data: evState } = await admin
+          .from('events')
+          .select('status')
+          .eq('id', ev)
+          .single();
+        assert.equal(evState.status, 'closed', 'room closed after resolution');
+
+        const { data: match } = await admin
+          .from('matches')
+          .select('id')
+          .or(`user_id_a.eq.${host.id},user_id_b.eq.${host.id}`)
+          .eq('source', 'blind_date')
+          .eq('status', 'active')
+          .maybeSingle();
+        assert.ok(match, 'the winner matched the host');
+
+        for (const s of suitors) {
+          assert.equal(await balance(admin, s.id), 5, `${s.email} paid 15`);
+        }
+        assert.equal(await balance(admin, host.id), 0, 'host plays free');
+      }
+    );
+
+    await t.test(
       `finalize under load: ${N} members, one cycle, all holds released cleanly`,
       async () => {
         const members = [];

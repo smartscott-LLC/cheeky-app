@@ -51,6 +51,17 @@ points — every push to `main` is production.
   the client init gone, env vars + docs cleaned. Sentry stays for errors; Stripe + GA can cover
   analytics when we actually need funnels.
 
+### Added
+
+- **Blind Date (Gold floor, host-driven)** — the first of the founder's gender-defense
+  events (PRD-event-logic §3): a real woman chooser launches a room (Gold+, never bots), up
+  to 5 suitors buy a seat (15 tokens — pay for a chance). She types her own questions; the
+  minute hand runs the round clock (1 min question → 1 min answers → 1 min selection, 4
+  rounds + a tiebreak final); one tally per round, most tallies wins the date (winner matched
+  + conversation, chooser plays free, suitors pay at resolution). Host failure (never a
+  question or never a single tally) cancels + refunds everyone. Fully exercised by the live
+  suite.
+
 ### Fixed
 
 - **The minute hand never ran — `finalize_events` was dead on hosted** (found by the new
