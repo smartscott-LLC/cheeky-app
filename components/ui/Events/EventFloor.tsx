@@ -38,7 +38,7 @@ const PICK_BUDGET = 10;
 const ROUND_SECONDS = 120;
 
 // Per-floor skin — the grid engine is shared, the room palette follows
-// the floor (Dance Floor = club pink, Themed Night = gold, Rooftop = diamond).
+// the floor (Dance Floor = club pink, Rooftop = diamond).
 const ACCENTS: Record<
   string,
   {

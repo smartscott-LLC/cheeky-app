@@ -25,17 +25,6 @@ export const KIND_META: Record<string, KindMeta> = {
     gradient: 'from-club-indigo via-club to-club-cotton',
     cta: 'bg-club text-white hover:bg-club-cotton'
   },
-  themed_night: {
-    name: 'Themed Night',
-    floor: 'Gold',
-    rank: 1,
-    emoji: '🎭',
-    tagline: 'The floor, dressed up. A pricier ticket, a deeper crowd.',
-    accent: 'text-gold border-gold/40',
-    image: '/brand/floor-gold.webp',
-    gradient: 'from-gold-graphite via-gold to-gold-royal',
-    cta: 'bg-gold text-black hover:bg-gold-royal'
-  },
   speed_dating: {
     name: 'Speed Dating',
     floor: 'Platinum',
@@ -60,7 +49,7 @@ export const KIND_META: Record<string, KindMeta> = {
   }
 };
 
-export const GRID_KINDS = ['dance_floor', 'themed_night', 'rooftop'];
+export const GRID_KINDS = ['dance_floor', 'rooftop'];
 
 export const eventUrl = (kind: string) =>
   kind === 'speed_dating' ? '/events/speed' : `/events/${kind}`;

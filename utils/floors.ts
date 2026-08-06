@@ -146,14 +146,14 @@ export const FLOORS: FloorMeta[] = [
     name: 'Gold',
     rank: 1,
     art: '/brand/floor-gold.webp',
-    tagline: 'Themed nights, deeper crowds, more to do.',
+    tagline: 'Blind Date, deeper crowds, more to do.',
     accent: 'text-gold border-gold/50',
     rooms: [
       ROXY,
       {
-        href: '/events/themed_night',
-        emoji: '🎭',
-        name: 'Themed Night',
+        href: '/events/blind_date',
+        emoji: '💘',
+        name: 'Blind Date',
         sub: 'The Gold floor\u2019s signature',
         color:
           'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',

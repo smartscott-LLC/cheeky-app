@@ -155,6 +155,82 @@ export type Database = {
           },
         ]
       }
+      blind_date_answers: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          round_id: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          round_id: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          round_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blind_date_answers_round_id_fkey"
+            columns: ["round_id"]
+            isOneToOne: false
+            referencedRelation: "blind_date_rounds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blind_date_rounds: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          phase: string
+          phase_started_at: string
+          question: string | null
+          round_index: number
+          skipped: boolean
+          tally_user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          phase?: string
+          phase_started_at?: string
+          question?: string | null
+          round_index: number
+          skipped?: boolean
+          tally_user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          phase?: string
+          phase_started_at?: string
+          question?: string | null
+          round_index?: number
+          skipped?: boolean
+          tally_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blind_date_rounds_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blocks: {
         Row: {
           blocked_id: string
@@ -679,6 +755,7 @@ export type Database = {
         Row: {
           created_at: string
           floor: string
+          host_id: string | null
           id: string
           kind: string
           min_fill: number
@@ -689,6 +766,7 @@ export type Database = {
         Insert: {
           created_at?: string
           floor?: string
+          host_id?: string | null
           id?: string
           kind?: string
           min_fill?: number
@@ -699,6 +777,7 @@ export type Database = {
         Update: {
           created_at?: string
           floor?: string
+          host_id?: string | null
           id?: string
           kind?: string
           min_fill?: number
@@ -1868,6 +1947,12 @@ export type Database = {
         }
         Returns: string
       }
+      advance_blind_date: {
+        Args: {
+          p_event_id: string
+        }
+        Returns: undefined
+      }
       award_badge: {
         Args: {
           p_user: string
@@ -1902,6 +1987,10 @@ export type Database = {
           b: string
         }
         Returns: boolean
+      }
+      create_blind_date: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       create_like: {
         Args: {
@@ -2000,11 +2089,23 @@ export type Database = {
         }
         Returns: string
       }
+      join_blind_date: {
+        Args: {
+          p_event_id: string
+        }
+        Returns: string
+      }
       join_event: {
         Args: {
           p_event_id: string
         }
         Returns: string
+      }
+      leave_blind_date: {
+        Args: {
+          p_event_id: string
+        }
+        Returns: undefined
       }
       leave_event: {
         Args: {
@@ -2096,6 +2197,14 @@ export type Database = {
         }
         Returns: undefined
       }
+      select_blind_tally: {
+        Args: {
+          p_event_id: string
+          p_round: number
+          p_selected: string
+        }
+        Returns: undefined
+      }
       select_speed_rank: {
         Args: {
           p_event_id: string
@@ -2151,6 +2260,22 @@ export type Database = {
           p_other: string
         }
         Returns: string
+      }
+      submit_blind_answer: {
+        Args: {
+          p_event_id: string
+          p_round: number
+          p_body: string
+        }
+        Returns: undefined
+      }
+      submit_blind_question: {
+        Args: {
+          p_event_id: string
+          p_round: number
+          p_question: string
+        }
+        Returns: undefined
       }
       tap_date_night: {
         Args: {

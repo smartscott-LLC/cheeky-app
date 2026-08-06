@@ -162,8 +162,9 @@ export default async function LandingPage() {
             The Hourly Playlist
           </p>
           <h2 className="mx-auto mt-4 max-w-2xl text-3xl font-extrabold sm:text-4xl">
-            Every hour, every quarter: the Dance Floor at :00, Themed Night at
-            :15, Speed Dating at :30, the Rooftop at :45.
+            Every hour, every quarter: the Dance Floor at :00, Speed Dating at
+            :30, the Rooftop at :45 — and Blind Date, whenever the Gold
+            floor&apos;s hostess opens the door.
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-lg text-cyan">
             Four floors, four rooms, one hour — a Diamond plays the whole set.

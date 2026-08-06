@@ -8,7 +8,7 @@ const GROUPS = [
       { href: '/club', label: 'The lobby', note: 'The entrance room, rooms and all.' },
       { href: '/floors', label: 'The floors', note: 'Silver → Gold → Platinum → Diamond.' },
       { href: '/floor/silver', label: 'Silver floor', note: 'The Dance Floor and the base rooms.' },
-      { href: '/floor/gold', label: 'Gold floor', note: 'Themed Night and the upper rooms.' },
+      { href: '/floor/gold', label: 'Gold floor', note: 'Blind Date and the upper rooms.' },
       { href: '/floor/platinum', label: 'Platinum floor', note: 'Speed Dating lives here.' },
       { href: '/floor/diamond', label: 'Diamond floor', note: 'The Rooftop at the top.' }
     ]

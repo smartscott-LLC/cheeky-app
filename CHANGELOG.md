@@ -62,6 +62,19 @@ points — every push to `main` is production.
   question or never a single tally) cancels + refunds everyone. Fully exercised by the live
   suite.
 
+### Added
+
+- **Blind Date UI** — the playable rooms for the Gold floor's host-driven event: her
+  table (suitors blurred, her question box, answers under each face, one mark per round,
+  the standing), their room (she's visible in-game, the live question, their answer box,
+  who's leading — never what they said), the lobby (host the room or take a seat, no host
+  preview until you're in), and cards in the Event Center + Gold floor. Phase clocks run
+  the 60-second rounds live.
+- **Themed Night retires from the wheel** — the Gold slot is now Blind Date (host-driven,
+  not clocked): `ensure_floor_events` stops minting it, `KIND_META`/floor/copy updated,
+  open leftover slots cleared. The grid engine still supports the kind (mechanics stay
+  tested).
+
 ### Fixed
 
 - **The minute hand never ran — `finalize_events` was dead on hosted** (found by the new

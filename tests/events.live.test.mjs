@@ -117,7 +117,7 @@ test(
       await pool.end().catch(() => {});
     });
 
-    await t.test('the hourly wheel: all four kinds, on the quarter, live', async () => {
+    await t.test('the hourly wheel: scheduled kinds on the quarter, live', async () => {
       const { data: all } = await admin
         .from('events')
         .select('kind, floor, starts_at');
@@ -128,18 +128,18 @@ test(
             .map((e) => new Date(e.starts_at).getUTCMinutes())
         );
       assert.ok(minutesOf('dance_floor').has(0), 'dance_floor runs at :00');
-      assert.ok(minutesOf('themed_night').has(15), 'themed_night at :15');
       assert.ok(minutesOf('speed_dating').has(30), 'speed_dating at :30');
       assert.ok(minutesOf('rooftop').has(45), 'rooftop at :45');
+      // Themed Night retired — Blind Date (Gold) is host-driven, not clocked.
       const floors = Object.fromEntries((all ?? []).map((e) => [e.kind, e.floor]));
       assert.equal(floors.dance_floor, 'silver');
       assert.equal(floors.speed_dating, 'platinum');
       assert.equal(floors.rooftop, 'diamond');
-      // The scheduler is alive: each kind's newest slot is recent (the cron
-      // pre-creates the next hours at :05, so the newest is usually future —
-      // if it ever stops, the newest slot ages past this window and fails).
+      // The scheduler is alive: each scheduled kind's newest slot is recent
+      // (the cron pre-creates the next hours at :05 — if it ever stops, the
+      // newest slot ages past this window and fails).
       const now = Date.now();
-      for (const k of ['dance_floor', 'themed_night', 'speed_dating', 'rooftop']) {
+      for (const k of ['dance_floor', 'speed_dating', 'rooftop']) {
         const newest = Math.max(
           ...(all ?? [])
             .filter((e) => e.kind === k)

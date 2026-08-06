@@ -61,8 +61,9 @@ export default async function EventsPage() {
           The Event Center
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
-          The hourly playlist. Four floors. Four rooms — every hour, on the
-          quarter. Join any room any time; your spot is held for the next set.
+          The playlist: the Dance Floor, Speed Dating, and the Rooftop, every
+          hour on the quarter — plus Blind Date, whenever the Gold
+          floor&apos;s hostess opens the door.
         </p>
 
         {/* The overhead ticker — anonymous, in-app only. */}
@@ -145,6 +146,26 @@ export default async function EventsPage() {
               </div>
             );
           })}
+        </div>
+
+        {/* Blind Date — the host-driven Gold room, not on the clock. */}
+        <div className="mt-6 rounded-2xl border border-gold/40 bg-zinc-900/50">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-5">
+            <div>
+              <h3 className="text-lg font-extrabold">💘 Blind Date</h3>
+              <p className="mt-1 text-xs text-cyan">
+                The Gold floor&apos;s room. One hostess, up to five suitors, four
+                rounds of questions — most marks wins the date. Host when
+                you&apos;re ready; the room runs when a lady opens the door.
+              </p>
+            </div>
+            <Link
+              href="/events/blind_date"
+              className="rounded-lg bg-gold px-6 py-2.5 text-sm font-extrabold text-black transition hover:bg-gold-royal"
+            >
+              Host or take a seat →
+            </Link>
+          </div>
         </div>
 
         {/* The Gift Shop link */}

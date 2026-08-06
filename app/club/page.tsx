@@ -121,8 +121,9 @@ export default async function ClubPage() {
           The hour spins on
         </p>
         <p className="mx-auto mt-3 max-w-2xl text-lg text-cyan">
-          The Dance Floor at :00, Themed Night at :15, Speed Dating at :30, the
-          Rooftop at :45 — the Event Center holds the whole playlist.
+          The Dance Floor at :00, Speed Dating at :30, the Rooftop at :45 —
+          and Blind Date when the Gold floor&apos;s hostess opens the door. The
+          Event Center holds the whole playlist.
         </p>
       </div>
     </div>
