@@ -14,10 +14,12 @@ const nextConfig = {
 // to upload source maps and fail the build, so we skip it entirely.
 const sentryToken = process.env.SENTRY_API_KEY ?? process.env.SENTRY_AUTH_TOKEN;
 
-// The CLI's sourcemap upload warns (harmlessly) about a handful of webpack
-// chunks it can't auto-map (~/... refs) — 11 of them on every Vercel build.
-// Errors-only keeps the deploy logs clean without hiding anything real.
-if (sentryToken) process.env.SENTRY_LOG_LEVEL = 'error';
+// The CLI's sourcemap upload warns about a handful of webpack chunk-loader
+// stubs (empty module registrations) that carry Sentry debug ids but no
+// sourcemap — webpack never emits maps for empty chunks, so no map can
+// exist. Errors-only keeps the deploy logs clean without hiding anything
+// real. (An explicit SENTRY_LOG_LEVEL still wins — used for debugging.)
+if (sentryToken && !process.env.SENTRY_LOG_LEVEL) process.env.SENTRY_LOG_LEVEL = 'error';
 
 module.exports = sentryToken
   ? require('@sentry/nextjs').withSentryConfig(nextConfig, {
@@ -34,7 +36,7 @@ module.exports = sentryToken
       // Only print logs for uploading source maps in CI
       silent: !process.env.CI,
 
-      // Upload a larger set of source maps for prettier stack traces
+      // Upload a larger set of source maps for prettier stack traces.
       widenClientFileUpload: true,
 
       webpack: {
