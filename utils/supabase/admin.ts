@@ -7,6 +7,10 @@ import type { Database, Tables, TablesInsert } from 'types_db';
 import { supabaseUrl, supabaseServiceKey } from '@/utils/supabase/keys';
 import { sendClubMail } from '@/utils/email';
 import { parseTokenAmount } from '@/utils/token-amount';
+import {
+  membershipTokenGrant,
+  membershipGrantRef
+} from '@/utils/membership-tokens';
 
 type Product = Tables<'products'>;
 type Price = Tables<'prices'>;
@@ -438,6 +442,12 @@ const manageSubscriptionStatusChange = async (
       console.error('Membership moment failed:', momentError.message);
   }
 
+  // Membership tokens — part of the package, every cycle (Gold 100,
+  // Platinum 200, Diamond 500). Idempotent per subscription + period +
+  // tier, so the created/updated/checkout triple-fire never double-grants
+  // and a mid-cycle upgrade lands its new tier's grant immediately.
+  await grantMembershipTokens(uuid, subscription);
+
   // For a new subscription copy the billing details to the customer object.
   // NOTE: This is a costly operation and should happen at the very end.
   if (createAction && subscription.default_payment_method && uuid)
@@ -492,6 +502,63 @@ const creditTokenPurchase = async (session: Stripe.Checkout.Session) => {
   });
   if (error) throw new Error(`Token purchase credit failed: ${error.message}`);
   console.log(`🪙 Token purchase credited: +${amount} to ${customerRow.id}`);
+};
+
+/**
+ * Membership token grants (PRD-event-logic §7): every paid membership comes
+ * with tokens, every cycle — Gold 100, Platinum 200, Diamond 500. Resolves
+ * the tier from the synced products table (no hardcoded price ids), grants
+ * only for active/trialing subscriptions, and dedupes per subscription +
+ * period + tier so the created/updated/checkout triple-fire can't
+ * double-grant and a mid-cycle upgrade lands its new tier immediately.
+ */
+const grantMembershipTokens = async (
+  uuid: string,
+  subscription: Stripe.Subscription
+) => {
+  if (subscription.status !== 'active' && subscription.status !== 'trialing') {
+    return;
+  }
+  const price = subscription.items.data[0]?.price;
+  if (!price) return;
+  const { data: priceRow } = await supabaseAdmin
+    .from('prices')
+    .select('product_id')
+    .eq('id', price.id)
+    .maybeSingle();
+  if (!priceRow?.product_id) return;
+  const { data: productRow } = await supabaseAdmin
+    .from('products')
+    .select('name')
+    .eq('id', priceRow.product_id)
+    .maybeSingle();
+  const grant = membershipTokenGrant(productRow?.name);
+  if (!grant) return; // not a membership (token pack, etc.)
+
+  const periodStartIso = toDateTime(subscription.current_period_start).toISOString();
+  const ref = membershipGrantRef(subscription.id, periodStartIso, price.id);
+
+  const { data: existing } = await supabaseAdmin
+    .from('token_ledger')
+    .select('id')
+    .eq('user_id', uuid)
+    .eq('reason', grant.reason)
+    .eq('ref', ref)
+    .maybeSingle();
+  if (existing) return; // this cycle's grant already landed
+
+  const { error } = await supabaseAdmin.from('token_ledger').insert({
+    user_id: uuid,
+    delta: grant.amount,
+    reason: grant.reason,
+    ref
+  });
+  if (error)
+    console.error(`Membership grant failed: ${error.message}`);
+  else
+    console.log(
+      `🎟️ Membership grant: +${grant.amount} (${grant.reason}) to ${uuid}`
+    );
 };
 
 export {

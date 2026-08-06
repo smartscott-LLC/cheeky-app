@@ -104,6 +104,7 @@ Every paid membership comes with tokens, **every cycle** — this is what makes 
 - **The meta-game (we WANT this):** people do the math — Platinum + a 1000-token pack ($19.99 + $9.99 ≈ Diamond's price) and think they beat the system. Great — either way they're engaged and spending.
 - Grants flow through the subscription webhook (idempotent, ledger-only, reason = membership tier) **every cycle — monthly, part of the membership package itself**. Upgrade mid-cycle → the new tier's grant lands immediately. Existing token packs unchanged.
 - **No gift add-ons with memberships** — tokens are the perk (a gift was considered; tokens won it).
+- **✅ Implemented (2026-08-06):** the webhook grants per subscription + period + tier (Gold 100 / Platinum 200 / Diamond 500, reasons `membership_gold` / `membership_platinum` / `membership_diamond`), active + trialing subscriptions only, deduped so the created/updated/checkout triple-fire can't double-grant. Pure mapping unit-tested.
 - First-week kicker: giveaways + membership grants = tokens flying around → gifts, swag, teddy bears — the excitement loop.
 
 ## 8. Open questions (not blocking the engine fix)

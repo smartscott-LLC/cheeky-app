@@ -81,6 +81,12 @@ points — every push to `main` is production.
   (`cheeky_rooftop_tick`) drives the clock — the minute hand no longer treats rooftop as
   a grid room. Everyone who matches pays the 40; an odd leftover (nobody left to pair
   with) is refunded. New pool room at `/events/rooftop`.
+- **Membership token grants** (PRD-event-logic §7): every paid membership comes with
+  tokens every cycle — Gold 100, Platinum 200, Diamond 500 — granted by the subscription
+  webhook (active + trialing), idempotent per subscription + period + tier (renewals and
+  mid-cycle upgrades land their grant; the created/updated/checkout triple-fire can't
+  double-grant). Tier resolved from the synced Stripe catalog; pure mapping
+  unit-tested.
 
 ### Fixed
 
