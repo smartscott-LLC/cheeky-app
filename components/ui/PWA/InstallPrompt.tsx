@@ -52,8 +52,18 @@ export default function InstallPrompt() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-4 z-50 flex justify-center px-4">
-      <div className="w-full max-w-md rounded-xl border border-gold/40 bg-zinc-900/95 p-4 shadow-[0_0_32px_rgba(255,215,0,0.15)]">
+    <>
+      <style>{`
+        @keyframes cc-toast-up {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+      <div className="fixed inset-x-0 bottom-4 z-50 flex justify-center px-4">
+        <div
+          className="w-full max-w-md rounded-xl border border-gold/40 bg-zinc-900/95 p-4 shadow-[0_0_32px_rgba(255,215,0,0.15)]"
+          style={{ animation: 'cc-toast-up 0.28s ease-out' }}
+        >
         <div className="flex items-start gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -100,7 +110,8 @@ export default function InstallPrompt() {
             Install the app →
           </button>
         )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
