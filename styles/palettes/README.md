@@ -8,7 +8,7 @@ the UI can use Tailwind classes (`text-club`, `bg-gold`, `bg-platinum-navy`,
 
 | File            | Floor / area                              | Key colors                                                                                |
 | --------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `club.scss`     | Club Floor (Floor 1, the base experience) | shocking pink `#F605BA`, cotton bloom `#FF56D5`, indigo bloom `#6C089B`, canary `#F1F15E` |
+| `club.scss`     | Club Floor (Floor 1, the base experience) | shocking pink `#FF4DA6`, cotton bloom `#FF56D5`, indigo bloom `#6C089B`, canary `#F1F15E` |
 | `gold.scss`     | Gold floor                                | harvest gold `#D29436`, royal gold `#E9CD42`, graphite, deep mocha                        |
 | `platinum.scss` | Platinum floor                            | alice blue `#D8EEFF`, navy electric `#310A9C`, silver `#C7C7C7`, white smoke              |
 | `diamond.scss`  | Diamond floor / Penthouse                 | hot fuchsia `#FB035C`, dark raspberry `#85054C`, azure mist, taupe grey                   |

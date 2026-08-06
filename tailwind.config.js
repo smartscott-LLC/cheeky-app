@@ -43,8 +43,8 @@ module.exports = {
         'bubblegum-fizz': palette['bubblegum-fizz'],
         'blue-violet': palette['blue-violet'],
         club: {
-          DEFAULT: '#FF2D9B', // neon pink (style guide)
-          pink: '#FF2D9B',
+          DEFAULT: '#FF4DA6', // neon pink (style guide)
+          pink: '#FF4DA6',
           cotton: '#FF56D5',
           indigo: '#6C089B',
           canary: '#F1F15E'
