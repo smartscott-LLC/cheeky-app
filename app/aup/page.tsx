@@ -3,6 +3,20 @@ import Link from 'next/link';
 const SECTIONS = [
   {
     num: '1',
+    title: 'Prohibited content & activity — zero tolerance',
+    intro:
+      'The following categories are strictly prohibited on Club Cheeky, on every surface — profiles, messages, events, and elsewhere. Violations are permanent-bounce offenses; where the law requires, we preserve records, report to the authorities, and cooperate fully with law enforcement.',
+    items: [
+      'CSAM (Child Sexual Abuse Material) — any sexualized content involving a minor. Zero tolerance: permanent removal, record preservation, and mandatory reporting to NCMEC (CyberTipline) and law enforcement. The door is 18+ enforced by government ID verification.',
+      'Public-facing sexually explicit content — no sexually explicit media or content anywhere on the platform, including profile photos and public surfaces. Profiles must be appropriate for public display; explicit content is removed immediately.',
+      'Non-consensual content — content created or shared without the consent of everyone depicted, including non-consensual intimate imagery and accounts created without a person\u2019s consent. Confirmed cases are permanently removed and may be referred to law enforcement.',
+      'Sexual violence — any content promoting, depicting, or threatening sexual violence, coercion, or assault. Zero tolerance: permanent bounce and cooperation with law enforcement.',
+      'Human / sex trafficking — any solicitation, facilitation, or promotion of trafficking, forced labor, or coerced exploitation. Zero tolerance: permanent removal and reporting to the authorities.',
+      'Fraudulent activities — scams, phishing, deceptive solicitations, payment or token fraud, fake-account fraud, or any attempt to defraud members or the platform. Accounts are removed and suspected fraud is reported to appropriate authorities.'
+    ]
+  },
+  {
+    num: '2',
     title: 'The floor rules',
     items: [
       'No harassment, threats, or stalking — in messages, events, or anywhere in the club.',
@@ -14,7 +28,7 @@ const SECTIONS = [
     ]
   },
   {
-    num: '2',
+    num: '3',
     title: 'How violations escalate',
     items: [
       'Warning → temporary timeout → permanent bounce. Severity matters: threats and illegal content skip straight to a permanent bounce.',
@@ -23,7 +37,7 @@ const SECTIONS = [
     ]
   },
   {
-    num: '3',
+    num: '4',
     title: 'Reporting & blocking',
     items: [
       'Report or block from any chat, one tap. Reports go to a human bouncer for review — no automated bans on word filters alone.',
@@ -33,7 +47,7 @@ const SECTIONS = [
     ]
   },
   {
-    num: '4',
+    num: '5',
     title: 'Bots & fake accounts',
     items: [
       'The door runs honeypots — traps that only bots fill out. Caught bots are flagged and shut down: no messages, no likes, no waves, no events.',
@@ -65,6 +79,9 @@ export default function AupPage() {
                 <span className="mr-2 text-club">{s.num}.</span>
                 {s.title}
               </h2>
+              {s.intro && (
+                <p className="mt-3 text-sm text-cyan">{s.intro}</p>
+              )}
               <ul className="mt-3 space-y-2">
                 {s.items.map((item) => (
                   <li

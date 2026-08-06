@@ -14,6 +14,25 @@ minimization running through all of it.
 
 ---
 
+## 0. Prohibited categories — explicitly prohibited, zero tolerance
+
+The following categories are strictly prohibited on Club Cheeky, on every
+surface — profiles, messages, events, and elsewhere. All are enforced through
+verified-identity entry, one-tap report/block, human review, permanent
+removal, and cooperation with law enforcement where the law requires (record
+preservation on valid process; mandatory reporting where mandated).
+
+| # | Category | Policy |
+| - | -------- | ------ |
+| 1 | **CSAM (Child Sexual Abuse Material)** | Zero tolerance. The platform is adults-only: every member passes a government ID + live selfie check (Stripe Identity) with an enforced 18+ gate, and no anonymous route to interactive features exists. Any CSAM report or discovery results in immediate permanent account removal, record preservation per legal obligations, and mandatory reporting to NCMEC (CyberTipline) and law enforcement. |
+| 2 | **Public-facing sexually explicit content** | Prohibited. No sexually explicit media or content anywhere, including profile photos and public surfaces; profiles must be appropriate for public display. Explicit content is removed immediately; repeat or serious cases are permanently bounced. |
+| 3 | **Non-consensual content** | Prohibited. Content created or shared without the consent of everyone depicted — including non-consensual intimate imagery and accounts or profiles created without a person's consent. Confirmed cases are permanently removed without warning and may be referred to law enforcement. |
+| 4 | **Sexual violence** | Zero tolerance. No content promoting, depicting, or threatening sexual violence, coercion, or assault. Permanent bounce and cooperation with law enforcement. |
+| 5 | **Human / sex trafficking** | Zero tolerance. No solicitation, facilitation, or promotion of trafficking, forced labor, or coerced exploitation. Permanent removal and reporting to the authorities. The platform is structurally hostile to trafficking: no anonymous use, verified identity on every account. |
+| 6 | **Fraudulent activities** | Prohibited. Scams, phishing, deceptive solicitations, payment or token fraud, fake-account fraud, or any attempt to defraud members or the platform. Accounts are removed; suspected fraud is reported to appropriate authorities. Tokens are a server-side ledger only, never redeemable for cash. |
+
+---
+
 ## 1. Prevention — violations stopped at the door
 
 | Control                     | How it works                                                                                                                                                                         |
