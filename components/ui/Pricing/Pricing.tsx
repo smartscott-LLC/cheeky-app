@@ -93,12 +93,18 @@ export default function Pricing({
         <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
           <div className="sm:flex sm:flex-col sm:align-center">
             <h1 className="font-hero text-gold text-4xl sm:text-center sm:text-6xl">
-              Get your card
+              PRICES
             </h1>
-            <p className="max-w-2xl m-auto mt-5 text-xl text-club sm:text-center sm:text-2xl">
-              Everyone gets in with a verified ID — free. Expand your options by
-              obtaining membership to the higher floors.
-            </p>
+            <h2 className="font-header text-cyan max-w-2xl m-auto mt-5 text-xl sm:text-center sm:text-2xl">
+              The only price of admission is being a real person. Every person
+              with an ID is a VIP.
+            </h2>
+            <ul className="max-w-2xl m-auto mt-3 text-center">
+              <li className="text-club text-lg">
+                Everyone gets in with a verified ID — FREE!. You can expand your
+                options by obtaining membership to the higher floors.
+              </li>
+            </ul>
             <div className="relative self-center mt-6 bg-zinc-900 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
               {intervals.includes('month') && (
                 <button

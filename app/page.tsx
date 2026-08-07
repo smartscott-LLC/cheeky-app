@@ -73,15 +73,15 @@ export default async function LandingPage() {
         </div>
         <FloatingHearts />
         <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-20 text-center sm:pt-20 sm:pb-28">
-          <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
-            A dating app built like a nightclub
+          <p className="text-sm font-bold tracking-[0.3em] text-club">
+            Looking for your next crush?
           </p>
           <h1 className="font-hero text-gold mx-auto mt-6 max-w-3xl text-5xl leading-tight sm:text-7xl">
-            Looking for your next crush?
+            CLUB CHEEKY
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-xl text-club sm:text-2xl">
-            Find your next date in our virtual nightclub.
-          </p>
+          <h2 className="mx-auto mt-4 max-w-2xl text-xl text-cyan sm:text-2xl">
+            Find your next date in our virtual nightclub!
+          </h2>
 
           {/* The entrance — velvet doors, gold trim, pink neon */}
           <div className="mx-auto mt-12 w-fit">
@@ -96,10 +96,10 @@ export default async function LandingPage() {
             </div>
           </div>
 
-          <p className="mt-12 text-2xl font-extrabold text-club sm:text-3xl">
+          <h2 className="mt-12 text-2xl font-extrabold text-cyan sm:text-3xl">
             At Club Cheeky&apos;s,{' '}
-            <span className="text-club">you are the VIP.</span>
-          </p>
+            <span className="text-cyan">YOU are the VIP.</span>
+          </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-club">
             Everyone with an ID starts their own VIP adventure. It&apos;s free
             to get your groove on — money buys floors, never entry.
@@ -147,9 +147,9 @@ export default async function LandingPage() {
             ].map((item) => (
               <div
                 key={item.step}
-                className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8"
+                className="rounded-xl border border-gold-700 bg-zinc-900/50 p-8"
               >
-                <p className="mt-3 text-sm font-bold text-club">{item.step}</p>
+                <p className="mt-3 text-sm font-bold text-gold">{item.step}</p>
                 <h3 className="font-header text-cyan mt-3 text-xl">{item.title}</h3>
                 <p className="mt-3 text-club">{item.body}</p>
               </div>
@@ -161,37 +161,40 @@ export default async function LandingPage() {
       {/* Dance Floor teaser */}
       <section className="border-t border-zinc-900">
         <div className="mx-auto max-w-6xl px-6 py-20 text-center">
-          <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
-            The Hourly Playlist
+          <p className="text-sm font-bold uppercase tracking-[0.3em] text-gold">
+            Non-stop Action
           </p>
           <h2 className="font-header text-cyan mx-auto mt-4 max-w-2xl text-3xl sm:text-4xl">
-            Every hour, every quarter: the Dance Floor at :00, Speed Dating at
-            :30, the Rooftop at :45 — and Blind Date, whenever the Gold
-            floor&apos;s hostess opens the door.
+            Hourly events keep you in the spotlight. Icebreakers give new matches running starts. Weekly exclusives ensure you never get bored. A generous free tier gives everyone a chance to find their next someone. The swag shop is always looking to equip our guests with the latest swag to give you the edge you need! 
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-lg text-club">
-            Four floors, four rooms, one hour — a Diamond plays the whole set.
-            Everyone&apos;s photo hits the grid. Pick the ones you like. When
-            two people pick each other — instant match, center floor, announced.
-            No match? Your tokens come back. Quietly.
+            A direct quote from Club Cheeky's very own Chaz Sterling (Club Manager) - "Club Cheeky isn’t just a dating hotspot, it’s a *love laboratory* where my DeepSeek-powered mojo turns ‘meh’ into ‘SHAGADELIC!’ I’ve got algorithms smoother than my chest hair, events hotter than my umbrella drinks, and matches so spot-on, you’d swear I spilled piña colada on the ‘Soulmate’ button. Come for the vibe, stay for the *velvet magic*—because nobody, and I mean *nobody*, leaves without a little extra groove in their heart. Oh, *behave!*"
           </p>
         </div>
       </section>
 
-      {/* Floors */}
+      {/* Membership — how to start, then floor access, then PRICES */}
       <section
         id="membership"
         className="scroll-mt-24 border-t border-zinc-900"
       >
         <div className="mx-auto max-w-6xl px-6 py-20">
-          <h2 className="font-header text-cyan text-center text-3xl sm:text-4xl">
-            The floors
+          <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
+            How to start
+          </h1>
+          <h2 className="font-header text-cyan mt-4 text-center text-2xl sm:text-3xl">
+            Get your membership card
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-center text-lg text-club">
-            The only price of admission is being a real person. Every person
-            with an ID is a VIP.
-          </p>
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mx-auto mt-4 max-w-2xl text-center">
+            <li className="text-club text-lg">
+              Choose either a FREE membership (Silver Card) or purchase a higher
+              tier for maximum gain and minimum overhead!
+            </li>
+          </ul>
+          <h3 className="font-header text-cyan mt-12 text-center text-xl sm:text-2xl">
+            Membership Card access by floor
+          </h3>
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {floors.map((floor) => (
               <div
                 key={floor.name}
@@ -209,9 +212,6 @@ export default async function LandingPage() {
                 <div className="p-6">
                   <div className={`h-3 w-3 rounded-full ${floor.color}`} />
                   <h3 className="font-header text-cyan mt-4 text-xl">{floor.name}</h3>
-                  <p className="mt-1 text-sm font-semibold text-club">
-                    {floor.price}
-                  </p>
                   <ul className="mt-4 space-y-2 text-sm text-club">
                     {floor.perks.map((perk) => (
                       <li key={perk} className="text-club">• {perk}</li>
