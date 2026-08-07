@@ -49,10 +49,10 @@ export default function PrivacyPage() {
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-3xl px-6 py-16">
-        <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
+        <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           🛡️ What the Bouncer Knows
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
+        <p className="mx-auto mt-3 max-w-xl text-center text-club">
           Privacy Policy. The club keeps the door, not your secrets — here is
           exactly what we hold and why.
         </p>
@@ -63,12 +63,12 @@ export default function PrivacyPage() {
               key={s.title}
               className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6"
             >
-              <h2 className="font-bold">{s.title}</h2>
+              <h2 className="font-header text-cyan">{s.title}</h2>
               <ul className="mt-3 space-y-2">
                 {s.items.map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-3 text-sm text-cyan"
+                    className="flex items-start gap-3 text-sm text-club"
                   >
                     <span className="text-club">✓</span>
                     {item}
@@ -79,12 +79,12 @@ export default function PrivacyPage() {
           ))}
         </div>
 
-        <p className="mt-8 text-xs text-cyan">
+        <p className="mt-8 text-xs text-club">
           Policy source: docs/Governance/privacy.md (binding on the build).
           Living document — refined as the club grows.
         </p>
 
-        <p className="mt-4 text-sm text-cyan">
+        <p className="mt-4 text-sm text-club">
           Questions about your data or your rights? Email{' '}
           <a
             href={`mailto:${CONTACT.info}`}

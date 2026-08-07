@@ -44,10 +44,10 @@ export default function LawEnforcementPage() {
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-3xl px-6 py-16">
-        <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
+        <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           🛡️ Law Enforcement
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
+        <p className="mx-auto mt-3 max-w-xl text-center text-club">
           How official requests for Club Cheeky account data are handled.
         </p>
 
@@ -57,7 +57,7 @@ export default function LawEnforcementPage() {
               key={s.num}
               className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6"
             >
-              <h2 className="font-bold">
+              <h2 className="font-header text-cyan">
                 <span className="mr-2 text-club">{s.num}.</span>
                 {s.title}
               </h2>
@@ -65,7 +65,7 @@ export default function LawEnforcementPage() {
                 {s.items.map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-3 text-sm text-cyan"
+                    className="flex items-start gap-3 text-sm text-club"
                   >
                     <span className="text-club">✓</span>
                     {item}
@@ -76,7 +76,7 @@ export default function LawEnforcementPage() {
           ))}
         </div>
 
-        <p className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 text-sm text-cyan">
+        <p className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 text-sm text-club">
           <span className="font-bold text-white">Legal contact:</span>{' '}
           <a
             href={`mailto:${CONTACT.info}`}

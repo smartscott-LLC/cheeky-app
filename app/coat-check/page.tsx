@@ -94,10 +94,10 @@ export default async function CoatCheckPage() {
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-5xl px-6 py-16">
-        <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
+        <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           🧥 The Coat Check
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
+        <p className="text-club mx-auto mt-3 max-w-xl text-center">
           &quot;Nothing gets lost in my care.&quot; Your collection lives here —
           check in daily, the coat you hand me is your day with the club.
         </p>
@@ -113,8 +113,8 @@ export default async function CoatCheckPage() {
 
         {/* Gems */}
         <div className="mt-10">
-          <h2 className="text-xl font-bold">💎 Gems</h2>
-          <p className="text-sm text-cyan">
+          <h2 className="font-header text-cyan text-xl">💎 Gems</h2>
+          <p className="text-club text-sm">
             The vault. Limited collectibles.
           </p>
           <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -129,20 +129,20 @@ export default async function CoatCheckPage() {
                       : 'border-zinc-800 bg-zinc-900/30 opacity-50 grayscale'
                   }`}
                 >
-                  <p className="text-4xl">{g.emoji}</p>
-                  <p className="mt-2 font-bold">{g.name}</p>
-                  <p className="text-[10px] uppercase tracking-[0.25em] text-cyan">
+                  <p className="text-club text-4xl">{g.emoji}</p>
+                  <p className="text-club mt-2 font-bold">{g.name}</p>
+                  <p className="text-club text-[10px] uppercase tracking-[0.25em]">
                     {g.rarity}
                   </p>
                   {owned ? (
-                    <p className="mt-2 text-xs text-emerald-400">
+                    <p className="text-club mt-2 text-xs">
                       Yours —{' '}
                       {gemDate(g.id)
                         ? new Date(gemDate(g.id) as string).toLocaleDateString()
                         : 'in the vault'}
                     </p>
                   ) : (
-                    <p className="mt-2 text-xs text-cyan">
+                    <p className="text-club mt-2 text-xs">
                       {g.how_to_earn}
                     </p>
                   )}
@@ -154,8 +154,8 @@ export default async function CoatCheckPage() {
 
         {/* Badges */}
         <div className="mt-10">
-          <h2 className="text-xl font-bold">🎖️ Badges</h2>
-          <p className="text-sm text-cyan">
+          <h2 className="font-header text-cyan text-xl">🎖️ Badges</h2>
+          <p className="text-club text-sm">
             What you&apos;ve earned on the floor.
           </p>
           <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
@@ -170,9 +170,9 @@ export default async function CoatCheckPage() {
                       : 'border-zinc-800 bg-zinc-900/30 opacity-50 grayscale'
                   }`}
                 >
-                  <p className="text-4xl">{b.emoji}</p>
-                  <p className="mt-2 font-bold">{b.name}</p>
-                  <p className="mt-1 text-[11px] text-cyan">
+                  <p className="text-club text-4xl">{b.emoji}</p>
+                  <p className="text-club mt-2 font-bold">{b.name}</p>
+                  <p className="text-club mt-1 text-[11px]">
                     {owned
                       ? badgeDate(b.id)
                         ? `Earned ${new Date(badgeDate(b.id) as string).toLocaleDateString()}`
@@ -188,16 +188,16 @@ export default async function CoatCheckPage() {
         <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* The stash */}
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-            <h2 className="font-bold">🎁 The stash</h2>
-            <p className="text-sm text-cyan">Gifts waiting to go out.</p>
+            <h2 className="font-header text-cyan">🎁 The stash</h2>
+            <p className="text-club text-sm">Gifts waiting to go out.</p>
             <div className="mt-3 space-y-2">
               {stash.length === 0 && (
-                <p className="text-sm text-cyan">
+                <p className="text-club text-sm">
                   Empty. The Gift Store is that way.
                 </p>
               )}
               {stash.map((s) => (
-                <p key={s.id} className="text-sm">
+                <p key={s.id} className="text-club text-sm">
                   {s.emoji} {s.name}
                 </p>
               ))}
@@ -212,13 +212,13 @@ export default async function CoatCheckPage() {
 
           {/* People you've met */}
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-            <h2 className="font-bold">🪪 People you&apos;ve met</h2>
-            <p className="text-sm text-cyan">
+            <h2 className="font-header text-cyan">🪪 People you&apos;ve met</h2>
+            <p className="text-club text-sm">
               Certificates from Speed Dating + special interests.
             </p>
             <div className="mt-3 space-y-2">
               {certPartnerIds.length === 0 && partnerIds.length === 0 && (
-                <p className="text-sm text-cyan">
+                <p className="text-club text-sm">
                   No certificates yet. Speed Dating is how you earn them.
                 </p>
               )}
@@ -228,14 +228,14 @@ export default async function CoatCheckPage() {
                     ? c.matches.user_id_b
                     : c.matches.user_id_a;
                 return (
-                  <p key={c.id} className="text-sm">
+                  <p key={c.id} className="text-club text-sm">
                     🏅 Certificate — {partnerName(partnerId)} ·{' '}
                     {new Date(c.issued_at).toLocaleDateString()}
                   </p>
                 );
               })}
               {(interestRows ?? []).map((i) => (
-                <p key={i.id} className="text-sm">
+                <p key={i.id} className="text-club text-sm">
                   ⭐ {partnerName(i.interest_user_id)} — special interest
                 </p>
               ))}
@@ -251,8 +251,8 @@ export default async function CoatCheckPage() {
 
         {/* The crew — bonds */}
         <div className="mt-10">
-          <h2 className="text-xl font-bold">🎭 The crew</h2>
-          <p className="text-sm text-cyan">
+          <h2 className="font-header text-cyan text-xl">🎭 The crew</h2>
+          <p className="text-club text-sm">
             Characters, not real people — each with a job in the club. Get to
             know them.
           </p>
@@ -278,9 +278,9 @@ export default async function CoatCheckPage() {
                       </span>
                     )}
                   </div>
-                  <p className="mt-2 text-sm font-bold">{c.name}</p>
-                  <p className="text-[11px] text-cyan">{c.role}</p>
-                  <p className="mt-1 text-xs">
+                  <p className="text-club mt-2 text-sm font-bold">{c.name}</p>
+                  <p className="text-club text-[11px]">{c.role}</p>
+                  <p className="text-club mt-1 text-xs">
                     {level > 0 ? (
                       <span className="text-club">Bond level {level}</span>
                     ) : (
@@ -293,10 +293,10 @@ export default async function CoatCheckPage() {
           </div>
         </div>
 
-        <p className="mt-8">
+        <p className="text-club mt-8">
           <Link
             href={floorHref}
-            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-cyan transition hover:border-zinc-500 hover:text-white"
+            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-club transition hover:border-zinc-500 hover:text-white"
           >
             ← Back to the floor
           </Link>

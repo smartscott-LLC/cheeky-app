@@ -305,8 +305,8 @@ export default function EventFloor({
                 ? 'Canceled'
                 : 'The floor is moving'}
         </p>
-        <h2 className="mt-2 text-2xl font-extrabold">{statusBanner.title}</h2>
-        <p className="mt-1 text-cyan">{statusBanner.body}</p>
+        <h2 className="font-header text-cyan mt-2 text-2xl">{statusBanner.title}</h2>
+        <p className="mt-1 text-club">{statusBanner.body}</p>
 
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
           {!joined && eventStatus === 'open' && (
@@ -337,7 +337,7 @@ export default function EventFloor({
 
         {error && <p className="mt-3 text-sm text-club">{error}</p>}
         {joined && eventStatus !== 'running' && eventStatus !== 'closed' && (
-          <p className="mt-3 text-xs text-cyan">
+          <p className="mt-3 text-xs text-club">
             {participants.length} on the floor now. Needs {event.minFill} to
             run.
           </p>
@@ -398,7 +398,7 @@ export default function EventFloor({
                   )}
                 </div>
                 <div className="p-3">
-                  <p className="truncate text-sm font-bold">
+                  <p className="text-club truncate text-sm font-bold">
                     {p.profile?.display_name || 'Member'}
                   </p>
                   <div className="mt-2 flex items-center justify-between">
@@ -430,7 +430,7 @@ export default function EventFloor({
       </div>
 
       {participants.length === 0 && (
-        <p className="mt-10 text-center text-cyan">
+        <p className="mt-10 text-center text-club">
           No one on the floor yet. Be the first through the door.
         </p>
       )}

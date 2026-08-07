@@ -55,7 +55,7 @@ export default function FloorLayout({
             href={spot.href}
             className={`absolute ${spot.pos} group rounded-xl border bg-black/70 px-5 py-4 backdrop-blur-sm transition hover:bg-black/85 ${spot.color}`}
           >
-            <p className="text-2xl">
+            <p className="text-club text-2xl">
               {spot.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -67,10 +67,10 @@ export default function FloorLayout({
                 spot.emoji
               )}
             </p>
-            <p className="mt-1 text-sm font-extrabold uppercase tracking-[0.12em] group-hover:text-white">
+            <p className="text-club mt-1 text-sm font-extrabold uppercase tracking-[0.12em] group-hover:text-white">
               {spot.name}
             </p>
-            <p className="text-xs text-cyan">{spot.sub}</p>
+            <p className="text-xs text-club">{spot.sub}</p>
           </Link>
         ))}
         <Link
@@ -91,7 +91,7 @@ export default function FloorLayout({
               href={spot.href}
               className={`rounded-xl border bg-black/80 p-4 backdrop-blur-sm ${spot.color}`}
             >
-              <p className="text-2xl">
+              <p className="text-club text-2xl">
                 {spot.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -103,10 +103,10 @@ export default function FloorLayout({
                   spot.emoji
                 )}
               </p>
-              <p className="mt-1 text-sm font-extrabold uppercase tracking-[0.12em]">
+              <p className="text-club mt-1 text-sm font-extrabold uppercase tracking-[0.12em]">
                 {spot.name}
               </p>
-              <p className="text-xs text-cyan">{spot.sub}</p>
+              <p className="text-xs text-club">{spot.sub}</p>
             </Link>
           ))}
         </div>

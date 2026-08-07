@@ -21,6 +21,9 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],
+        body: ['var(--font-body)', ...fontFamily.sans],
+        hero: ['var(--font-hero)', 'cursive'],
+        header: ['var(--font-header)', 'cursive'],
         script: ['var(--font-script)', 'cursive']
       },
       // Floor palettes — source of truth: styles/palettes/*.scss, brand

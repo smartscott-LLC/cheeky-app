@@ -82,11 +82,11 @@ export default async function MessagesPage() {
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-2xl px-6 py-16">
-        <h1 className="text-3xl font-extrabold sm:text-4xl">Cheeky Chats</h1>
-        <p className="mt-2">
+        <h1 className="font-hero text-gold text-3xl sm:text-4xl">Cheeky Chats</h1>
+        <p className="mt-2 text-club">
           <Link
             href={floorHref}
-            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-cyan transition hover:border-zinc-500 hover:text-white"
+            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-club transition hover:border-zinc-500 hover:text-white"
           >
             ← Back to the floor
           </Link>
@@ -96,7 +96,7 @@ export default async function MessagesPage() {
 
         {(waves ?? []).length > 0 && (
           <div className="mt-8 rounded-xl border border-platinum/30 bg-platinum/5 p-5">
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-platinum">
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-club">
               👋 Someone waved
             </p>
             <div className="mt-3 space-y-3">
@@ -128,10 +128,10 @@ export default async function MessagesPage() {
                         )}
                       </div>
                       <div>
-                        <p className="font-bold">
+                        <p className="font-bold text-club">
                           {profile?.display_name || 'Member'}
                         </p>
-                        <p className="text-xs text-cyan">waved at you</p>
+                        <p className="text-xs text-club">waved at you</p>
                       </div>
                     </div>
                     <form action={openConversation.bind(null, w.sender_id)}>
@@ -150,8 +150,8 @@ export default async function MessagesPage() {
         )}
         {convs.length === 0 ? (
           <div className="mt-10 rounded-xl border border-zinc-800 bg-zinc-900/50 p-10 text-center">
-            <h2 className="text-xl font-bold">No conversations yet.</h2>
-            <p className="mt-2 text-cyan">
+            <h2 className="font-header text-cyan text-xl">No conversations yet.</h2>
+            <p className="mt-2 text-club">
               Hit the floor, pick someone you like — when they pick you back,
               the chatting starts here.
             </p>
@@ -176,17 +176,17 @@ export default async function MessagesPage() {
                   className="block rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 transition hover:border-zinc-600"
                 >
                   <div className="flex items-center justify-between gap-4">
-                    <p className="text-lg font-bold">
+                    <p className="text-lg font-bold text-club">
                       {profile?.display_name || 'Member'}
                     </p>
                     {last && (
-                      <p className="text-xs text-cyan">
+                      <p className="text-xs text-club">
                         {new Date(last.created_at).toLocaleString()}
                       </p>
                     )}
                   </div>
                   {last && (
-                    <p className="mt-1 truncate text-sm text-cyan">
+                    <p className="mt-1 truncate text-sm text-club">
                       {last.body}
                     </p>
                   )}

@@ -28,15 +28,15 @@ export default function VerificationPanel({
     return (
       <div className="mx-auto max-w-xl rounded-xl border border-club/60 bg-zinc-900/50 p-8 text-center">
         <div className="text-5xl">🎉</div>
-        <h2 className="mt-4 text-3xl font-extrabold">You&apos;re inside!</h2>
-        <p className="mt-3 text-cyan">
+        <h2 className="font-header text-cyan mt-4 text-3xl">You&apos;re inside!</h2>
+        <p className="mt-3 text-club">
           Brutus cleared you. Silver card live — VIP badge active, and your
           welcome tokens are on your tab.
         </p>
         <p className="mt-6 rounded-lg bg-zinc-900 px-4 py-3 text-xl font-bold text-club">
           {tokenBalance} tokens
         </p>
-        <p className="mt-4 text-sm text-cyan">
+        <p className="mt-4 text-sm text-club">
           The Dance Floor opens every hour on the hour — 3 tokens, one song.
         </p>
         <Link
@@ -53,13 +53,13 @@ export default function VerificationPanel({
     return (
       <div className="mx-auto max-w-xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-center">
         <div className="text-5xl">🧑‍💼</div>
-        <h2 className="mt-4 text-2xl font-extrabold">Brutus needs a human.</h2>
-        <p className="mt-3 text-cyan">
+        <h2 className="font-header text-cyan mt-4 text-2xl">Brutus needs a human.</h2>
+        <p className="mt-3 text-club">
           Three checks didn&apos;t pass, so the door is taking this one
           upstairs. Our support team will sort your ID check personally — no
           more loops.
         </p>
-        <p className="mt-4 text-sm text-cyan">
+        <p className="mt-4 text-sm text-club">
           Email the help desk at{' '}
           <a
             href={`mailto:${CONTACT.helpdesk}`}
@@ -80,19 +80,19 @@ export default function VerificationPanel({
           💪
         </div>
         <div>
-          <h2 className="text-2xl font-extrabold">Brutus the Bouncer</h2>
-          <p className="text-sm text-cyan">The Door Check</p>
+          <h2 className="font-header text-cyan text-2xl">Brutus the Bouncer</h2>
+          <p className="text-sm text-club">The Door Check</p>
         </div>
       </div>
 
-      <p className="mt-6 text-cyan">
+      <p className="mt-6 text-club">
         Everyone&apos;s a VIP here — but everybody checks in at the door. One
         last hoop: name, date of birth, and your government ID number —
         we&apos;ll have your email ready, and it takes two minutes. Brutus
         stamps the card and you get{' '}
         <span className="font-bold text-club">20 tokens</span> on the spot.
       </p>
-      <p className="mt-3 text-sm text-cyan">
+      <p className="mt-3 text-sm text-club">
         Your ID number is processed by Stripe and never stored by us.
       </p>
 
@@ -103,7 +103,7 @@ export default function VerificationPanel({
       )}
 
       {verificationAttempts > 0 && (
-        <p className="mt-4 text-xs text-cyan">
+        <p className="mt-4 text-xs text-club">
           Attempts so far: {verificationAttempts} of 3. After three, a human
           bouncer takes over.
         </p>

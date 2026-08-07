@@ -287,8 +287,8 @@ export default function SpeedDatingFloor({
     return (
       <div className="mx-auto max-w-xl rounded-xl border border-club/60 bg-zinc-900/80 p-10 text-center">
         <div className="text-5xl">🏆</div>
-        <h2 className="mt-4 text-3xl font-extrabold">You matched!</h2>
-        <p className="mt-3 text-cyan">
+        <h2 className="font-header text-cyan mt-4 text-3xl">You matched!</h2>
+        <p className="mt-3 text-club">
           {result.matchedName
             ? `You and ${result.matchedName} picked each other first.`
             : 'You two picked each other first.'}{' '}
@@ -328,14 +328,14 @@ export default function SpeedDatingFloor({
                 ? 'Done'
                 : 'Doors open'}
         </p>
-        <h2 className="mt-2 text-2xl font-extrabold">
+        <h2 className="font-header text-cyan mt-2 text-2xl">
           {!joined
             ? 'Speed Dating — 25 tokens'
             : selectionPhase
               ? 'Who would you pick again?'
               : `Session ${slotIndex + 1} of ${maxSlot + 1}`}
         </h2>
-        <p className="mt-1 text-cyan">
+        <p className="mt-1 text-club">
           {!joined
             ? `Entry is ${event.tokenCost} tokens (reserved — back if no match). Platinum floor.`
             : selectionPhase
@@ -375,7 +375,7 @@ export default function SpeedDatingFloor({
               )}
             </div>
             <div>
-              <p className="font-bold">
+              <p className="text-club font-bold">
                 {partner.profile?.display_name || 'Member'}
               </p>
               {partner.profile?.verified_at && (
@@ -390,7 +390,7 @@ export default function SpeedDatingFloor({
           </div>
           <div className="h-48 space-y-2 overflow-y-auto p-4">
             {messages.length === 0 && (
-              <p className="pt-14 text-center text-cyan">
+              <p className="pt-14 text-center text-club">
                 Ninety seconds — make it memorable.
               </p>
             )}
@@ -435,7 +435,7 @@ export default function SpeedDatingFloor({
       {/* Selection phase */}
       {joined && selectionPhase && (
         <div className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-          <p className="text-sm text-cyan">
+          <p className="text-sm text-club">
             Pick your top choice and one alternate from your group. Mutual top
             picks get the certificate.
           </p>
@@ -479,7 +479,7 @@ export default function SpeedDatingFloor({
               </div>
             ))}
           </div>
-          <p className="mt-4 text-xs text-cyan">
+          <p className="mt-4 text-xs text-club">
             Results land when the room closes — we&apos;ll announce the matches.
           </p>
         </div>
@@ -487,7 +487,7 @@ export default function SpeedDatingFloor({
 
       {/* Waiting for the room */}
       {joined && !selectionPhase && !partner && eventStatus === 'running' && (
-        <p className="mt-10 text-center text-cyan">
+        <p className="mt-10 text-center text-club">
           Finding your next seat…
         </p>
       )}

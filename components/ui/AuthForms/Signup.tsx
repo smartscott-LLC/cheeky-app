@@ -70,7 +70,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               required
               className="w-full p-3 rounded-md bg-zinc-800 [color-scheme:dark]"
             />
-            <p className="text-xs text-cyan">
+            <p className="text-xs text-club">
               You must be 18 or older. Brutus double-checks it at the door.
             </p>
             <label htmlFor="gender">What are you?</label>
@@ -87,7 +87,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               <option value="gentleman">Gentleman</option>
               <option value="lady">Lady</option>
             </select>
-            <p className="text-xs text-cyan">
+            <p className="text-xs text-club">
               The club pairs real gentlemen and real ladies — no surprises. This
               tells the floor who you are.
             </p>
@@ -102,7 +102,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               <option value="women">Ladies</option>
               <option value="men">Gentlemen</option>
             </select>
-            <p className="text-xs text-cyan">
+            <p className="text-xs text-club">
               Who you&apos;re here to meet. Personal, and never shown publicly.
             </p>
             <label htmlFor="messageRetentionDays">
@@ -119,7 +119,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               <option value="30">30 days</option>
               <option value="90">90 days</option>
             </select>
-            <p className="text-xs text-cyan">
+            <p className="text-xs text-club">
               Messages are purged after your window. In a chat, the stricter
               window wins.
             </p>
@@ -177,15 +177,15 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
           />
         </div>
       </form>
-      <p>Already have an account?</p>
-      <p>
-        <Link href="/signin/password_signin" className="font-light text-sm">
+      <p className="text-club">Already have an account?</p>
+      <p className="text-club">
+        <Link href="/signin/password_signin" className="text-club font-light text-sm">
           Sign in with email and password
         </Link>
       </p>
       {allowEmail && (
-        <p>
-          <Link href="/signin/email_signin" className="font-light text-sm">
+        <p className="text-club">
+          <Link href="/signin/email_signin" className="text-club font-light text-sm">
             Sign in via magic link
           </Link>
         </p>

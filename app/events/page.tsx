@@ -53,14 +53,14 @@ export default async function EventsPage() {
       <div className="mx-auto max-w-6xl px-6 py-16">
         <Link
           href={floorHref}
-          className="text-sm font-semibold text-cyan hover:text-white"
+          className="text-sm font-semibold text-club hover:text-white"
         >
           ← Back to the floor
         </Link>
-        <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
+        <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           The Event Center
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
+        <p className="text-club mx-auto mt-3 max-w-xl text-center">
           The playlist: the Dance Floor, Speed Dating, and the Rooftop, every
           hour on the quarter — plus Blind Date, whenever the Gold
           floor&apos;s hostess opens the door.
@@ -74,7 +74,7 @@ export default async function EventsPage() {
             </p>
             <ul className="divide-y divide-zinc-800">
               {(announcements ?? []).map((a, i) => (
-                <li key={i} className="px-4 py-2 text-sm text-cyan">
+                <li key={i} className="text-club px-4 py-2 text-sm">
                   {a.body}{' '}
                   <span className="text-xs text-cyan">
                     {new Date(a.created_at).toLocaleTimeString([], {
@@ -112,7 +112,7 @@ export default async function EventsPage() {
                 />
                 <div className="p-5">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-extrabold">
+                    <h3 className="font-header text-cyan text-lg">
                       {meta.emoji} {meta.name}
                     </h3>
                     <span
@@ -123,14 +123,14 @@ export default async function EventsPage() {
                       {meta.floor}
                     </span>
                   </div>
-                  <p className="mt-1 text-xs text-cyan">
+                  <p className="text-club mt-1 text-xs">
                     {next
                       ? `${timeLabel(next.starts_at)} · ${next.token_cost} tokens`
                       : 'Between sets'}
                   </p>
-                  <p className="mt-2 text-xs text-cyan">{meta.tagline}</p>
+                  <p className="text-club mt-2 text-xs">{meta.tagline}</p>
                   {locked ? (
-                    <p className="mt-4 text-sm font-bold text-gold">
+                    <p className="text-club mt-4 text-sm font-bold">
                       Behind the rope. Come see what&apos;s on these floors with
                       a {meta.floor} card today.
                     </p>
@@ -152,8 +152,8 @@ export default async function EventsPage() {
         <div className="mt-6 rounded-2xl border border-gold/40 bg-zinc-900/50">
           <div className="flex flex-wrap items-center justify-between gap-4 p-5">
             <div>
-              <h3 className="text-lg font-extrabold">💘 Blind Date</h3>
-              <p className="mt-1 text-xs text-cyan">
+              <h3 className="font-header text-cyan text-lg">💘 Blind Date</h3>
+              <p className="text-club mt-1 text-xs">
                 The Gold floor&apos;s room. One hostess, up to five suitors, four
                 rounds of questions — most marks wins the date. Host when
                 you&apos;re ready; the room runs when a lady opens the door.
@@ -172,8 +172,8 @@ export default async function EventsPage() {
         <div className="mt-6 rounded-2xl border border-club/40 bg-zinc-900/50">
           <div className="flex flex-wrap items-center justify-between gap-4 p-5">
             <div>
-              <h3 className="text-lg font-extrabold">🧊 Icebreakers</h3>
-              <p className="mt-1 text-xs text-cyan">
+              <h3 className="font-header text-cyan text-lg">🧊 Icebreakers</h3>
+              <p className="text-club mt-1 text-xs">
                 Not events — things for matched couples to do instead of
                 staring at empty chat. Date Night is the first one: five
                 questions, both of you tap the same answer to lock it. Free,

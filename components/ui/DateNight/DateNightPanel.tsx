@@ -121,14 +121,14 @@ export default function DateNightPanel({
     const total = leaderboard.length;
     return (
       <div className="rounded-xl border border-club/30 bg-gradient-to-b from-club/10 to-zinc-900 p-5 text-center">
-        <p className="text-3xl">💘</p>
-        <h3 className="mt-2 text-xl font-extrabold">Date Night complete</h3>
-        <p className="mt-1 text-cyan">
+        <p className="text-club text-3xl">💘</p>
+        <h3 className="font-header text-cyan mt-2 text-xl">Date Night complete</h3>
+        <p className="mt-1 text-club">
           {state.score} of {state.total} — you two locked {state.score}{' '}
           {state.score === 1 ? 'answer' : 'answers'} together.
         </p>
         {total > 0 && (
-          <p className="mt-1 text-sm text-cyan">
+          <p className="mt-1 text-sm text-club">
             You beat {beaten} of {total} couples on this pack
             {beaten >= total / 2
               ? ' — the floor noticed. 🏆'
@@ -176,8 +176,8 @@ export default function DateNightPanel({
         </span>
       </div>
 
-      <p className="mt-3 text-sm font-bold text-white">{question.prompt}</p>
-      <p className="mt-1 text-xs text-cyan">
+      <p className="text-club mt-3 text-sm font-bold">{question.prompt}</p>
+      <p className="mt-1 text-xs text-club">
         Huddle with {otherName} in the chat — your answer only locks when you
         both pick the same one.
       </p>
@@ -206,17 +206,17 @@ export default function DateNightPanel({
 
       <div className="mt-3 flex items-center justify-between text-xs">
         {myPick === null ? (
-          <p className="text-cyan">Pick an answer — then talk it out.</p>
+          <p className="text-club">Pick an answer — then talk it out.</p>
         ) : disagree ? (
-          <p className="font-semibold text-gold">
+          <p className="font-semibold text-club">
             They picked differently — hash it out in the chat, then re-pick.
           </p>
         ) : partnerPicked ? (
-          <p className="text-cyan">
+          <p className="text-club">
             They&apos;ve picked — match them to lock it.
           </p>
         ) : (
-          <p className="text-cyan">
+          <p className="text-club">
             Your pick is in. Waiting on {otherName}…
           </p>
         )}

@@ -48,11 +48,11 @@ export default async function EventRoomPage({
     return (
       <div className="bg-black">
         <div className="mx-auto max-w-2xl px-6 py-16 text-center">
-          <p className="text-5xl">{meta.emoji}</p>
-          <h1 className="mt-6 text-3xl font-extrabold">
+          <p className="text-club text-5xl">{meta.emoji}</p>
+          <h1 className="font-hero text-gold mt-6 text-3xl">
             {meta.name} is behind the rope.
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-cyan">
+          <p className="text-club mx-auto mt-3 max-w-md">
             Come see what&apos;s on this floor with a {meta.floor} card today —
             the room&apos;s worth it.
           </p>
@@ -65,7 +65,7 @@ export default async function EventRoomPage({
             </Link>
             <Link
               href="/events"
-              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-cyan transition hover:border-zinc-500 hover:text-white"
+              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-club transition hover:border-zinc-500 hover:text-white"
             >
               The Event Center
             </Link>
@@ -175,13 +175,13 @@ export default async function EventRoomPage({
         <div className="flex flex-wrap items-center gap-4">
           <Link
             href="/events"
-            className="text-sm font-semibold text-cyan hover:text-white"
+            className="text-sm font-semibold text-club hover:text-white"
           >
             ← The Event Center
           </Link>
           <Link
             href={floorHref}
-            className="text-sm font-semibold text-cyan hover:text-white"
+            className="text-sm font-semibold text-club hover:text-white"
           >
             ← Back to the floor
           </Link>
@@ -200,10 +200,10 @@ export default async function EventRoomPage({
           <div className="absolute inset-0 bg-black/70" />
           <div className="relative p-6">
             <div className="mb-6 text-center">
-              <h2 className="text-2xl font-extrabold">
+              <h2 className="font-header text-cyan text-2xl">
                 {meta.emoji} {meta.name}
               </h2>
-              <p className="mt-1 text-sm text-cyan">
+              <p className="text-club mt-1 text-sm">
                 Next slot {timeLabel(roomEvent.starts_at)} · {meta.tagline}
               </p>
             </div>
@@ -228,11 +228,11 @@ export default async function EventRoomPage({
         </div>
       ) : (
         <div className="mx-auto max-w-xl px-6 py-24 text-center">
-          <p className="text-5xl">{meta.emoji}</p>
-          <h2 className="mt-6 text-2xl font-extrabold">
+          <p className="text-club text-5xl">{meta.emoji}</p>
+          <h2 className="font-header text-cyan mt-6 text-2xl">
             The room&apos;s between sets.
           </h2>
-          <p className="mt-3 text-cyan">
+          <p className="text-club mt-3">
             The next {meta.name} spins up on the hour. Check the Event Center
             for the playlist.
           </p>

@@ -67,11 +67,11 @@ export default async function BlindDatePage() {
     return (
       <div className="bg-black">
         <div className="mx-auto max-w-2xl px-6 py-16 text-center">
-          <p className="text-5xl">💘</p>
-          <h1 className="mt-6 text-3xl font-extrabold">
+          <p className="text-club text-5xl">💘</p>
+          <h1 className="font-hero text-gold mt-6 text-3xl">
             Blind Date is behind the rope.
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-cyan">
+          <p className="text-club mx-auto mt-3 max-w-md">
             Come see what&apos;s on this floor with a Gold card today — the
             room&apos;s worth it.
           </p>
@@ -84,7 +84,7 @@ export default async function BlindDatePage() {
             </Link>
             <Link
               href="/events"
-              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-cyan transition hover:border-zinc-500 hover:text-white"
+              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-club transition hover:border-zinc-500 hover:text-white"
             >
               The Event Center
             </Link>
@@ -173,14 +173,14 @@ export default async function BlindDatePage() {
           <div className="mx-auto max-w-4xl px-6 py-16">
             <Link
               href="/events"
-              className="text-sm font-semibold text-cyan hover:text-white"
+              className="text-sm font-semibold text-club hover:text-white"
             >
               ← The Event Center
             </Link>
-            <h1 className="mt-6 text-center text-3xl font-extrabold sm:text-4xl">
+            <h1 className="font-hero text-gold mt-6 text-center text-3xl sm:text-4xl">
               👑 Blind Date — the host&apos;s table
             </h1>
-            <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
+            <p className="text-club mx-auto mt-3 max-w-xl text-center">
               You can&apos;t see them yet — that&apos;s the point. Ask, read, and
               mark the best answer.
             </p>
@@ -223,14 +223,14 @@ export default async function BlindDatePage() {
           <div className="mx-auto max-w-3xl px-6 py-16">
             <Link
               href="/events"
-              className="text-sm font-semibold text-cyan hover:text-white"
+              className="text-sm font-semibold text-club hover:text-white"
             >
               ← The Event Center
             </Link>
-            <h1 className="mt-6 text-center text-3xl font-extrabold sm:text-4xl">
+            <h1 className="font-hero text-gold mt-6 text-center text-3xl sm:text-4xl">
               💘 Blind Date
             </h1>
-            <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
+            <p className="text-club mx-auto mt-3 max-w-xl text-center">
               Four rounds. Answer her questions. Most marks wins the date.
             </p>
             <div className="mt-8">
@@ -277,14 +277,14 @@ export default async function BlindDatePage() {
       <div className="mx-auto max-w-3xl px-6 py-16">
         <Link
           href="/events"
-          className="text-sm font-semibold text-cyan hover:text-white"
+          className="text-sm font-semibold text-club hover:text-white"
         >
           ← The Event Center
         </Link>
-        <h1 className="mt-6 text-center text-3xl font-extrabold sm:text-4xl">
+        <h1 className="font-hero text-gold mt-6 text-center text-3xl sm:text-4xl">
           💘 Blind Date
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
+        <p className="text-club mx-auto mt-3 max-w-xl text-center">
           The Gold floor&apos;s room. One hostess, up to five suitors, four
           rounds of questions — personality decides, the marks decide more.
         </p>

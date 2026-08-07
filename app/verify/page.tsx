@@ -23,14 +23,14 @@ export default async function VerifyPage({
       <div className="bg-black">
         <div className="mx-auto max-w-2xl px-6 py-20 text-center">
           <p className="text-5xl">📧</p>
-          <h1 className="mt-6 text-3xl font-extrabold">
+          <h1 className="font-hero text-gold mt-6 text-3xl">
             You&apos;re checked in — one email to go
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-cyan">
+          <p className="mx-auto mt-3 max-w-md text-club">
             Your ID passed. Now open the confirmation email we sent and click
             the link — it drops you straight into the lobby, card in hand.
           </p>
-          <p className="mt-6 text-sm text-cyan">
+          <p className="mt-6 text-sm text-club">
             Didn&apos;t get it? Check spam, or sign in and resend the
             confirmation.
           </p>
@@ -45,10 +45,10 @@ export default async function VerifyPage({
     return (
       <div className="bg-black">
         <div className="mx-auto max-w-6xl px-6 py-16">
-          <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
+          <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
             Check in at the door
           </h1>
-          <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
+          <p className="mx-auto mt-3 max-w-xl text-center text-club">
             Everyone&apos;s a VIP — but everybody checks in. One stop, then
             you&apos;re in.
           </p>
@@ -75,10 +75,10 @@ export default async function VerifyPage({
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-6xl px-6 py-20">
-        <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
+        <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           Get your Silver card
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
+        <p className="mx-auto mt-3 max-w-xl text-center text-club">
           Free. Verified. Twenty tokens on the house the second you&apos;re in.
         </p>
         <div className="mt-10">

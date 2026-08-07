@@ -91,7 +91,7 @@ export default function MomentsStrip() {
               )}
             </div>
             <div className="min-w-0">
-              <p className="flex flex-wrap items-baseline gap-x-2 text-sm">
+              <p className="text-club flex flex-wrap items-baseline gap-x-2 text-sm">
                 <span className="font-bold text-white">
                   {m.characters?.name ?? 'The Crew'}
                 </span>
@@ -100,7 +100,7 @@ export default function MomentsStrip() {
                   {new Date(m.created_at).toLocaleString()}
                 </span>
               </p>
-              <p className="mt-0.5 text-sm text-cyan">{m.message}</p>
+              <p className="mt-0.5 text-sm text-club">{m.message}</p>
             </div>
           </div>
         ))}

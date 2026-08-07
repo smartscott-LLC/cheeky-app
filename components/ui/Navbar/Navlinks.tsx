@@ -60,7 +60,7 @@ export default function Navlinks({ user }: NavlinksProps) {
       {/* Meet the crew — dead center, the club's people are its face */}
       <Link
         href="/crew"
-        className="hidden rounded-full border border-gold/50 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-gold transition hover:border-gold hover:bg-gold/10 md:inline-flex"
+        className="hidden rounded-full border border-gold/50 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-club transition hover:border-gold hover:bg-gold/10 md:inline-flex"
       >
         Meet the Crew
       </Link>

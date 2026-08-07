@@ -37,10 +37,10 @@ export default async function SwagPage() {
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-2xl px-6 py-16">
-        <h1 className="text-3xl font-extrabold sm:text-4xl">
+        <h1 className="font-hero text-gold text-3xl sm:text-4xl">
           🎟️ The Swag Shop
         </h1>
-        <p className="mt-2 text-sm text-cyan">
+        <p className="mt-2 text-sm text-club">
           Free stuff, on the house. Got a code from the cast — or from the club
           — drop it in and it&apos;s yours. No payment, no catch.
         </p>
@@ -48,10 +48,10 @@ export default async function SwagPage() {
         <RedeemCode />
 
         <div className="mt-8">
-          <h2 className="text-lg font-bold">Your swag</h2>
+          <h2 className="font-header text-cyan text-lg">Your swag</h2>
           <div className="mt-3 space-y-2">
             {(grants ?? []).length === 0 && (
-              <p className="text-sm text-cyan">
+              <p className="text-sm text-club">
                 Nothing yet. Codes come from the cast and the club — keep an eye
                 out.
               </p>
@@ -65,9 +65,9 @@ export default async function SwagPage() {
                   <p className="font-bold text-club">
                     {describe(g.benefit_type, g.benefit_value)}
                   </p>
-                  <p className="text-xs text-cyan">{g.reason}</p>
+                  <p className="text-xs text-club">{g.reason}</p>
                 </div>
-                <p className="text-xs text-cyan">
+                <p className="text-xs text-club">
                   {new Date(g.created_at).toLocaleString()}
                 </p>
               </div>
@@ -75,10 +75,10 @@ export default async function SwagPage() {
           </div>
         </div>
 
-        <p className="mt-8">
+        <p className="mt-8 text-club">
           <Link
             href={floorHref}
-            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-cyan transition hover:border-zinc-500 hover:text-white"
+            className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-club transition hover:border-zinc-500 hover:text-white"
           >
             ← Back to the floor
           </Link>

@@ -175,9 +175,9 @@ export default function BlindDateHost({
   if (eventStatus === 'canceled') {
     return (
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
-        <p className="text-4xl">🚪</p>
-        <h2 className="mt-3 text-xl font-extrabold">The room closed.</h2>
-        <p className="mx-auto mt-2 max-w-md text-sm text-cyan">
+        <p className="text-club text-4xl">🚪</p>
+        <h2 className="font-header text-cyan mt-3 text-xl">The room closed.</h2>
+        <p className="mx-auto mt-2 max-w-md text-sm text-club">
           It didn&apos;t fill in time (or the room failed), so everyone&apos;s tokens
           were returned. The door stays open — you can host again whenever
           you&apos;re ready.
@@ -197,11 +197,11 @@ export default function BlindDateHost({
     const winner = suitors.find((s) => s.userId === top?.[0]) ?? null;
     return (
       <div className="rounded-xl border border-gold/40 bg-zinc-900/50 p-6 text-center">
-        <p className="text-4xl">💘</p>
-        <h2 className="mt-3 text-2xl font-extrabold">The room is done.</h2>
+        <p className="text-club text-4xl">💘</p>
+        <h2 className="font-header text-cyan mt-3 text-2xl">The room is done.</h2>
         {winner ? (
           <>
-            <p className="mx-auto mt-2 max-w-md text-sm text-cyan">
+            <p className="mx-auto mt-2 max-w-md text-sm text-club">
               Your winner, with {top[1]} mark{top[1] === 1 ? '' : 's'} —{' '}
               <span className="font-bold text-gold">{winner.displayName ?? 'your date'}</span>.
               The rest of the room paid for the chance, that&apos;s on their
@@ -217,7 +217,7 @@ export default function BlindDateHost({
             )}
           </>
         ) : (
-          <p className="mx-auto mt-2 max-w-md text-sm text-cyan">
+          <p className="mx-auto mt-2 max-w-md text-sm text-club">
             No marks were handed out, so everyone was refunded.
           </p>
         )}
@@ -263,7 +263,7 @@ export default function BlindDateHost({
         >
           {roundLabel}
         </p>
-        <p className="mt-1 text-sm text-cyan">
+        <p className="mt-1 text-sm text-club">
           {phase === 'question' && 'Ask anything — it goes to all of them.'}
           {phase === 'answer' && 'Their answers land under each face.'}
           {phase === 'selection' && 'Give one mark to the answer you liked best.'}
@@ -306,10 +306,10 @@ export default function BlindDateHost({
 
       {round?.question && phase !== 'question' && (
         <div className="mt-6 rounded-lg border border-gold/30 bg-gold/5 px-4 py-3 text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold">
+          <p className="text-club text-xs font-bold uppercase tracking-[0.2em]">
             The question
           </p>
-          <p className="mt-1 text-sm text-white">“{round.question}”</p>
+          <p className="mt-1 text-sm text-club">“{round.question}”</p>
         </div>
       )}
 
@@ -332,7 +332,7 @@ export default function BlindDateHost({
                 alt=""
                 className="mx-auto h-20 w-16 rounded-lg object-cover blur-[3px]"
               />
-              <p className="mt-2 text-xs font-bold text-white">
+              <p className="mt-2 text-xs font-bold text-club">
                 {s.displayName ?? 'Gentleman'}
               </p>
               <div className="mt-1 flex items-center justify-center gap-2 text-xs">
@@ -358,7 +358,7 @@ export default function BlindDateHost({
         })}
       </div>
 
-      <p className="mt-6 text-center text-xs text-cyan">
+      <p className="mt-6 text-center text-xs text-club">
         The seat costs {tokenCost} tokens for them — you host free. Most marks
         at the end wins the date.
       </p>

@@ -555,11 +555,11 @@ export default function OwnerPage() {
     return (
       <div className="bg-black">
         <div className="mx-auto max-w-md px-6 py-20">
-          <p className="text-center text-5xl">🦁</p>
-          <h1 className="mt-4 text-center text-3xl font-extrabold">
+          <p className="text-center text-5xl text-club">🦁</p>
+          <h1 className="font-hero text-gold mt-4 text-center text-3xl">
             The Lions Den
           </h1>
-          <p className="mt-2 text-center text-sm text-cyan">
+          <p className="mt-2 text-center text-sm text-club">
             The owner&apos;s office. If this is you, it opens on its own — no
             key needed.
           </p>
@@ -585,7 +585,7 @@ export default function OwnerPage() {
             <div className="h-px flex-1 bg-zinc-800" />
           </div>
 
-          <p className="text-center text-sm text-cyan">
+          <p className="text-center text-sm text-club">
             The door&apos;s still open. Leave a message and the owner gets back
             to you.
           </p>
@@ -622,7 +622,7 @@ export default function OwnerPage() {
           </form>
           {msg && (
             <p
-              className={`mt-4 text-center text-sm ${
+              className={`text-club mt-4 text-center text-sm ${
                 msg.ok ? 'text-emerald-400' : 'text-club'
               }`}
             >
@@ -639,8 +639,8 @@ export default function OwnerPage() {
       <div className="mx-auto max-w-4xl px-6 py-16">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-extrabold">🦁 The Lions Den</h1>
-            <p className="mt-1 text-sm text-cyan">
+            <h1 className="font-hero text-gold text-3xl">🦁 The Lions Den</h1>
+            <p className="mt-1 text-sm text-club">
               The club from one seat — mint, announce, and keep the floors
               moving.
             </p>
@@ -665,7 +665,7 @@ export default function OwnerPage() {
 
         {msg && (
           <p
-            className={`mt-3 text-sm ${msg.ok ? 'text-emerald-400' : 'text-club'}`}
+            className={`text-club mt-3 text-sm ${msg.ok ? 'text-emerald-400' : 'text-club'}`}
           >
             {msg.text}
           </p>
@@ -687,10 +687,10 @@ export default function OwnerPage() {
               key={m.label}
               className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 text-center"
             >
-              <p className="text-2xl font-extrabold text-white">
+              <p className="text-2xl font-extrabold text-club">
                 {m.icon} {m.value.toLocaleString()}
               </p>
-              <p className="mt-1 text-[11px] uppercase tracking-wider text-cyan">
+              <p className="mt-1 text-[11px] uppercase tracking-wider text-club">
                 {m.label}
               </p>
             </div>
@@ -700,7 +700,7 @@ export default function OwnerPage() {
         {/* Fresh codes */}
         {fresh.length > 0 && (
           <div className="mt-6 rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-5">
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-emerald-400">
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-club">
               New codes — hand these out
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -720,9 +720,9 @@ export default function OwnerPage() {
 
         {/* Flags */}
         <div className="mt-8">
-          <h2 className="text-lg font-bold">🚩 The flag job</h2>
+          <h2 className="font-header text-cyan text-lg">🚩 The flag job</h2>
           {flags.length === 0 ? (
-            <p className="mt-2 text-sm text-cyan">
+            <p className="mt-2 text-sm text-club">
               No open flags. The cast hasn&apos;t needed the owner.
             </p>
           ) : (
@@ -732,7 +732,7 @@ export default function OwnerPage() {
                   key={f.id}
                   className="rounded-xl border border-club/30 bg-zinc-900/60 p-4"
                 >
-                  <p className="text-sm">
+                  <p className="text-sm text-club">
                     <span className="font-bold">
                       {f.characters?.name ?? f.actor_ref ?? 'A cast member'}
                     </span>{' '}
@@ -745,10 +745,10 @@ export default function OwnerPage() {
                       {f.profiles?.display_name ?? 'a member'}
                     </span>
                   </p>
-                  <p className="mt-1 text-sm italic text-cyan">
+                  <p className="mt-1 text-sm italic text-club">
                     “{f.reason}”
                   </p>
-                  <p className="mt-1 text-xs text-cyan">
+                  <p className="mt-1 text-xs text-club">
                     {new Date(f.created_at).toLocaleString()}
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -782,12 +782,12 @@ export default function OwnerPage() {
 
         {/* The safety desk — reports needing a human */}
         <div className="mt-8">
-          <h2 className="text-lg font-bold">🛡️ The safety desk</h2>
-          <p className="mt-1 text-sm text-cyan">
+          <h2 className="font-header text-cyan text-lg">🛡️ The safety desk</h2>
+          <p className="mt-1 text-sm text-club">
             Reports DateSafe couldn&apos;t settle — your call is the final word.
           </p>
           {reports.length === 0 ? (
-            <p className="mt-2 text-sm text-cyan">
+            <p className="mt-2 text-sm text-club">
               Nothing on the desk. DateSafe cleared the queue.
             </p>
           ) : (
@@ -797,14 +797,14 @@ export default function OwnerPage() {
                   key={r.id}
                   className="rounded-xl border border-club/30 bg-zinc-900/60 p-4"
                 >
-                  <p className="text-sm">
+                  <p className="text-sm text-club">
                     <span className="font-bold">Report #{r.id}</span>{' '}
                     <span className="text-cyan">
                       · {new Date(r.created_at).toLocaleString()}
                     </span>
                   </p>
-                  <p className="mt-1 text-sm">“{r.reason}”</p>
-                  <p className="mt-1 text-xs text-cyan">
+                  <p className="mt-1 text-sm text-club">“{r.reason}”</p>
+                  <p className="mt-1 text-xs text-club">
                     {r.verdict === 'violation'
                       ? '🛑 flagged as violation'
                       : '❔ inconclusive'}{' '}
@@ -814,7 +814,7 @@ export default function OwnerPage() {
                       : ''}
                     {r.review_summary ? ` — ${r.review_summary}` : ''}
                   </p>
-                  <p className="mt-0.5 font-mono text-[10px] text-cyan">
+                  <p className="mt-0.5 font-mono text-[10px] text-club">
                     member {r.reported_id.slice(0, 8)}…
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -841,8 +841,8 @@ export default function OwnerPage() {
 
         {/* The banned list — the door refuses these emails */}
         <div className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-          <h2 className="font-bold">⛔ The banned list</h2>
-          <p className="mt-1 text-xs text-cyan">
+          <h2 className="font-header text-cyan">⛔ The banned list</h2>
+          <p className="mt-1 text-xs text-club">
             The door checks this at signup and sign-in. 0 years = lifetime.
           </p>
           <form
@@ -917,7 +917,7 @@ export default function OwnerPage() {
 
         {/* Generate codes */}
         <div className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-          <h2 className="font-bold">🎟️ Generate swag codes</h2>
+          <h2 className="font-header text-cyan">🎟️ Generate swag codes</h2>
           <form
             onSubmit={generate}
             className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4"
@@ -977,7 +977,7 @@ export default function OwnerPage() {
         {/* Announcement — the floor marquee */}
         <div className="mt-6 rounded-xl border border-gold/30 bg-zinc-900/50 p-6">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="font-bold">📢 Floor announcement</h2>
+            <h2 className="font-header text-cyan">📢 Floor announcement</h2>
             <button
               onClick={clearAnnounce}
               disabled={busy}
@@ -987,7 +987,7 @@ export default function OwnerPage() {
             </button>
           </div>
           {announcement && (
-            <p className="mt-3 rounded-lg border border-gold/30 bg-gold/5 px-4 py-2 text-sm text-gold">
+            <p className="mt-3 rounded-lg border border-gold/30 bg-gold/5 px-4 py-2 text-sm text-club">
               Live now: “{announcement.message}” ·{' '}
               <span className="uppercase">{announcement.display_style}</span> ·{' '}
               {announcement.ends_at
@@ -1033,8 +1033,8 @@ export default function OwnerPage() {
 
         {/* Model switch — failover without a redeploy */}
         <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-          <h2 className="font-bold">🤖 Model switch</h2>
-          <p className="mt-1 text-xs text-cyan">
+          <h2 className="font-header text-cyan">🤖 Model switch</h2>
+          <p className="mt-1 text-xs text-club">
             Swap a down model in seconds. Keys stay in env — this only changes
             which model is called.
           </p>
@@ -1097,8 +1097,8 @@ export default function OwnerPage() {
 
         {/* Floor status — close a section */}
         <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-          <h2 className="font-bold">🚧 Floor status</h2>
-          <p className="mt-1 text-xs text-cyan">
+          <h2 className="font-header text-cyan">🚧 Floor status</h2>
+          <p className="mt-1 text-xs text-club">
             Put a floor under construction — the elevators show the notice
             instead of the room.
           </p>
@@ -1186,9 +1186,9 @@ export default function OwnerPage() {
 
         {/* Unpurchased memberships */}
         <div className="mt-8">
-          <h2 className="text-lg font-bold">🪪 Verified, no card yet</h2>
+          <h2 className="font-header text-cyan text-lg">🪪 Verified, no card yet</h2>
           {unpurchased.length === 0 ? (
-            <p className="mt-2 text-sm text-cyan">
+            <p className="mt-2 text-sm text-club">
               Everyone verified has a card. Quiet night at the exchange.
             </p>
           ) : (
@@ -1198,10 +1198,10 @@ export default function OwnerPage() {
                   key={p.id}
                   className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3"
                 >
-                  <p className="font-bold text-white">
+                  <p className="font-bold text-club">
                     {p.display_name ?? 'Unnamed member'}
                   </p>
-                  <p className="mt-0.5 text-xs text-cyan">
+                  <p className="mt-0.5 text-xs text-club">
                     Verified{' '}
                     {p.verified_at
                       ? new Date(p.verified_at).toLocaleDateString()
@@ -1216,7 +1216,7 @@ export default function OwnerPage() {
 
         {/* Grant directly */}
         <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-          <h2 className="font-bold">🎁 Grant directly (no code)</h2>
+          <h2 className="font-header text-cyan">🎁 Grant directly (no code)</h2>
           <form
             onSubmit={grantDirect}
             className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4"
@@ -1268,7 +1268,7 @@ export default function OwnerPage() {
 
         {/* Rules */}
         <div className="mt-8">
-          <h2 className="text-lg font-bold">📋 The rule set</h2>
+          <h2 className="font-header text-cyan text-lg">📋 The rule set</h2>
           <div className="mt-3 overflow-x-auto rounded-xl border border-zinc-800">
             <table className="w-full text-sm">
               <thead className="bg-zinc-900 text-left text-xs uppercase tracking-wider text-cyan">
@@ -1302,10 +1302,10 @@ export default function OwnerPage() {
 
         {/* Events on the floor — who's in, what's running */}
         <div className="mt-8">
-          <h2 className="text-lg font-bold">📅 Events on the floor</h2>
+          <h2 className="font-header text-cyan text-lg">📅 Events on the floor</h2>
           <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {events.length === 0 && (
-              <p className="text-sm text-cyan">
+              <p className="text-sm text-club">
                 Nothing scheduled in the next 6 hours.
               </p>
             )}
@@ -1314,10 +1314,10 @@ export default function OwnerPage() {
                 key={e.id}
                 className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3"
               >
-                <p className="text-sm font-bold capitalize text-white">
+                <p className="text-sm font-bold capitalize text-club">
                   {e.kind.replace(/_/g, ' ')} · {e.floor}
                 </p>
-                <p className="mt-0.5 text-xs text-cyan">
+                <p className="mt-0.5 text-xs text-club">
                   {new Date(e.starts_at).toLocaleString()} · {e.token_cost}{' '}
                   tokens · {e.entrants} in ·{' '}
                   <span className="uppercase">{e.status}</span>
@@ -1329,10 +1329,10 @@ export default function OwnerPage() {
 
         {/* Loot ledger — the token flow */}
         <div className="mt-8">
-          <h2 className="text-lg font-bold">🪙 Loot ledger</h2>
+          <h2 className="font-header text-cyan text-lg">🪙 Loot ledger</h2>
           <div className="mt-3 space-y-1.5">
             {ledger.length === 0 && (
-              <p className="text-sm text-cyan">No movement yet.</p>
+              <p className="text-sm text-club">No movement yet.</p>
             )}
             {ledger.map((r) => (
               <div
@@ -1360,16 +1360,16 @@ export default function OwnerPage() {
 
         {/* Gift shop catalog — quick look */}
         <div className="mt-8">
-          <h2 className="text-lg font-bold">🎁 Gift shop catalog</h2>
+          <h2 className="font-header text-cyan text-lg">🎁 Gift shop catalog</h2>
           <div className="mt-3 grid gap-2 sm:grid-cols-3 lg:grid-cols-5">
             {catalog.map((g) => (
               <div
                 key={g.id}
                 className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3 text-center"
               >
-                <p className="text-2xl">{g.emoji}</p>
-                <p className="mt-1 text-xs font-bold text-white">{g.name}</p>
-                <p className="text-xs text-cyan">{g.token_cost} tokens</p>
+                <p className="text-2xl text-club">{g.emoji}</p>
+                <p className="mt-1 text-xs font-bold text-club">{g.name}</p>
+                <p className="text-xs text-club">{g.token_cost} tokens</p>
               </div>
             ))}
           </div>
@@ -1378,10 +1378,10 @@ export default function OwnerPage() {
         {/* Recent codes + grants */}
         <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
           <div>
-            <h2 className="text-lg font-bold">🎟️ Recent codes</h2>
+            <h2 className="font-header text-cyan text-lg">🎟️ Recent codes</h2>
             <div className="mt-3 space-y-2">
               {codes.length === 0 && (
-                <p className="text-sm text-cyan">None yet.</p>
+                <p className="text-sm text-club">None yet.</p>
               )}
               {codes.map((c) => (
                 <div
@@ -1409,17 +1409,17 @@ export default function OwnerPage() {
             </div>
           </div>
           <div>
-            <h2 className="text-lg font-bold">📜 Recent grants</h2>
+            <h2 className="font-header text-cyan text-lg">📜 Recent grants</h2>
             <div className="mt-3 space-y-2">
               {grants.length === 0 && (
-                <p className="text-sm text-cyan">None yet.</p>
+                <p className="text-sm text-club">None yet.</p>
               )}
               {grants.map((g) => (
                 <div
                   key={g.id}
                   className="rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2 text-sm"
                 >
-                  <p>
+                  <p className="text-club">
                     <span className="font-bold">
                       {g.profiles?.display_name ?? 'a member'}
                     </span>{' '}
@@ -1428,7 +1428,7 @@ export default function OwnerPage() {
                       {label(g.benefit_type, g.benefit_value)}
                     </span>
                   </p>
-                  <p className="text-xs text-cyan">
+                  <p className="text-xs text-club">
                     {g.reason} · {g.actor_type}
                     {g.actor_ref ? `/${g.actor_ref}` : ''} ·{' '}
                     {new Date(g.created_at).toLocaleString()}
@@ -1450,7 +1450,7 @@ export default function OwnerPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-extrabold">⚒️ The Mint</h2>
+                <h2 className="font-header text-cyan text-xl">⚒️ The Mint</h2>
                 <button
                   onClick={() => setMintOpen(false)}
                   className="text-cyan hover:text-white"
@@ -1458,7 +1458,7 @@ export default function OwnerPage() {
                   ✕
                 </button>
               </div>
-              <p className="mt-1 text-sm text-cyan">
+              <p className="mt-1 text-sm text-club">
                 Pick what a member needs — one code prints it all.
               </p>
 
@@ -1564,7 +1564,7 @@ export default function OwnerPage() {
 
               {mintFresh.length > 0 && (
                 <div className="mt-5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-4">
-                  <p className="text-xs font-bold uppercase tracking-[0.3em] text-emerald-400">
+                  <p className="text-xs font-bold uppercase tracking-[0.3em] text-club">
                     Printed — hand these out
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">

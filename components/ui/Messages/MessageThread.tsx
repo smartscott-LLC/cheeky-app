@@ -262,14 +262,14 @@ export default function MessageThread({
             )}
           </div>
           <div>
-            <p className="font-bold">{other.display_name}</p>
+            <p className="text-club font-bold">{other.display_name}</p>
             {other.verified_at && (
               <p className="text-xs font-bold uppercase tracking-wide text-club">
                 Verified
               </p>
             )}
             {certificateMode && (
-              <p className="text-xs font-bold uppercase tracking-wide text-platinum">
+              <p className="text-club text-xs font-bold uppercase tracking-wide">
                 💎 Certificate match
               </p>
             )}
@@ -280,7 +280,7 @@ export default function MessageThread({
               </p>
             )}
             {declined && (
-              <p className="text-xs text-cyan">Song over — chat closed</p>
+              <p className="text-xs text-club">Song over — chat closed</p>
             )}
           </div>
         </div>
@@ -336,8 +336,8 @@ export default function MessageThread({
         <div className="border-b border-gold/20 bg-gradient-to-r from-gold/20 via-zinc-900 to-club/10 px-4 py-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-bold text-gold">🍾 A Gift Date</p>
-              <p className="text-xs text-cyan">
+              <p className="text-club text-sm font-bold">🍾 A Gift Date</p>
+              <p className="text-xs text-club">
                 This room is yours for the next two hours
                 {giftFloor && giftFloor !== 'standard' && giftFloor !== 'silver'
                   ? ` — explore the ${giftFloor} floor together`
@@ -357,10 +357,10 @@ export default function MessageThread({
         <div className="border-b border-platinum/20 bg-platinum-navy px-4 py-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-bold text-platinum-alice">
+              <p className="text-club text-sm font-bold">
                 💎 Speed Dating Certificate Match
               </p>
-              <p className="text-xs text-platinum/70">
+              <p className="text-xs text-club">
                 You two picked each other on the Speed Dating floor — this chat
                 is certified. No one else gets this room.
               </p>
@@ -400,7 +400,7 @@ export default function MessageThread({
       {/* Post-song decision */}
       {songOver && !declined && !blocked && (
         <div className="border-b border-zinc-800 bg-zinc-900 p-4 text-center">
-          <p className="text-sm font-bold">The song&apos;s over. What now?</p>
+          <p className="text-club text-sm font-bold">The song&apos;s over. What now?</p>
           <div className="mt-3 flex justify-center gap-3">
             <button
               onClick={() => handleResolve(true)}
@@ -421,7 +421,7 @@ export default function MessageThread({
       )}
 
       {declined && (
-        <p className="border-b border-zinc-800 px-4 py-2 text-center text-xs text-cyan">
+        <p className="border-b border-zinc-800 px-4 py-2 text-center text-xs text-club">
           The song is over and the chat is closed. No follow-ups — that&apos;s
           the rule of the floor.
         </p>
@@ -429,7 +429,7 @@ export default function MessageThread({
 
       {reportOpen && !blocked && !declined && (
         <div className="border-b border-zinc-800 bg-zinc-900 p-4">
-          <p className="mb-2 text-sm font-bold">Report {other.display_name}</p>
+          <p className="text-club mb-2 text-sm font-bold">Report {other.display_name}</p>
           <div className="flex flex-wrap gap-2">
             {REPORT_REASONS.map((reason) => (
               <button
@@ -469,7 +469,7 @@ export default function MessageThread({
       {/* Messages */}
       <div className="flex-1 space-y-3 overflow-y-auto p-4">
         {messages.length === 0 && (
-          <p className="pt-10 text-center text-cyan">
+          <p className="pt-10 text-center text-club">
             {blocked
               ? 'This conversation is blocked.'
               : songMode
@@ -522,7 +522,7 @@ export default function MessageThread({
       <div className="border-t border-zinc-800 p-4">
         {error && <p className="mb-2 text-xs text-club">{error}</p>}
         {blocked ? (
-          <p className="text-sm text-cyan">Blocked. No more messages.</p>
+          <p className="text-sm text-club">Blocked. No more messages.</p>
         ) : declined ? (
           <Link
             href="/events"

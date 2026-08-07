@@ -71,7 +71,7 @@ export default function Pricing({
       <section className="bg-black">
         <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
           <div className="sm:flex sm:flex-col sm:align-center"></div>
-          <p className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
+          <p className="text-club text-4xl font-extrabold sm:text-center sm:text-6xl">
             No subscription pricing plans found. Create them in your{' '}
             <a
               className="text-club underline"
@@ -92,10 +92,10 @@ export default function Pricing({
       <section className="bg-black">
         <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
           <div className="sm:flex sm:flex-col sm:align-center">
-            <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
+            <h1 className="font-hero text-gold text-4xl sm:text-center sm:text-6xl">
               Get your card
             </h1>
-            <p className="max-w-2xl m-auto mt-5 text-xl text-cyan sm:text-center sm:text-2xl">
+            <p className="max-w-2xl m-auto mt-5 text-xl text-club sm:text-center sm:text-2xl">
               Everyone gets in with a verified ID — free. Expand your options by
               obtaining membership to the higher floors.
             </p>
@@ -155,11 +155,11 @@ export default function Pricing({
                   )}
                 >
                   <div className="p-6">
-                    <h2 className="text-2xl font-semibold leading-6 text-white">
+                    <h2 className="font-header text-cyan text-2xl leading-6">
                       {product.name}
                     </h2>
-                    <p className="mt-4 text-cyan">{product.description}</p>
-                    <p className="mt-8">
+                    <p className="mt-4 text-club">{product.description}</p>
+                    <p className="text-club mt-8">
                       <span className="text-5xl font-extrabold white">
                         {priceString}
                       </span>
@@ -196,7 +196,7 @@ export default function Pricing({
           {/* Messaging is the room, never a product. */}
           <div className="mx-auto mt-14 max-w-3xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-center">
             <p className="text-3xl">💬</p>
-            <h2 className="mt-3 text-xl font-extrabold">
+            <h2 className="font-header text-cyan mt-3 text-xl">
               Messaging is never for sale
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-sm text-club">
@@ -206,35 +206,35 @@ export default function Pricing({
             </p>
             <div className="mt-6 grid grid-cols-1 gap-3 text-left sm:grid-cols-2">
               <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">
-                <p className="text-xs font-bold uppercase tracking-wide text-silver">
+                <p className="text-club text-xs font-bold uppercase tracking-wide">
                   Silver — free
                 </p>
-                <p className="mt-1 text-sm text-cyan">
+                <p className="mt-1 text-sm text-club">
                   30 messages + 5 new conversations a day. Generous on purpose,
                   never shrunk.
                 </p>
               </div>
               <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">
-                <p className="text-xs font-bold uppercase tracking-wide text-gold">
+                <p className="text-club text-xs font-bold uppercase tracking-wide">
                   Gold
                 </p>
-                <p className="mt-1 text-sm text-cyan">
+                <p className="mt-1 text-sm text-club">
                   75 messages + 15 new people a day.
                 </p>
               </div>
               <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">
-                <p className="text-xs font-bold uppercase tracking-wide text-platinum">
+                <p className="text-club text-xs font-bold uppercase tracking-wide">
                   Platinum
                 </p>
-                <p className="mt-1 text-sm text-cyan">
+                <p className="mt-1 text-sm text-club">
                   Unlimited messages + 40 new people a day.
                 </p>
               </div>
               <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">
-                <p className="text-xs font-bold uppercase tracking-wide text-diamond">
+                <p className="text-club text-xs font-bold uppercase tracking-wide">
                   Diamond
                 </p>
-                <p className="mt-1 text-sm text-cyan">
+                <p className="mt-1 text-sm text-club">
                   Unlimited messages + 100 new people a day.
                 </p>
               </div>

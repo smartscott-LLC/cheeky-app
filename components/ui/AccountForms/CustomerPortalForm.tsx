@@ -58,9 +58,9 @@ export default function CustomerPortalForm({
     <div className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="min-w-0">
-          <h2 className="text-xl font-bold">Membership</h2>
+          <h2 className="font-header text-cyan text-xl">Membership</h2>
           {subscription ? (
-            <p className="mt-1 text-cyan">
+            <p className="mt-1 text-club">
               Your {subscription.prices?.products?.name} plan is active —{' '}
               <span className="font-semibold text-gold">
                 {subscriptionPrice}/{subscription.prices?.interval}
@@ -68,12 +68,12 @@ export default function CustomerPortalForm({
               . Cancel anytime, one click, no scripts.
             </p>
           ) : tier !== 'standard' ? (
-            <p className="mt-1 text-cyan">
+            <p className="mt-1 text-club">
               Your <span className="font-semibold text-gold">{tierLabel}</span>{' '}
               membership is active.
             </p>
           ) : (
-            <p className="mt-1 text-cyan">
+            <p className="mt-1 text-club">
               You&apos;re on the Silver floor — free, and it stays fun. When you
               want the view from up top, the memberships are waiting.
             </p>

@@ -33,10 +33,10 @@ export default function ContactPage() {
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-3xl px-6 py-16">
-        <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
+        <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           📞 Talk to the Club
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
+        <p className="text-club mx-auto mt-3 max-w-xl text-center">
           A real human reads every desk. Pick the one that fits and we&apos;ll
           route it right — usually a same-day reply.
         </p>
@@ -49,15 +49,15 @@ export default function ContactPage() {
               className="block rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 transition hover:border-club/50"
             >
               <p className="font-bold text-club">{d.label}</p>
-              <p className="mt-1 text-sm text-cyan">{d.body}</p>
-              <p className="mt-2 text-sm font-semibold text-white underline decoration-club/50">
+              <p className="text-club mt-1 text-sm">{d.body}</p>
+              <p className="text-club mt-2 text-sm font-semibold underline decoration-club/50">
                 {d.email}
               </p>
             </a>
           ))}
         </div>
 
-        <p className="mt-8 text-xs text-cyan">
+        <p className="text-club mt-8 text-xs">
           Emails are fielded through our parent mailbox (smartscott.com) and
           routed to the right desk. If it&apos;s an emergency involving someone
           &apos;s immediate safety, contact local emergency services first —

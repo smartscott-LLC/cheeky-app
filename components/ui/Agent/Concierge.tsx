@@ -192,7 +192,7 @@ export default function Concierge() {
         <div className="fixed bottom-24 right-5 z-50 flex h-[560px] max-h-[70vh] w-[380px] max-w-[calc(100vw-2.5rem)] flex-col overflow-hidden rounded-2xl border border-zinc-700 bg-zinc-950 shadow-2xl">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-900 px-4 py-3">
-            <p className="text-sm font-bold">
+            <p className="text-club text-sm font-bold">
               {chaz.name}{' '}
               <span className="text-xs font-semibold text-cyan">
                 · Club Manager
@@ -218,8 +218,8 @@ export default function Concierge() {
               />
             </div>
             <div>
-              <p className="font-bold">{chaz.name}</p>
-              <p className="text-xs text-cyan">{chaz.role}</p>
+              <p className="text-club font-bold">{chaz.name}</p>
+              <p className="text-xs text-club">{chaz.role}</p>
             </div>
           </div>
 
@@ -230,7 +230,7 @@ export default function Concierge() {
             className="flex-1 space-y-3 overflow-y-auto p-4"
           >
             {messages.length === 0 && (
-              <p className="pt-6 text-center text-sm text-cyan">
+              <p className="pt-6 text-center text-sm text-club">
                 {chaz.tagline ?? `Talk to ${chaz.name}.`}
               </p>
             )}
@@ -251,7 +251,7 @@ export default function Concierge() {
               </div>
             ))}
             {busy && (
-              <p className="text-sm text-cyan">{TYPING[typingIdx]}…</p>
+              <p className="text-sm text-club">{TYPING[typingIdx]}…</p>
             )}
           </div>
 

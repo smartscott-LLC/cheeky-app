@@ -55,7 +55,7 @@ export default function AnnouncementBanner() {
           href={announcement.link}
           target="_blank"
           rel="noreferrer"
-          className="w-full text-center"
+          className="text-club w-full text-center"
         >
           {content}
         </a>

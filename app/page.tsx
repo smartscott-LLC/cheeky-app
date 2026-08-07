@@ -76,10 +76,10 @@ export default async function LandingPage() {
           <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
             A dating app built like a nightclub
           </p>
-          <h1 className="mx-auto mt-6 max-w-3xl text-5xl font-extrabold leading-tight sm:text-7xl">
+          <h1 className="font-hero text-gold mx-auto mt-6 max-w-3xl text-5xl leading-tight sm:text-7xl">
             Looking for your next crush?
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-xl text-cyan sm:text-2xl">
+          <p className="mx-auto mt-4 max-w-2xl text-xl text-club sm:text-2xl">
             Find your next date in our virtual nightclub.
           </p>
 
@@ -96,11 +96,11 @@ export default async function LandingPage() {
             </div>
           </div>
 
-          <p className="mt-12 text-2xl font-extrabold sm:text-3xl">
+          <p className="mt-12 text-2xl font-extrabold text-club sm:text-3xl">
             At Club Cheeky&apos;s,{' '}
             <span className="text-club">you are the VIP.</span>
           </p>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-cyan">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-club">
             Everyone with an ID starts their own VIP adventure. It&apos;s free
             to get your groove on — money buys floors, never entry.
           </p>
@@ -113,7 +113,7 @@ export default async function LandingPage() {
             </a>
             <a
               href="#membership"
-              className="rounded-lg border-2 border-gold px-10 py-4 text-lg font-extrabold uppercase tracking-[0.12em] text-gold transition hover:bg-gold/10"
+              className="rounded-lg border-2 border-gold px-10 py-4 text-lg font-extrabold uppercase tracking-[0.12em] text-club transition hover:bg-gold/10"
             >
               See the floors
             </a>
@@ -124,7 +124,7 @@ export default async function LandingPage() {
       {/* How it works */}
       <section className="border-t border-zinc-900">
         <div className="mx-auto max-w-6xl px-6 py-20">
-          <h2 className="text-center text-3xl font-extrabold sm:text-4xl">
+          <h2 className="font-header text-cyan text-center text-3xl sm:text-4xl">
             How the club works
           </h2>
           <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
@@ -150,7 +150,7 @@ export default async function LandingPage() {
                 className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8"
               >
                 <p className="mt-3 text-sm font-bold text-club">{item.step}</p>
-                <h3 className="mt-3 text-xl font-bold">{item.title}</h3>
+                <h3 className="font-header text-cyan mt-3 text-xl">{item.title}</h3>
                 <p className="mt-3 text-club">{item.body}</p>
               </div>
             ))}
@@ -164,12 +164,12 @@ export default async function LandingPage() {
           <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
             The Hourly Playlist
           </p>
-          <h2 className="mx-auto mt-4 max-w-2xl text-3xl font-extrabold sm:text-4xl">
+          <h2 className="font-header text-cyan mx-auto mt-4 max-w-2xl text-3xl sm:text-4xl">
             Every hour, every quarter: the Dance Floor at :00, Speed Dating at
             :30, the Rooftop at :45 — and Blind Date, whenever the Gold
             floor&apos;s hostess opens the door.
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-lg text-cyan">
+          <p className="mx-auto mt-5 max-w-xl text-lg text-club">
             Four floors, four rooms, one hour — a Diamond plays the whole set.
             Everyone&apos;s photo hits the grid. Pick the ones you like. When
             two people pick each other — instant match, center floor, announced.
@@ -184,7 +184,7 @@ export default async function LandingPage() {
         className="scroll-mt-24 border-t border-zinc-900"
       >
         <div className="mx-auto max-w-6xl px-6 py-20">
-          <h2 className="text-center text-3xl font-extrabold sm:text-4xl">
+          <h2 className="font-header text-cyan text-center text-3xl sm:text-4xl">
             The floors
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-center text-lg text-club">
@@ -208,13 +208,13 @@ export default async function LandingPage() {
                 />
                 <div className="p-6">
                   <div className={`h-3 w-3 rounded-full ${floor.color}`} />
-                  <h3 className="mt-4 text-xl font-bold">{floor.name}</h3>
+                  <h3 className="font-header text-cyan mt-4 text-xl">{floor.name}</h3>
                   <p className="mt-1 text-sm font-semibold text-club">
                     {floor.price}
                   </p>
                   <ul className="mt-4 space-y-2 text-sm text-club">
                     {floor.perks.map((perk) => (
-                      <li key={perk}>• {perk}</li>
+                      <li key={perk} className="text-club">• {perk}</li>
                     ))}
                   </ul>
                 </div>

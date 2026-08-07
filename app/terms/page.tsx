@@ -76,10 +76,10 @@ export default function TermsPage() {
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-3xl px-6 py-16">
-        <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
+        <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           📜 The Rules of the Club
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
+        <p className="mx-auto mt-3 max-w-xl text-center text-club">
           Terms of Service. Every club has its rules — Brutus enforces these,
           and the code is built to match them.
         </p>
@@ -90,7 +90,7 @@ export default function TermsPage() {
               key={s.num}
               className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6"
             >
-              <h2 className="font-bold">
+              <h2 className="font-header text-cyan">
                 <span className="mr-2 text-club">{s.num}.</span>
                 {s.title}
               </h2>
@@ -98,7 +98,7 @@ export default function TermsPage() {
                 {s.items.map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-3 text-sm text-cyan"
+                    className="flex items-start gap-3 text-sm text-club"
                   >
                     <span className="text-club">✓</span>
                     {item}
@@ -109,12 +109,12 @@ export default function TermsPage() {
           ))}
         </div>
 
-        <p className="mt-8 text-xs text-cyan">
+        <p className="mt-8 text-xs text-club">
           Policy source: docs/Governance/terms.md (binding on the build). Living
           document — refined as the club grows.
         </p>
 
-        <p className="mt-4 text-sm text-cyan">
+        <p className="mt-4 text-sm text-club">
           Questions about the rules? Write the club at{' '}
           <a
             href={`mailto:${CONTACT.clubCheeky}`}

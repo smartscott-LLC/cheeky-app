@@ -53,10 +53,10 @@ export default function SitemapPage() {
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-4xl px-6 py-16">
-        <h1 className="text-center text-3xl font-extrabold sm:text-4xl">
+        <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           🗺️ The Map of the Club
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-cyan">
+        <p className="mx-auto mt-3 max-w-xl text-center text-club">
           Every room in the building, one list. If you can walk it, it&apos;s
           here.
         </p>
@@ -64,12 +64,12 @@ export default function SitemapPage() {
         <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2">
           {GROUPS.map((group) => (
             <div key={group.title}>
-              <h2 className="mb-3 border-b border-zinc-800 pb-2 text-sm font-bold uppercase tracking-widest text-gold">
+              <h2 className="font-header text-cyan mb-3 border-b border-zinc-800 pb-2 text-sm uppercase tracking-widest">
                 {group.title}
               </h2>
               <ul className="space-y-3">
                 {group.items.map((item) => (
-                  <li key={item.href}>
+                  <li key={item.href} className="text-club">
                     <Link
                       href={item.href}
                       className="group block rounded-lg border border-zinc-800 bg-zinc-900/50 p-3 transition hover:border-gold/50 hover:bg-zinc-900"

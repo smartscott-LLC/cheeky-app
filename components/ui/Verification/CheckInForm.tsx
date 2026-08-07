@@ -26,12 +26,12 @@ export default function CheckInForm({ error }: { error?: string | null }) {
           💪
         </div>
         <div>
-          <h2 className="text-2xl font-extrabold">Brutus the Bouncer</h2>
-          <p className="text-sm text-cyan">The Door Check</p>
+          <h2 className="font-header text-cyan text-2xl">Brutus the Bouncer</h2>
+          <p className="text-sm text-club">The Door Check</p>
         </div>
       </div>
 
-      <p className="mt-4 text-sm text-cyan">
+      <p className="mt-4 text-sm text-club">
         One stop: your details and your consents right here, then the ID check —
         then you&apos;re in. Everything at the door, nothing twice.
       </p>
@@ -100,7 +100,7 @@ export default function CheckInForm({ error }: { error?: string | null }) {
             <option value="gentleman">Gentleman</option>
             <option value="lady">Lady</option>
           </select>
-          <p className="text-xs text-cyan">
+          <p className="text-xs text-club">
             The club pairs real gentlemen and real ladies — no surprises.
           </p>
 
@@ -192,7 +192,7 @@ export default function CheckInForm({ error }: { error?: string | null }) {
         </button>
       </form>
 
-      <p className="mt-4 text-center text-sm text-cyan">
+      <p className="mt-4 text-center text-sm text-club">
         Already a member?{' '}
         <Link
           href="/signin"

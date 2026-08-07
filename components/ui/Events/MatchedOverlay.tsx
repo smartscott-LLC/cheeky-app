@@ -73,16 +73,16 @@ export default function MatchedOverlay({ onDone }: MatchedOverlayProps) {
           The floor says
         </p>
         <h1
-          className="mt-4 text-7xl font-black tracking-tight text-white sm:text-9xl"
+          className="font-hero text-gold mt-4 text-7xl tracking-tight sm:text-9xl"
           style={{ animation: 'matchedPulse 1.2s ease-in-out infinite' }}
         >
           MATCHED
         </h1>
-        <p className="mt-6 text-xl text-cyan sm:text-2xl">
+        <p className="mt-6 text-xl text-club sm:text-2xl">
           You have <span className="font-bold text-club">one song</span> to make
           this count.
         </p>
-        <p className="mt-2 text-lg uppercase tracking-[0.3em] text-cyan">
+        <p className="mt-2 text-lg uppercase tracking-[0.3em] text-club">
           Get… your… groove… on!
         </p>
       </div>

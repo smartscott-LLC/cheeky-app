@@ -128,12 +128,12 @@ export default function GiftShop({
       {/* Incoming */}
       {incoming.length > 0 && (
         <div className="mb-8 rounded-xl border border-diamond/30 bg-diamond/5 p-6">
-          <h2 className="text-xl font-bold">💝 Someone sent you a gift</h2>
+          <h2 className="font-header text-cyan text-xl">💝 Someone sent you a gift</h2>
           <ul className="mt-4 space-y-3">
             {incoming.map((g) => (
               <li
                 key={g.id}
-                className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-zinc-800 bg-zinc-900/60 px-4 py-3"
+                className="text-club flex flex-wrap items-center justify-between gap-3 rounded-lg border border-zinc-800 bg-zinc-900/60 px-4 py-3"
               >
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-zinc-800">
@@ -151,10 +151,10 @@ export default function GiftShop({
                     )}
                   </div>
                   <div>
-                    <p className="font-bold">
+                    <p className="text-club font-bold">
                       {g.sender.display_name || 'Member'}
                     </p>
-                    <p className="text-sm text-cyan">
+                    <p className="text-sm text-club">
                       sent you {g.emoji} {g.name}
                     </p>
                   </div>
@@ -188,8 +188,8 @@ export default function GiftShop({
       <div className="grid gap-6 lg:grid-cols-2">
         {/* The store */}
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-          <h2 className="text-xl font-bold">🍸 The Bar</h2>
-          <p className="mt-1 text-sm text-cyan">
+          <h2 className="font-header text-cyan text-xl">🍸 The Bar</h2>
+          <p className="mt-1 text-sm text-club">
             {tokenBalance} tokens · {tierLabel} floor · you can buy your floor
             and below
           </p>
@@ -209,7 +209,7 @@ export default function GiftShop({
               if (floorGifts.length === 0 && !showBasket) return null;
               return (
                 <div key={floor}>
-                  <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-cyan">
+                  <h3 className="font-header text-cyan text-xs uppercase tracking-[0.3em]">
                     {FLOOR_LABEL[floor]} floor
                   </h3>
                   <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -228,8 +228,8 @@ export default function GiftShop({
                             {g.kind === 'featured' ? '✨ Featured' : 'Gesture'}
                           </span>
                         </div>
-                        <p className="mt-2 font-bold">{g.name}</p>
-                        <p className="text-sm text-cyan">{giftPitch(g)}</p>
+                        <p className="text-club mt-2 font-bold">{g.name}</p>
+                        <p className="text-sm text-club">{giftPitch(g)}</p>
                         <button
                           onClick={() =>
                             run(`buy-${g.slug}`, () => buyGift(g.slug))
@@ -255,8 +255,8 @@ export default function GiftShop({
                             Every floor
                           </span>
                         </div>
-                        <p className="mt-2 font-bold">{basket.name}</p>
-                        <p className="text-sm text-cyan">
+                        <p className="text-club mt-2 font-bold">{basket.name}</p>
+                        <p className="text-sm text-club">
                           {giftPitch(basket)}
                         </p>
                         <button
@@ -282,13 +282,13 @@ export default function GiftShop({
         {/* My stash + sent */}
         <div className="space-y-6">
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-            <h2 className="text-xl font-bold">🧥 My stash</h2>
-            <p className="mt-1 text-sm text-cyan">
+            <h2 className="font-header text-cyan text-xl">🧥 My stash</h2>
+            <p className="mt-1 text-sm text-club">
               Your inventory. One offer per hour, and a denied gift comes right
               back here.
             </p>
             {stash.length === 0 ? (
-              <p className="mt-4 text-sm text-cyan">
+              <p className="mt-4 text-sm text-club">
                 Nothing in the stash yet — buy something from the bar.
               </p>
             ) : (
@@ -296,7 +296,7 @@ export default function GiftShop({
                 {stash.map((g) => (
                   <li
                     key={g.id}
-                    className="flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900/60 px-4 py-2.5"
+                    className="text-club flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900/60 px-4 py-2.5"
                   >
                     <span className="text-sm font-semibold">
                       {g.emoji} {g.name}
@@ -317,9 +317,9 @@ export default function GiftShop({
 
             {sendFor && (
               <div className="mt-4 rounded-lg border border-platinum/30 bg-platinum/5 p-4">
-                <p className="text-sm font-bold">Send {sendFor.name} to…</p>
+                <p className="text-club text-sm font-bold">Send {sendFor.name} to…</p>
                 {people.length === 0 ? (
-                  <p className="mt-2 text-sm text-cyan">
+                  <p className="mt-2 text-sm text-club">
                     No one to send to yet — match or chat with someone first.
                   </p>
                 ) : (
@@ -360,12 +360,12 @@ export default function GiftShop({
 
           {sent.length > 0 && (
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-              <h2 className="text-xl font-bold">📬 Out the door</h2>
+              <h2 className="font-header text-cyan text-xl">📬 Out the door</h2>
               <ul className="mt-4 space-y-2">
                 {sent.map((s) => (
                   <li
                     key={s.id}
-                    className="flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900/60 px-4 py-2.5 text-sm"
+                    className="text-club flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900/60 px-4 py-2.5 text-sm"
                   >
                     <span>
                       {s.emoji} {s.name} → {s.recipientName}
