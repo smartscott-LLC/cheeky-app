@@ -46,10 +46,10 @@ export default async function FloorPage({
       <div className="bg-black">
         <div className="mx-auto max-w-2xl px-6 py-16 text-center">
           <p className="text-club text-5xl">🚧</p>
-          <h1 className="font-hero text-gold mt-6 text-3xl">
+          <h1 className="font-hero text-gold mt-6 text-4xl">
             The {floor.name} floor is under construction
           </h1>
-          <p className="text-club mx-auto mt-3 max-w-md">
+          <p className="text-club mx-auto mt-3 max-w-md text-lg">
             {closure?.reason ??
               'The crew is setting up the room — come back soon.'}
           </p>
@@ -71,7 +71,7 @@ export default async function FloorPage({
       <div className="mx-auto max-w-6xl px-6 pt-10">
         <Link
           href="/floors"
-          className="text-sm font-semibold text-club hover:text-white"
+          className="text-base font-semibold text-club hover:text-white"
         >
           ← The floors
         </Link>
@@ -80,10 +80,10 @@ export default async function FloorPage({
       {locked ? (
         <div className="mx-auto max-w-2xl px-6 py-16 text-center">
           <p className="text-club text-5xl">🛗</p>
-          <h1 className="font-hero text-gold mt-6 text-3xl">
+          <h1 className="font-hero text-gold mt-6 text-4xl">
             The {floor.name} floor is behind the rope.
           </h1>
-          <p className="text-club mx-auto mt-3 max-w-md">
+          <p className="text-club mx-auto mt-3 max-w-md text-lg">
             Come see what&apos;s on these floors with a {floor.name} card today
             — the view&apos;s worth it.
           </p>
@@ -106,11 +106,11 @@ export default async function FloorPage({
         <>
           <div className="mx-auto max-w-6xl px-6 pt-6 text-center">
             <p
-              className={`text-club text-sm font-bold uppercase tracking-[0.3em] ${floor.accent}`}
+              className={`text-club text-base font-bold uppercase tracking-[0.3em] ${floor.accent}`}
             >
               The {floor.name} floor
             </p>
-            <p className="text-club mx-auto mt-2 max-w-xl">
+            <p className="text-club mx-auto mt-2 max-w-xl text-lg">
               {floor.tagline}
             </p>
             <div className="mt-5">

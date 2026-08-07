@@ -92,10 +92,10 @@ export default async function ClubPage() {
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-club/50 bg-zinc-900 text-3xl">
             💪
           </div>
-          <h1 className="font-hero text-gold mt-6 text-3xl">
+          <h1 className="font-hero text-gold mt-6 text-4xl">
             The velvet rope is up.
           </h1>
-          <p className="text-club mt-3">
+          <p className="text-club mt-3 text-lg">
             Brutus needs your ID before you walk the floor — free, quick, and
             the VIP badge comes with it.
           </p>
@@ -117,10 +117,10 @@ export default async function ClubPage() {
 
       {/* Where the floors lead */}
       <div className="mx-auto max-w-6xl px-6 py-10 text-center">
-        <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
+        <p className="text-base font-bold uppercase tracking-[0.3em] text-club">
           The hour spins on
         </p>
-        <p className="text-club mx-auto mt-3 max-w-2xl text-lg">
+        <p className="text-club mx-auto mt-3 max-w-2xl text-xl">
           The Dance Floor at :00, Speed Dating at :30, the Rooftop at :45 —
           and Blind Date when the Gold floor&apos;s hostess opens the door. The
           Event Center holds the whole playlist.

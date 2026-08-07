@@ -31,10 +31,10 @@ export default async function FloorsPage() {
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-5xl px-6 py-16">
-        <h1 className="text-center text-3xl font-hero text-gold sm:text-4xl">
+        <h1 className="text-center text-4xl font-hero text-gold sm:text-5xl">
           🛗 The floors
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-club">
+        <p className="mx-auto mt-3 max-w-xl text-center text-lg text-club">
           Every floor is its own room. Pick where you want to go — the elevators
           take you there.
         </p>
@@ -56,9 +56,9 @@ export default async function FloorsPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <p className="font-header text-cyan text-2xl">
+                  <p className="font-header text-cyan text-3xl">
                     {floor.name} floor
-                    <span className="ml-2 text-sm font-semibold text-cyan">
+                    <span className="ml-2 text-base font-semibold text-cyan">
                       {floor.rank === 1
                         ? '· $9.99/mo'
                         : floor.rank === 2
@@ -68,18 +68,18 @@ export default async function FloorsPage() {
                             : '· free'}
                     </span>
                   </p>
-                  <p className="mt-1 text-sm text-club">{floor.tagline}</p>
+                  <p className="mt-1 text-base text-club">{floor.tagline}</p>
                   {locked ? (
-                    <p className="mt-2 text-sm font-bold text-club">
+                    <p className="mt-2 text-base font-bold text-club">
                       Come see what&apos;s on these floors with a {floor.name}{' '}
                       card today.
                     </p>
                   ) : closedFloors.has(floor.slug) ? (
-                    <p className="mt-2 text-sm font-bold text-club">
+                    <p className="mt-2 text-base font-bold text-club">
                       🚧 Under construction
                     </p>
                   ) : (
-                    <p className="mt-2 text-sm font-bold text-club opacity-0 transition group-hover:opacity-100">
+                    <p className="mt-2 text-base font-bold text-club opacity-0 transition group-hover:opacity-100">
                       Step in →
                     </p>
                   )}

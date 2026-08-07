@@ -67,15 +67,15 @@ export default function FloorLayout({
                 spot.emoji
               )}
             </p>
-            <p className="font-header text-cyan mt-1 text-base group-hover:text-white">
+            <p className="font-header text-cyan mt-1 text-lg group-hover:text-white">
               {spot.name}
             </p>
-            <p className="text-xs text-club">{spot.sub}</p>
+            <p className="text-sm text-club">{spot.sub}</p>
           </Link>
         ))}
         <Link
           href={medallionHref}
-          className="absolute bottom-[6%] left-1/2 -translate-x-1/2 rounded-full border border-gold/60 bg-black/70 px-5 py-2 text-sm font-bold text-gold backdrop-blur-sm transition hover:bg-black/90"
+          className="absolute bottom-[6%] left-1/2 -translate-x-1/2 rounded-full border border-gold/60 bg-black/70 px-5 py-2 text-base font-bold text-gold backdrop-blur-sm transition hover:bg-black/90"
         >
           {medallionLabel}
         </Link>
@@ -103,10 +103,10 @@ export default function FloorLayout({
                   spot.emoji
                 )}
               </p>
-              <p className="font-header text-cyan mt-1 text-base">
+              <p className="font-header text-cyan mt-1 text-lg">
                 {spot.name}
               </p>
-              <p className="text-xs text-club">{spot.sub}</p>
+              <p className="text-sm text-club">{spot.sub}</p>
             </Link>
           ))}
         </div>
