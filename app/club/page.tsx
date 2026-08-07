@@ -15,7 +15,7 @@ const SPOTS: FloorSpot[] = [
     name: 'Brutus',
     sub: 'The bouncer',
     color:
-      'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+      'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
     pos: 'left-[6%] top-[8%]'
   },
   {
@@ -24,7 +24,7 @@ const SPOTS: FloorSpot[] = [
     name: 'VIP area',
     sub: 'The silver floor',
     color:
-      'text-cyan border-cyan/50 hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
+      'text-cyan hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
     pos: 'left-[6%] top-[42%]'
   },
   {
@@ -33,7 +33,7 @@ const SPOTS: FloorSpot[] = [
     name: 'Gift Shop',
     sub: 'Buy something',
     color:
-      'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+      'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
     pos: 'right-[6%] top-[42%]'
   },
   {
@@ -42,7 +42,7 @@ const SPOTS: FloorSpot[] = [
     name: 'Cheeky Chats',
     sub: 'Your conversations',
     color:
-      'text-club border-club/50 hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+      'text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
     pos: 'left-[36%] top-[30%]'
   },
   {
@@ -51,7 +51,7 @@ const SPOTS: FloorSpot[] = [
     name: 'The Spark List',
     sub: 'Who\u2019s out tonight',
     color:
-      'text-club border-club/50 hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+      'text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
     pos: 'right-[36%] top-[30%]'
   },
   {
@@ -60,7 +60,7 @@ const SPOTS: FloorSpot[] = [
     name: 'Elevators',
     sub: 'Gold · Platinum · Diamond',
     color:
-      'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+      'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
     pos: 'right-[5%] top-[8%]'
   },
   {
@@ -69,7 +69,7 @@ const SPOTS: FloorSpot[] = [
     name: 'Coat Check',
     sub: 'Your collection',
     color:
-      'text-purple-neon border-purple-neon/50 hover:shadow-[0_0_24px_rgba(155,89,182,0.25)]',
+      'text-purple-neon hover:shadow-[0_0_24px_rgba(155,89,182,0.25)]',
     pos: 'right-[6%] bottom-[10%]'
   }
 ];

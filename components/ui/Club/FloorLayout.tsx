@@ -53,7 +53,7 @@ export default function FloorLayout({
           <Link
             key={spot.name}
             href={spot.href}
-            className={`absolute ${spot.pos} group rounded-xl border bg-black/70 px-5 py-4 backdrop-blur-sm transition hover:bg-black/85 ${spot.color}`}
+            className={`absolute ${spot.pos} group rounded-xl border border-gold bg-black/70 px-5 py-4 backdrop-blur-sm transition hover:bg-black/85 ${spot.color}`}
           >
             <p className="text-club text-2xl">
               {spot.image ? (
@@ -67,7 +67,7 @@ export default function FloorLayout({
                 spot.emoji
               )}
             </p>
-            <p className="text-club mt-1 text-sm font-extrabold uppercase tracking-[0.12em] group-hover:text-white">
+            <p className="font-header text-cyan mt-1 text-base group-hover:text-white">
               {spot.name}
             </p>
             <p className="text-xs text-club">{spot.sub}</p>
@@ -89,7 +89,7 @@ export default function FloorLayout({
             <Link
               key={spot.name}
               href={spot.href}
-              className={`rounded-xl border bg-black/80 p-4 backdrop-blur-sm ${spot.color}`}
+              className={`rounded-xl border border-gold bg-black/80 p-4 backdrop-blur-sm ${spot.color}`}
             >
               <p className="text-club text-2xl">
                 {spot.image ? (
@@ -103,7 +103,7 @@ export default function FloorLayout({
                   spot.emoji
                 )}
               </p>
-              <p className="text-club mt-1 text-sm font-extrabold uppercase tracking-[0.12em]">
+              <p className="font-header text-cyan mt-1 text-base">
                 {spot.name}
               </p>
               <p className="text-xs text-club">{spot.sub}</p>

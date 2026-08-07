@@ -46,11 +46,7 @@ export default async function FloorsPage() {
               <Link
                 key={floor.slug}
                 href={`/floor/${floor.slug}`}
-                className={`group relative overflow-hidden rounded-2xl border transition ${
-                  locked
-                    ? 'border-zinc-800'
-                    : 'border-zinc-700 hover:border-gold'
-                }`}
+                className="group relative overflow-hidden rounded-2xl border border-gold transition"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -60,7 +56,7 @@ export default async function FloorsPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <p className="text-2xl font-extrabold text-club">
+                  <p className="font-header text-cyan text-2xl">
                     {floor.name} floor
                     <span className="ml-2 text-sm font-semibold text-cyan">
                       {floor.rank === 1

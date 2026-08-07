@@ -30,7 +30,7 @@ const CHAT = {
   name: 'Cheeky Chats',
   sub: 'Your conversations',
   color:
-    'text-club border-club/50 hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+    'text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
   pos: 'left-[36%] top-[30%]'
 };
 const SPARK = {
@@ -39,7 +39,7 @@ const SPARK = {
   name: 'The Spark List',
   sub: 'Who\u2019s out tonight',
   color:
-    'text-club border-club/50 hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+    'text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
   pos: 'right-[36%] top-[30%]'
 };
 const GIFT = {
@@ -48,7 +48,7 @@ const GIFT = {
   name: 'Gift Shop',
   sub: 'Buy something',
   color:
-    'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+    'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
   pos: 'right-[6%] top-[42%]'
 };
 const ELEVATORS = {
@@ -57,7 +57,7 @@ const ELEVATORS = {
   name: 'Elevators',
   sub: 'Up or down',
   color:
-    'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+    'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
   pos: 'right-[5%] top-[8%]'
 };
 const CENTER = {
@@ -66,7 +66,7 @@ const CENTER = {
   name: 'Event Center',
   sub: 'The hourly playlist',
   color:
-    'text-cyan border-cyan/50 hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
+    'text-cyan hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
   pos: 'left-1/2 top-[58%] -translate-x-1/2'
 };
 
@@ -80,7 +80,7 @@ const DJ = {
   name: 'The DJ',
   sub: 'D34D_B34T on the decks',
   color:
-    'text-cyan border-cyan/50 hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
+    'text-cyan hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
   pos: 'left-[6%] top-[8%]'
 };
 const ROXY = {
@@ -90,7 +90,7 @@ const ROXY = {
   name: 'Roxy',
   sub: 'The mixologist',
   color:
-    'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+    'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
   pos: 'left-[6%] top-[8%]'
 };
 const TRIXIE = {
@@ -100,7 +100,7 @@ const TRIXIE = {
   name: 'Trixie',
   sub: 'The waitress',
   color:
-    'text-club border-club/50 hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+    'text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
   pos: 'left-[6%] top-[8%]'
 };
 const VALENTINA = {
@@ -110,7 +110,7 @@ const VALENTINA = {
   name: 'Valentina',
   sub: 'The hostess',
   color:
-    'text-diamond border-diamond/50 hover:shadow-[0_0_24px_rgba(251,3,92,0.25)]',
+    'text-diamond hover:shadow-[0_0_24px_rgba(251,3,92,0.25)]',
   pos: 'left-[6%] top-[8%]'
 };
 
@@ -131,7 +131,7 @@ export const FLOORS: FloorMeta[] = [
         name: 'Dance Floor',
         sub: 'The hourly room',
         color:
-          'text-cyan border-cyan/50 hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
+          'text-cyan hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
         pos: 'left-[6%] top-[42%]'
       },
       GIFT,
@@ -156,7 +156,7 @@ export const FLOORS: FloorMeta[] = [
         name: 'Blind Date',
         sub: 'The Gold floor\u2019s signature',
         color:
-          'text-gold border-gold/50 hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+          'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
         pos: 'left-[6%] top-[42%]'
       },
       GIFT,
@@ -181,7 +181,7 @@ export const FLOORS: FloorMeta[] = [
         name: 'Speed Dating',
         sub: 'The Platinum room',
         color:
-          'text-cyan border-cyan/50 hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
+          'text-cyan hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
         pos: 'left-[6%] top-[42%]'
       },
       GIFT,
@@ -206,7 +206,7 @@ export const FLOORS: FloorMeta[] = [
         name: 'The Rooftop',
         sub: 'Closer, higher, fewer',
         color:
-          'text-diamond border-diamond/50 hover:shadow-[0_0_24px_rgba(251,3,92,0.25)]',
+          'text-diamond hover:shadow-[0_0_24px_rgba(251,3,92,0.25)]',
         pos: 'left-[6%] top-[42%]'
       },
       GIFT,
