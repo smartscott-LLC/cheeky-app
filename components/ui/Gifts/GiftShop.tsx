@@ -151,7 +151,7 @@ export default function GiftShop({
                     )}
                   </div>
                   <div>
-                    <p className="text-club font-bold">
+                    <p className="font-header text-cyan text-lg">
                       {g.sender.display_name || 'Member'}
                     </p>
                     <p className="text-base text-club">
@@ -220,12 +220,12 @@ export default function GiftShop({
                       >
                         <div className="flex items-center justify-between">
                           <span className="text-2xl">{g.emoji}</span>
-                          <span className="text-sm font-bold uppercase tracking-wide text-cyan">
+                          <span className="font-hero text-gold text-sm uppercase tracking-wide">
                             {g.kind === 'featured' ? '✨ Featured' : 'Gesture'}
                           </span>
                         </div>
-                        <p className="text-club mt-2 text-xl font-bold">{g.name}</p>
-                        <p className="text-lg text-club">{giftPitch(g)}</p>
+                        <p className="font-header text-cyan mt-2 text-lg">{g.name}</p>
+                        <p className="text-base text-club">{giftPitch(g)}</p>
                         <button
                           onClick={() =>
                             run(`buy-${g.slug}`, () => buyGift(g.slug))
@@ -247,11 +247,11 @@ export default function GiftShop({
                       <div className="rounded-lg border border-gold/40 bg-gold/5 p-4">
                         <div className="flex items-center justify-between">
                           <span className="text-2xl">{basket.emoji}</span>
-                          <span className="text-sm font-bold uppercase tracking-wide text-gold">
+                          <span className="font-hero text-gold text-sm uppercase tracking-wide">
                             Every floor
                           </span>
                         </div>
-                        <p className="text-club mt-2 font-bold">{basket.name}</p>
+                        <p className="font-header text-cyan mt-2 text-lg">{basket.name}</p>
                         <p className="text-base text-club">
                           {giftPitch(basket)}
                         </p>
@@ -294,7 +294,7 @@ export default function GiftShop({
                     key={g.id}
                     className="text-club flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900/60 px-4 py-2.5"
                   >
-                    <span className="text-base font-semibold">
+                    <span className="font-header text-cyan text-base">
                       {g.emoji} {g.name}
                     </span>
                     <button
@@ -313,7 +313,7 @@ export default function GiftShop({
 
             {sendFor && (
               <div className="mt-4 rounded-lg border border-platinum/30 bg-platinum/5 p-4">
-                <p className="text-club text-base font-bold">Send {sendFor.name} to…</p>
+                <p className="font-header text-cyan text-base">Send {sendFor.name} to…</p>
                 {people.length === 0 ? (
                   <p className="mt-2 text-base text-club">
                     No one to send to yet — match or chat with someone first.

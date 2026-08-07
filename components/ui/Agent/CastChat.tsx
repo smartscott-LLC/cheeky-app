@@ -116,7 +116,7 @@ export default function CastChat({ character }: { character: CastCharacter }) {
           />
         </div>
         <div>
-          <p className="text-club text-xl font-extrabold">{character.name}</p>
+          <p className="font-header text-cyan text-xl">{character.name}</p>
           <p className="text-base text-club">{character.role}</p>
         </div>
       </div>

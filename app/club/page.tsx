@@ -3,6 +3,7 @@ import { createClient } from '@/utils/supabase/server';
 import { getProfile, getUser } from '@/utils/supabase/queries';
 import { redirect } from 'next/navigation';
 import FloorLayout, { FloorSpot } from '@/components/ui/Club/FloorLayout';
+import AnnouncementBanner from '@/components/ui/AnnouncementBanner/AnnouncementBanner';
 
 // The lobby — the stopping zone. Floor 1's rooms, positioned per the
 // founder's entrance-scene guide: Dance Floor left (cyan), Gift Shop right
@@ -117,7 +118,8 @@ export default async function ClubPage() {
 
       {/* Where the floors lead */}
       <div className="mx-auto max-w-6xl px-6 py-10 text-center">
-        <p className="text-base font-bold uppercase tracking-[0.3em] text-club">
+        <AnnouncementBanner />
+        <p className="font-header text-cyan mt-8 text-base">
           The hour spins on
         </p>
         <p className="text-club mx-auto mt-3 max-w-2xl text-xl">

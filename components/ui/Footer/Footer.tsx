@@ -16,13 +16,16 @@ export default function Footer() {
                 className="h-full w-full object-cover"
               />
             </span>
-            <span className="font-script ml-2.5 bg-gradient-to-r from-gold via-gold-royal to-gold bg-clip-text text-2xl leading-none text-transparent">
+            <span className="font-script ml-2.5 bg-gradient-to-r from-gold via-gold-royal to-gold bg-clip-text px-1 py-1 text-2xl leading-[1.4] text-transparent">
               Club Cheeky
             </span>
           </Link>
         </div>
         <div className="col-span-1 lg:col-span-2">
           <ul className="flex flex-col flex-initial md:flex-1">
+            <li className="text-club py-3 md:py-0 md:pb-4">
+              <p className="font-header text-cyan">Product</p>
+            </li>
             <li className="text-club py-3 md:py-0 md:pb-4">
               <Link
                 href="/#membership"
@@ -76,9 +79,7 @@ export default function Footer() {
         <div className="col-span-1 lg:col-span-2">
           <ul className="flex flex-col flex-initial md:flex-1">
             <li className="text-club py-3 md:py-0 md:pb-4">
-              <p className="text-club font-bold transition duration-150 ease-in-out hover:text-cyan">
-                LEGAL
-              </p>
+              <p className="font-header text-cyan">Legal</p>
             </li>
             <li className="text-club py-3 md:py-0 md:pb-4">
               <Link
@@ -141,9 +142,7 @@ export default function Footer() {
         <div className="col-span-1 lg:col-span-2">
           <ul className="flex flex-col flex-initial md:flex-1">
             <li className="text-club py-3 md:py-0 md:pb-4">
-              <p className="text-club font-bold transition duration-150 ease-in-out hover:text-cyan">
-                CONTACT
-              </p>
+              <p className="font-header text-cyan">Contact</p>
             </li>
             <li className="text-club py-3 md:py-0 md:pb-4">
               <Link
