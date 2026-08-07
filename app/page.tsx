@@ -1,4 +1,5 @@
 import Pricing from '@/components/ui/Pricing/Pricing';
+import FloatingHearts from '@/components/ui/FloatingHearts/FloatingHearts';
 import { createClient } from '@/utils/supabase/server';
 import {
   getProducts,
@@ -70,6 +71,7 @@ export default async function LandingPage() {
           <div className="absolute -top-40 left-1/2 h-96 w-[42rem] -translate-x-1/2 rounded-full bg-club/10 blur-3xl" />
           <div className="absolute top-24 left-1/2 h-72 w-96 -translate-x-1/2 rounded-full bg-gold/10 blur-3xl" />
         </div>
+        <FloatingHearts />
         <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-20 text-center sm:pt-20 sm:pb-28">
           <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
             A dating app built like a nightclub
