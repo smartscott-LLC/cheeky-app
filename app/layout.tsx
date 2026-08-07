@@ -9,11 +9,32 @@ import InstallPrompt from '@/components/ui/PWA/InstallPrompt';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import { PropsWithChildren, Suspense } from 'react';
-import { getURL } from '@/utils/helpers';
+import localFont from 'next/font/local';
 import { Great_Vibes } from 'next/font/google';
+import { getURL } from '@/utils/helpers';
 import 'styles/main.css';
 
-// The club's script wordmark — gold metallic gradient, per the UI style guide.
+// The nightclub type system (founder): Fascinate for heroes, Damion for
+// headers, Rancho for body. All three are single-weight display fonts —
+// main.css sets font-synthesis: none on headings so weight utilities never
+// fake-bold them.
+const hero = localFont({
+  src: '../styles/fonts/Fascinate-Regular.ttf',
+  variable: '--font-hero',
+  display: 'swap'
+});
+const header = localFont({
+  src: '../styles/fonts/Damion-Regular.ttf',
+  variable: '--font-header',
+  display: 'swap'
+});
+const body = localFont({
+  src: '../styles/fonts/Rancho-Regular.ttf',
+  variable: '--font-body',
+  display: 'swap'
+});
+// The wordmark — the club's logo, gold metallic gradient. It's art; it stays
+// on Great_Vibes regardless of the type system.
 const script = Great_Vibes({
   weight: '400',
   subsets: ['latin'],
@@ -43,7 +64,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en" className={script.variable}>
+    <html lang="en" className={`${hero.variable} ${header.variable} ${body.variable} ${script.variable}`}>
       <body className="bg-black">
         <ServiceWorkerRegister />
         <InstallPrompt />

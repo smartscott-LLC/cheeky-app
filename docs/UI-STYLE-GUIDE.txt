@@ -5,7 +5,7 @@ BRAND COLORS
 Primary Pink (Neon): #FF4DA6 Primary Gold: #FFD700 Silver: #C0C0C0 Platinum: #E5E4E2 Diamond Blue: #1B3A6B Deep Purple: #2D0A4E Background Black: #0A0A0A
 TYPOGRAPHY
 
-Wordmark/Display: Cursive script, gold metallic gradient UI Labels: Sans-serif, all-caps, tight tracking Button Text: Bold sans-serif, centered
+Hero (Fascinate): gold #FFD700 — big stage lines and the wordmark Headers (Damion): pink #FF4DA6 — section titles Body (Rancho): cyan #00F5FF — reading text Button Text: Bold sans-serif, centered
 MEMBERSHIP TIER BADGES (circular, 80px min)
 
 SILVER: Chrome/silver metallic, crown icon, #C0C0C0 GOLD: Gold metallic, crown icon, #FFD700 PLATINUM: Light silver-white, crown icon, #E5E4E2 DIAMOND: Deep navy blue, diamond gem icon, #1B3A6B

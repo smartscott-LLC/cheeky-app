@@ -25,11 +25,30 @@ html {
 html,
 body {
   font-family:
-    -apple-system, system-ui, BlinkMacSystemFont, 'Helvetica Neue', 'Helvetica',
-    sans-serif;
+    var(--font-body), -apple-system, system-ui, BlinkMacSystemFont,
+    'Helvetica Neue', 'Helvetica', sans-serif;
   text-rendering: optimizeLegibility;
   -moz-osx-font-smoothing: grayscale;
-  @apply text-white bg-zinc-800 antialiased;
+  @apply text-cyan bg-zinc-800 antialiased;
+}
+
+/* Type system (founder): Fascinate heroes in gold, Damion headers in pink,
+   Rancho body in cyan. Single-weight display fonts — never fake-bold them. */
+h1,
+h2,
+h3 {
+  font-synthesis: none;
+}
+
+h1 {
+  font-family: var(--font-hero);
+  @apply text-gold;
+}
+
+h2,
+h3 {
+  font-family: var(--font-header);
+  @apply text-club;
 }
 
 body {
