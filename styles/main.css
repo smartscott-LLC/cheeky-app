@@ -2,19 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
-}
-
 *:focus:not(ol) {
   @apply outline-none ring-2 ring-club ring-opacity-50;
 }
 
 html {
   height: 100%;
-  box-sizing: border-box;
   touch-action: manipulation;
   font-feature-settings:
     'case' 1,
@@ -44,7 +37,6 @@ h3 {
 body {
   position: relative;
   min-height: 100%;
-  margin: 0;
 }
 
 a {
@@ -53,15 +45,6 @@ a {
 
 p a {
   @apply hover:underline;
-}
-
-.animated {
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
 }
 
 .height-screen-helper {

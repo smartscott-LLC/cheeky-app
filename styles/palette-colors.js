@@ -1,6 +1,7 @@
-// The full 50-950 color scales (mirror of styles/tailwind_color_scales.md —
-// the founder's Coolors-derived club neon kit). Loaded by tailwind.config.js
-// and merged with the legacy sub-tokens so existing classes keep resolving.
+// The full 50-950 color scales — the founder's Coolors-derived club neon kit.
+// (The original scale doc is archived in docs/archives/styles/.) Loaded by
+// tailwind.config.js and merged with the legacy sub-tokens so existing
+// classes keep resolving.
 module.exports = {
   gold: {
     50: '#fffbe5',

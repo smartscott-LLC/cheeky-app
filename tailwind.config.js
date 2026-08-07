@@ -26,9 +26,10 @@ module.exports = {
         header: ['var(--font-header)', 'cursive'],
         script: ['var(--font-script)', 'cursive']
       },
-      // Floor palettes — source of truth: styles/palettes/*.scss, brand
-      // values from the Club Cheeky UI Style Guide (docs/UI-STYLE-GUIDE.txt).
-      // Full 50-950 scales: styles/tailwind_color_scales.md -> palette-colors.js.
+      // Brand colors — the single live source is styles/palette-colors.js
+      // (scales) merged with the sub-tokens below; values per the Club Cheeky
+      // UI Style Guide (docs/UI-STYLE-GUIDE.txt). The old per-floor SCSS
+      // exports are archived in docs/archives/styles/.
       colors: {
         // The club neon kit — full scales + legacy sub-tokens kept so existing
         // classes (text-gold, bg-cyan, from-gold-graphite, ...) keep resolving.
