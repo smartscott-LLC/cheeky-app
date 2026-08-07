@@ -101,7 +101,7 @@ export default function Pricing({
             </h2>
             <ul className="max-w-2xl m-auto mt-3 text-center">
               <li className="text-club text-lg">
-                Everyone gets in with a verified ID — FREE!. You can expand your
+                Everyone gets in with a verified ID — FREE! You can expand your
                 options by obtaining membership to the higher floors.
               </li>
             </ul>
