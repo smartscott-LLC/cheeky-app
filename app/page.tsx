@@ -165,10 +165,12 @@ export default async function LandingPage() {
             Non-stop Action
           </p>
           <h2 className="font-header text-cyan mx-auto mt-4 max-w-2xl text-4xl sm:text-5xl">
-            Hourly events keep you in the spotlight. Icebreakers give new matches running starts. Weekly exclusives ensure you never get bored. A generous free tier gives everyone a chance to find their next someone. The swag shop is always looking to equip our guests with the latest swag to give you the edge you need! 
+            Events, Icebreakers and Exclusives keep you in the spotlight.
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-xl text-club">
-            A direct quote from Club Cheeky’s very own Chaz Sterling (Club Manager) - “Club Cheeky isn’t just a dating hotspot, it’s a *love laboratory* where my DeepSeek-powered mojo turns ‘meh’ into ‘SHAGADELIC!’ I’ve got algorithms smoother than my chest hair, events hotter than my umbrella drinks, and matches so spot-on, you’d swear I spilled piña colada on the ‘Soulmate’ button. Come for the vibe, stay for the *velvet magic*—because nobody, and I mean *nobody*, leaves without a little extra groove in their heart. Oh, *behave!*”
+            Icebreakers give new matches running starts. Weekly exclusives ensure you never get bored. A generous free tier gives everyone a chance to find their next someone. The swag shop is always looking to equip our guests with the latest swag to give you the edge you need!
+
+            --- A direct quote from Club Cheeky’s very own Chaz Sterling (Club Manager) - “Club Cheeky isn’t just a dating hotspot, it’s a *love laboratory* where my DeepSeek-powered mojo turns ‘meh’ into ‘SHAGADELIC!’ I’ve got algorithms smoother than my chest hair, events hotter than my umbrella drinks, and matches so spot-on, you’d swear I spilled piña colada on the ‘Soulmate’ button. Come for the vibe, stay for the *velvet magic*—because nobody, and I mean *nobody*, leaves without a little extra groove in their heart. Oh, *behave!*” ---
           </p>
         </div>
       </section>
