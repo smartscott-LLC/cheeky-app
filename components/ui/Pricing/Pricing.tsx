@@ -92,15 +92,15 @@ export default function Pricing({
       <section className="bg-black">
         <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
           <div className="sm:flex sm:flex-col sm:align-center">
-            <h1 className="font-hero text-gold text-4xl sm:text-center sm:text-6xl">
+            <h1 className="font-hero text-gold text-5xl sm:text-center sm:text-7xl">
               PRICES
             </h1>
-            <h2 className="font-header text-cyan max-w-2xl m-auto mt-5 text-xl sm:text-center sm:text-2xl">
+            <h2 className="font-header text-cyan max-w-2xl m-auto mt-5 text-2xl sm:text-center sm:text-3xl">
               The only price of admission is being a real person. Every person
               with an ID is a VIP.
             </h2>
             <ul className="max-w-2xl m-auto mt-3 text-center">
-              <li className="text-club text-lg">
+              <li className="text-club text-xl">
                 Everyone gets in with a verified ID — FREE! You can expand your
                 options by obtaining membership to the higher floors.
               </li>
