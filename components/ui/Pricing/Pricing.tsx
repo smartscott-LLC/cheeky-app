@@ -135,7 +135,21 @@ export default function Pricing({
             </div>
           </div>
           <div className="mt-12 space-y-0 sm:mt-16 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
-            {products.map((product) => {
+            {/* Free leads — the Silver Card is the door, never buried at the
+                bottom of a paywall (no dark patterns, per the PRD). Stable
+                sort: the free recurring card first, the rest keep their
+                metadata order. */}
+            {[...products]
+              .sort(
+                (a, b) =>
+                  (a.prices?.some((p) => p.type === 'recurring' && !p.unit_amount)
+                    ? 0
+                    : 1) -
+                  (b.prices?.some((p) => p.type === 'recurring' && !p.unit_amount)
+                    ? 0
+                    : 1)
+              )
+              .map((product) => {
               const price = product?.prices?.find(
                 (p) => p.interval === billingInterval || p.type === 'one_time'
               );
