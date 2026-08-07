@@ -176,8 +176,8 @@ export default function BlindDateHost({
     return (
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
         <p className="text-club text-4xl">🚪</p>
-        <h2 className="font-header text-cyan mt-3 text-xl">The room closed.</h2>
-        <p className="mx-auto mt-2 max-w-md text-sm text-club">
+        <h2 className="font-header text-cyan mt-3 text-2xl">The room closed.</h2>
+        <p className="mx-auto mt-2 max-w-md text-base text-club">
           It didn&apos;t fill in time (or the room failed), so everyone&apos;s tokens
           were returned. The door stays open — you can host again whenever
           you&apos;re ready.
@@ -198,10 +198,10 @@ export default function BlindDateHost({
     return (
       <div className="rounded-xl border border-gold/40 bg-zinc-900/50 p-6 text-center">
         <p className="text-club text-4xl">💘</p>
-        <h2 className="font-header text-cyan mt-3 text-2xl">The room is done.</h2>
+        <h2 className="font-header text-cyan mt-3 text-3xl">The room is done.</h2>
         {winner ? (
           <>
-            <p className="mx-auto mt-2 max-w-md text-sm text-club">
+            <p className="mx-auto mt-2 max-w-md text-base text-club">
               Your winner, with {top[1]} mark{top[1] === 1 ? '' : 's'} —{' '}
               <span className="font-bold text-gold">{winner.displayName ?? 'your date'}</span>.
               The rest of the room paid for the chance, that&apos;s on their
@@ -217,7 +217,7 @@ export default function BlindDateHost({
             )}
           </>
         ) : (
-          <p className="mx-auto mt-2 max-w-md text-sm text-club">
+          <p className="mx-auto mt-2 max-w-md text-base text-club">
             No marks were handed out, so everyone was refunded.
           </p>
         )}
@@ -257,25 +257,25 @@ export default function BlindDateHost({
       {/* The stage */}
       <div className="text-center">
         <p
-          className={`text-xs font-extrabold uppercase tracking-[0.3em] ${
+          className={`text-sm font-extrabold uppercase tracking-[0.3em] ${
             final ? 'text-gold' : 'text-club'
           }`}
         >
           {roundLabel}
         </p>
-        <p className="mt-1 text-sm text-club">
+        <p className="mt-1 text-base text-club">
           {phase === 'question' && 'Ask anything — it goes to all of them.'}
           {phase === 'answer' && 'Their answers land under each face.'}
           {phase === 'selection' && 'Give one mark to the answer you liked best.'}
           {phase === 'done' && 'Round complete — the next round is coming.'}
         </p>
-        <div className="mt-2 font-mono text-lg font-bold text-gold">
+        <div className="mt-2 font-mono text-xl font-bold text-gold">
           {phase === 'done' ? '—' : `${left}s`}
         </div>
       </div>
 
       {error && (
-        <p className="mt-4 rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-2 text-center text-xs text-club">
+        <p className="mt-4 rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-2 text-center text-sm text-club">
           {error}
         </p>
       )}
@@ -283,7 +283,7 @@ export default function BlindDateHost({
       {/* The question box (question phase) */}
       {phase === 'question' && (
         <div className="mt-6">
-          <label className="text-xs font-bold uppercase tracking-[0.2em] text-cyan">
+          <label className="text-sm font-bold uppercase tracking-[0.2em] text-cyan">
             Your question — {PHASE_SECONDS} seconds to write it
           </label>
           <textarea
@@ -292,7 +292,7 @@ export default function BlindDateHost({
             maxLength={300}
             rows={2}
             placeholder="Ask them anything — personality decides tonight…"
-            className="mt-2 w-full rounded-lg border border-zinc-700 bg-zinc-950 p-3 text-sm text-white placeholder-zinc-500 focus:border-club focus:outline-none"
+            className="mt-2 w-full rounded-lg border border-zinc-700 bg-zinc-950 p-3 text-base text-white placeholder-zinc-500 focus:border-club focus:outline-none"
           />
           <button
             onClick={ask}
@@ -306,10 +306,10 @@ export default function BlindDateHost({
 
       {round?.question && phase !== 'question' && (
         <div className="mt-6 rounded-lg border border-gold/30 bg-gold/5 px-4 py-3 text-center">
-          <p className="text-club text-xs font-bold uppercase tracking-[0.2em]">
+          <p className="text-club text-sm font-bold uppercase tracking-[0.2em]">
             The question
           </p>
-          <p className="mt-1 text-sm text-club">“{round.question}”</p>
+          <p className="mt-1 text-base text-club">“{round.question}”</p>
         </div>
       )}
 
@@ -332,14 +332,14 @@ export default function BlindDateHost({
                 alt=""
                 className="mx-auto h-20 w-16 rounded-lg object-cover blur-[3px]"
               />
-              <p className="mt-2 text-xs font-bold text-club">
+              <p className="mt-2 text-sm font-bold text-club">
                 {s.displayName ?? 'Gentleman'}
               </p>
-              <div className="mt-1 flex items-center justify-center gap-2 text-xs">
+              <div className="mt-1 flex items-center justify-center gap-2 text-sm">
                 <span className="font-mono font-bold text-gold">{count}</span>
                 <span className="text-cyan">marks</span>
               </div>
-              <div className="mt-2 min-h-[3rem] rounded-md bg-zinc-900 px-2 py-1.5 text-left text-xs text-cyan">
+              <div className="mt-2 min-h-[3rem] rounded-md bg-zinc-900 px-2 py-1.5 text-left text-sm text-cyan">
                 {answersByUser.get(s.userId) ?? (
                   <span className="text-zinc-500">no answer yet</span>
                 )}
@@ -358,7 +358,7 @@ export default function BlindDateHost({
         })}
       </div>
 
-      <p className="mt-6 text-center text-xs text-club">
+      <p className="mt-6 text-center text-sm text-club">
         The seat costs {tokenCost} tokens for them — you host free. Most marks
         at the end wins the date.
       </p>

@@ -116,8 +116,8 @@ export default function CastChat({ character }: { character: CastCharacter }) {
           />
         </div>
         <div>
-          <p className="text-club text-lg font-extrabold">{character.name}</p>
-          <p className="text-sm text-club">{character.role}</p>
+          <p className="text-club text-xl font-extrabold">{character.name}</p>
+          <p className="text-base text-club">{character.role}</p>
         </div>
       </div>
 
@@ -129,7 +129,7 @@ export default function CastChat({ character }: { character: CastCharacter }) {
           className="flex-1 space-y-3 overflow-y-auto p-5"
         >
           {messages.length === 0 && (
-            <p className="pt-8 text-center text-sm text-club">
+            <p className="pt-8 text-center text-base text-club">
               {character.tagline ?? `Talk to ${character.name}.`}
             </p>
           )}
@@ -141,7 +141,7 @@ export default function CastChat({ character }: { character: CastCharacter }) {
               }`}
             >
               <div
-                className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm ${
+                className={`max-w-[85%] rounded-2xl px-3 py-2 text-base ${
                   m.role === 'user'
                     ? 'bg-club text-white'
                     : 'bg-zinc-800 text-cyan'
@@ -152,12 +152,12 @@ export default function CastChat({ character }: { character: CastCharacter }) {
             </div>
           ))}
           {busy && (
-            <p className="text-sm text-club">{TYPING[typingIdx]}…</p>
+            <p className="text-base text-club">{TYPING[typingIdx]}…</p>
           )}
         </div>
 
         {error && (
-          <p className="border-t border-zinc-800 px-4 py-2 text-xs text-club">
+          <p className="border-t border-zinc-800 px-4 py-2 text-sm text-club">
             {error}
           </p>
         )}
@@ -169,7 +169,7 @@ export default function CastChat({ character }: { character: CastCharacter }) {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && send()}
             placeholder={`Say something to ${character.name}…`}
-            className="flex-1 rounded-lg bg-zinc-800 p-2.5 text-sm text-white outline-none ring-club/50 focus:ring-2"
+            className="flex-1 rounded-lg bg-zinc-800 p-2.5 text-base text-white outline-none ring-club/50 focus:ring-2"
           />
           <button
             onClick={send}

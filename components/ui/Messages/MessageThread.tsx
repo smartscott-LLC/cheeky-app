@@ -243,7 +243,7 @@ export default function MessageThread({
         <div className="flex items-center gap-3">
           <Link
             href="/browse"
-            className="text-xs font-semibold text-cyan hover:text-white"
+            className="text-sm font-semibold text-cyan hover:text-white"
           >
             ← The floor
           </Link>
@@ -264,23 +264,23 @@ export default function MessageThread({
           <div>
             <p className="text-club font-bold">{other.display_name}</p>
             {other.verified_at && (
-              <p className="text-xs font-bold uppercase tracking-wide text-club">
+              <p className="text-sm font-bold uppercase tracking-wide text-club">
                 Verified
               </p>
             )}
             {certificateMode && (
-              <p className="text-club text-xs font-bold uppercase tracking-wide">
+              <p className="text-club text-sm font-bold uppercase tracking-wide">
                 💎 Certificate match
               </p>
             )}
             {songMode && (
-              <p className="text-xs font-bold text-club">
+              <p className="text-sm font-bold text-club">
                 🎵 Dancing — {Math.floor(songLeft / 60)}:
                 {String(songLeft % 60).padStart(2, '0')}
               </p>
             )}
             {declined && (
-              <p className="text-xs text-club">Song over — chat closed</p>
+              <p className="text-sm text-club">Song over — chat closed</p>
             )}
           </div>
         </div>
@@ -336,8 +336,8 @@ export default function MessageThread({
         <div className="border-b border-gold/20 bg-gradient-to-r from-gold/20 via-zinc-900 to-club/10 px-4 py-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-club text-sm font-bold">🍾 A Gift Date</p>
-              <p className="text-xs text-club">
+              <p className="text-club text-base font-bold">🍾 A Gift Date</p>
+              <p className="text-sm text-club">
                 This room is yours for the next two hours
                 {giftFloor && giftFloor !== 'standard' && giftFloor !== 'silver'
                   ? ` — explore the ${giftFloor} floor together`
@@ -345,7 +345,7 @@ export default function MessageThread({
                 .
               </p>
             </div>
-            <span className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs font-semibold text-gold">
+            <span className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-sm font-semibold text-gold">
               💝 Special delivery
             </span>
           </div>
@@ -357,16 +357,16 @@ export default function MessageThread({
         <div className="border-b border-platinum/20 bg-platinum-navy px-4 py-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-club text-sm font-bold">
+              <p className="text-club text-base font-bold">
                 💎 Speed Dating Certificate Match
               </p>
-              <p className="text-xs text-club">
+              <p className="text-sm text-club">
                 You two picked each other on the Speed Dating floor — this chat
                 is certified. No one else gets this room.
               </p>
             </div>
             {interestAdded ? (
-              <span className="rounded-full border border-platinum/40 bg-platinum/10 px-3 py-1 text-xs font-semibold text-platinum-alice">
+              <span className="rounded-full border border-platinum/40 bg-platinum/10 px-3 py-1 text-sm font-semibold text-platinum-alice">
                 ⭐ On your special interests
               </span>
             ) : (
@@ -385,7 +385,7 @@ export default function MessageThread({
       {/* Icebreakers during the song */}
       {songMode && (
         <div className="flex items-center gap-3 border-b border-zinc-800 bg-club/10 px-4 py-2">
-          <p className="text-sm font-semibold text-club">
+          <p className="text-base font-semibold text-club">
             💬 {ICEBREAKERS[promptIdx]}
           </p>
           <button
@@ -400,7 +400,7 @@ export default function MessageThread({
       {/* Post-song decision */}
       {songOver && !declined && !blocked && (
         <div className="border-b border-zinc-800 bg-zinc-900 p-4 text-center">
-          <p className="text-club text-sm font-bold">The song&apos;s over. What now?</p>
+          <p className="text-club text-base font-bold">The song&apos;s over. What now?</p>
           <div className="mt-3 flex justify-center gap-3">
             <button
               onClick={() => handleResolve(true)}
@@ -421,7 +421,7 @@ export default function MessageThread({
       )}
 
       {declined && (
-        <p className="border-b border-zinc-800 px-4 py-2 text-center text-xs text-club">
+        <p className="border-b border-zinc-800 px-4 py-2 text-center text-sm text-club">
           The song is over and the chat is closed. No follow-ups — that&apos;s
           the rule of the floor.
         </p>
@@ -429,7 +429,7 @@ export default function MessageThread({
 
       {reportOpen && !blocked && !declined && (
         <div className="border-b border-zinc-800 bg-zinc-900 p-4">
-          <p className="text-club mb-2 text-sm font-bold">Report {other.display_name}</p>
+          <p className="text-club mb-2 text-base font-bold">Report {other.display_name}</p>
           <div className="flex flex-wrap gap-2">
             {REPORT_REASONS.map((reason) => (
               <button
@@ -455,13 +455,13 @@ export default function MessageThread({
             ))}
           </div>
           {reportError && (
-            <p className="mt-2 text-xs text-amber-400">{reportError}</p>
+            <p className="mt-2 text-sm text-amber-400">{reportError}</p>
           )}
         </div>
       )}
 
       {reported && (
-        <p className="border-b border-zinc-800 px-4 py-2 text-xs text-club">
+        <p className="border-b border-zinc-800 px-4 py-2 text-sm text-club">
           Report filed. A human bouncer will review it.
         </p>
       )}
@@ -485,13 +485,13 @@ export default function MessageThread({
               className={`flex ${mine ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-[75%] rounded-2xl px-4 py-2 text-sm ${
+                className={`max-w-[75%] rounded-2xl px-4 py-2 text-base ${
                   mine ? 'bg-club text-white' : 'bg-zinc-800 text-cyan'
                 }`}
               >
                 <p>{m.body}</p>
                 <p
-                  className={`mt-1 text-[10px] ${
+                  className={`mt-1 text-[12px] ${
                     mine ? 'text-white/60' : 'text-cyan'
                   }`}
                 >
@@ -520,13 +520,13 @@ export default function MessageThread({
 
       {/* Composer */}
       <div className="border-t border-zinc-800 p-4">
-        {error && <p className="mb-2 text-xs text-club">{error}</p>}
+        {error && <p className="mb-2 text-sm text-club">{error}</p>}
         {blocked ? (
-          <p className="text-sm text-club">Blocked. No more messages.</p>
+          <p className="text-base text-club">Blocked. No more messages.</p>
         ) : declined ? (
           <Link
             href="/events"
-            className="inline-block rounded-lg bg-club px-5 py-2 text-sm font-bold text-white transition hover:bg-club-cotton"
+            className="inline-block rounded-lg bg-club px-5 py-2 text-base font-bold text-white transition hover:bg-club-cotton"
           >
             Back to the Dance Floor
           </Link>
@@ -539,7 +539,7 @@ export default function MessageThread({
               placeholder={
                 songMode ? 'Say it while the song plays…' : 'Say something…'
               }
-              className="flex-1 rounded-lg bg-zinc-800 p-3 text-sm text-white outline-none ring-club/50 focus:ring-2"
+              className="flex-1 rounded-lg bg-zinc-800 p-3 text-base text-white outline-none ring-club/50 focus:ring-2"
             />
             <button
               onClick={handleSend}

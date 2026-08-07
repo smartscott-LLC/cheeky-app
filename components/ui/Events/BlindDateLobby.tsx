@@ -40,7 +40,7 @@ export default function BlindDateLobby({
   return (
     <div className="space-y-6">
       {error && (
-        <p className="rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-2 text-center text-xs text-club">
+        <p className="rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-2 text-center text-sm text-club">
           {error}
         </p>
       )}
@@ -48,10 +48,10 @@ export default function BlindDateLobby({
       {canHost && (
         <div className="rounded-xl border border-gold/40 bg-zinc-900/50 p-6 text-center">
           <p className="text-club text-4xl">👑</p>
-          <h2 className="font-header text-cyan mt-3 text-xl">
+          <h2 className="font-header text-cyan mt-3 text-2xl">
             Host a Blind Date
           </h2>
-          <p className="mx-auto mt-2 max-w-md text-sm text-club">
+          <p className="mx-auto mt-2 max-w-md text-base text-club">
             You&apos;re on the other side of the table. Ask the questions,
             read the answers, hand out the marks — and you leave with a date
             if they earn it. You host free; they pay for the chance.
@@ -63,7 +63,7 @@ export default function BlindDateLobby({
           >
             Start the room →
           </button>
-          <p className="mt-3 text-xs text-club">
+          <p className="mt-3 text-sm text-club">
             The room stays open 10 minutes to fill (3–5 suitors), then the
             clock starts. No bots — real members only.
           </p>
@@ -72,12 +72,12 @@ export default function BlindDateLobby({
 
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
         <h2 className="font-header text-cyan">Open rooms</h2>
-        <p className="mt-1 text-xs text-club">
+        <p className="mt-1 text-sm text-club">
           You won&apos;t see her until you&apos;re in the room — that&apos;s the
           whole point. 15 tokens for the chance.
         </p>
         {rooms.length === 0 ? (
-          <p className="mt-4 text-sm text-club">
+          <p className="mt-4 text-base text-club">
             No rooms are open right now. Host one yourself, or check back —
             the ladies decide when the door opens.
           </p>
@@ -89,8 +89,8 @@ export default function BlindDateLobby({
                 className="text-club flex flex-wrap items-center justify-between gap-3 rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-3"
               >
                 <div>
-                  <p className="text-sm font-bold text-club">💘 Blind Date</p>
-                  <p className="text-xs text-club">
+                  <p className="text-base font-bold text-club">💘 Blind Date</p>
+                  <p className="text-sm text-club">
                     {room.seated}/{room.maxSeats} seated ·{' '}
                     {room.seated >= 3
                       ? 'ready to run'
@@ -111,10 +111,10 @@ export default function BlindDateLobby({
       </div>
 
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
-        <p className="text-club text-xs font-bold uppercase tracking-[0.3em]">
+        <p className="text-club text-sm font-bold uppercase tracking-[0.3em]">
           How it works
         </p>
-        <p className="mx-auto mt-2 max-w-lg text-sm text-club">
+        <p className="mx-auto mt-2 max-w-lg text-base text-club">
           4 rounds. She asks, you answer, she gives one mark to the best
           answer. Most marks wins the date. You never see the other answers —
           only where you stand.

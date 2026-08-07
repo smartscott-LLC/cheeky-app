@@ -293,7 +293,7 @@ export default function EventFloor({
       {/* Banner */}
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
         <p
-          className={`text-sm font-bold uppercase tracking-[0.3em] ${accent.kicker}`}
+          className={`text-base font-bold uppercase tracking-[0.3em] ${accent.kicker}`}
         >
           {eventStatus === 'running'
             ? `Round closes in ${Math.floor(secondsLeftInRound / 60)}:${String(
@@ -305,7 +305,7 @@ export default function EventFloor({
                 ? 'Canceled'
                 : 'The floor is moving'}
         </p>
-        <h2 className="font-header text-cyan mt-2 text-2xl">{statusBanner.title}</h2>
+        <h2 className="font-header text-cyan mt-2 text-3xl">{statusBanner.title}</h2>
         <p className="mt-1 text-club">{statusBanner.body}</p>
 
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
@@ -335,9 +335,9 @@ export default function EventFloor({
           )}
         </div>
 
-        {error && <p className="mt-3 text-sm text-club">{error}</p>}
+        {error && <p className="mt-3 text-base text-club">{error}</p>}
         {joined && eventStatus !== 'running' && eventStatus !== 'closed' && (
-          <p className="mt-3 text-xs text-club">
+          <p className="mt-3 text-sm text-club">
             {participants.length} on the floor now. Needs {event.minFill} to
             run.
           </p>
@@ -380,31 +380,31 @@ export default function EventFloor({
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <span className="text-4xl font-extrabold text-cyan">
+                    <span className="text-5xl font-extrabold text-cyan">
                       {(p.profile?.display_name || '?').charAt(0).toUpperCase()}
                     </span>
                   )}
                   {locked && (
                     <span
-                      className={`absolute m-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase text-white ${accent.cta}`}
+                      className={`absolute m-1 rounded-full px-2 py-0.5 text-[12px] font-bold uppercase text-white ${accent.cta}`}
                     >
                       Dancing
                     </span>
                   )}
                   {spotlight && !locked && (
-                    <span className="absolute m-1 rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase text-black">
+                    <span className="absolute m-1 rounded-full bg-gold px-2 py-0.5 text-[12px] font-bold uppercase text-black">
                       🌟 Center Stage
                     </span>
                   )}
                 </div>
                 <div className="p-3">
-                  <p className="text-club truncate text-sm font-bold">
+                  <p className="text-club truncate text-base font-bold">
                     {p.profile?.display_name || 'Member'}
                   </p>
                   <div className="mt-2 flex items-center justify-between">
                     {p.profile?.verified_at && (
                       <span
-                        className={`text-[10px] font-bold uppercase tracking-wide ${accent.verified}`}
+                        className={`text-[12px] font-bold uppercase tracking-wide ${accent.verified}`}
                       >
                         ✓
                       </span>

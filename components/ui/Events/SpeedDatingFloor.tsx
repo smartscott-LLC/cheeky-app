@@ -287,7 +287,7 @@ export default function SpeedDatingFloor({
     return (
       <div className="mx-auto max-w-xl rounded-xl border border-club/60 bg-zinc-900/80 p-10 text-center">
         <div className="text-5xl">🏆</div>
-        <h2 className="font-header text-cyan mt-4 text-3xl">You matched!</h2>
+        <h2 className="font-header text-cyan mt-4 text-4xl">You matched!</h2>
         <p className="mt-3 text-club">
           {result.matchedName
             ? `You and ${result.matchedName} picked each other first.`
@@ -317,7 +317,7 @@ export default function SpeedDatingFloor({
     <div className="mx-auto max-w-3xl">
       {/* Banner */}
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
-        <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
+        <p className="text-base font-bold uppercase tracking-[0.3em] text-club">
           {eventStatus === 'running'
             ? selectionPhase
               ? 'Choose your pick'
@@ -328,7 +328,7 @@ export default function SpeedDatingFloor({
                 ? 'Done'
                 : 'Doors open'}
         </p>
-        <h2 className="font-header text-cyan mt-2 text-2xl">
+        <h2 className="font-header text-cyan mt-2 text-3xl">
           {!joined
             ? 'Speed Dating — 25 tokens'
             : selectionPhase
@@ -353,7 +353,7 @@ export default function SpeedDatingFloor({
             </button>
           )}
         </div>
-        {error && <p className="mt-3 text-sm text-club">{error}</p>}
+        {error && <p className="mt-3 text-base text-club">{error}</p>}
       </div>
 
       {/* Rotation: current partner + chat */}
@@ -379,12 +379,12 @@ export default function SpeedDatingFloor({
                 {partner.profile?.display_name || 'Member'}
               </p>
               {partner.profile?.verified_at && (
-                <p className="text-xs font-bold uppercase tracking-wide text-club">
+                <p className="text-sm font-bold uppercase tracking-wide text-club">
                   Verified
                 </p>
               )}
             </div>
-            <p className="ml-auto text-sm font-bold text-club">
+            <p className="ml-auto text-base font-bold text-club">
               {ICEBREAKERS[slotIndex % ICEBREAKERS.length]}
             </p>
           </div>
@@ -402,7 +402,7 @@ export default function SpeedDatingFloor({
                 }`}
               >
                 <div
-                  className={`max-w-[75%] rounded-2xl px-3 py-1.5 text-sm ${
+                  className={`max-w-[75%] rounded-2xl px-3 py-1.5 text-base ${
                     m.sender_id === myUserId
                       ? 'bg-club text-white'
                       : 'bg-zinc-800 text-cyan'
@@ -420,7 +420,7 @@ export default function SpeedDatingFloor({
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
               placeholder="Say something…"
-              className="flex-1 rounded-lg bg-zinc-800 p-2.5 text-sm outline-none ring-club/50 focus:ring-2"
+              className="flex-1 rounded-lg bg-zinc-800 p-2.5 text-base outline-none ring-club/50 focus:ring-2"
             />
             <button
               onClick={handleSend}
@@ -435,7 +435,7 @@ export default function SpeedDatingFloor({
       {/* Selection phase */}
       {joined && selectionPhase && (
         <div className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-          <p className="text-sm text-club">
+          <p className="text-base text-club">
             Pick your top choice and one alternate from your group. Mutual top
             picks get the certificate.
           </p>
@@ -479,7 +479,7 @@ export default function SpeedDatingFloor({
               </div>
             ))}
           </div>
-          <p className="mt-4 text-xs text-club">
+          <p className="mt-4 text-sm text-club">
             Results land when the room closes — we&apos;ll announce the matches.
           </p>
         </div>

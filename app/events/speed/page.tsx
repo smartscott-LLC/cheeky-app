@@ -23,7 +23,7 @@ export default async function SpeedDatingPage() {
       <div className="bg-black">
         <div className="mx-auto max-w-2xl px-6 py-16 text-center">
           <p className="text-club text-5xl">💘</p>
-          <h1 className="font-hero text-gold mt-6 text-3xl">
+          <h1 className="font-hero text-gold mt-6 text-4xl">
             Speed Dating is behind the rope.
           </h1>
           <p className="text-club mx-auto mt-3 max-w-md">
@@ -133,7 +133,7 @@ export default async function SpeedDatingPage() {
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-4xl px-6 py-16">
-        <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
+        <h1 className="font-hero text-gold text-center text-4xl sm:text-5xl">
           Speed Dating
         </h1>
         <p className="text-club mx-auto mt-3 max-w-xl text-center">

@@ -120,15 +120,15 @@ export default function GiftShop({
   return (
     <div>
       {error && (
-        <p className="mb-4 rounded-lg border border-club/40 bg-club/10 px-4 py-2 text-sm text-club">
+        <p className="mb-4 rounded-lg border border-club/40 bg-club/10 px-4 py-2 text-base text-club">
           {error}
         </p>
       )}
 
       {/* Incoming */}
       {incoming.length > 0 && (
-        <div className="mb-8 rounded-xl border border-diamond/30 bg-diamond/5 p-6">
-          <h2 className="font-header text-cyan text-xl">💝 Someone sent you a gift</h2>
+        <div className="mb-8 rounded-xl border border-gold bg-diamond/5 p-6">
+          <h2 className="font-header text-cyan text-2xl">💝 Someone sent you a gift</h2>
           <ul className="mt-4 space-y-3">
             {incoming.map((g) => (
               <li
@@ -154,7 +154,7 @@ export default function GiftShop({
                     <p className="text-club font-bold">
                       {g.sender.display_name || 'Member'}
                     </p>
-                    <p className="text-sm text-club">
+                    <p className="text-base text-club">
                       sent you {g.emoji} {g.name}
                     </p>
                   </div>
@@ -187,9 +187,9 @@ export default function GiftShop({
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* The store */}
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-          <h2 className="font-header text-cyan text-xl">🍸 The Bar</h2>
-          <p className="mt-1 text-sm text-club">
+        <div className="rounded-xl border border-gold bg-zinc-900/50 p-6">
+          <h2 className="font-header text-cyan text-2xl">🍸 The Bar</h2>
+          <p className="mt-1 text-base text-club">
             {tokenBalance} tokens · {tierLabel} floor · you can buy your floor
             and below
           </p>
@@ -209,27 +209,23 @@ export default function GiftShop({
               if (floorGifts.length === 0 && !showBasket) return null;
               return (
                 <div key={floor}>
-                  <h3 className="font-header text-cyan text-xs uppercase tracking-[0.3em]">
+                  <h3 className="font-header text-cyan text-sm uppercase tracking-[0.3em]">
                     {FLOOR_LABEL[floor]} floor
                   </h3>
                   <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                     {floorGifts.map((g) => (
                       <div
                         key={g.id}
-                        className={`rounded-lg border bg-zinc-900/60 p-4 ${
-                          g.kind === 'featured'
-                            ? 'border-club/40'
-                            : 'border-zinc-800'
-                        }`}
+                        className="rounded-lg border border-gold bg-zinc-900/60 p-4"
                       >
                         <div className="flex items-center justify-between">
                           <span className="text-2xl">{g.emoji}</span>
-                          <span className="text-xs font-bold uppercase tracking-wide text-cyan">
+                          <span className="text-sm font-bold uppercase tracking-wide text-cyan">
                             {g.kind === 'featured' ? '✨ Featured' : 'Gesture'}
                           </span>
                         </div>
-                        <p className="text-club mt-2 font-bold">{g.name}</p>
-                        <p className="text-sm text-club">{giftPitch(g)}</p>
+                        <p className="text-club mt-2 text-xl font-bold">{g.name}</p>
+                        <p className="text-lg text-club">{giftPitch(g)}</p>
                         <button
                           onClick={() =>
                             run(`buy-${g.slug}`, () => buyGift(g.slug))
@@ -251,12 +247,12 @@ export default function GiftShop({
                       <div className="rounded-lg border border-gold/40 bg-gold/5 p-4">
                         <div className="flex items-center justify-between">
                           <span className="text-2xl">{basket.emoji}</span>
-                          <span className="text-xs font-bold uppercase tracking-wide text-gold">
+                          <span className="text-sm font-bold uppercase tracking-wide text-gold">
                             Every floor
                           </span>
                         </div>
                         <p className="text-club mt-2 font-bold">{basket.name}</p>
-                        <p className="text-sm text-club">
+                        <p className="text-base text-club">
                           {giftPitch(basket)}
                         </p>
                         <button
@@ -282,13 +278,13 @@ export default function GiftShop({
         {/* My stash + sent */}
         <div className="space-y-6">
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-            <h2 className="font-header text-cyan text-xl">🧥 My stash</h2>
-            <p className="mt-1 text-sm text-club">
+            <h2 className="font-header text-cyan text-2xl">🧥 My stash</h2>
+            <p className="mt-1 text-base text-club">
               Your inventory. One offer per hour, and a denied gift comes right
               back here.
             </p>
             {stash.length === 0 ? (
-              <p className="mt-4 text-sm text-club">
+              <p className="mt-4 text-base text-club">
                 Nothing in the stash yet — buy something from the bar.
               </p>
             ) : (
@@ -298,7 +294,7 @@ export default function GiftShop({
                     key={g.id}
                     className="text-club flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900/60 px-4 py-2.5"
                   >
-                    <span className="text-sm font-semibold">
+                    <span className="text-base font-semibold">
                       {g.emoji} {g.name}
                     </span>
                     <button
@@ -317,16 +313,16 @@ export default function GiftShop({
 
             {sendFor && (
               <div className="mt-4 rounded-lg border border-platinum/30 bg-platinum/5 p-4">
-                <p className="text-club text-sm font-bold">Send {sendFor.name} to…</p>
+                <p className="text-club text-base font-bold">Send {sendFor.name} to…</p>
                 {people.length === 0 ? (
-                  <p className="mt-2 text-sm text-club">
+                  <p className="mt-2 text-base text-club">
                     No one to send to yet — match or chat with someone first.
                   </p>
                 ) : (
                   <select
                     value={recipient}
                     onChange={(e) => setRecipient(e.target.value)}
-                    className="mt-2 w-full rounded-lg bg-zinc-800 p-2.5 text-sm text-white outline-none ring-platinum/50 focus:ring-2"
+                    className="mt-2 w-full rounded-lg bg-zinc-800 p-2.5 text-base text-white outline-none ring-platinum/50 focus:ring-2"
                   >
                     <option value="">Pick someone…</option>
                     {people.map((p) => (
@@ -360,18 +356,18 @@ export default function GiftShop({
 
           {sent.length > 0 && (
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-              <h2 className="font-header text-cyan text-xl">📬 Out the door</h2>
+              <h2 className="font-header text-cyan text-2xl">📬 Out the door</h2>
               <ul className="mt-4 space-y-2">
                 {sent.map((s) => (
                   <li
                     key={s.id}
-                    className="text-club flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900/60 px-4 py-2.5 text-sm"
+                    className="text-club flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900/60 px-4 py-2.5 text-base"
                   >
                     <span>
                       {s.emoji} {s.name} → {s.recipientName}
                     </span>
                     <span
-                      className={`text-xs font-bold uppercase tracking-wide ${
+                      className={`text-sm font-bold uppercase tracking-wide ${
                         s.status === 'accepted'
                           ? 'text-club'
                           : s.status === 'denied'

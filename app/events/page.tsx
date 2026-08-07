@@ -53,11 +53,11 @@ export default async function EventsPage() {
       <div className="mx-auto max-w-6xl px-6 py-16">
         <Link
           href={floorHref}
-          className="text-sm font-semibold text-club hover:text-white"
+          className="text-base font-semibold text-club hover:text-white"
         >
           ← Back to the floor
         </Link>
-        <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
+        <h1 className="font-hero text-gold text-center text-4xl sm:text-5xl">
           The Event Center
         </h1>
         <p className="text-club mx-auto mt-3 max-w-xl text-center">
@@ -69,14 +69,14 @@ export default async function EventsPage() {
         {/* The overhead ticker — anonymous, in-app only. */}
         {(announcements ?? []).length > 0 && (
           <div className="mx-auto mt-8 max-w-2xl overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50">
-            <p className="border-b border-zinc-800 px-4 py-2 text-xs font-bold uppercase tracking-[0.3em] text-club">
+            <p className="border-b border-zinc-800 px-4 py-2 text-sm font-bold uppercase tracking-[0.3em] text-club">
               📢 Over the house speakers
             </p>
             <ul className="divide-y divide-zinc-800">
               {(announcements ?? []).map((a, i) => (
-                <li key={i} className="text-club px-4 py-2 text-sm">
+                <li key={i} className="text-club px-4 py-2 text-base">
                   {a.body}{' '}
-                  <span className="text-xs text-cyan">
+                  <span className="text-sm text-cyan">
                     {new Date(a.created_at).toLocaleTimeString([], {
                       hour: 'numeric',
                       minute: '2-digit'
@@ -112,32 +112,32 @@ export default async function EventsPage() {
                 />
                 <div className="p-5">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-header text-cyan text-lg">
+                    <h3 className="font-header text-cyan text-xl">
                       {meta.emoji} {meta.name}
                     </h3>
                     <span
-                      className={`text-xs font-bold uppercase tracking-wide ${
+                      className={`text-sm font-bold uppercase tracking-wide ${
                         meta.accent.split(' ')[0]
                       }`}
                     >
                       {meta.floor}
                     </span>
                   </div>
-                  <p className="text-club mt-1 text-xs">
+                  <p className="text-club mt-1 text-sm">
                     {next
                       ? `${timeLabel(next.starts_at)} · ${next.token_cost} tokens`
                       : 'Between sets'}
                   </p>
-                  <p className="text-club mt-2 text-xs">{meta.tagline}</p>
+                  <p className="text-club mt-2 text-sm">{meta.tagline}</p>
                   {locked ? (
-                    <p className="text-club mt-4 text-sm font-bold">
+                    <p className="text-club mt-4 text-base font-bold">
                       Behind the rope. Come see what&apos;s on these floors with
                       a {meta.floor} card today.
                     </p>
                   ) : (
                     <Link
                       href={eventUrl(kind)}
-                      className={`mt-4 inline-block w-full rounded-lg px-4 py-2 text-center text-sm font-bold transition ${meta.cta}`}
+                      className={`mt-4 inline-block w-full rounded-lg px-4 py-2 text-center text-base font-bold transition ${meta.cta}`}
                     >
                       {next ? 'Enter the room →' : 'The room'}
                     </Link>
@@ -152,8 +152,8 @@ export default async function EventsPage() {
         <div className="mt-6 rounded-2xl border border-gold/40 bg-zinc-900/50">
           <div className="flex flex-wrap items-center justify-between gap-4 p-5">
             <div>
-              <h3 className="font-header text-cyan text-lg">💘 Blind Date</h3>
-              <p className="text-club mt-1 text-xs">
+              <h3 className="font-header text-cyan text-xl">💘 Blind Date</h3>
+              <p className="text-club mt-1 text-sm">
                 The Gold floor&apos;s room. One hostess, up to five suitors, four
                 rounds of questions — most marks wins the date. Host when
                 you&apos;re ready; the room runs when a lady opens the door.
@@ -161,7 +161,7 @@ export default async function EventsPage() {
             </div>
             <Link
               href="/events/blind_date"
-              className="rounded-lg bg-gold px-6 py-2.5 text-sm font-extrabold text-black transition hover:bg-gold-royal"
+              className="rounded-lg bg-gold px-6 py-2.5 text-base font-extrabold text-black transition hover:bg-gold-royal"
             >
               Host or take a seat →
             </Link>
@@ -172,8 +172,8 @@ export default async function EventsPage() {
         <div className="mt-6 rounded-2xl border border-club/40 bg-zinc-900/50">
           <div className="flex flex-wrap items-center justify-between gap-4 p-5">
             <div>
-              <h3 className="font-header text-cyan text-lg">🧊 Icebreakers</h3>
-              <p className="text-club mt-1 text-xs">
+              <h3 className="font-header text-cyan text-xl">🧊 Icebreakers</h3>
+              <p className="text-club mt-1 text-sm">
                 Not events — things for matched couples to do instead of
                 staring at empty chat. Date Night is the first one: five
                 questions, both of you tap the same answer to lock it. Free,
@@ -182,7 +182,7 @@ export default async function EventsPage() {
             </div>
             <Link
               href="/messages"
-              className="rounded-lg bg-club px-6 py-2.5 text-sm font-extrabold text-white transition hover:bg-club-cotton"
+              className="rounded-lg bg-club px-6 py-2.5 text-base font-extrabold text-white transition hover:bg-club-cotton"
             >
               Start one from a chat →
             </Link>

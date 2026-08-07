@@ -85,11 +85,11 @@ export default async function BrowsePage() {
       <div className="mx-auto max-w-6xl px-6 py-16">
         <Link
           href={floorHref}
-          className="text-sm font-semibold text-club hover:text-white"
+          className="text-base font-semibold text-club hover:text-white"
         >
           ← Back to the floor
         </Link>
-        <h1 className="text-center text-3xl font-hero text-gold sm:text-4xl">
+        <h1 className="text-center text-4xl font-hero text-gold sm:text-5xl">
           The Spark List
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-club">

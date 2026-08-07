@@ -58,7 +58,7 @@ export default function RedeemCode() {
 
   return (
     <div className="mt-8 rounded-xl border border-club/30 bg-club/5 p-6">
-      <p className="text-xs font-bold uppercase tracking-[0.3em] text-club">
+      <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
         🎟️ Got a code?
       </p>
       <div className="mt-3 flex flex-col gap-3 sm:flex-row">
@@ -67,7 +67,7 @@ export default function RedeemCode() {
           onChange={(e) => setCode(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && submit()}
           placeholder="SWAG-XXXXXXXX"
-          className="flex-1 rounded-lg border border-zinc-700 bg-zinc-900 p-3 font-mono text-sm text-white uppercase outline-none focus:ring-2 focus:ring-club/50"
+          className="flex-1 rounded-lg border border-zinc-700 bg-zinc-900 p-3 font-mono text-base text-white uppercase outline-none focus:ring-2 focus:ring-club/50"
         />
         <button
           onClick={submit}
@@ -79,7 +79,7 @@ export default function RedeemCode() {
       </div>
       {result && (
         <p
-          className={`mt-3 text-sm ${result.ok ? 'text-emerald-400' : 'text-club'}`}
+          className={`mt-3 text-base ${result.ok ? 'text-emerald-400' : 'text-club'}`}
         >
           {result.text}
         </p>

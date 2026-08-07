@@ -68,7 +68,7 @@ export default async function BlindDatePage() {
       <div className="bg-black">
         <div className="mx-auto max-w-2xl px-6 py-16 text-center">
           <p className="text-club text-5xl">💘</p>
-          <h1 className="font-hero text-gold mt-6 text-3xl">
+          <h1 className="font-hero text-gold mt-6 text-4xl">
             Blind Date is behind the rope.
           </h1>
           <p className="text-club mx-auto mt-3 max-w-md">
@@ -173,11 +173,11 @@ export default async function BlindDatePage() {
           <div className="mx-auto max-w-4xl px-6 py-16">
             <Link
               href="/events"
-              className="text-sm font-semibold text-club hover:text-white"
+              className="text-base font-semibold text-club hover:text-white"
             >
               ← The Event Center
             </Link>
-            <h1 className="font-hero text-gold mt-6 text-center text-3xl sm:text-4xl">
+            <h1 className="font-hero text-gold mt-6 text-center text-4xl sm:text-5xl">
               👑 Blind Date — the host&apos;s table
             </h1>
             <p className="text-club mx-auto mt-3 max-w-xl text-center">
@@ -223,11 +223,11 @@ export default async function BlindDatePage() {
           <div className="mx-auto max-w-3xl px-6 py-16">
             <Link
               href="/events"
-              className="text-sm font-semibold text-club hover:text-white"
+              className="text-base font-semibold text-club hover:text-white"
             >
               ← The Event Center
             </Link>
-            <h1 className="font-hero text-gold mt-6 text-center text-3xl sm:text-4xl">
+            <h1 className="font-hero text-gold mt-6 text-center text-4xl sm:text-5xl">
               💘 Blind Date
             </h1>
             <p className="text-club mx-auto mt-3 max-w-xl text-center">
@@ -277,11 +277,11 @@ export default async function BlindDatePage() {
       <div className="mx-auto max-w-3xl px-6 py-16">
         <Link
           href="/events"
-          className="text-sm font-semibold text-club hover:text-white"
+          className="text-base font-semibold text-club hover:text-white"
         >
           ← The Event Center
         </Link>
-        <h1 className="font-hero text-gold mt-6 text-center text-3xl sm:text-4xl">
+        <h1 className="font-hero text-gold mt-6 text-center text-4xl sm:text-5xl">
           💘 Blind Date
         </h1>
         <p className="text-club mx-auto mt-3 max-w-xl text-center">

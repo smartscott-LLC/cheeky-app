@@ -32,7 +32,7 @@ export default async function FloorsPage() {
     <div className="bg-black">
       <div className="mx-auto max-w-5xl px-6 py-16">
         <h1 className="text-center text-4xl font-hero text-gold sm:text-5xl">
-          🛗 The floors
+          🛗 The Floors
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-lg text-club">
           Every floor is its own room. Pick where you want to go — the elevators

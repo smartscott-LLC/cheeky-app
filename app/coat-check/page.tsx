@@ -94,7 +94,7 @@ export default async function CoatCheckPage() {
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-5xl px-6 py-16">
-        <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
+        <h1 className="font-hero text-gold text-center text-4xl sm:text-5xl">
           🧥 The Coat Check
         </h1>
         <p className="text-club mx-auto mt-3 max-w-xl text-center">
@@ -103,7 +103,7 @@ export default async function CoatCheckPage() {
         </p>
 
         {typeof streak === 'number' && streak > 0 && (
-          <p className="mt-4 text-center text-sm text-club">
+          <p className="mt-4 text-center text-base text-club">
             🔥 {streak} day{streak === 1 ? '' : 's'} in a row
             {streak >= 7 && streak < 30
               ? ' — keep it going, the Pearl is at 30'
@@ -113,8 +113,8 @@ export default async function CoatCheckPage() {
 
         {/* Gems */}
         <div className="mt-10">
-          <h2 className="font-header text-cyan text-xl">💎 Gems</h2>
-          <p className="text-club text-sm">
+          <h2 className="font-header text-cyan text-2xl">💎 Gems</h2>
+          <p className="text-club text-base">
             The vault. Limited collectibles.
           </p>
           <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -131,18 +131,18 @@ export default async function CoatCheckPage() {
                 >
                   <p className="text-club text-4xl">{g.emoji}</p>
                   <p className="text-club mt-2 font-bold">{g.name}</p>
-                  <p className="text-club text-[10px] uppercase tracking-[0.25em]">
+                  <p className="text-club text-[12px] uppercase tracking-[0.25em]">
                     {g.rarity}
                   </p>
                   {owned ? (
-                    <p className="text-club mt-2 text-xs">
+                    <p className="text-club mt-2 text-sm">
                       Yours —{' '}
                       {gemDate(g.id)
                         ? new Date(gemDate(g.id) as string).toLocaleDateString()
                         : 'in the vault'}
                     </p>
                   ) : (
-                    <p className="text-club mt-2 text-xs">
+                    <p className="text-club mt-2 text-sm">
                       {g.how_to_earn}
                     </p>
                   )}
@@ -154,8 +154,8 @@ export default async function CoatCheckPage() {
 
         {/* Badges */}
         <div className="mt-10">
-          <h2 className="font-header text-cyan text-xl">🎖️ Badges</h2>
-          <p className="text-club text-sm">
+          <h2 className="font-header text-cyan text-2xl">🎖️ Badges</h2>
+          <p className="text-club text-base">
             What you&apos;ve earned on the floor.
           </p>
           <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
@@ -172,7 +172,7 @@ export default async function CoatCheckPage() {
                 >
                   <p className="text-club text-4xl">{b.emoji}</p>
                   <p className="text-club mt-2 font-bold">{b.name}</p>
-                  <p className="text-club mt-1 text-[11px]">
+                  <p className="text-club mt-1 text-[13px]">
                     {owned
                       ? badgeDate(b.id)
                         ? `Earned ${new Date(badgeDate(b.id) as string).toLocaleDateString()}`
@@ -189,22 +189,22 @@ export default async function CoatCheckPage() {
           {/* The stash */}
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
             <h2 className="font-header text-cyan">🎁 The stash</h2>
-            <p className="text-club text-sm">Gifts waiting to go out.</p>
+            <p className="text-club text-base">Gifts waiting to go out.</p>
             <div className="mt-3 space-y-2">
               {stash.length === 0 && (
-                <p className="text-club text-sm">
+                <p className="text-club text-base">
                   Empty. The Gift Store is that way.
                 </p>
               )}
               {stash.map((s) => (
-                <p key={s.id} className="text-club text-sm">
+                <p key={s.id} className="text-club text-base">
                   {s.emoji} {s.name}
                 </p>
               ))}
             </div>
             <Link
               href="/gifts"
-              className="mt-4 inline-block text-sm font-semibold text-club hover:text-club-cotton"
+              className="mt-4 inline-block text-base font-semibold text-club hover:text-club-cotton"
             >
               → Visit the Gift Store
             </Link>
@@ -213,12 +213,12 @@ export default async function CoatCheckPage() {
           {/* People you've met */}
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
             <h2 className="font-header text-cyan">🪪 People you&apos;ve met</h2>
-            <p className="text-club text-sm">
+            <p className="text-club text-base">
               Certificates from Speed Dating + special interests.
             </p>
             <div className="mt-3 space-y-2">
               {certPartnerIds.length === 0 && partnerIds.length === 0 && (
-                <p className="text-club text-sm">
+                <p className="text-club text-base">
                   No certificates yet. Speed Dating is how you earn them.
                 </p>
               )}
@@ -228,21 +228,21 @@ export default async function CoatCheckPage() {
                     ? c.matches.user_id_b
                     : c.matches.user_id_a;
                 return (
-                  <p key={c.id} className="text-club text-sm">
+                  <p key={c.id} className="text-club text-base">
                     🏅 Certificate — {partnerName(partnerId)} ·{' '}
                     {new Date(c.issued_at).toLocaleDateString()}
                   </p>
                 );
               })}
               {(interestRows ?? []).map((i) => (
-                <p key={i.id} className="text-club text-sm">
+                <p key={i.id} className="text-club text-base">
                   ⭐ {partnerName(i.interest_user_id)} — special interest
                 </p>
               ))}
             </div>
             <Link
               href="/events/speed"
-              className="mt-4 inline-block text-sm font-semibold text-club hover:text-club-cotton"
+              className="mt-4 inline-block text-base font-semibold text-club hover:text-club-cotton"
             >
               → Speed Dating
             </Link>
@@ -251,8 +251,8 @@ export default async function CoatCheckPage() {
 
         {/* The crew — bonds */}
         <div className="mt-10">
-          <h2 className="font-header text-cyan text-xl">🎭 The crew</h2>
-          <p className="text-club text-sm">
+          <h2 className="font-header text-cyan text-2xl">🎭 The crew</h2>
+          <p className="text-club text-base">
             Characters, not real people — each with a job in the club. Get to
             know them.
           </p>
@@ -273,14 +273,14 @@ export default async function CoatCheckPage() {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <span className="flex h-full w-full items-center justify-center text-xl font-bold text-cyan">
+                      <span className="flex h-full w-full items-center justify-center text-2xl font-bold text-cyan">
                         {c.name.charAt(0)}
                       </span>
                     )}
                   </div>
-                  <p className="text-club mt-2 text-sm font-bold">{c.name}</p>
-                  <p className="text-club text-[11px]">{c.role}</p>
-                  <p className="text-club mt-1 text-xs">
+                  <p className="text-club mt-2 text-base font-bold">{c.name}</p>
+                  <p className="text-club text-[13px]">{c.role}</p>
+                  <p className="text-club mt-1 text-sm">
                     {level > 0 ? (
                       <span className="text-club">Bond level {level}</span>
                     ) : (
