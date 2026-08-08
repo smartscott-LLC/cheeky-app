@@ -122,6 +122,9 @@ importers:
       resend:
         specifier: ^6.18.1
         version: 6.18.1
+      sharp:
+        specifier: ^0.35.3
+        version: 0.35.3(@types/node@26.1.2)
       stripe:
         specifier: ^14.25.0
         version: 14.25.0
@@ -171,9 +174,6 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.8.1
         version: 0.8.1(prettier@3.9.6)
-      sharp:
-        specifier: ^0.35.3
-        version: 0.35.3(@types/node@26.1.2)
       supabase:
         specifier: ^1.226.4
         version: 1.226.4(supports-color@8.1.1)

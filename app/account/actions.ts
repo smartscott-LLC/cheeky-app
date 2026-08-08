@@ -1,5 +1,6 @@
 'use server';
 
+import sharp from 'sharp';
 import { createClient } from '@/utils/supabase/server';
 import { supabaseAdmin } from '@/utils/supabase/admin';
 import { recordMoment } from '@/utils/character-moments';
@@ -77,6 +78,30 @@ export async function uploadProfilePhoto(
       return { error: 'unsupported format — use an image (JPG, PNG, WebP)' };
     }
 
+    // Every upload becomes a normalized WebP server-side: EXIF auto-orient
+    // (kills sideways selfies), capped at 1200px on the long edge (feed
+    // cards never need more), and encoded ~80% smaller than the source —
+    // the same PNG→WebP play that cut the floor/persona art 91-94%. The
+    // storage path has no extension, so nothing downstream changes.
+    let webp: Buffer;
+    try {
+      webp = await sharp(Buffer.from(await file.arrayBuffer()))
+        .rotate()
+        .resize({
+          width: 1200,
+          height: 1200,
+          fit: 'inside',
+          withoutEnlargement: true
+        })
+        .webp({ quality: 80 })
+        .toBuffer();
+    } catch (convErr) {
+      console.error('photo conversion failed:', convErr);
+      return {
+        error: 'could not read that image — try a JPG or PNG straight from your camera'
+      };
+    }
+
     // Position is server-computed (never trust the client — earlier broken
     // client states wrote duplicate positions). First photo = position 0 + primary.
     const { data: lastPhoto } = await supabase
@@ -92,7 +117,7 @@ export async function uploadProfilePhoto(
     const storagePath = `${user.id}/${crypto.randomUUID()}`;
     const { error: upErr } = await supabase.storage
       .from('profiles')
-      .upload(storagePath, file);
+      .upload(storagePath, webp, { contentType: 'image/webp' });
     if (upErr) {
       console.error('photo upload failed:', upErr.message);
       return { error: upErr.message };
