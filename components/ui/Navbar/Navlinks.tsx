@@ -39,9 +39,11 @@ export default function Navlinks({ user }: NavlinksProps) {
   const onTheStreet = pathname === '/' || pathname.startsWith('/signin');
 
   return (
-    // Three-zone grid: logo / crew / door. The crew pill lives in the flow
-    // (not absolutely centered) so it can never overlap the right links.
-    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 py-3 md:py-4">
+    // One flex row: logo left, the crew pill riding the center, and the
+    // right group (links + the marquee button) pinned to the FAR right as a
+    // single unit — they move together, no stragglers. (Founder fix: the old
+    // three-zone grid let the group drift off-center next to the crew pill.)
+    <div className="flex items-center gap-2 py-3 md:py-4">
       <div className="flex items-center justify-start">
         <Link href="/" className={s.logo} aria-label="Club Cheeky home">
           <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-gold shadow-[0_0_14px_rgba(255,215,0,0.35)]">
@@ -57,14 +59,14 @@ export default function Navlinks({ user }: NavlinksProps) {
           </span>
         </Link>
       </div>
-      {/* Meet the crew — dead center, the club's people are its face */}
+      {/* Meet the crew — centered between the logo and the right group */}
       <Link
         href="/crew"
-        className="hidden rounded-full border border-gold/50 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-gold transition hover:border-gold hover:bg-gold/10 md:inline-flex"
+        className="mx-auto hidden rounded-full border border-gold/50 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-gold transition hover:border-gold hover:bg-gold/10 md:inline-flex"
       >
         Meet the Crew
       </Link>
-      <nav className="flex items-center justify-end gap-1 lg:gap-2">
+      <nav className="ml-auto flex items-center gap-1 lg:gap-2">
         {/* Mobile: the crew link rides with the rest of the links */}
         <Link href="/crew" className={`${s.link} md:hidden`}>
           Meet the Crew
