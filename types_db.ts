@@ -1413,6 +1413,7 @@ export type Database = {
           interested_in: string
           message_retention_days: number
           one_liner: string | null
+          test_member: boolean
           updated_at: string
           verified_at: string | null
         }
@@ -1426,6 +1427,7 @@ export type Database = {
           interested_in?: string
           message_retention_days?: number
           one_liner?: string | null
+          test_member?: boolean
           updated_at?: string
           verified_at?: string | null
         }
@@ -1439,6 +1441,7 @@ export type Database = {
           interested_in?: string
           message_retention_days?: number
           one_liner?: string | null
+          test_member?: boolean
           updated_at?: string
           verified_at?: string | null
         }
