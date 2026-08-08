@@ -23,7 +23,8 @@ quiet.
 - **Cold-start**: new members get a real chance to start a conversation
   before anyone has liked them — the #1 "why is this empty" problem.
 - **Activity**: the game manufactures views of people the user would never
-  have seen, plus a reason to keep coming back (2 plays/day).
+  have seen, plus a reason to keep coming back (plays/day scale by floor —
+  §5: 2 free, up to 5 for Diamond).
 - **Ownable**: a memory game is a signature, not a swipe clone — "Matchmaker"
   becomes a room people talk about.
 
@@ -69,8 +70,21 @@ flowchart TD
 
 ## 5. Limits & economy
 
-- **2 plays/day** (config dial; 3 is viable at the top end). Each play is
-  one full board.
+- **Plays per day scale with the floor (2/3/4/5)** — every paid floor steps
+  up, mirroring the messaging ladder (75/15 → unlimited/40 → unlimited/100):
+
+  | Floor | Plays/day |
+  |---|---|
+  | Silver (free) | 2 |
+  | Gold | 3 |
+  | Platinum | 4 |
+  | Diamond | 5 |
+
+  The dial is server-side (same `current_tier` case pattern as the message
+  caps) so a one-line change rebalances the whole ladder. Each play is one
+  full board. **5 is the absolute ceiling** — it caps recipient noise and
+  keeps upper-floor randoms rare, so a Diamond board still feels special.
+  Rewards spenders; never shrinks the free tier.
 - **Unlock messages ride their own allowance** — they never eat the free
   tier's 5-new-conversations cap and never shrink it. The game *is* the
   gate; no double-penalty.
@@ -113,9 +127,8 @@ flowchart TD
 ## 9. Open questions (founder to decide)
 
 1. **Recipient notice** (deferred): pure alert vs. alert + like-back window.
-2. **Play cap**: 2 (default) vs 3/day.
-3. **Randoms pool**: verified-only (recommended, same as L³) — confirm.
-4. **Board balance**: 8 pairs / 2-match win before 3 strikes — tune after
+2. **Randoms pool**: verified-only (recommended, same as L³) — confirm.
+3. **Board balance**: 8 pairs / 2-match win before 3 strikes — tune after
    first playtest.
 
 ## 10. Out of scope (for now)
