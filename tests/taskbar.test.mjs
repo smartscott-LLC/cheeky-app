@@ -5,6 +5,7 @@ import {
   TIER_CAPS,
   TASKBAR_TILES,
   capsForTier,
+  isTaskbarHidden,
   rankForTier,
   tilesForRank
 } from '../utils/taskbar.ts';
@@ -44,4 +45,19 @@ test('rank + caps mapping is forgiving', () => {
   assert.equal(rankForTier('bogus'), 0);
   assert.equal(capsForTier('platinum').messages, null);
   assert.equal(capsForTier('bogus').messages, 30);
+});
+
+test('route gating hides only the street/door/office/auth — never the club', () => {
+  // The regression: startsWith('/') matched every route and hid the bar
+  // everywhere. '/' is exact; everything else is prefix-matched.
+  assert.equal(isTaskbarHidden('/'), true, 'landing hidden');
+  assert.equal(isTaskbarHidden('/signin'), true);
+  assert.equal(isTaskbarHidden('/verify'), true);
+  assert.equal(isTaskbarHidden('/owner'), true);
+  assert.equal(isTaskbarHidden('/auth/callback'), true);
+  assert.equal(isTaskbarHidden('/club'), false, 'lobby shows the bar');
+  assert.equal(isTaskbarHidden('/floors/silver'), false);
+  assert.equal(isTaskbarHidden('/messages'), false);
+  assert.equal(isTaskbarHidden('/browse'), false);
+  assert.equal(isTaskbarHidden('/events/dance_floor'), false);
 });

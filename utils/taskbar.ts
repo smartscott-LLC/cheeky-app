@@ -25,6 +25,15 @@ export interface TaskbarTileDef {
 export const RANK_TIERS = ['silver', 'gold', 'platinum', 'diamond'] as const;
 export type TierName = (typeof RANK_TIERS)[number];
 
+// Routes where the bar never renders: the street, the door, the office,
+// auth flows. NOTE: '/' is an EXACT match — startsWith('/') matches every
+// route and hides the bar everywhere (it did; that was the bug).
+export const HIDDEN_PATHS = ['/signin', '/verify', '/owner', '/auth'];
+
+export function isTaskbarHidden(pathname: string): boolean {
+  return pathname === '/' || HIDDEN_PATHS.some((p) => pathname.startsWith(p));
+}
+
 export interface TierCaps {
   /** Messages per day; null = unlimited (∞ on the bar). */
   messages: number | null;

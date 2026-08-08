@@ -9,6 +9,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { isTaskbarHidden } from '@/utils/taskbar';
 
 interface Tile {
   key: string;
@@ -31,8 +32,6 @@ interface Prefs {
 }
 
 const PREFS_KEY = 'tiki:prefs';
-// No bar on the street, the door, the office, or auth flows.
-const HIDDEN_PATHS = ['/', '/signin', '/verify', '/owner', '/auth'];
 const REFRESH_MS = 60_000;
 
 const DEFAULT_PREFS: Prefs = { hidden: false, collapsed: false, position: 'top' };
@@ -104,7 +103,7 @@ export default function TikiTaskbar() {
     }
   };
 
-  const hiddenByRoute = HIDDEN_PATHS.some((p) => pathname.startsWith(p));
+  const hiddenByRoute = isTaskbarHidden(pathname);
   const nothingToShow = !state || state.tiles.length === 0;
 
   if (hiddenByRoute || nothingToShow) return null;
