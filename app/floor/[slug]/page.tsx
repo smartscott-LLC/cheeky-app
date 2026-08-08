@@ -105,9 +105,10 @@ export default async function FloorPage({
       ) : (
         <>
           <div className="mx-auto max-w-6xl px-6 pt-6 text-center">
-            <p
-              className={`text-club text-base font-bold uppercase tracking-[0.3em] ${floor.accent}`}
-            >
+            {/* The floor kicker follows the type system — Damion, cyan —
+                on every floor (founder: the diamond one rendered in its
+                raspberry accent; headers are always cyan). */}
+            <p className="font-header text-cyan text-base uppercase tracking-[0.3em]">
               The {floor.name} floor
             </p>
             <p className="text-club mx-auto mt-2 max-w-xl text-lg">

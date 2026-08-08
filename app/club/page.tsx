@@ -113,20 +113,28 @@ export default async function ClubPage() {
 
   return (
     <div className="bg-black">
-      {/* The lobby — the base room, filled in with floor 1's rooms. */}
-      <FloorLayout background="/brand/club-interior.webp" spots={SPOTS} />
-
-      {/* Where the floors lead */}
-      <div className="mx-auto max-w-6xl px-6 py-10 text-center">
-        <AnnouncementBanner />
-        <p className="font-header text-cyan mt-8 text-base">
+      {/* Consistent with every floor: name → ticker → info, all up top,
+          nothing at the bottom of the page. */}
+      <div className="mx-auto max-w-6xl px-6 pt-8 text-center">
+        <p className="font-header text-cyan text-base uppercase tracking-[0.3em]">
+          The Lobby
+        </p>
+        <div className="mt-5">
+          <AnnouncementBanner />
+        </div>
+        <p className="font-header text-cyan mt-5 text-base">
           The hour spins on
         </p>
-        <p className="text-club mx-auto mt-3 max-w-2xl text-xl">
+        <p className="text-club mx-auto mt-2 max-w-2xl text-lg">
           The Dance Floor at :00, Speed Dating at :30, the Rooftop at :45 —
           and Blind Date when the Gold floor&apos;s hostess opens the door. The
           Event Center holds the whole playlist.
         </p>
+      </div>
+
+      {/* The lobby — the base room, filled in with floor 1's rooms. */}
+      <div className="pt-6">
+        <FloorLayout background="/brand/club-interior.webp" spots={SPOTS} />
       </div>
     </div>
   );
