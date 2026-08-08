@@ -111,6 +111,22 @@ test(
       const a = await makeUser(admin, anon, stamp, 'fresh');
       userIds.push(a.id);
 
+      // RLS smoke: the member can read their own profile. A broken profiles
+      // policy (e.g., recursion) bounces every member out of the club — this
+      // caught it once; it must never silently pass as '0 rows' again.
+      const own = await fetch(
+        `${URL}/rest/v1/profiles?select=id,verified_at&id=eq.${a.id}`,
+        {
+          headers: {
+            apikey: ANON_KEY,
+            authorization: `Bearer ${a.token}`
+          }
+        }
+      );
+      assert.equal(own.status, 200, 'member can read their own profile (RLS intact)');
+      const ownBody = await own.json();
+      assert.equal(ownBody.length, 1, 'profile row visible');
+
       const { data, error } = await rpc(a.token, 'taskbar_state', {});
       assert.ok(!error, error?.message);
       const row = data[0];
