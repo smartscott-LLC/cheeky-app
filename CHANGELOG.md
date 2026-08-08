@@ -50,6 +50,11 @@ points — every push to `main` is production.
   weren't paying for it): `posthog-js`/`posthog-node` dropped, all capture/identify calls and
   the client init gone, env vars + docs cleaned. Sentry stays for errors; Stripe + GA can cover
   analytics when we actually need funnels.
+- **Swag codes hardened** (founder): every code now defaults to a **30-day window to be
+  used** (redeem already refused expired codes — minting just never set one), and gift codes
+  **fail closed** if the item was renamed/deactivated after minting (`gift_unavailable`, never
+  a silent NULL-catalog_id inventory row — no partial grants). The Owner's Booth surfaces
+  unredeemed stale codes via the new `swag_codes_stale` view.
 
 ### Added
 

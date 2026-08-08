@@ -40,6 +40,7 @@ export async function ownerFetchState(input: { key?: string }): Promise<{
   codes?: unknown[];
   grants?: unknown[];
   flags?: unknown[];
+  staleCodes?: unknown[];
   announcement?: unknown;
   unpurchased?: {
     id: string;
@@ -112,6 +113,7 @@ export async function ownerFetchState(input: { key?: string }): Promise<{
     codes,
     grants,
     flags,
+    staleCodes,
     announcement,
     profiles,
     activeSubs,
@@ -153,6 +155,11 @@ export async function ownerFetchState(input: { key?: string }): Promise<{
       .eq('status', 'open')
       .order('created_at', { ascending: false })
       .limit(25),
+    supabaseAdmin
+      .from('swag_codes_stale')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(50),
     supabaseAdmin
       .from('announcements')
       .select('*')
@@ -255,6 +262,7 @@ export async function ownerFetchState(input: { key?: string }): Promise<{
     codes: codes.data ?? [],
     grants: grants.data ?? [],
     flags: flags.data ?? [],
+    staleCodes: staleCodes.data ?? [],
     announcement: announcement.data ?? null,
     unpurchased: unpurchased.map((p) => ({
       id: p.id,

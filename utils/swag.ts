@@ -15,6 +15,7 @@ export async function generateSwagCode(opts: {
   actorType: SwagActorType;
   actorRef?: string | null;
   maxUses?: number;
+  expiresAt?: string | null;
   notes?: string | null;
 }): Promise<{ code?: string; error?: string }> {
   const { data, error } = await supabaseAdmin.rpc('generate_swag_code', {
@@ -22,7 +23,7 @@ export async function generateSwagCode(opts: {
     p_benefit_value: opts.benefitValue,
     p_actor_type: opts.actorType,
     p_actor_ref: opts.actorRef ?? undefined,
-    p_expires_at: undefined,
+    p_expires_at: opts.expiresAt ?? undefined,
     p_max_uses: opts.maxUses ?? 1,
     p_notes: opts.notes ?? undefined
   });

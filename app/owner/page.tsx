@@ -36,6 +36,17 @@ interface CodeRow {
   created_at: string;
   notes: string | null;
 }
+interface StaleCodeRow {
+  id: string;
+  code: string;
+  benefit_type: string;
+  benefit_value: string;
+  actor_type: string;
+  actor_ref: string | null;
+  notes: string | null;
+  created_at: string;
+  expires_at: string | null;
+}
 interface GrantRow {
   id: string;
   benefit_type: string;
@@ -92,6 +103,7 @@ export default function OwnerPage() {
   const [codes, setCodes] = useState<CodeRow[]>([]);
   const [grants, setGrants] = useState<GrantRow[]>([]);
   const [flags, setFlags] = useState<FlagRow[]>([]);
+  const [staleCodes, setStaleCodes] = useState<StaleCodeRow[]>([]);
   const [announcement, setAnnouncement] = useState<{
     message: string;
     display_style: string;
@@ -216,6 +228,7 @@ export default function OwnerPage() {
     setCodes((res.codes ?? []) as CodeRow[]);
     setGrants((res.grants ?? []) as GrantRow[]);
     setFlags((res.flags ?? []) as FlagRow[]);
+    setStaleCodes((res.staleCodes ?? []) as StaleCodeRow[]);
     setAnnouncement(
       (res.announcement as {
         message: string;
@@ -263,6 +276,7 @@ export default function OwnerPage() {
       setCodes((res.codes ?? []) as CodeRow[]);
       setGrants((res.grants ?? []) as GrantRow[]);
       setFlags((res.flags ?? []) as FlagRow[]);
+      setStaleCodes((res.staleCodes ?? []) as StaleCodeRow[]);
       setAnnouncement(
         (res.announcement as {
           message: string;
@@ -1374,6 +1388,40 @@ export default function OwnerPage() {
             ))}
           </div>
         </div>
+
+        {/* Stale codes — benefit no longer resolves to an active catalog item */}
+        {staleCodes.length > 0 && (
+          <div className="mt-8 rounded-xl border border-red-500/40 bg-red-500/5 p-5">
+            <h2 className="font-header text-cyan text-lg">
+              ⚠️ Stale codes — {staleCodes.length}
+            </h2>
+            <p className="mt-1 text-sm text-club">
+              Unredeemed codes whose gift was renamed or deactivated after
+              minting. Redemption fails closed ({'gift_unavailable'}) — fix the
+              catalog or let them expire.
+            </p>
+            <div className="mt-3 space-y-2">
+              {staleCodes.map((c) => (
+                <div
+                  key={c.id}
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-red-500/30 bg-zinc-900/60 px-3 py-2 text-sm"
+                >
+                  <span className="font-mono text-club">{c.code}</span>
+                  <span className="text-cyan">
+                    {label(c.benefit_type, c.benefit_value)} · {c.actor_type}
+                    {c.actor_ref ? `/${c.actor_ref}` : ''}
+                  </span>
+                  <span className="text-xs text-club">
+                    minted {new Date(c.created_at).toLocaleDateString()}
+                    {c.expires_at
+                      ? ` · expires ${new Date(c.expires_at).toLocaleDateString()}`
+                      : ''}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Recent codes + grants */}
         <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">

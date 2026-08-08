@@ -64,11 +64,18 @@ is asking — a confused AI and a hacked caller both get flagged the same way.
 1. **Generate** — the actor (owner via the Booth, or the cast via the AI
    shelf) calls the RPC; the rule set is checked; a random hash
    (`SWAG-XXXXXXXX`) is created and **tied to exactly one item** in one row.
+   **Every code carries a 30-day window to be used** by default (the owner
+   can pass a custom expiry); a code that outlives its window refuses
+   redemption (`code_expired`).
 2. **Give** — the code is handed out in whatever way (in chat, on a card,
    in an email, a batch of 100 for launch).
 3. **Redeem** — the member enters the code in the Swag Shop; the engine
    validates it against that row. No match = invalid. Match = the tied item
-   is rewarded (entitlement / ledger / inventory) + an **audit row**.
+   is rewarded (entitlement / ledger / inventory) + an **audit row**. If a
+   gift in the code's benefit was renamed or deactivated after minting,
+   redemption **fails closed** (`gift_unavailable`) — no partial grants, no
+   broken inventory rows — and the code shows up in the Owner's Booth's
+   stale-code list until the catalog is fixed or the code expires.
 4. **Log** — the code row records who generated it and who claimed it; the
    benefit grant is in `benefit_grants` (actor, benefit, reason, time).
 

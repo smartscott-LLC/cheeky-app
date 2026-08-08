@@ -153,6 +153,13 @@ export type Database = {
             referencedRelation: "swag_codes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "benefit_grants_code_id_fkey"
+            columns: ["code_id"]
+            isOneToOne: false
+            referencedRelation: "swag_codes_stale"
+            referencedColumns: ["id"]
+          },
         ]
       }
       blind_date_answers: {
@@ -2067,7 +2074,42 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      swag_codes_stale: {
+        Row: {
+          actor_ref: string | null
+          actor_type: string | null
+          benefit_type: string | null
+          benefit_value: string | null
+          code: string | null
+          created_at: string | null
+          expires_at: string | null
+          id: string | null
+          notes: string | null
+        }
+        Insert: {
+          actor_ref?: string | null
+          actor_type?: string | null
+          benefit_type?: string | null
+          benefit_value?: string | null
+          code?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          notes?: string | null
+        }
+        Update: {
+          actor_ref?: string | null
+          actor_type?: string | null
+          benefit_type?: string | null
+          benefit_value?: string | null
+          code?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          notes?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       add_special_interest: {

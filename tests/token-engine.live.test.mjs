@@ -179,6 +179,84 @@ test(
     );
 
     await t.test(
+      'swag codes expire and stale gifts fail closed',
+      async () => {
+        const u = await makeUser(admin, anon, stamp, 'swagexp');
+        userIds.push(u.id);
+
+        // 1. An expired code is refused (minted with a past expiry).
+        const { data: expiredCode, error: mintErr } = await admin.rpc(
+          'generate_swag_code',
+          {
+            p_benefit_type: 'tokens',
+            p_benefit_value: '5',
+            p_actor_type: 'owner',
+            p_max_uses: 1,
+            p_expires_at: new Date(Date.now() - 60_000).toISOString(),
+            p_notes: `test:${stamp}`
+          }
+        );
+        assert.ok(!mintErr, mintErr?.message);
+        codes.push(expiredCode);
+        const { error: expErr } = await rpc(u.token, 'redeem_swag_code', {
+          p_code: expiredCode
+        });
+        assert.ok(
+          expErr && expErr.message.includes('code_expired'),
+          'expired code refused'
+        );
+
+        // 2. A gift code whose item is deactivated after minting fails
+        //    closed — never a silent null-catalog_id inventory row.
+        const { data: gift } = await admin
+          .from('gift_catalog')
+          .select('id, slug')
+          .eq('active', true)
+          .limit(1)
+          .single();
+        if (!gift) return t.skip('no active gift catalog item to test');
+        const { data: giftCode, error: gMintErr } = await admin.rpc(
+          'generate_swag_code',
+          {
+            p_benefit_type: 'gift',
+            p_benefit_value: gift.slug,
+            p_actor_type: 'owner',
+            p_max_uses: 1,
+            p_notes: `test:${stamp}`
+          }
+        );
+        assert.ok(!gMintErr, gMintErr?.message);
+        codes.push(giftCode);
+
+        await admin
+          .from('gift_catalog')
+          .update({ active: false })
+          .eq('id', gift.id);
+        const { error: staleErr } = await rpc(u.token, 'redeem_swag_code', {
+          p_code: giftCode
+        });
+        assert.ok(
+          staleErr && staleErr.message.includes('gift_unavailable'),
+          'deactivated gift refused closed'
+        );
+        // The owner view surfaces the stale code while it is broken.
+        const { data: stale } = await admin
+          .from('swag_codes_stale')
+          .select('code')
+          .eq('code', giftCode);
+        assert.ok(
+          (stale ?? []).some((s) => s.code === giftCode),
+          'stale code appears in the owner view'
+        );
+        const { error: restoreErr } = await admin
+          .from('gift_catalog')
+          .update({ active: true })
+          .eq('id', gift.id);
+        assert.ok(!restoreErr, restoreErr?.message);
+      }
+    );
+
+    await t.test(
       `${N} members join one event concurrently — all land, holds consistent`,
       async () => {
         if (!POOL_URL) return t.skip('POSTGRES_URL (pooler) missing');
