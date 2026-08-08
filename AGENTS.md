@@ -40,6 +40,8 @@ A dating app built like a nightclub. Three pillars:
 - **Build on main during construction.** We're in build-out: `main` is always current and every push auto-deploys to Vercel (`smartscott.online`). The safety valve is git history + milestone tags, not a stale main — when a floor/area is fluid and testable, tag it (e.g. `v0.1-floor-1-locked`) as a save spot, then cut per-area branches (`feat/floor-1`) for the next area and merge back when fluid. No PR ceremony until there are real users on the app.
 - **Commit messages describe _what and why_.** Never push a broken build — `pnpm lint` + `pnpm build` pass before pushing, because a bad push goes live on production.
 - **Validate before saying done.** `pnpm lint`, `pnpm build`, and a manual pass of the affected flow (auth / checkout / event).
+- **No "pre-existing" escapes — it's all ours.** If we run into an error, a warning, dead weight, or a mess — whether we caused it or inherited it — we take care of it immediately. No TODOs, no placeholders, no "get to it later", no dummy logic, ever. The store rule: one worker stocks it wrong, the next worker doesn't shrug — they clean it up.
+- **One identity system, one way.** Every table uses a uuid primary key, with stable human-readable slugs/labels only as secondary identity for URLs, config, and shareables (characters, event kinds, gift slugs, swag codes). Never key a relationship by a label; never reach for uuid where a stable slug already exists. If a mix ever appears, align it to whichever side is more efficient and say so.
 
 ## Engineering conventions
 
