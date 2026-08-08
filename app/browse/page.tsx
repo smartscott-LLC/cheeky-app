@@ -1,4 +1,5 @@
 import BrowseCard, { BrowsePerson } from '@/components/ui/Browse/BrowseCard';
+import SparkLab from '@/components/ui/Browse/SparkLab';
 import { createClient } from '@/utils/supabase/server';
 import { getProfile, getSubscription, getUser } from '@/utils/supabase/queries';
 import { isCompatible } from '@/utils/helpers';
@@ -97,10 +98,14 @@ export default async function BrowsePage() {
           back, it&apos;s instant. No waiting, no wondering.
         </p>
         <div className="mt-10">
-          <BrowseCard
-            people={people}
-            photoBase={photoBase}
-            wavedIds={wavedIds}
+          <SparkLab
+            spark={
+              <BrowseCard
+                people={people}
+                photoBase={photoBase}
+                wavedIds={wavedIds}
+              />
+            }
           />
         </div>
       </div>
