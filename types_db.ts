@@ -2519,6 +2519,9 @@ export type Database = {
           new_people_today: number
           checked_in_today: boolean
           matchmaker_plays_left: number
+          blind_date_joins_today: number
+          gift_ready: boolean
+          gift_ready_in_minutes: number
         }[]
       }
       tick_rooftop_events: {

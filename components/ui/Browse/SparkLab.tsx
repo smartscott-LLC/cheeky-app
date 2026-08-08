@@ -5,7 +5,7 @@ import L3Trio from './L3Trio';
 
 /**
  * The spark lab — /browse is the hub of ways to create sparks. Mode 1 is the
- * classic 1-for-1 Spark List; Mode 2 is L³ (Leave · Like · Love). Each mode
+ * classic 1-for-1 Swipes; Mode 2 is L³ (Leave · Like · Love). Each mode
  * carries a one-line how-it-works; the L³ rewards live behind "more details".
  */
 export default function SparkLab({ spark }: { spark: ReactNode }) {
@@ -28,7 +28,7 @@ export default function SparkLab({ spark }: { spark: ReactNode }) {
   return (
     <div>
       <div className="flex items-center justify-center gap-3">
-        {tab('spark', '⚡ Spark')}
+        {tab('spark', '⚡ Swipes')}
         {tab('l3', 'L³')}
       </div>
 

@@ -20,7 +20,7 @@ export interface FloorMeta {
 // Every floor's room scene — the floor map (docs/floor-map.md) is the
 // source of truth for what belongs where:
 //   LEFT   = the floor's signature event
-//   MIDDLE = Event Center, Cheeky Chats, The Spark List
+//   MIDDLE = Event Center, Cheeky Chats, The SPARX
 //   RIGHT  = Elevators + Gift Shop
 // The lobby (/club) differs: LEFT = VIP area, RIGHT also carries Coat Check.
 
@@ -36,7 +36,7 @@ const CHAT = {
 const SPARK = {
   href: '/browse',
   emoji: '⚡',
-  name: 'The Spark List',
+  name: 'SPARX',
   sub: 'Who\u2019s out tonight',
   color:
     'text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',

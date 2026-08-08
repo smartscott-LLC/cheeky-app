@@ -1,7 +1,7 @@
 // The Tiki Taskbar's data endpoint. One round trip to the taskbar_state RPC
 // (usage counts), then the "left" math against the tier caps. Hard-capped
-// daily allowances only — token-spend items never appear. The client polls
-// this; no realtime in v1.
+// allowances only — token-spend items and hourly events never appear. The
+// client polls this; no realtime in v1.
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
@@ -13,6 +13,9 @@ interface TaskbarStateRow {
   new_people_today: number | null;
   checked_in_today: boolean | null;
   matchmaker_plays_left: number | null;
+  blind_date_joins_today: number | null;
+  gift_ready: boolean | null;
+  gift_ready_in_minutes: number | null;
 }
 
 const left = (cap: number | null, used: number | null): number | null => {
@@ -52,11 +55,24 @@ export async function GET() {
         count = left(caps.messages, row.messages_sent_today);
         unlimited = caps.messages === null;
         break;
-      case 'sparks':
+      case 'swipes':
+        // The sparks hub's shared allowance: new people reachable today.
+        count = left(caps.people, row.new_people_today);
+        break;
+      case 'l3':
+        // L³ rides the same new-people allowance (no separate daily limit).
         count = left(caps.people, row.new_people_today);
         break;
       case 'matchmaker':
+        // Plays left from the 2/3/4/5 dial; the game decrements it when it ships.
         count = left(caps.plays, row.matchmaker_plays_left);
+        break;
+      case 'blind':
+        count = left(caps.blindDate, row.blind_date_joins_today);
+        break;
+      case 'gifts':
+        // One send/hour: 1 when ready, minutes-to-ready when cooling.
+        count = row.gift_ready ? 1 : (row.gift_ready_in_minutes ?? 0);
         break;
       case 'coat':
         // One a day: 1 to do until it's done, 0 after.

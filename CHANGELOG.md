@@ -92,13 +92,19 @@ points — every push to `main` is production.
   mid-cycle upgrades land their grant; the created/updated/checkout triple-fire can't
   double-grant). Tier resolved from the synced Stripe catalog; pure mapping
   unit-tested.
-- **The Tiki Taskbar** (PRD-tiki-taskbar): the universal to-do bar at the top of the feed
-  — hard-capped daily allowances only (messages left 30/75/∞/∞, new people left 5/15/40/100,
+- **The Tiki Taskbar** (PRD-tiki-taskbar): the universal to-do bar — hard-capped daily allowances only (messages left 30/75/∞/∞, new people left 5/15/40/100,
   Matchmaker plays 2/3/4/5 once it ships, the coat check). Token-spend items never appear —
   the bar never regulates the wallet. Gold rounded bar, teal Damion counts (∞ for
   unlimited), gold Fascinate heading, pink caption; collapse / move top-bottom / hide per
   device; guest tier gets the 🪪 Get-your-card tile. Backed by the `taskbar_state` RPC and
   `messages.read_at` + `mark_conversation_read` (chat list now shows gold unread pills).
+- **Tiki Taskbar v3** (founder's rule pass): the bar now carries EVERY hard-capped
+  non-hourly allowance — **SPARX** (the Spark List is renamed — Swipes ⚡, L³ 💞, and
+  Matchmaker 🎯 all get tiles; the 2/3/4/5 dial shows live), **Blind Date** (❤️, Gold+,
+  new 2/day join cap enforced in `join_blind_date`), **Gifts** (🎁, 1/hour — shows
+  minutes-to-ready while cooling), plus Chats and Coat Check. Hourly events and pure
+  token items stay out. The bar docks **bottom-left at 1/3 width**, compact, with the
+  label centered over it.
 
 ### Fixed
 

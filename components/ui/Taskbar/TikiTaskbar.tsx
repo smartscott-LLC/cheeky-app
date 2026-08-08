@@ -1,9 +1,10 @@
 // The Tiki Taskbar — the club's to-do list (PRD: docs/PRD-tiki-taskbar.md).
-// Hard-capped daily allowances only: gold rounded bar, icons in their
-// natural colors, counts in teal Damion (∞ where the tier is unlimited),
-// heading in gold Fascinate, caption in pink Rancho. Fetches live counts
-// from /api/taskbar on mount, on navigation, on focus, and every 60s.
-// Per-device prefs (localStorage): collapse, move top/bottom, hide.
+// Hard-capped daily allowances only. Tucked bottom-left at 1/3 width (out of
+// the way of everything you scroll), compact tiles: icons in their natural
+// colors, counts in teal Damion (∞ where unlimited), label centered above in
+// gold Fascinate, tiny pink caption. Fetches live counts from /api/taskbar
+// on mount, on navigation, on focus, and every 60s. Per-device prefs
+// (localStorage): collapse, move top/bottom, hide.
 'use client';
 
 import Link from 'next/link';
@@ -34,7 +35,7 @@ interface Prefs {
 const PREFS_KEY = 'tiki:prefs';
 const REFRESH_MS = 60_000;
 
-const DEFAULT_PREFS: Prefs = { hidden: false, collapsed: false, position: 'top' };
+const DEFAULT_PREFS: Prefs = { hidden: false, collapsed: false, position: 'bottom' };
 
 function loadPrefs(): Prefs {
   if (typeof window === 'undefined') return DEFAULT_PREFS;
@@ -114,26 +115,27 @@ export default function TikiTaskbar() {
     <div
       className={`${
         prefs.position === 'top'
-          ? 'sticky top-[4rem] z-40 md:top-[5rem]'
-          : 'fixed bottom-4 left-1/2 z-40 w-full max-w-3xl -translate-x-1/2 px-3'
+          ? 'sticky top-[4rem] z-40 w-1/3 min-w-[240px] md:top-[5rem]'
+          : 'fixed bottom-3 left-3 z-40 w-1/3 min-w-[240px]'
       }`}
     >
       {prefs.collapsed ? (
         <button
           onClick={() => savePrefs({ ...prefs, collapsed: false })}
-          className="mx-auto flex items-center gap-2 rounded-full border-2 border-gold bg-zinc-950/95 px-4 py-1.5 text-gold shadow-[0_0_24px_rgba(255,215,0,0.15)] transition hover:bg-zinc-900"
+          className="flex items-center gap-2 rounded-full border-2 border-gold bg-zinc-950/95 px-4 py-1.5 text-gold shadow-[0_0_24px_rgba(255,215,0,0.15)] transition hover:bg-zinc-900"
           title="Expand the Tiki Taskbar"
         >
           <span className="font-hero text-sm">Tiki</span>
           <span className="text-xs">▾</span>
         </button>
       ) : (
-        <div className="mx-auto max-w-3xl px-2">
-          <div className="flex items-center justify-between gap-2 px-1">
-            <h2 className="font-hero text-gold text-center text-2xl tracking-wide sm:text-3xl">
+        <div>
+          {/* Label — centered over the bar, small. Controls hug the corner. */}
+          <div className="relative pr-20">
+            <h2 className="font-hero text-gold text-center text-sm tracking-wide sm:text-base">
               Tiki Taskbar
             </h2>
-            <div className="flex items-center gap-1 text-zinc-500">
+            <div className="absolute right-0 top-0 flex items-center gap-1 text-zinc-500">
               <button
                 onClick={() =>
                   savePrefs({
@@ -141,21 +143,21 @@ export default function TikiTaskbar() {
                     position: prefs.position === 'top' ? 'bottom' : 'top'
                   })
                 }
-                className="rounded px-1.5 py-0.5 text-xs transition hover:text-cyan"
+                className="rounded px-1 py-0.5 text-[10px] transition hover:text-cyan"
                 title={prefs.position === 'top' ? 'Move to the bottom' : 'Move to the top'}
               >
                 ⇅
               </button>
               <button
                 onClick={() => savePrefs({ ...prefs, collapsed: true })}
-                className="rounded px-1.5 py-0.5 text-xs transition hover:text-cyan"
+                className="rounded px-1 py-0.5 text-[10px] transition hover:text-cyan"
                 title="Collapse the bar"
               >
                 ▾
               </button>
               <button
                 onClick={() => savePrefs({ ...prefs, hidden: true })}
-                className="rounded px-1.5 py-0.5 text-xs transition hover:text-club"
+                className="rounded px-1 py-0.5 text-[10px] transition hover:text-club"
                 title="Hide the Tiki Taskbar"
               >
                 ✕
@@ -163,29 +165,29 @@ export default function TikiTaskbar() {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 rounded-full border-2 border-gold bg-zinc-950/95 px-8 py-3 shadow-[0_0_30px_rgba(255,215,0,0.12)]">
+          <div className="mt-1 flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 rounded-2xl border-2 border-gold bg-zinc-950/95 px-4 py-2 shadow-[0_0_24px_rgba(255,215,0,0.12)]">
             {tiles.map((t) => (
               <Link
                 key={t.key}
                 href={t.href}
                 title={t.label}
-                className="group flex flex-col items-center gap-0.5 rounded-full px-1 py-0.5 transition hover:scale-105"
+                className="group flex flex-col items-center gap-0.5 rounded-lg px-1 py-0.5 transition hover:scale-105"
               >
-                <span className="text-2xl leading-none">{t.icon}</span>
-                <span className="font-header text-cyan text-lg leading-none">
+                <span className="text-xl leading-none">{t.icon}</span>
+                <span className="font-header text-cyan text-sm leading-none">
                   {t.unlimited ? '∞' : formatCount(t.count)}
                 </span>
-                <span className="text-club text-[10px] font-semibold leading-tight tracking-wide">
+                <span className="text-club text-[9px] font-semibold leading-tight tracking-wide">
                   {t.label}
                 </span>
               </Link>
             ))}
           </div>
 
-          <p className="text-club mt-1.5 text-center font-body text-sm opacity-80">
+          <p className="text-club mt-1 text-center font-body text-xs opacity-70">
             {tier === 'guest'
               ? 'Get your card to start your night'
-              : 'Your daily to-dos — tonight, the club is yours'}
+              : 'Your daily to-dos'}
           </p>
         </div>
       )}

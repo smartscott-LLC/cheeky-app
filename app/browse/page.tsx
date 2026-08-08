@@ -91,7 +91,7 @@ export default async function BrowsePage() {
           ← Back to the floor
         </Link>
         <h1 className="text-center text-4xl font-hero text-gold sm:text-5xl">
-          The Spark List
+          SPARX
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-club">
           Everyone&apos;s out tonight. Pick who you like — if they pick you

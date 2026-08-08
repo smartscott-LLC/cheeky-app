@@ -25,7 +25,7 @@ const GROUPS = [
   {
     title: 'The rooms',
     items: [
-      { href: '/browse', label: 'The Spark List', note: "Who's out tonight." },
+      { href: '/browse', label: 'SPARX', note: "Who's out tonight." },
       { href: '/messages', label: 'Cheeky Chats', note: 'Conversations, waves, Date Night.' },
       { href: '/gifts', label: 'Gift Shop', note: 'Buy gifts with tokens.' },
       { href: '/swag', label: 'Swag Shop', note: 'Redeem giveaway codes.' },

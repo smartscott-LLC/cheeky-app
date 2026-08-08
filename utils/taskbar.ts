@@ -1,13 +1,14 @@
 // The Tiki Taskbar — one config drives the whole bar (PRD:
-// docs/PRD-tiki-taskbar.md). Founder's logic: the bar carries ONLY
-// hard-capped daily allowances — never token-spend items (we don't regulate
-// what a member spends their tokens on; nothing rolls over, caps reset
-// daily). Counts come from the taskbar_state RPC (usage) + the caps below
-// (the "left" math happens in the API route).
+// docs/PRD-tiki-taskbar.md). Founder's logic: the bar carries hard-capped
+// daily (or shorter-window) allowances — token-spend items never appear (we
+// don't regulate the wallet), and hourly events are self-limiting so they
+// stay out too. Counts come from the taskbar_state RPC (usage) + the caps
+// below (the "left" math happens in the API route).
 //
-// The caps mirror send_message's tier logic (30/5, 75/15, ∞/40, ∞/100) and
-// the Matchmaker plays dial (2/3/4/5 — PRD-matchmaker §5). If a cap moves
-// there, move it here too — the bar must agree with the enforcement.
+// The caps mirror send_message's tier logic (30/5, 75/15, ∞/40, ∞/100), the
+// Matchmaker plays dial (2/3/4/5 — PRD-matchmaker §5), and the Blind Date
+// daily cap (2/day — join_blind_date enforces it). If a cap moves there, it
+// moves here too — the bar must agree with the enforcement.
 //
 // PURE module — no server imports, safe for both the API route and tests.
 
@@ -41,13 +42,17 @@ export interface TierCaps {
   people: number;
   /** Matchmaker plays per day (PRD-matchmaker §5: 2/3/4/5). */
   plays: number;
+  /** Blind Date joins per day (enforced in join_blind_date). */
+  blindDate: number;
+  /** Gifts sendable per hour (the send_gift cooldown). */
+  giftsPerHour: number;
 }
 
 export const TIER_CAPS: Record<TierName, TierCaps> = {
-  silver: { messages: 30, people: 5, plays: 2 },
-  gold: { messages: 75, people: 15, plays: 3 },
-  platinum: { messages: null, people: 40, plays: 4 },
-  diamond: { messages: null, people: 100, plays: 5 }
+  silver: { messages: 30, people: 5, plays: 2, blindDate: 0, giftsPerHour: 1 },
+  gold: { messages: 75, people: 15, plays: 3, blindDate: 2, giftsPerHour: 1 },
+  platinum: { messages: null, people: 40, plays: 4, blindDate: 2, giftsPerHour: 1 },
+  diamond: { messages: null, people: 100, plays: 5, blindDate: 2, giftsPerHour: 1 }
 };
 
 export const TASKBAR_TILES: Record<string, TaskbarTileDef> = {
@@ -58,10 +63,17 @@ export const TASKBAR_TILES: Record<string, TaskbarTileDef> = {
     href: '/messages',
     minRank: 0
   },
-  sparks: {
-    key: 'sparks',
+  swipes: {
+    key: 'swipes',
     icon: '⚡',
-    label: 'The Spark List',
+    label: 'Swipes',
+    href: '/browse',
+    minRank: 0
+  },
+  l3: {
+    key: 'l3',
+    icon: '💞',
+    label: 'L³',
     href: '/browse',
     minRank: 0
   },
@@ -70,8 +82,21 @@ export const TASKBAR_TILES: Record<string, TaskbarTileDef> = {
     icon: '🎯',
     label: 'Matchmaker',
     href: '/browse',
-    minRank: 0,
-    shipped: false // the game isn't built yet — flip when Matchmaker lands
+    minRank: 0
+  },
+  blind: {
+    key: 'blind',
+    icon: '❤️',
+    label: 'Blind Date',
+    href: '/events/blind_date',
+    minRank: 1
+  },
+  gifts: {
+    key: 'gifts',
+    icon: '🎁',
+    label: 'Gifts',
+    href: '/gifts',
+    minRank: 0
   },
   coat: {
     key: 'coat',
@@ -82,8 +107,16 @@ export const TASKBAR_TILES: Record<string, TaskbarTileDef> = {
   }
 };
 
-/** Display order — the founder's four to-dos. */
-export const TILE_ORDER = ['chats', 'sparks', 'matchmaker', 'coat'];
+/** Display order — the founder's to-dos: chats, the sparks hub, the rooms. */
+export const TILE_ORDER = [
+  'chats',
+  'swipes',
+  'l3',
+  'matchmaker',
+  'blind',
+  'gifts',
+  'coat'
+];
 
 export function rankForTier(tier: string | null | undefined): number {
   const i = RANK_TIERS.indexOf((tier ?? 'silver') as TierName);

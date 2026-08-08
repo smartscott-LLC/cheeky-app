@@ -6,7 +6,7 @@ import { isCompatible } from '@/utils/helpers';
 import type { Database } from '@/types_db';
 
 // ============================================================
-// Spark List — the 1-for-1
+// Swipes — the 1-for-1
 // ============================================================
 
 /**
@@ -69,7 +69,7 @@ export type L3PickResult = {
 /**
  * L³ next trio — the RPC pulls a random any-floor batch (excluding self,
  * already-picked, blocked, unverified, photo-less); we then apply the same
- * mutual-compatibility filter as the Spark List and slice to three.
+ * mutual-compatibility filter as Swipes and slice to three.
  */
 export async function l3NextTrio(): Promise<{
   people: L3Person[];

@@ -7,7 +7,7 @@ import AnnouncementBanner from '@/components/ui/AnnouncementBanner/AnnouncementB
 
 // The lobby — the stopping zone. Floor 1's rooms, positioned per the
 // founder's entrance-scene guide: Dance Floor left (cyan), Gift Shop right
-// (gold), Chats + Spark List front and center (pink), elevators upper right.
+// (gold), Chats + SPARX front and center (pink), elevators upper right.
 const SPOTS: FloorSpot[] = [
   {
     href: '/chat/brutus',
@@ -49,7 +49,7 @@ const SPOTS: FloorSpot[] = [
   {
     href: '/browse',
     emoji: '⚡',
-    name: 'The Spark List',
+    name: 'SPARX',
     sub: 'Who\u2019s out tonight',
     color:
       'text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',

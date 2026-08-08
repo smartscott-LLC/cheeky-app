@@ -59,44 +59,46 @@ Platinum). Universal, collapsible, and movable.
 
 ## 5. The tiles (config-driven, hard-cap only — binding rule)
 
-**Only hard-capped daily allowances go in the bar.** A tile exists if and
-only if the membership puts a hard cap on it per day. **Token-spend items
-(Dance Floor, Blind Date, Speed Dating, Rooftop, gifts) never appear** —
-we don't regulate what a member spends their tokens on; a member who
-skips a dance floor for a 20-token gift must never see their bar shrink
-as if they owed the bar those tokens. Nothing rolls over; every cap resets
-daily.
+**The bar carries every hard-capped allowance.** A tile exists if and only
+if the membership puts a hard per-member limit on it (daily, or a shorter
+window like the gift hour). **Token-spend items with NO rate limit never
+appear** — we don't regulate the wallet. **Hourly events (Dance Floor,
+Speed Dating, Rooftop) never appear** — they're self-limiting. Token-cost
+items that ARE also rate-limited (Gifts, Blind Date) qualify on the rate
+limit, never on the tokens. Nothing rolls over; caps reset daily (or on
+their window).
 
 One config file (`utils/taskbar.ts`) drives the tile set + the caps (they
-mirror `send_message`'s tier logic and the Matchmaker plays dial — if a cap
-moves there, it moves here too). Adding a tile later = one config entry.
+mirror `send_message`'s tier logic, the Matchmaker plays dial, and the
+`join_blind_date` daily cap — if a cap moves there, it moves here too).
 
-| # | Icon | Tile | The count (number) | Unlocks | Taps to |
+| # | Icon | Tile | The count | Unlocks | Taps to |
 |---|---|---|---|---|---|
-| 1 | 📩 | Cheeky Chats | messages left today — 30 (silver) / 75 (gold) / ∞ (platinum) / ∞ (diamond) | all | `/messages` |
-| 2 | ⚡ | The Spark List | new people left today — 5 / 15 / 40 / 100 | all | `/browse` |
-| 3 | 🎯 | Matchmaker | plays left today — 2 / 3 / 4 / 5 (the locked dial) | all (when Matchmaker ships) | `/browse` matchmaker mode |
-| 4 | 🔥 | Coat Check | 1 = not checked in today, 0 = done | all | `/coat-check` |
+| 1 | 📩 | Cheeky Chats | messages left today — 30 / 75 / ∞ / ∞ | all | `/messages` |
+| 2 | ⚡ | Swipes | new people left today — 5 / 15 / 40 / 100 (the sparks hub's allowance) | all | `/browse` |
+| 3 | 💞 | L³ | same new-people allowance (L³ shares the cap, no separate limit) | all | `/browse` |
+| 4 | 🎯 | Matchmaker | plays left today — 2 / 3 / 4 / 5 | all | `/browse` |
+| 5 | ❤️ | Blind Date | joins left today — 2 / day (enforced in `join_blind_date`) | Gold+ | `/events/blind_date` |
+| 6 | 🎁 | Gifts | 1 when a send is ready; minutes-to-ready while cooling (1/hour) | all | `/gifts` |
+| 7 | 🔥 | Coat Check | 1 = not checked in today, 0 = done | all | `/coat-check` |
 
 Notes:
-- The tile set is the same four for every tier — the Ladder shows in the
-  **numbers** (§6), not in new tiles.
 - **∞** renders for unlimited messages (Platinum/Diamond) — Damion falls
   back to a system glyph for the symbol itself.
-- The Matchmaker tile is config-gated (`shipped: false`) until the game
-  ships; flipping the flag turns it on with the 2/3/4/5 dial.
+- Pending (founder to decide): **daily like caps** and **super likes** —
+  neither exists in the engine yet; when they land, Swipes shows likes
+  left and a super-like tile appears (see §10).
 - Street (unverified): no bar — one tile instead, **🪪 Get your card**
   → `/verify`. The door is the only to-do before the club opens.
 
 ## 6. The Ladder, visible in the numbers
 
-- Same four tiles for every member. What changes with the card:
-  - **Chats**: 30 → 75 → ∞ → ∞.
-  - **Sparks**: 5 → 15 → 40 → 100 new people a day.
-  - **Matchmaker**: 2 → 3 → 4 → 5 plays a day.
+- The tile set grows with the card (Blind Date joins at Gold) and the
+  numbers rise with it: Chats 30 → 75 → ∞ → ∞, Sparks 5 → 15 → 40 → 100,
+  Matchmaker 2 → 3 → 4 → 5.
 - The counts are the promise of the Ladder made visible: the free tier
-  sees a generous club (30 chats, 5 people, 2 plays, the coat check) and
-  every paid step visibly raises the numbers.
+  sees a generous club (30 chats, 5 people, 2 plays, gifts, the coat
+  check) and every paid step visibly raises the numbers.
 
 ## 7. Update logic (from the founder's flow — binding)
 
@@ -142,17 +144,24 @@ are a v2 upgrade if we want instant counts without polling.
 
 ## 10. Decisions (resolved 2026-08-08)
 
-1. **Tile set**: the four hard-cap to-dos (Chats, Sparks, Matchmaker, Coat
-   Check). Events + tokens explicitly excluded by the hard-cap rule.
-2. **Blind Date / Dance Floor / etc.**: out — token-spend items.
-3. **Matchmaker**: tile built, `shipped: false` until the game ships.
+1. **Tile set**: the seven hard-capped to-dos (Chats, Swipes, L³,
+   Matchmaker, Blind Date, Gifts, Coat Check). Hourly events and pure
+   token items excluded — token-cost items qualify only when rate-limited.
+2. **Blind Date / Gifts**: in — rate-limited (2 joins/day enforced in
+   `join_blind_date`; 1 gift send/hour), never counted by tokens.
+3. **Matchmaker**: tile live with the 2/3/4/5 dial; the game itself is the
+   next build.
 4. **Adjustability**: per-device — collapse, move top/bottom, hide
-   (localStorage).
+   (localStorage). Default dock: bottom-left, 1/3 width.
 5. **Mount**: root-layout overlay, all member pages (hidden on /, /signin,
    /verify, /owner, /auth). Street zone gets the 🪪 Get-your-card tile.
+6. **Open (founder to decide)**: daily like caps + super likes — neither
+   exists; Swipes currently shows the new-people allowance, and the
+   super-like feature needs a definition (waves? L³ Love? a new build).
 
 ## 11. Out of scope (v1)
 
 - Realtime push counts (poll first, channels later).
 - Server-synced bar preferences (device-level only).
 - Taskbar on the landing page.
+- Like caps / super likes until the founder picks the numbers + shape.

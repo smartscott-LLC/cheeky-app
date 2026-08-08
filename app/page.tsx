@@ -19,7 +19,7 @@ const floors = [
       'Verified with ID',
       '20 tokens on entry',
       'Hourly Dance Floor',
-      'Cheeky Chats + Spark List'
+      'Cheeky Chats + SPARX'
     ]
   },
   {

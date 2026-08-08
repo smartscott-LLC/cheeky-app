@@ -239,7 +239,7 @@ export default function ProfileForm({
             className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
           />
           <p className="text-xs text-club">
-            A little insight goes a long way. The Spark List shows it under your
+            A little insight goes a long way. SPARX shows it under your
             name.
           </p>
         </div>
