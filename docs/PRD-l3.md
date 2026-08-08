@@ -109,15 +109,30 @@ make Love the *fun* pick, not the risky one:
   deliberate exception to messaging-down, and it is match-only (no cold
   messaging up ever).
 
-## 7. UX sketch
+## 7. UX sketch — the Spark List is the hub
 
-- **Mobile:** a trio of three photo cards in a row. Tap a card, then assign
-  Leave / Like / Love (or drag to a labeled slot). After the third assignment,
-  the trio advances. One clear "skip trio" if someone genuinely dislikes all
-  three — but the layout makes assigning the default.
+The Spark List (`/browse`) becomes the **spark lab** — a growing hub of
+ways to create sparks. Each mode has a name, a **one-line how-it-works**
+underneath, and its rewards/mechanics tucked behind a **"more details"**
+affordance (never inlined into the flow). Future modes slot in here — the
+same weekly cadence as icebreakers and events, but for matchmaking.
+
+**Mode 1 — Spark (the 1-for-1, existing browse):**
+> One face at a time. Say yes or skip — a mutual yes is an instant spark.
+
+**Mode 2 — L³:**
+> Three faces at once. Rank them — Leave, Like, Love — then the next trio.
+> Mutual Love is a super match.
+
+- The mode switch is a simple tab/segment control at the top of the page.
+- "More details" for L³ opens the tier ladder (§4) — the T1 free line, the
+  T2 super-match gift, and cross-floor visibility. Small, out of the way.
+- **Mobile:** the trio is three photo cards in a row; tap a card then assign
+  Leave / Like / Love (or drag to a labeled slot). One clear "skip trio"
+  if someone genuinely dislikes all three — but assigning is the default.
 - **Desktop:** same trio, larger cards, keyboard shortcuts (1/2/3).
-- The three slots are labeled and color-tied: **Leave** (zinc), **Like**
-  (cyan), **Love** (gold) — the L³ branding moment.
+- The three slots are color-tied: **Leave** (zinc), **Like** (cyan),
+  **Love** (gold) — the L³ branding moment.
 
 ## 8. Metrics (owner dashboard)
 
@@ -131,8 +146,9 @@ make Love the *fun* pick, not the risky one:
 
 1. **Like+Like**: keep as a soft match (launch default per founder), or
    "spark only" from day one?
-2. **Where it lives**: a mode inside the Spark List (`/browse`), or its own
-   room on a floor / in the lobby? (Founder leaned: browse extension.)
+2. **Where it lives** — **decided: the Spark List** (`/browse`), as a second
+   mode beside the existing 1-for-1. The page becomes a hub of matchmaking
+   modes (Spark, L³, and future ones).
 3. **Trio source**: random verified members vs. preference-weighted (floors,
    distance, the Spark List's existing signals)? Start random, weight later.
 4. **How the match conversation counts** against the existing rate limits —
