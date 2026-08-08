@@ -1,0 +1,35 @@
+flowchart TD
+    A([Start Matchmaker Game]) --> B[Regular Swipe Mode]
+    B --> C{User swipes right?}
+    C -- No --> B
+    C -- Yes --> D[Add profile to Liked List]
+    D --> E{Reached 2 likes?}
+    E -- No --> B
+    E -- Yes --> F[Setup 4x4 Matchmaking Board]
+
+    subgraph Setup [Board Setup - 16 cards]
+        direction TB
+        F --> G[Place 2 copies of each liked profile<br/>4 cards total]
+        G --> H[Add 2 copies of 6 random profiles<br/>12 cards total]
+        H --> I[Shuffle all 16 cards<br/>place face down]
+    end
+
+    I --> J[User flips two cards]
+    J --> K{Do they match?}
+
+    K -- No --> L[Strike + 1]
+    L --> M{Strikes = 3?}
+    M -- Yes --> N[Game Over: Lose<br/>No more message unlocks]
+    M -- No --> J
+
+    K -- Yes --> O[Match found!]
+    O --> P[Unlock messaging to that <br/>specific matched profile]
+    P --> Q[User sends 1 message to them]
+    Q --> R[Recipient gets alert: <br/>'Someone discovered you<br/>in Matchmaker']
+    R --> S{Recipient accepts?}
+    S -- Yes --> T[Chat opens - both can talk]
+    S -- No --> U[Chat ends - no further contact]
+
+    O --> V{Total matches = 2?}
+    V -- Yes --> W[Game Over: Win - 2 messages sent]
+    V -- No --> J
