@@ -53,20 +53,31 @@ export default async function MessagesPage() {
 
   let profileMap = new Map<string, { display_name: string | null }>();
   let lastByConv = new Map<string, { body: string; created_at: string }>();
+  const unreadByConv = new Map<string, number>();
 
   if (convs.length > 0) {
-    const [{ data: profiles }, { data: lastMessages }] = await Promise.all([
-      supabase.from('profiles').select('id, display_name').in('id', otherIds),
-      supabase
-        .from('messages')
-        .select('conversation_id, body, created_at')
-        .in(
-          'conversation_id',
-          convs.map((c) => c.id)
-        )
-        .order('created_at', { ascending: false })
-        .limit(200)
-    ]);
+    const [{ data: profiles }, { data: lastMessages }, { data: unreadRows }] =
+      await Promise.all([
+        supabase.from('profiles').select('id, display_name').in('id', otherIds),
+        supabase
+          .from('messages')
+          .select('conversation_id, body, created_at')
+          .in(
+            'conversation_id',
+            convs.map((c) => c.id)
+          )
+          .order('created_at', { ascending: false })
+          .limit(200),
+        supabase
+          .from('messages')
+          .select('conversation_id')
+          .in(
+            'conversation_id',
+            convs.map((c) => c.id)
+          )
+          .neq('sender_id', user.id)
+          .is('read_at', null)
+      ]);
 
     profileMap = new Map((profiles ?? []).map((p) => [p.id, p]));
     for (const m of lastMessages ?? []) {
@@ -76,6 +87,13 @@ export default async function MessagesPage() {
           created_at: m.created_at
         });
       }
+    }
+    // Unread counts per conversation (read_at is set when a thread opens).
+    for (const m of unreadRows ?? []) {
+      unreadByConv.set(
+        m.conversation_id,
+        (unreadByConv.get(m.conversation_id) ?? 0) + 1
+      );
     }
   }
 
@@ -176,8 +194,13 @@ export default async function MessagesPage() {
                   className="block rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 transition hover:border-zinc-600"
                 >
                   <div className="flex items-center justify-between gap-4">
-                    <p className="text-xl font-bold text-club">
+                    <p className="flex items-center gap-2 text-xl font-bold text-club">
                       {profile?.display_name || 'Member'}
+                      {(unreadByConv.get(c.id) ?? 0) > 0 && (
+                        <span className="rounded-full bg-gold px-2 py-0.5 font-header text-sm leading-none text-black">
+                          {unreadByConv.get(c.id)}
+                        </span>
+                      )}
                     </p>
                     {last && (
                       <p className="text-sm text-club">

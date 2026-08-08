@@ -67,6 +67,10 @@ export default async function ThreadPage({
   const songEndsAt = match?.created_at
     ? new Date(match.created_at).getTime() + 3 * 60 * 1000
     : null;
+
+  // Opening the thread clears its unread state (Tiki Taskbar + chat list
+  // read messages.read_at). Idempotent — safe on every view.
+  await supabase.rpc('mark_conversation_read', { p_conversation_id: id });
   // Every grid room (Dance Floor, Themed Night, Rooftop) pays for the song
   // moment — the DJ + timer follow the room, not just the reference event.
   const GRID_KINDS = ['dance_floor', 'themed_night', 'rooftop'];

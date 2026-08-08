@@ -8,13 +8,15 @@
 
 ## 1. TL;DR
 
-**The Tiki Taskbar is a gold-trimmed bar at the top of the feed showing live,
-actionable to-dos: unread messages, unanswered sparks, plays left, events
-open — each an icon + a count that navigates to the thing and decrements when
-the thing is done.** It is the play-in to the whole availability of the club:
-the free tier lands and instantly sees "there's a lot to do here", paid tiers
-see the bar expand as their floors unlock. Universal, collapsible, and
-movable.
+**The Tiki Taskbar is a gold-trimmed bar at the top of the feed showing the
+member's hard-capped daily allowances: messages left, new people left,
+Matchmaker plays left, and the coat check — each an icon + a count that
+navigates to the thing and decrements when the thing is done.** Token-spend
+items never appear: the bar shows what the membership caps give you, never
+your token wallet. It is the play-in to the whole availability of the club:
+the free tier lands and instantly sees a generous club (30 chats, 5 new
+people, 2 plays), and every paid step visibly raises the numbers (∞ chats at
+Platinum). Universal, collapsible, and movable.
 
 ## 2. Why
 
@@ -55,100 +57,102 @@ movable.
   option if the founder wants it synced across devices.
 - **Guest/street**: no bar (no events, no tokens — nothing to show).
 
-## 5. The tiles (config-driven, tier-aware)
+## 5. The tiles (config-driven, hard-cap only — binding rule)
 
-One config file (`utils/taskbar.ts`) drives the tile set: which tiles exist,
-which tier unlocks each, and how each count is computed. Adding a tile or a
-new event later = one config entry, no page surgery. Tiles render in order;
-locked tiles are **hidden** (the bar literally expands as the tier rises —
-see §6).
+**Only hard-capped daily allowances go in the bar.** A tile exists if and
+only if the membership puts a hard cap on it per day. **Token-spend items
+(Dance Floor, Blind Date, Speed Dating, Rooftop, gifts) never appear** —
+we don't regulate what a member spends their tokens on; a member who
+skips a dance floor for a 20-token gift must never see their bar shrink
+as if they owed the bar those tokens. Nothing rolls over; every cap resets
+daily.
+
+One config file (`utils/taskbar.ts`) drives the tile set + the caps (they
+mirror `send_message`'s tier logic and the Matchmaker plays dial — if a cap
+moves there, it moves here too). Adding a tile later = one config entry.
 
 | # | Icon | Tile | The count (number) | Unlocks | Taps to |
 |---|---|---|---|---|---|
-| 1 | 📩 | Cheeky Chats | unread messages | all | `/messages` |
-| 2 | ⚡ | The Spark List | unanswered sparks (incoming likes/waves you haven't replied to) | all | `/browse` |
-| 3 | 🎯 | Matchmaker | plays left today (2/3/4/5 — the locked dial) | all (when Matchmaker ships) | `/browse` matchmaker mode |
-| 4 | ❤️ | Blind Date | live room? seats left / "open" | Gold+ | `/events/blind_date` |
-| 5 | 🪩 | Dance Floor | minutes to the next set ("now" when live) | all | `/events/dance_floor` |
-| 6 | 🔥 | Coat Check | current streak | all | `/coat-check` |
-| 7 | 🪙 | Tokens | balance | all | `/store` |
+| 1 | 📩 | Cheeky Chats | messages left today — 30 (silver) / 75 (gold) / ∞ (platinum) / ∞ (diamond) | all | `/messages` |
+| 2 | ⚡ | The Spark List | new people left today — 5 / 15 / 40 / 100 | all | `/browse` |
+| 3 | 🎯 | Matchmaker | plays left today — 2 / 3 / 4 / 5 (the locked dial) | all (when Matchmaker ships) | `/browse` matchmaker mode |
+| 4 | 🔥 | Coat Check | 1 = not checked in today, 0 = done | all | `/coat-check` |
 
 Notes:
-- Tiles 1–4 are the founder's four from the sketch (to-dos that decrement).
-  5–7 are the availability readouts that make the bar a "what's here" map —
-  remove or reorder at will, the config makes it one-line.
-- **Blind Date "tries left"**: Blind Date is host-driven (the Gold hostess
-  opens a room; suitors buy a seat). There is no per-member "tries" mechanic
-  yet — proposal: the count is **live seats left in an open room**, and the
-  tile shows a "closed" state (dimmed, no number) when no room is open.
-  Founder to confirm or define the mechanic.
-- **"Unanswered sparks"** semantics to confirm: incoming likes/waves with no
-  reply from me (the browse tab's received-likes queue).
+- The tile set is the same four for every tier — the Ladder shows in the
+  **numbers** (§6), not in new tiles.
+- **∞** renders for unlimited messages (Platinum/Diamond) — Damion falls
+  back to a system glyph for the symbol itself.
+- The Matchmaker tile is config-gated (`shipped: false`) until the game
+  ships; flipping the flag turns it on with the 2/3/4/5 dial.
+- Street (unverified): no bar — one tile instead, **🪪 Get your card**
+  → `/verify`. The door is the only to-do before the club opens.
 
-## 6. Tier expansion (the Ladder, visible)
+## 6. The Ladder, visible in the numbers
 
-- Silver: Chats, Sparks, Matchmaker, Dance Floor, Coat Check, Tokens.
-- Gold adds: **Blind Date**.
-- Platinum adds: **Speed Dating** (plays/open state when it's live).
-- Diamond adds: **The Rooftop** (live/open state).
-- Nothing is ever *removed* — the bar only grows. This is the visual promise
-  of the Ladder: every floor visibly adds a tile.
+- Same four tiles for every member. What changes with the card:
+  - **Chats**: 30 → 75 → ∞ → ∞.
+  - **Sparks**: 5 → 15 → 40 → 100 new people a day.
+  - **Matchmaker**: 2 → 3 → 4 → 5 plays a day.
+- The counts are the promise of the Ladder made visible: the free tier
+  sees a generous club (30 chats, 5 people, 2 plays, the coat check) and
+  every paid step visibly raises the numbers.
 
 ## 7. Update logic (from the founder's flow — binding)
 
-1. A trigger fires (new message, new spark, event unlocked, play used).
-2. The bar adds/updates the icon + count.
+1. A trigger fires (a message sent, a spark used, a play spent, the coat
+   checked).
+2. The bar updates the count.
 3. The member taps the icon → navigates to the linked screen.
-4. Task completed → count decrements (or the tile clears).
+4. Task completed → count decrements (the coat check clears to 0).
 5. The bar refreshes to the remaining to-dos.
 
-Implementation: counts are fetched server-side per render (profile tier +
-the count queries) and refetched client-side on a light interval (60s) + on
-navigation. Realtime channels (Supabase) are a v2 upgrade if we want
-instant counts without polling.
+Implementation: `taskbar_state` RPC returns usage counts in one round trip;
+the API route does the "left" math against the caps. The client refetches on
+mount, on navigation, on focus, and every 60s. Realtime channels (Supabase)
+are a v2 upgrade if we want instant counts without polling.
 
 ## 8. Data sources
 
-- Tier: `current_tier` RPC (already the single source of truth).
-- Unread: `messages`/`conversations` (read state) — needs a read-flag query.
-- Unanswered sparks: `likes` + `waves` where the member is the recipient and
-  no reply/match exists yet.
-- Matchmaker plays: the 2/3/4/5 dial (server-side config, same
-  `current_tier` case as the message caps).
-- Blind Date: live room state (`events` kind `blind_date` status open).
-- Dance Floor: next `events` row of the kind.
-- Streak: `daily_checkins` (the Coat Check already tracks it).
-- Tokens: `token_ledger` sum (existing `getTokenBalance`).
-
-All server-side queries run behind RLS with the member's session; nothing
-client-trusted (the token figure is display-only, the ledger is the truth).
+- Tier: `current_tier` RPC (note: it calls the free floor `standard` — the
+  bar maps that to rank 0 / silver caps; the floor slug is `silver`).
+- Usage counts: `taskbar_state` RPC — messages sent today (for the chats
+  tile), new non-matched people messaged today (the same count
+  `send_message`'s people-limit uses), today's check-in flag, and (later)
+  Matchmaker plays used.
+- Caps: `utils/taskbar.ts` `TIER_CAPS` — mirrors `send_message` (30/5,
+  75/15, ∞/40, ∞/100) and PRD-matchmaker §5 (2/3/4/5).
+- **Unread (supporting)**: `messages.read_at` + `mark_conversation_read`
+  (set when a thread opens); the chat list shows a gold unread pill per
+  conversation. The bar itself shows the daily allowance, not unread — the
+  read flag powers the chat list.
+- Coat Check: `daily_checkins` (today's row = done).
 
 ## 9. Guardrails
 
-- **Free tier stays generous.** The bar is a map, not a paywall: locked
-  tiles are hidden (not teased with "pay to see"), so the free member sees
-  a full, alive club — the expansion is a reward, never a shove.
-- **No fake counts.** Every number is a real query result. No "3 people
-  viewed you" invented numbers.
-- **PWA perf.** The bar is one small component + a few indexed queries; no
-  new heavy client deps. Keep the landing page free of it (it's the LCP).
+- **Free tier stays generous.** The bar shows 30 chats / 5 new people / 2
+  plays / the coat check — a full club, free. Paid steps visibly raise the
+  numbers; nothing is ever shrunk.
+- **We never regulate token spend.** No token-cost item appears in the bar.
+  A member's bar only reflects their hard caps, never their wallet.
+- **No fake counts.** Every number is a real query result (usage from the
+  RPC, caps from the config that mirrors enforcement).
+- **PWA perf.** One small component + one RPC round trip; no new heavy
+  client deps. The landing page never mounts the bar (it's the LCP).
 
-## 10. Open questions (founder to decide)
+## 10. Decisions (resolved 2026-08-08)
 
-1. **The tile set** — are the four sketch tiles + Dance Floor/Coat
-   Check/Tokens right, or fewer/more?
-2. **Blind Date "tries"** — live-seats-left until a tries mechanic exists, or
-   define one (e.g., N joins/day)?
-3. **"Unanswered sparks"** — confirm it's incoming likes/waves without my
-   reply (the received queue).
-4. **Adjustability** — top/bottom + hide/collapse per device OK? Or synced
-   across devices (server pref, v2)?
-5. **Mount points** — all member pages, or the feed-like pages only
-   (lobby, floors, event center)?
+1. **Tile set**: the four hard-cap to-dos (Chats, Sparks, Matchmaker, Coat
+   Check). Events + tokens explicitly excluded by the hard-cap rule.
+2. **Blind Date / Dance Floor / etc.**: out — token-spend items.
+3. **Matchmaker**: tile built, `shipped: false` until the game ships.
+4. **Adjustability**: per-device — collapse, move top/bottom, hide
+   (localStorage).
+5. **Mount**: root-layout overlay, all member pages (hidden on /, /signin,
+   /verify, /owner, /auth). Street zone gets the 🪪 Get-your-card tile.
 
 ## 11. Out of scope (v1)
 
 - Realtime push counts (poll first, channels later).
-- Server-synced bar preferences.
-- Locked-tile teasers ("🔒 Gold" upsell chips) — hidden tiles only, per §9.
+- Server-synced bar preferences (device-level only).
 - Taskbar on the landing page.

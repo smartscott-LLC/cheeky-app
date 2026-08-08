@@ -1192,6 +1192,7 @@ export type Database = {
           conversation_id: string
           created_at: string
           id: number
+          read_at: string | null
           sender_id: string
         }
         Insert: {
@@ -1199,6 +1200,7 @@ export type Database = {
           conversation_id: string
           created_at?: string
           id?: never
+          read_at?: string | null
           sender_id: string
         }
         Update: {
@@ -1206,6 +1208,7 @@ export type Database = {
           conversation_id?: string
           created_at?: string
           id?: never
+          read_at?: string | null
           sender_id?: string
         }
         Relationships: [
@@ -2187,6 +2190,10 @@ export type Database = {
           match_id: string
         }[]
       }
+      current_streak: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       current_tier: {
         Args: {
           p_user: string
@@ -2312,6 +2319,12 @@ export type Database = {
         }
         Returns: undefined
       }
+      mark_conversation_read: {
+        Args: {
+          p_conversation_id: string
+        }
+        Returns: undefined
+      }
       mark_webhook_processed: {
         Args: {
           p_event_id: string
@@ -2319,6 +2332,12 @@ export type Database = {
           p_payload: Json
         }
         Returns: boolean
+      }
+      next_event_minutes: {
+        Args: {
+          p_kind: string
+        }
+        Returns: number
       }
       owner_grant: {
         Args: {
@@ -2491,6 +2510,16 @@ export type Database = {
           p_pick: number
         }
         Returns: undefined
+      }
+      taskbar_state: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          tier: string
+          messages_sent_today: number
+          new_people_today: number
+          checked_in_today: boolean
+          matchmaker_plays_left: number
+        }[]
       }
       tick_rooftop_events: {
         Args: Record<PropertyKey, never>

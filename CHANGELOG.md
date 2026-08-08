@@ -92,6 +92,13 @@ points — every push to `main` is production.
   mid-cycle upgrades land their grant; the created/updated/checkout triple-fire can't
   double-grant). Tier resolved from the synced Stripe catalog; pure mapping
   unit-tested.
+- **The Tiki Taskbar** (PRD-tiki-taskbar): the universal to-do bar at the top of the feed
+  — hard-capped daily allowances only (messages left 30/75/∞/∞, new people left 5/15/40/100,
+  Matchmaker plays 2/3/4/5 once it ships, the coat check). Token-spend items never appear —
+  the bar never regulates the wallet. Gold rounded bar, teal Damion counts (∞ for
+  unlimited), gold Fascinate heading, pink caption; collapse / move top-bottom / hide per
+  device; guest tier gets the 🪪 Get-your-card tile. Backed by the `taskbar_state` RPC and
+  `messages.read_at` + `mark_conversation_read` (chat list now shows gold unread pills).
 
 ### Fixed
 
