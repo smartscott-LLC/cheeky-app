@@ -111,6 +111,19 @@ points — every push to `main` is production.
   closes it as missed, differing picks keep the huddle open. Also fixed the dead-code uuid
   cast in the scoring path (`->>` instead of `->` + `::text`) that would have crashed the
   first correct answer.
+- **L³ could never settle a mutual pick** (found by the new L³ suite): `create_l3_pick`
+  raised `42702 column reference "match_id" is ambiguous` the moment two members liked each
+  other back — the `RETURNS TABLE (match_id, …)` output parameter collided with
+  `l3_rewards.match_id` in the `ON CONFLICT` column list. The match path had never been
+  exercised end-to-end (single picks never reach it). Fixed by targeting the unique
+  constraint by name; the RPC JSON contract is unchanged. T1/T2 tiers, the free line, the
+  T2 gift + announcement, and Leave-silent are now all proven live.
+- **Live-test cleanup silently failed for ~5.6k throwaway members**: the Stripe template's
+  signup trigger creates a `public.users` row (NO ACTION FK on `auth.users`), so GoTrue
+  `deleteUser` 500s until it's gone — every live suite's teardown was swallowing that and
+  leaving members behind (`toktest-` ×3,930, `evttest-` ×1,607, others). Suites now delete
+  the `users` row first, surface teardown failures loudly, and the accumulated throwaways
+  are purged. `scripts/seed-test-members.mjs --remove` fixed the same way.
 
 ### Added
 

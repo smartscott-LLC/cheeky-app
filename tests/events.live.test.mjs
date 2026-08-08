@@ -96,6 +96,7 @@ test(
       }
       for (let i = 0; i < userIds.length; i += 100) {
         const ids = userIds.slice(i, i + 100);
+        await admin.from('users').delete().in('id', ids); // Stripe-sync row — NO ACTION FK blocks deleteUser
         await admin.from('token_ledger').delete().in('user_id', ids);
         await admin.from('event_entries').delete().in('user_id', ids);
         await admin.from('certificates').delete().in('user_id', ids);
@@ -103,11 +104,17 @@ test(
       }
       const chunk = 25;
       for (let i = 0; i < userIds.length; i += chunk) {
-        await Promise.all(
+        const results = await Promise.allSettled(
           userIds.slice(i, i + chunk).map((id) =>
-            admin.auth.admin.deleteUser(id).catch(() => {})
+            admin.auth.admin.deleteUser(id)
           )
         );
+        for (const r of results)
+          if (r.status === 'rejected')
+            console.error(
+              'deleteUser failed (check cleanup):',
+              r.reason?.message ?? r.reason
+            );
       }
       for (const e of events) await admin.from('events').delete().eq('id', e);
     };

@@ -112,17 +112,26 @@ test(
       };
       if (events.length) await chunkIn('event_entries', 'event_id', events);
       if (userIds.length) {
+        // Stripe-sync row (handle_new_user trigger) — NO ACTION FK on
+        // auth.users, so GoTrue deleteUser 500s until this row is gone.
+        await chunkIn('users', 'id', userIds);
         for (const t of ['token_ledger', 'benefit_grants', 'gift_inventory']) {
           await chunkIn(t, 'user_id', userIds);
         }
         // deleteUser is per-user; parallelize in chunks.
         const chunk = 25;
         for (let i = 0; i < userIds.length; i += chunk) {
-          await Promise.all(
+          const results = await Promise.allSettled(
             userIds
               .slice(i, i + chunk)
-              .map((id) => admin.auth.admin.deleteUser(id).catch(() => {}))
+              .map((id) => admin.auth.admin.deleteUser(id))
           );
+          for (const r of results)
+            if (r.status === 'rejected')
+              console.error(
+                'deleteUser failed (check cleanup):',
+                r.reason?.message ?? r.reason
+              );
         }
       }
       for (const e of events) await admin.from('events').delete().eq('id', e);

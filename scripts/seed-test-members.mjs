@@ -133,6 +133,10 @@ async function remove() {
     for (const f of listErr ? [] : (await sb.storage.from('profiles').list(`test-members/${d.id}`)).data ?? []) {
       await sb.storage.from('profiles').remove([`test-members/${d.id}/${f.name}`]);
     }
+    // The template's signup trigger creates a Stripe-sync public.users row
+    // (NO ACTION FK on auth.users) — GoTrue deleteUser 500s until it's gone.
+    const { error: usersErr } = await sb.from('users').delete().eq('id', d.id);
+    if (usersErr) console.error(`  ${d.id} users row: ${usersErr.message}`);
     const { error: delErr } = await sb.auth.admin.deleteUser(d.id);
     if (delErr) console.error(`  ${d.id}: ${delErr.message}`);
     else console.log(`  removed ${d.id}`);
