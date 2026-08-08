@@ -54,3 +54,6 @@ certificates
 
 # agent scratch (claude code, etc.)
 .claude/
+
+# founder's dummy-member source images (seeded via scripts/seed-test-members.mjs)
+/dummy_images

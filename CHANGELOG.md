@@ -105,6 +105,11 @@ points — every push to `main` is production.
   minutes-to-ready while cooling), plus Chats and Coat Check. Hourly events and pure
   token items stay out. The bar docks **bottom-left at 1/3 width**, compact, with the
   label centered over it.
+- **The test crew is live** — 22 dummy members seeded (`dummy.a-v@clubcheeky.test`,
+  WebP avatars from `dummy_images/`), the founder's account flagged, and the profiles
+  SELECT policy now guards `test_member` at the RLS layer (only test-flagged callers
+  see them — verified: a normal member sees 0). Seed script fixed: proper createUser
+  destructure, auth-admin owner lookup, deterministic storage keys.
 
 ### Fixed
 

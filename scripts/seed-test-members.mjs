@@ -1,17 +1,21 @@
 // Seeds the test members (dummy profiles) that populate L³ trios, Matchmaker
 // boards, and the Spark List for the owner's walkthroughs.
 //
-//   node scripts/seed-test-members.mjs                 # create the dummies
-//   node scripts/seed-test-members.mjs --owner=EMAIL   # ...and flag your account
-//   node scripts/seed-test-members.mjs --remove        # delete all dummies
+//   node scripts/seed-test-members.mjs                   # create the dummies
+//   node scripts/seed-test-members.mjs --owner=EMAIL     # ...and flag your account
+//   node scripts/seed-test-members.mjs --flag-only=EMAIL # just flag (already seeded)
+//   node scripts/seed-test-members.mjs --remove          # delete all dummies
 //
-// Photos come from test-photos/ at the repo root (a.png, b.png, ... up to v).
-// Test members are invisible to real members — spark RPCs show them only to
-// callers who are also test-flagged (see 20260807010000_test_members.sql).
+// Photos come from dummy_images/ at the repo root (a.png, b.png, ... up to v).
+// Every image is normalized to WebP at upload (auto-orient, 1200px cap, q80 —
+// the same pipeline as member uploads). Test members are invisible to real
+// members — the profiles RLS policy shows them only to test-flagged callers
+// (see 20260807010000_test_members.sql + 20260808040000_test_member_visibility.sql).
 import { config } from 'dotenv';
-import { readFile, readdir, stat } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { createClient } from '@supabase/supabase-js';
+import sharp from 'sharp';
 
 config({ path: 'env.new' });
 
@@ -26,7 +30,7 @@ const sb = createClient(URL, KEY, {
   auth: { autoRefreshToken: false, persistSession: false }
 });
 
-const PHOTO_DIR = join(process.cwd(), 'test-photos');
+const PHOTO_DIR = join(process.cwd(), 'dummy_images');
 const EMAIL_DOMAIN = 'clubcheeky.test';
 
 // 22 dummies, A..V. Half gentlemen, half ladies, all open to everyone, all
@@ -51,12 +55,21 @@ const BIOS = [
   'Night person. The later, the better.'
 ];
 
+// Normalize to WebP — auto-orient, 1200px cap, q80 (matches member uploads).
+async function toWebP(img) {
+  return sharp(img)
+    .rotate()
+    .resize({ width: 1200, height: 1200, fit: 'inside', withoutEnlargement: true })
+    .webp({ quality: 80 })
+    .toBuffer();
+}
+
 async function seed() {
   const photos = (await readdir(PHOTO_DIR))
     .filter((f) => /\.(png|jpe?g|webp)$/i.test(f))
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
   if (photos.length < LETTERS.length) {
-    console.error(`Need ${LETTERS.length} images in test-photos/ (a → v); found ${photos.length}`);
+    console.error(`Need ${LETTERS.length} images in dummy_images/ (a → v); found ${photos.length}`);
     process.exit(1);
   }
 
@@ -66,7 +79,7 @@ async function seed() {
     const name = NAMES[i];
     const gender = i % 2 === 0 ? 'lady' : 'gentleman';
 
-    const { data: user, error: userErr } = await sb.auth.admin.createUser({
+    const { data: created, error: userErr } = await sb.auth.admin.createUser({
       email,
       password: `DummyTest${letter}!`,
       email_confirm: true,
@@ -76,6 +89,7 @@ async function seed() {
       console.error(`  ${letter} ${email}: ${userErr.message}`);
       continue;
     }
+    const uid = created.user.id;
 
     const { error: profileErr } = await sb
       .from('profiles')
@@ -86,25 +100,30 @@ async function seed() {
         verified_at: new Date().toISOString(),
         test_member: true
       })
-      .eq('id', user.id);
+      .eq('id', uid);
     if (profileErr) {
       console.error(`  ${letter} profile: ${profileErr.message}`);
       continue;
     }
 
-    const img = await readFile(join(PHOTO_DIR, photos[i]));
-    const ext = photos[i].match(/\.(\w+)$/)?.[1] ?? 'png';
-    const storagePath = `test-members/${user.id}.${ext}`;
+    let webp;
+    try {
+      webp = await toWebP(await readFile(join(PHOTO_DIR, photos[i])));
+    } catch (convErr) {
+      console.error(`  ${letter} image conversion failed: ${convErr.message}`);
+      continue;
+    }
+    const storagePath = `test-members/${uid}.webp`;
     const { error: upErr } = await sb.storage
       .from('profiles')
-      .upload(storagePath, img, { contentType: `image/${ext === 'jpg' ? 'jpeg' : ext}` });
+      .upload(storagePath, webp, { contentType: 'image/webp' });
     if (upErr && !upErr.message.includes('already exists')) {
       console.error(`  ${letter} photo upload: ${upErr.message}`);
       continue;
     }
 
     const { error: photoErr } = await sb.from('photos').insert({
-      user_id: user.id,
+      user_id: uid,
       storage_path: storagePath,
       position: 0,
       is_primary: true
@@ -129,10 +148,8 @@ async function remove() {
     process.exit(1);
   }
   for (const d of dummies ?? []) {
-    const { error: listErr } = await sb.storage.from('profiles').list(`test-members/${d.id}`);
-    for (const f of listErr ? [] : (await sb.storage.from('profiles').list(`test-members/${d.id}`)).data ?? []) {
-      await sb.storage.from('profiles').remove([`test-members/${d.id}/${f.name}`]);
-    }
+    // Deterministic key: test-members/{id}.webp (the seed uploads one file).
+    await sb.storage.from('profiles').remove([`test-members/${d.id}.webp`]);
     // The template's signup trigger creates a Stripe-sync public.users row
     // (NO ACTION FK on auth.users) — GoTrue deleteUser 500s until it's gone.
     const { error: usersErr } = await sb.from('users').delete().eq('id', d.id);
@@ -145,23 +162,40 @@ async function remove() {
 }
 
 async function flagOwner(email) {
-  const { data, error } = await sb
+  // auth.users is not exposed to PostgREST — find the account via the auth
+  // admin API instead.
+  const { data: users, error: listErr } = await sb.auth.admin.listUsers({
+    page: 1,
+    perPage: 1000
+  });
+  if (listErr) {
+    console.error('flag failed:', listErr.message);
+    process.exit(1);
+  }
+  const match = (users?.users ?? []).find((u) => u.email === email);
+  if (!match) {
+    console.log('  (email not found — check the email you passed)');
+    process.exit(1);
+  }
+  const { error } = await sb
     .from('profiles')
     .update({ test_member: true })
-    .eq('id', (await sb.from('auth.users').select('id').eq('email', email).maybeSingle()).data?.id ?? '');
+    .eq('id', match.id);
   if (error) {
     console.error('flag failed:', error.message);
     process.exit(1);
   }
   const { data: ok } = await sb.from('profiles').select('id').eq('test_member', true);
   console.log('Owner flagged. Test-flagged accounts:', (ok ?? []).length);
-  if (!data?.length) console.log('  (email not found — check the email you passed)');
 }
 
-const arg = process.argv.slice(2).find((a) => a.startsWith('--owner='));
+const flagOnlyArg = process.argv.slice(2).find((a) => a.startsWith('--flag-only='));
+const ownerArg = process.argv.slice(2).find((a) => a.startsWith('--owner='));
 if (process.argv.includes('--remove')) {
   await remove();
+} else if (flagOnlyArg) {
+  await flagOwner(flagOnlyArg.slice('--flag-only='.length));
 } else {
   await seed();
-  if (arg) await flagOwner(arg.slice('--owner='.length));
+  if (ownerArg) await flagOwner(ownerArg.slice('--owner='.length));
 }
