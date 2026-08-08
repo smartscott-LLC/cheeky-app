@@ -1011,6 +1011,62 @@ export type Database = {
         }
         Relationships: []
       }
+      l3_picks: {
+        Row: {
+          choice: string
+          created_at: string
+          id: number
+          picker_id: string
+          target_id: string
+        }
+        Insert: {
+          choice: string
+          created_at?: string
+          id?: never
+          picker_id: string
+          target_id: string
+        }
+        Update: {
+          choice?: string
+          created_at?: string
+          id?: never
+          picker_id?: string
+          target_id?: string
+        }
+        Relationships: []
+      }
+      l3_rewards: {
+        Row: {
+          created_at: string
+          id: number
+          match_id: string
+          messages_left: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          match_id: string
+          messages_left?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          match_id?: string
+          messages_left?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "l3_rewards_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       likes: {
         Row: {
           created_at: string
@@ -1038,6 +1094,7 @@ export type Database = {
           id: string
           source: string
           status: string
+          tier: string | null
           user_id_a: string
           user_id_b: string
         }
@@ -1046,6 +1103,7 @@ export type Database = {
           id?: string
           source?: string
           status?: string
+          tier?: string | null
           user_id_a: string
           user_id_b: string
         }
@@ -1054,6 +1112,7 @@ export type Database = {
           id?: string
           source?: string
           status?: string
+          tier?: string | null
           user_id_a?: string
           user_id_b?: string
         }
@@ -2065,6 +2124,16 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      create_l3_pick: {
+        Args: {
+          p_target: string
+          p_choice: string
+        }
+        Returns: {
+          match_id: string
+          tier: string
+        }[]
+      }
       create_like: {
         Args: {
           p_likee: string
@@ -2173,6 +2242,18 @@ export type Database = {
           p_event_id: string
         }
         Returns: string
+      }
+      l3_trio: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          display_name: string
+          bio: string
+          one_liner: string
+          gender: string
+          interested_in: string
+          photo_path: string
+        }[]
       }
       leave_blind_date: {
         Args: {
