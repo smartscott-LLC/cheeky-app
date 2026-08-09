@@ -88,14 +88,18 @@ invite is sent:
 > "Inviting them to a private chat **constitutes a match**. If they accept,
 > it counts against your new-people-per-day and message allowances. Continue?"
 
+**Consent is two-sided (founder):** the *acceptor* gets the same
+confirmation before the match is created — they may not want to give up one
+of their people/messages for the day. **Both parties must agree**; only then
+is the room created.
+
 Yes → the invite goes. **Accept → a real match** (matches row, conversation
 opens, both can talk under the normal messaging rules). Decline/ignore →
-nothing, silent.
-
-This closes the obvious loophole ("I'm out of messages, meet me in chat and
-we'll go private") — going private *is* the messaging system, with its
-consent and its caps intact — and it turns the town square into another
-**match engine**. The confirmation box is the consent moment, on record.
+nothing, silent. This closes the obvious loophole ("I'm out of messages,
+meet me in chat and we'll go private") — going private *is* the messaging
+system, with its consent and its caps intact — and it turns the town square
+into another **match engine**. The confirmation boxes are the consent
+moments, on record.
 
 ## 6. The Horn 🎺
 
@@ -107,8 +111,13 @@ consent and its caps intact — and it turns the town square into another
 
 ## 7. Moderation — standard, silent, human-backed
 
-- **Profanity/auto-filter** — the bog-standard chat element: automatic
-  removal, warning on repeat.
+- **Profanity/auto-filter — always on, never optional** (founder: optional
+  filters get used for the wrong thing). The bog-standard chat element:
+  automatic removal, warning on repeat. People will spell around it — that's
+  expected; the filter is us doing our part.
+- **Chat bans, escalating** (founder): human moderators (on from time to
+  time) catch the sneaks — **banned from chat** (never the platform) for
+  **1 day, then 3 days, scaling with violations**.
 - **The crew AI moderates** — a rotating persona (Chaz or whoever's on
   shift) sits in the room like the six crew chat rooms: silent scan,
   warn / **mute** (timed) / remove. One more persona connection, no new
@@ -135,6 +144,13 @@ chat badge). Club Chat adds a new family, **earned only in the room**:
 Awarded by the existing collectible machinery (catalog + inventory +
 `award_badge`-style grant); earned chat badges flash in-room when they
 land. Triggers are config values, not rebuilds.
+
+**Collectible book (future — the reason families stay separate):** badges
+will eventually live in a collectible book — easy families on the first
+page, then lobby / silver / gold / platinum / diamond pages, each drawing
+from different parts of the collectible system. Filling a page rewards;
+higher floors hold rarer entries (membership pull). The catalog is built
+book-ready: every badge carries its family + floor + rarity metadata now.
 
 ## 9. Retention & governance (founder-locked)
 
@@ -180,12 +196,16 @@ land. Triggers are config values, not rebuilds.
 
 ## 13. Locked decisions (this session)
 
-- Five rooms incl. Global; ladder + dimmed read-only above; Global full.
+- Five rooms incl. Global; ladder + dimmed read-only above (dim but
+  **seeable** — the climb is the point); Global full.
 - No caps / no rate limits to talk; the room is the retention play.
-- Take-private = match + consent dialog + counts against allowances.
+- Take-private = match + **two-sided consent** (inviter and acceptor both
+  confirm it counts against allowances) + counts against new-people/messages.
 - Whisper = ephemeral in-room private. User mute = hide. Block = blocks
   table. Report = AI + human queue. Gift from the menu, same rules.
 - Horn = 10 tokens, 1/hour, ticker + lit-up.
+- Profanity filter **always on** (never optional); chat bans escalate
+  1 day → 3 days by violation count (human-moderator catch).
 - Chat-only badge family (Chatterbox 50/200/500/1000, Regular, Horn
-  Blower).
+  Blower) — catalog is built book-ready for the future collectible book.
 - Retention: 24h visible / 30-day logs / nightly purge / request for older.
