@@ -1750,6 +1750,8 @@ export type Database = {
       }
       profiles: {
         Row: {
+          accepts_gifts: boolean
+          accepts_private_invites: boolean
           bio: string
           bot_flagged_at: string | null
           chat_messages_sent: number
@@ -1765,6 +1767,8 @@ export type Database = {
           verified_at: string | null
         }
         Insert: {
+          accepts_gifts?: boolean
+          accepts_private_invites?: boolean
           bio?: string
           bot_flagged_at?: string | null
           chat_messages_sent?: number
@@ -1780,6 +1784,8 @@ export type Database = {
           verified_at?: string | null
         }
         Update: {
+          accepts_gifts?: boolean
+          accepts_private_invites?: boolean
           bio?: string
           bot_flagged_at?: string | null
           chat_messages_sent?: number

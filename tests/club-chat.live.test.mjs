@@ -90,6 +90,7 @@ test(
     const matchIds = [];
     const convIds = [];
     const ledgerIds = [];
+    const giftIds = [];
 
     t.after(async () => {
       const chunkIn = async (table, col, ids) => {
@@ -108,6 +109,7 @@ test(
         await chunkIn('conversations', 'id', convIds);
       }
       if (matchIds.length) await chunkIn('matches', 'id', matchIds);
+      if (giftIds.length) await chunkIn('gift_inventory', 'id', giftIds);
       if (ledgerIds.length) await chunkIn('token_ledger', 'id', ledgerIds);
       if (userIds.length) {
         await chunkIn('club_chat_time', 'user_id', userIds);
@@ -418,6 +420,60 @@ test(
         'accepting past the new-people cap is refused'
       );
       void seeders;
+    });
+
+    await t.test('privacy toggles: invites_disabled + gifts_disabled', async () => {
+      // Bob switches off private invites — senders are told.
+      const { error: uErr } = await admin
+        .from('profiles')
+        .update({ accepts_private_invites: false })
+        .eq('id', bob.id);
+      assert.ok(!uErr, uErr?.message);
+
+      const stranger = await makeUser(admin, anon, stamp, 'stranger', 'gentleman');
+      userIds.push(stranger.id);
+      const inv = await rpc(stranger.token, 'club_chat_invite', {
+        p_user: bob.id
+      });
+      assert.ok(
+        inv.error && inv.error.message.includes('invites_disabled'),
+        'private invites refused when toggled off'
+      );
+
+      // Bob switches off gifts too; silver (matched with bob) tries to gift.
+      const { error: gErr } = await admin
+        .from('profiles')
+        .update({ accepts_gifts: false })
+        .eq('id', bob.id);
+      assert.ok(!gErr, gErr?.message);
+
+      const { data: cat } = await admin
+        .from('gift_catalog')
+        .select('id')
+        .eq('slug', 'teddy')
+        .single();
+      const { data: inv2, error: invErr } = await admin
+        .from('gift_inventory')
+        .insert({ user_id: silver.id, catalog_id: cat.id, status: 'available' })
+        .select('id')
+        .single();
+      assert.ok(!invErr, invErr?.message);
+      giftIds.push(inv2.id);
+
+      const send = await rpc(silver.token, 'send_gift', {
+        p_gift_id: inv2.id,
+        p_recipient: bob.id
+      });
+      assert.ok(
+        send.error && send.error.message.includes('gifts_disabled'),
+        'gifts refused when toggled off'
+      );
+
+      // Flip both back on — bob is a good member again.
+      await admin
+        .from('profiles')
+        .update({ accepts_private_invites: true, accepts_gifts: true })
+        .eq('id', bob.id);
     });
 
     await t.test('the Chatterbox collectible family (chat_50)', async () => {

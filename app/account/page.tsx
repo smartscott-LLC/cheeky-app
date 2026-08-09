@@ -2,6 +2,7 @@ import CustomerPortalForm from '@/components/ui/AccountForms/CustomerPortalForm'
 import EmailForm from '@/components/ui/AccountForms/EmailForm';
 import GuestPassForm from '@/components/ui/AccountForms/GuestPassForm';
 import ProfileForm from '@/components/ui/AccountForms/ProfileForm';
+import LoungePrefs from '@/components/ui/ClubChat/LoungePrefs';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
@@ -294,6 +295,9 @@ export default async function Account() {
           )}
         </div>
         <EmailForm userEmail={user.email} />
+        <div className="mt-8">
+          <LoungePrefs />
+        </div>
       </div>
     </section>
   );

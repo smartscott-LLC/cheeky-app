@@ -115,6 +115,22 @@ export async function loungeVerified(): Promise<boolean> {
   return Boolean(data?.verified_at);
 }
 
+/** The privacy toggles: switch off private invites and/or gifts. */
+export async function loungePrefs(
+  acceptsPrivateInvites: boolean,
+  acceptsGifts: boolean
+): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const user = await getUser(supabase);
+  if (!user) return { error: 'not signed in' };
+  const { error } = await supabase
+    .from('profiles')
+    .update({ accepts_private_invites: acceptsPrivateInvites, accepts_gifts: acceptsGifts })
+    .eq('id', user.id);
+  if (error) return { error: error.message };
+  return {};
+}
+
 /** Friend ids (matches + conversations) — the presence list highlights them. */
 export async function loungeFriendIds(): Promise<string[]> {
   const supabase = await createClient();
