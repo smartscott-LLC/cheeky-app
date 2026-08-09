@@ -50,6 +50,8 @@ export type Database = {
           created_at: string
           description: string
           emoji: string
+          family: string
+          floor: string | null
           how_to_earn: string
           id: string
           name: string
@@ -59,6 +61,8 @@ export type Database = {
           created_at?: string
           description: string
           emoji: string
+          family?: string
+          floor?: string | null
           how_to_earn: string
           id?: string
           name: string
@@ -68,6 +72,8 @@ export type Database = {
           created_at?: string
           description?: string
           emoji?: string
+          family?: string
+          floor?: string | null
           how_to_earn?: string
           id?: string
           name?: string
@@ -448,6 +454,161 @@ export type Database = {
           created_at?: string
           id?: never
           kind?: string
+        }
+        Relationships: []
+      }
+      club_chat_bans: {
+        Row: {
+          banned_until: string
+          created_at: string
+          created_by: string | null
+          id: string
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          banned_until: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          reason: string
+          user_id: string
+        }
+        Update: {
+          banned_until?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          reason?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      club_chat_invites: {
+        Row: {
+          created_at: string
+          id: string
+          invitee_id: string
+          inviter_id: string
+          responded_at: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          invitee_id: string
+          inviter_id: string
+          responded_at?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          invitee_id?: string
+          inviter_id?: string
+          responded_at?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      club_chat_messages: {
+        Row: {
+          body: string
+          created_at: string
+          floor_tag: string
+          horn: boolean
+          id: number
+          room: string
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          floor_tag: string
+          horn?: boolean
+          id?: never
+          room: string
+          sender_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          floor_tag?: string
+          horn?: boolean
+          id?: never
+          room?: string
+          sender_id?: string
+        }
+        Relationships: []
+      }
+      club_chat_time: {
+        Row: {
+          day: string
+          seconds: number
+          user_id: string
+        }
+        Insert: {
+          day?: string
+          seconds?: number
+          user_id: string
+        }
+        Update: {
+          day?: string
+          seconds?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      club_chat_whisper_messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: number
+          sender_id: string
+          whisper_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: never
+          sender_id: string
+          whisper_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: never
+          sender_id?: string
+          whisper_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_chat_whisper_messages_whisper_id_fkey"
+            columns: ["whisper_id"]
+            isOneToOne: false
+            referencedRelation: "club_chat_whispers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      club_chat_whispers: {
+        Row: {
+          created_at: string
+          id: string
+          user_a: string
+          user_b: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          user_a: string
+          user_b: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          user_a?: string
+          user_b?: string
         }
         Relationships: []
       }
@@ -1591,6 +1752,7 @@ export type Database = {
         Row: {
           bio: string
           bot_flagged_at: string | null
+          chat_messages_sent: number
           created_at: string
           display_name: string
           gender: string | null
@@ -1605,6 +1767,7 @@ export type Database = {
         Insert: {
           bio?: string
           bot_flagged_at?: string | null
+          chat_messages_sent?: number
           created_at?: string
           display_name?: string
           gender?: string | null
@@ -1619,6 +1782,7 @@ export type Database = {
         Update: {
           bio?: string
           bot_flagged_at?: string | null
+          chat_messages_sent?: number
           created_at?: string
           display_name?: string
           gender?: string | null
@@ -2335,6 +2499,71 @@ export type Database = {
           p_slug: string
         }
         Returns: string
+      }
+      club_chat_ban: {
+        Args: {
+          p_user: string
+          p_hours: number
+          p_reason: string
+        }
+        Returns: undefined
+      }
+      club_chat_bump_badges: {
+        Args: {
+          p_user: string
+        }
+        Returns: undefined
+      }
+      club_chat_heartbeat: {
+        Args: {
+          p_seconds: number
+        }
+        Returns: boolean
+      }
+      club_chat_horn: {
+        Args: {
+          p_body: string
+        }
+        Returns: number
+      }
+      club_chat_invite: {
+        Args: {
+          p_user: string
+        }
+        Returns: string
+      }
+      club_chat_profanity: {
+        Args: {
+          p_body: string
+        }
+        Returns: boolean
+      }
+      club_chat_respond_invite: {
+        Args: {
+          p_invite_id: string
+          p_accept: boolean
+        }
+        Returns: undefined
+      }
+      club_chat_send: {
+        Args: {
+          p_room: string
+          p_body: string
+        }
+        Returns: number
+      }
+      club_chat_whisper_get: {
+        Args: {
+          p_other: string
+        }
+        Returns: string
+      }
+      club_chat_whisper_send: {
+        Args: {
+          p_whisper_id: string
+          p_body: string
+        }
+        Returns: number
       }
       compatible: {
         Args: {
