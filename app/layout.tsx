@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
 import TikiTaskbar from '@/components/ui/Taskbar/TikiTaskbar';
+import ClubChat from '@/components/ui/ClubChat/ClubChat';
 import { Toaster } from '@/components/ui/Toasts/toaster';
 import Concierge from '@/components/ui/Agent/Concierge';
 import ClubAudio from '@/components/ui/Audio/ClubAudio';
@@ -85,6 +86,9 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         </Suspense>
         <Suspense>
           <Concierge />
+        </Suspense>
+        <Suspense>
+          <ClubChat />
         </Suspense>
         <Suspense>
           <ClubAudio />
