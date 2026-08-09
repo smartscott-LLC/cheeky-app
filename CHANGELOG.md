@@ -147,6 +147,14 @@ points — every push to `main` is production.
   leaving members behind (`toktest-` ×3,930, `evttest-` ×1,607, others). Suites now delete
   the `users` row first, surface teardown failures loudly, and the accumulated throwaways
   are purged. `scripts/seed-test-members.mjs --remove` fixed the same way.
+- **Storage bucket listing hole closed** (Supabase lint 0025): the `profiles` bucket was
+  public (by design — object URLs serve photos) but the "Read profile photos" SELECT
+  policy let **anyone enumerate every member's photo keys** via the Storage API. Dropped
+  the broad SELECT; upload/update/delete stay scoped to the member's own folder, URLs are
+  built from known `storage_path`s (`/storage/v1/object/public/profiles/...`), and nothing
+  in the app lists the bucket. Applied to hosted (`20260808078000_storage_no_listing.sql`).
+  The last remaining security-advisor warning is leaked-password protection — a dashboard
+  toggle that requires Supabase Pro.
 
 ### Added
 
