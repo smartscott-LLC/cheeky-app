@@ -158,6 +158,14 @@ points — every push to `main` is production.
 
 ### Added
 
+- **Index Advisor enabled**: `hypopg` (hypothetical indexes for EXPLAIN-only planning) and
+  `index_advisor` (Supabase's index-recommendation function) installed into the `extensions`
+  schema — the same thing the dashboard's enable button runs. Both are passive analysis
+  tools, zero runtime cost. DB health today: 99.99% cache hit, ~10 rows/call, and the
+  dashboard's "25 slow queries" are all platform introspection (timezone/extension catalogs,
+  backups, table browser) — the app's own queries don't appear.
+- **Tiki task bar diagrams** (`docs/event-diagrams/`): the founder's `.mmd` source and `.pdf`
+  export now live in permanent repo storage instead of the repo root.
 - **Event-kind live suite** (`tests/events.live.test.mjs`): the hourly wheel (all four kinds
   on the quarter + scheduler liveness), mutual-pick → match → debit for every grid kind
   (dance_floor / themed_night / rooftop), and `finalize_events` under load (N members, one
