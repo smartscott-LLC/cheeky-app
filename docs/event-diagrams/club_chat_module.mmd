@@ -1,0 +1,35 @@
+flowchart TD
+    A[User opens app] --> B[Main screen - any floor]
+    B --> C[Club Chat overlay appears as floating button]
+    C -->|Click| D[Open Global Chat Overlay]
+    D --> E[View messages from all floors in real-time]
+    E --> F{User membership level}
+
+    F -->|Gold| G[See Diamond chat as dimmed/faded]
+    G --> G1[Read-only - no typing]
+    G1 --> E
+
+    F -->|High-tier member| H[See all chats at full brightness]
+    H --> I[Can type in any floor chat]
+    I --> J[Send message]
+    J --> K{Rate limit check: Max 5 msgs / 20 secs?}
+    K -->|Exceeded| K1[Block send - show cooldown countdown]
+    K1 --> I
+    K -->|OK| L[AI Moderator - silent scan]
+    L --> L1{Club Manager AI + Floor AI review}
+    L1 -->|Clean| M[Message broadcasts to all floors with floor tag + badge]
+    L1 -->|Flagged| N[AI intervention: warn, mute, or remove]
+    N --> E
+
+    M --> O[Engagement boost: XP + heat increase]
+    O --> P{Badge threshold met?}
+    P -->|Yes| Q[Earn collectible badge - added to inventory]
+    Q --> E
+    P -->|No| E
+
+    D --> R[User sees sender avatar]
+    R --> S{User action}
+    S -->|Report| T[Submit report - queued for AI + human review]
+    S -->|Block| U[Block user - hide messages instantly]
+    T --> V[Mod action: warn, suspend, or remove]
+    U --> E
