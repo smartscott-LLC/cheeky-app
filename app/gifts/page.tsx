@@ -36,7 +36,7 @@ export default async function GiftsPage() {
   ] = await Promise.all([
     supabase
       .from('gift_catalog')
-      .select('id, slug, name, emoji, floor, token_cost, kind')
+      .select('id, slug, name, emoji, floor, token_cost, kind, matchmaker_only')
       .eq('active', true)
       .order('token_cost'),
     supabase
@@ -184,15 +184,17 @@ export default async function GiftsPage() {
           <GiftShop
             tokenBalance={tokenBalance ?? 0}
             tierLabel={tierLabel}
-            catalog={(catalog ?? []).map((c) => ({
-              id: c.id,
-              slug: c.slug,
-              name: c.name,
-              emoji: c.emoji,
-              floor: c.floor,
-              token_cost: c.token_cost,
-              kind: c.kind
-            }))}
+            catalog={(catalog ?? [])
+              .filter((c) => !c.matchmaker_only)
+              .map((c) => ({
+                id: c.id,
+                slug: c.slug,
+                name: c.name,
+                emoji: c.emoji,
+                floor: c.floor,
+                token_cost: c.token_cost,
+                kind: c.kind
+              }))}
             stash={stash}
             incoming={incoming}
             sent={sent}

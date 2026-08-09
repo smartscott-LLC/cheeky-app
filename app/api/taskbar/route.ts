@@ -64,8 +64,8 @@ export async function GET() {
         count = left(caps.people, row.new_people_today);
         break;
       case 'matchmaker':
-        // Plays left from the 2/3/4/5 dial; the game decrements it when it ships.
-        count = left(caps.plays, row.matchmaker_plays_left);
+        // Plays left from the 2/3/4/5 dial — the RPC returns the remainder.
+        count = row.matchmaker_plays_left;
         break;
       case 'blind':
         count = left(caps.blindDate, row.blind_date_joins_today);

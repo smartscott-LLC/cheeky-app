@@ -856,6 +856,7 @@ export type Database = {
           floor: string
           id: string
           kind: string
+          matchmaker_only: boolean
           name: string
           slug: string
           token_cost: number
@@ -867,6 +868,7 @@ export type Database = {
           floor: string
           id?: string
           kind?: string
+          matchmaker_only?: boolean
           name: string
           slug: string
           token_cost: number
@@ -878,6 +880,7 @@ export type Database = {
           floor?: string
           id?: string
           kind?: string
+          matchmaker_only?: boolean
           name?: string
           slug?: string
           token_cost?: number
@@ -1124,6 +1127,178 @@ export type Database = {
           user_id_b?: string
         }
         Relationships: []
+      }
+      matchmaker_boards: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          flipped_card_id: string | null
+          id: string
+          matches_found: number
+          status: string
+          strikes: number
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          flipped_card_id?: string | null
+          id?: string
+          matches_found?: number
+          status?: string
+          strikes?: number
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          flipped_card_id?: string | null
+          id?: string
+          matches_found?: number
+          status?: string
+          strikes?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "matchmaker_boards_flipped_card_fk"
+            columns: ["flipped_card_id"]
+            isOneToOne: false
+            referencedRelation: "matchmaker_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      matchmaker_cards: {
+        Row: {
+          board_id: string
+          card_position: number
+          id: string
+          is_stake: boolean
+          matched: boolean
+          pair_id: string
+          target_id: string
+        }
+        Insert: {
+          board_id: string
+          card_position: number
+          id?: string
+          is_stake?: boolean
+          matched?: boolean
+          pair_id: string
+          target_id: string
+        }
+        Update: {
+          board_id?: string
+          card_position?: number
+          id?: string
+          is_stake?: boolean
+          matched?: boolean
+          pair_id?: string
+          target_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "matchmaker_cards_board_id_fkey"
+            columns: ["board_id"]
+            isOneToOne: false
+            referencedRelation: "matchmaker_boards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      matchmaker_drafts: {
+        Row: {
+          board_id: string
+          id: string
+          picked_at: string
+          target_id: string
+        }
+        Insert: {
+          board_id: string
+          id?: string
+          picked_at?: string
+          target_id: string
+        }
+        Update: {
+          board_id?: string
+          id?: string
+          picked_at?: string
+          target_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "matchmaker_drafts_board_id_fkey"
+            columns: ["board_id"]
+            isOneToOne: false
+            referencedRelation: "matchmaker_boards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      matchmaker_unlocks: {
+        Row: {
+          board_id: string
+          conversation_id: string | null
+          created_at: string
+          gift_inventory_id: string | null
+          id: string
+          message: string
+          recipient_id: string
+          responded_at: string | null
+          sender_floor: string
+          sender_id: string
+          status: string
+        }
+        Insert: {
+          board_id: string
+          conversation_id?: string | null
+          created_at?: string
+          gift_inventory_id?: string | null
+          id?: string
+          message: string
+          recipient_id: string
+          responded_at?: string | null
+          sender_floor: string
+          sender_id: string
+          status?: string
+        }
+        Update: {
+          board_id?: string
+          conversation_id?: string | null
+          created_at?: string
+          gift_inventory_id?: string | null
+          id?: string
+          message?: string
+          recipient_id?: string
+          responded_at?: string | null
+          sender_floor?: string
+          sender_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "matchmaker_unlocks_board_id_fkey"
+            columns: ["board_id"]
+            isOneToOne: false
+            referencedRelation: "matchmaker_boards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matchmaker_unlocks_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matchmaker_unlocks_gift_inventory_id_fkey"
+            columns: ["gift_inventory_id"]
+            isOneToOne: false
+            referencedRelation: "gift_inventory"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       member_badges: {
         Row: {
@@ -2283,6 +2458,10 @@ export type Database = {
         }
         Returns: string
       }
+      is_test_member: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       join_blind_date: {
         Args: {
           p_event_id: string
@@ -2332,6 +2511,106 @@ export type Database = {
           p_payload: Json
         }
         Returns: boolean
+      }
+      matchmaker_award_gift: {
+        Args: {
+          p_user: string
+          p_floor: string
+        }
+        Returns: string
+      }
+      matchmaker_board_cards: {
+        Args: {
+          p_board_id: string
+        }
+        Returns: {
+          id: string
+          card_position: number
+          is_stake: boolean
+          matched: boolean
+          target_id: string
+          display_name: string
+          photo_path: string
+        }[]
+      }
+      matchmaker_draft_candidates: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          display_name: string
+          bio: string
+          one_liner: string
+          gender: string
+          interested_in: string
+          photo_path: string
+          picked: boolean
+        }[]
+      }
+      matchmaker_flip: {
+        Args: {
+          p_card_id: string
+        }
+        Returns: {
+          card_id: string
+          card_position: number
+          is_stake: boolean
+          is_match: boolean
+          first_card_id: string
+          target_id: string
+          display_name: string
+          photo_path: string
+          strikes: number
+          matches_found: number
+          board_status: string
+        }[]
+      }
+      matchmaker_incoming: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          unlock_id: string
+          sender_id: string
+          display_name: string
+          photo_path: string
+          message: string
+          created_at: string
+        }[]
+      }
+      matchmaker_pick_draft: {
+        Args: {
+          p_target: string
+        }
+        Returns: undefined
+      }
+      matchmaker_respond_unlock: {
+        Args: {
+          p_unlock_id: string
+          p_accept: boolean
+        }
+        Returns: undefined
+      }
+      matchmaker_send_unlock: {
+        Args: {
+          p_card_id: string
+          p_message: string
+        }
+        Returns: string
+      }
+      matchmaker_start_board: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          board_id: string
+          status: string
+          strikes: number
+          matches_found: number
+          card_id: string
+          card_position: number
+          is_stake: boolean
+          matched: boolean
+        }[]
+      }
+      matchmaker_start_draft: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       next_event_minutes: {
         Args: {

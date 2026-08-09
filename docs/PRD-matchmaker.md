@@ -1,8 +1,10 @@
 # Club Cheeky — Feature PRD: Matchmaker
 
-> Status: **DRAFT** (2026-08-07) — founder's design; not yet built.
-> A third spark mode, sibling to L³ (docs/PRD-l3.md) under the Spark List hub
-> (`/browse`). Extends PRD-foundation.md. Companion: AGENTS.md.
+> Status: **BUILT** (2026-08-08) — shipped as the third spark mode under the
+> Spark hub (`/browse`), sibling to L³ (docs/PRD-l3.md). Two PRD decisions
+> were amended during the build by the founder (see §4 and §6); everything
+> else shipped as drafted. Live-tested end to end (`tests/matchmaker.live.test.mjs`).
+> Extends PRD-foundation.md. Companion: AGENTS.md.
 
 ## 1. TL;DR
 
@@ -56,12 +58,15 @@ flowchart TD
 
 ## 4. Floor rules
 
-- **Drafts (the swipe phase): your floor only.** No free-tier peeks at
-  paid-floor faces; the paid floors keep their exclusivity.
-- **Randoms (the board): any floor, but from the compatible pool.**
-  Random *within* the same `isCompatible` filter Spark/L³ use (no
-  guy-on-guy boards), floor-weighted: same-floor faces common, upper-floor
-  faces rarer — so the top stays special.
+- **Drafts (the swipe phase): your floor or beneath.** (Amended during
+  build: the founder opened drafts to your floor *and below* — the paid
+  floors keep their exclusivity above you, but the downstairs is fair
+  game.) No free-tier peeks at paid-floor faces.
+- **Randoms (the board): any floor, from the compatible pool.**
+  Random *within* the same `compatible()` filter the board uses (no
+  guy-on-guy boards), verified-only is moot (you can't get in the club
+  unverified — the pool is the whole club). All random for now;
+  floor-weighting (same-floor common, upper-floor rarer) is a later tune.
 - **Cross-floor unlocks are earned + consented.** Matching an upper-floor
   face earns one intro; the recipient accepts or declines silently.
 - **Game swipes are draft picks, not real likes.** No accidental matches
@@ -94,15 +99,35 @@ flowchart TD
 
 ## 6. Guardrails (binding)
 
-- **Silent loss, public win.** A declined unlock ends contact with no
-  follow-up, no nudge, no "they'd love to hear from you."
+- **Silent loss, public win — with the rebound amendment (founder).** A
+  declined unlock ends *contact* with no follow-up, no nudge, no "they'd
+  love to hear from you." The recipient stays silent. But the *sender is
+  told* the outcome — wrapped in the win: "they declined, but you still
+  won the game — your [Matchmaker-exclusive gift] is in your inventory."
+  The brain anchors on the gift; the decline becomes the next shot, not a
+  bruise (the rebound engine, §9a).
 - **No dark patterns.** The board is honest chance + memory skill; no
   fake activity, no pity mechanics, no "almost!" pressure loops.
 - **Safety rails reused.** The recipient's alert carries report/block;
   the unlock message flows through the existing messaging safety.
-- **The recipient notice mechanic is deferred** (founder): options on the
-  table are (a) pure "someone discovered you in Matchmaker" alert, or
-  (b) an alert with a like-back window. Decide before build.
+- **The recipient notice mechanic is DECIDED** (see §9a): pure
+  "someone discovered you in Matchmaker" alert with accept/decline — no
+  like-back countdown window.
+
+## 6a. The decline economy — Matchmaker-exclusive gifts (founder, built)
+
+- **Four exclusive gifts, one per floor**, never for sale: The First Spark
+  (silver) 🔥, The Golden Ticket (gold) 🎫, The Platinum Pass (platinum) 💠,
+  The Diamond Key (diamond) 🗝️. `buy_gift` refuses them (`gift_not_purchasable`).
+- **Accept** → the *recipient* earns the **sender's-floor** variant. The
+  collectible pull: accept from a Gold face → the Gold gift; a Diamond
+  face → the Diamond gift — "Dang, I need that one for the set."
+- **Decline** → the *sender* earns their **own floor's** variant as the
+  consolation. It lands in inventory (`available`), re-giftable through
+  the normal gift flow (silent mini-kind gesture), and is linked to the
+  unlock so history shows exactly what was earned.
+- This seeds the Gems collectible economy: the first "can't buy, only
+  earn" items in the club.
 
 ## 7. UX sketch
 
@@ -124,12 +149,16 @@ flowchart TD
 - Recipient accept rate; cross-floor accept rate.
 - Cold-start effect: new members who unlock within their first 48h.
 
-## 9. Open questions (founder to decide)
+## 9. Decisions (formerly open questions)
 
-1. **Recipient notice** (deferred): pure alert vs. alert + like-back window.
-2. **Randoms pool**: verified-only (recommended, same as L³) — confirm.
-3. **Board balance**: 8 pairs / 2-match win before 3 strikes — tune after
-   first playtest.
+1. **Recipient notice** — **decided (a) + the rebound**: pure alert with
+   accept/decline; no like-back window. The decline tells the sender with
+   a consolation gift (§6/§6a) — the rebound engine, first implementation.
+2. **Randoms pool** — verified-only confirmed; moot, everyone in the club
+   is verified. The pool is the whole club, any floor.
+3. **Board balance** — shipped as drafted (8 pairs / 2-match win / 3
+   strikes); tune after first playtest.
+4. **The sender learns of a decline** — decided yes, gift-wrapped (§6).
 
 ## 10. Out of scope (for now)
 

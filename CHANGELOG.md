@@ -164,6 +164,20 @@ points — every push to `main` is production.
   tools, zero runtime cost. DB health today: 99.99% cache hit, ~10 rows/call, and the
   dashboard's "25 slow queries" are all platform introspection (timezone/extension catalogs,
   backups, table browser) — the app's own queries don't appear.
+- **Matchmaker is live** — the third spark mode on `/browse`, the memory game that unlocks
+  first impressions (PRD-matchmaker.md, DRAFT → BUILT). Draft two faces from your floor or
+  beneath, then play a 4×4 board (8 people, 2 cards each): matching a pair earns one
+  first-impression message to that person — even if they never liked you back. 2 matches
+  win, 3 strikes lose; plays/day dial 2/3/4/5 by floor via the `matchmaker:` rate-limit
+  namespace, and unlocks ride their own allowance (never the 5-new-conversations cap).
+  The decline economy (founder): a decline stays silent for the recipient, but the sender
+  is told — gift-wrapped — and earns a **Matchmaker-exclusive gift** (one per floor, never
+  purchasable: The First Spark / Golden Ticket / Platinum Pass / Diamond Key) into their
+  inventory; accepting earns the recipient the sender-floor variant, the collectible pull
+  to accept cross-floor. The rebound engine, first implementation. Server-authoritative
+  flips (cards are deny-all at RLS — the client only sees what `matchmaker_flip` reveals),
+  taskbar shows plays left, and `scripts/purge-mmtest.mjs` is the safety net for interrupted
+  live runs. **10/10 live tests green** + L³/taskbar suites re-verified.
 - **Tiki task bar diagrams** (`docs/event-diagrams/`): the founder's `.mmd` source and `.pdf`
   export now live in permanent repo storage instead of the repo root.
 - **Event-kind live suite** (`tests/events.live.test.mjs`): the hourly wheel (all four kinds
