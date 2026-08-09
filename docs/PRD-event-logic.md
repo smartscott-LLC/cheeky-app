@@ -2,6 +2,11 @@
 
 **Status:** DRAFT — founder dictation captured 2026-08-06, pending his confirmation before implementation. Supersedes the event mechanics in `PRD-foundation.md` where they conflict (foundation stays the north star; this is the refined floor/event logic).
 
+> **Engine boundary:** this PRD is the **Events Engine** — clock-driven,
+> scheduled, multi-member rooms. Instant, solo games (L³, Matchmaker) run on
+> the **Spark Game Spine**, not this engine — see `docs/GAME-ENGINES.md` for
+> the Playability Check that decides which engine a new game belongs on.
+
 ---
 
 ## 0. The strategy — playing defense on the gender ratio

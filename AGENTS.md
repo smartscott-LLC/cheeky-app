@@ -47,6 +47,7 @@ A dating app built like a nightclub. Three pillars:
 
 - **Stack:** Next.js 15 (App Router), Supabase (auth + Postgres + RLS), Stripe (billing + Identity + checkout), Tailwind, TypeScript.
 - **Components:** server components by default; `'use client'` only where interactivity requires it. UI primitives live in `components/ui/`. Keep `components/ui/` presentational — business logic goes in `utils/`.
+- **Two game engines, one club:** clock-driven scheduled rooms run on the Events Engine (`events`/`event_entries`/the minute cron — `docs/PRD-event-logic.md`); instant solo games (Swipes, L³, Matchmaker) run on the Spark Game Spine (matches/rewards/gifts/messages/rate-limits — each game adds its own value-resolution RPCs). Before building a new game, run it through the Playability Check in `docs/GAME-ENGINES.md` — and when a game hits an architecture fork, ask the founder first.
 - **Styling:** Tailwind utility classes; CSS modules for component-specific styles (`components/ui/Navbar/Navbar.module.css` pattern). Floor color schemes live in `styles/palettes/*.scss` (source of truth) and are mirrored as Tailwind tokens (`club`, `gold`, `platinum`, `diamond`) in `tailwind.config.js` — never hardcode hex in components.
 - **Supabase:**
   - Row Level Security is mandatory on every table. Never disable RLS "just for now."
@@ -57,7 +58,7 @@ A dating app built like a nightclub. Three pillars:
   - Checkout runs server-side (`utils/stripe/server.ts`); subscriptions gate floors via `subscriptions` + entitlements.
   - Stripe Identity is the candidate for verification (keeps the stack unified) — confirm before Phase 1.
 - **Tokens:** integer microcurrency, atomic server-side ledger, RLS-protected; refunds for no-match events; never computed from client state.
-- **Testing:** `node:test` suite in `tests/` (zero deps). `pnpm test` runs the safe tests in CI; live suites (`webhook`, `token-engine`, `ai-probe`) run behind `RUN_LIVE_TESTS=1` and hit production with throwaway members that clean up after themselves. The token-engine burst (`STRESS_N=1000`) is the pre-launch check for anything touching events/tokens. See `tests/README.md`.
+- **Testing:** `node:test` suite in `tests/` (zero deps). `pnpm test` runs the safe tests in CI; live suites (`webhook`, `token-engine`, `ai-probe`, `events`, `l3`, `matchmaker`, `taskbar`) run behind `RUN_LIVE_TESTS=1` and hit production with throwaway members that clean up after themselves (`scripts/purge-mmtest.mjs` is the interrupted-run safety net). The token-engine burst (`STRESS_N=1000`) is the pre-launch check for anything touching events/tokens. See `tests/README.md`.
 - **Money display:** format with `Intl.NumberFormat` (already the pattern in `Pricing.tsx`); store amounts as integers (cents).
 
 ## Repo map
@@ -65,16 +66,18 @@ A dating app built like a nightclub. Three pillars:
 ```
 app/            Next.js routes: / (landing), /signin, /account, /club, /floors, /events,
                 /crew, /gifts, /coat-check, /swag, /browse, /messages, /verify, /owner, /api
-components/     ui primitives (ui/) + feature components (Agent, Club, Events, Gifts,
-                Messages, Audio, Swag, Navbar, Footer) — see docs/COMPONENT-LIBRARY.md
+components/     ui primitives (ui/) + feature components (Agent, Club, Events,
+                Gifts, Messages, Audio, Swag, Navbar, Footer, Browse) — see docs/COMPONENT-LIBRARY.md
 utils/          supabase clients + queries, stripe client/server, auth helpers, floors map,
                 characters, events config, swag, rate limits, token-amount
-supabase/       migrations (48) — apply to hosted with scripts/migrate-hosted.mjs
-scripts/        dev utilities (migrate-hosted, backfill-*, check-*, smoke-*)
+supabase/       migrations (83) — apply to hosted with scripts/migrate-hosted.mjs
+scripts/        dev utilities (migrate-hosted, backfill-*, check-*, smoke-*, purge-mmtest)
 styles/         global css (main.css) + floor palettes (styles/palettes/*.scss)
-docs/           PRD-foundation.md + Governance/ policies + COMPONENT-LIBRARY.md +
-                ENVIRONMENT.md + floor-map.md + first-floor-flow.mmd + future feature PRDs
-                (historical audits/setup reports live in docs/archives/)
+docs/           PRD-foundation.md + PRDs + GAME-ENGINES.md (the two game engines
+                + Playability Check) + Governance/ policies + COMPONENT-LIBRARY.md +
+                ENVIRONMENT.md + floor-map.md + event-diagrams/ + first-floor-flow.mmd
+                + future feature PRDs (historical audits/setup reports live in
+                docs/archives/)
 fixtures/       Stripe fixture JSON for bootstrapping products/prices
 tests/          node:test suite — safe (pnpm test) + live (RUN_LIVE_TESTS=1)
 public/         served assets: brand/, personas/, audio/, icons/, .well-known/

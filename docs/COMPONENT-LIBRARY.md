@@ -57,7 +57,7 @@ the database directly.
 | `ui/Club/`      | `FloorLayout` — the shared room scene (art backdrop + positioned room spots); lobby + every floor render through it |
 | `ui/Events/`    | `EventFloor` (grid room + song phase), `SpeedDatingFloor` (rotation/certificates), `MatchedOverlay`                 |
 | `ui/DateNight/` | Couple Trivia — the mutual-tap game in matched chats                                                                |
-| `ui/Browse/`    | `BrowseCard` — the Spark List card (like/wave, match overlay)                                                       |
+| `ui/Browse/`    | The spark hub: `SparkLab` (mode tabs), `BrowseCard` (the 1-for-1 Swipes card — like/wave, match overlay), `L3Trio` (Leave · Like · Love), and the Matchmaker suite — `Matchmaker` (the room: incoming unlocks + board orchestration), `MatchmakerDraft` (phase-1 picks), `MatchmakerBoard` (the 4×4 board + flip/unlock), `MatchmakerHistory` (results + the decline consolation) |
 | `ui/Messages/`  | `MessageThread` — Cheeky Chats: composer, report/block, waves, Date Night, song mode                                |
 
 ### Cast & commerce

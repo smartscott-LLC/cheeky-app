@@ -21,7 +21,7 @@ Club Cheeky is a nightclub, not a menu. Members walk a real building:
 | 🎁 The Gift Shop           | `/gifts`                     | Buy gifts with tokens and send them to members.                                                                                                                                             |
 | 🧥 Coat Check              | `/coat-check`                | Gems, badges, your daily streak, and crew bonds.                                                                                                                                            |
 | 🎟️ Swag Shop               | `/swag`                      | Redeem giveaway codes (SWAG-XXXXXXXX) — always in the nav.                                                                                                                                  |
-| ⚡ The Spark List          | `/browse`                    | Who's out tonight, filtered by mutual dating preference.                                                                                                                                    |
+| ⚡ The Spark List          | `/browse`                    | The spark hub — Swipes (the 1-for-1), L³ (Leave · Like · Love), and Matchmaker (the memory board that unlocks first impressions). Filtered by mutual dating preference. |
 | 💬 Cheeky Chats            | `/messages`                  | Conversations, waves, Date Night with matches.                                                                                                                                              |
 | 👤 Account                 | `/account`                   | Your card (grant-aware), avatar name, one-liner, photos, billing.                                                                                                                           |
 | 🔑 Owner's back door       | `/owner`                     | The founder's booth — swag codes, grants, flags (owner account only).                                                                                                                       |
@@ -35,6 +35,11 @@ Club Cheeky is a nightclub, not a menu. Members walk a real building:
 - **The Token Economy** — earn (verify, referrals, giveaways) or buy
   (100/$4.99, 1000/$9.99); events cost tokens per floor. Server-side ledger
   only — never trust the client.
+
+The games run on **two engines** — clock-driven rooms (the Events Engine)
+and instant solo games (the Spark Game Spine: Swipes, L³, Matchmaker). New
+games are checked against both before they're built — see
+[`docs/GAME-ENGINES.md`](docs/GAME-ENGINES.md).
 
 ### The crew
 
@@ -135,7 +140,7 @@ The full set (see `.env.local.example` for the core local-dev values).
 
 ## Database & migrations
 
-- Schema changes go through `supabase/migrations/` (48 and counting).
+- Schema changes go through `supabase/migrations/` (83 and counting).
 - **Apply to hosted, then regenerate types** — that's the whole workflow:
   `node scripts/migrate-hosted.mjs <name>` then `pnpm supabase:generate-types`, and commit the
   diff. (Local Supabase is optional; it is not the default path.)
@@ -159,16 +164,18 @@ app/            Next.js routes (landing, signin, account, club, floors, events,
                 chat, crew, gifts, coat-check, swag, browse, messages, verify,
                 owner, api/)
 components/     ui primitives (ui/) + feature components (Agent, Club, Events,
-                Gifts, Messages, Audio, Swag, Navbar, Footer) — see
+                Gifts, Messages, Audio, Swag, Navbar, Footer, Browse) — see
                 docs/COMPONENT-LIBRARY.md
 utils/          supabase clients + queries, stripe, auth helpers, floors map,
                 characters, events config, swag, rate limits, token-amount
-supabase/       migrations (48) — apply to hosted with scripts/migrate-hosted.mjs
+supabase/       migrations (83) — apply to hosted with scripts/migrate-hosted.mjs
 scripts/        dev utilities (migrate-hosted, backfill-*, check-*, test-*)
 styles/         global css (main.css) + floor palettes (styles/palettes/*.scss)
-docs/           PRD-foundation.md + PRDs + Governance/ + COMPONENT-LIBRARY.md +
-                ENVIRONMENT.md + floor-map.md + first-floor-flow.mmd
-                (historical audits/setup reports live in docs/archives/)
+docs/           PRD-foundation.md + PRDs + GAME-ENGINES.md (the two game
+                engines + Playability Check) + Governance/ + COMPONENT-LIBRARY.md +
+                ENVIRONMENT.md + floor-map.md + event-diagrams/ +
+                first-floor-flow.mmd (historical audits/setup reports live in
+                docs/archives/)
 tests/          node:test suite — safe (pnpm test) + live (RUN_LIVE_TESTS=1)
 fixtures/       Stripe fixture JSON for bootstrapping products/prices
 public/         served assets: brand/ (floor art, entrance), personas/ (crew
@@ -189,7 +196,8 @@ public/         served assets: brand/ (floor art, entrance), personas/ (crew
 Read [`AGENTS.md`](AGENTS.md) — the working guidelines — and
 [`docs/PRD-foundation.md`](docs/PRD-foundation.md) — the product spec.
 [`docs/floor-map.md`](docs/floor-map.md) is the source of truth for what
-belongs on every floor. [`CONTRIBUTING.md`](CONTRIBUTING.md) is the process
+belongs on every floor. [`docs/GAME-ENGINES.md`](docs/GAME-ENGINES.md) is
+where new games get checked against the two engines. [`CONTRIBUTING.md`](CONTRIBUTING.md) is the process
 discipline — the standing rule, migrations, testing, secrets.
 
 ## Validation checklist

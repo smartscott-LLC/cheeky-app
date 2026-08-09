@@ -1,6 +1,9 @@
 # Club Cheeky — Feature PRD: L³ (Leave · Like · Love)
 
-> Status: **DRAFT** (2026-08-07) — founder's design; not yet built.
+> Status: **BUILT** (2026-08-08) — shipped as the second spark mode under the
+> Spark hub (`/browse`), sibling to Swipes and Matchmaker. Live-tested end to
+> end (`tests/l3.live.test.mjs`). Runs on the Spark Game Spine — see
+> `docs/GAME-ENGINES.md`.
 > Extends `PRD-foundation.md` (mission guardrails, floors, matchmaking).
 > Companion: `AGENTS.md`.
 

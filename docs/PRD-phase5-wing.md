@@ -96,6 +96,15 @@ chat). Five items per floor (1 featured + 4 minis) + the basket.
   handing out Diamond passes).
 - **Blocks respected** — cannot gift someone who blocked you.
 
+### 3.2b Matchmaker-exclusive gifts (amendment, shipped 2026-08-08)
+
+The Matchmaker game earns gifts that the store can never sell (PRD-matchmaker
+§6a). `gift_catalog` gained `matchmaker_only` — four items, one per floor,
+with `buy_gift` refusing them (`gift_not_purchasable`). They land in
+inventory via the game's RPCs (accept → recipient earns the sender-floor
+variant; decline → sender earns their own floor's as the consolation) and
+re-gift through the normal `send_gift` flow as silent mini-kind gestures.
+
 ### 3.3 Flow
 
 ```mermaid
