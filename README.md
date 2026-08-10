@@ -25,6 +25,7 @@ Club Cheeky is a nightclub, not a menu. Members walk a real building:
 | 💬 Cheeky Chats            | `/messages`                  | Conversations, waves, Date Night with matches.                                                                                                                                              |
 | 👤 Account                 | `/account`                   | Your card (grant-aware), avatar name, one-liner, photos, billing.                                                                                                                           |
 | 🔑 Owner's back door       | `/owner`                     | The founder's booth — swag codes, grants, flags (owner account only).                                                                                                                       |
+| 🍸 The Cheeky Lounge       | everywhere                   | The always-available chat overlay — five rooms (Global + the floors), realtime, the Horn, chat badges. The town square.                                                                      |
 
 ### The three pillars
 
@@ -140,7 +141,7 @@ The full set (see `.env.local.example` for the core local-dev values).
 
 ## Database & migrations
 
-- Schema changes go through `supabase/migrations/` (83 and counting).
+- Schema changes go through `supabase/migrations/` (87 and counting).
 - **Apply to hosted, then regenerate types** — that's the whole workflow:
   `node scripts/migrate-hosted.mjs <name>` then `pnpm supabase:generate-types`, and commit the
   diff. (Local Supabase is optional; it is not the default path.)
@@ -164,11 +165,11 @@ app/            Next.js routes (landing, signin, account, club, floors, events,
                 chat, crew, gifts, coat-check, swag, browse, messages, verify,
                 owner, api/)
 components/     ui primitives (ui/) + feature components (Agent, Club, Events,
-                Gifts, Messages, Audio, Swag, Navbar, Footer, Browse) — see
+                Gifts, Messages, Audio, Swag, Navbar, Footer, Browse, ClubChat) — see
                 docs/COMPONENT-LIBRARY.md
 utils/          supabase clients + queries, stripe, auth helpers, floors map,
                 characters, events config, swag, rate limits, token-amount
-supabase/       migrations (83) — apply to hosted with scripts/migrate-hosted.mjs
+supabase/       migrations (87) — apply to hosted with scripts/migrate-hosted.mjs
 scripts/        dev utilities (migrate-hosted, backfill-*, check-*, test-*)
 styles/         global css (main.css) + floor palettes (styles/palettes/*.scss)
 docs/           PRD-foundation.md + PRDs + GAME-ENGINES.md (the two game

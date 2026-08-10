@@ -67,10 +67,10 @@ A dating app built like a nightclub. Three pillars:
 app/            Next.js routes: / (landing), /signin, /account, /club, /floors, /events,
                 /crew, /gifts, /coat-check, /swag, /browse, /messages, /verify, /owner, /api
 components/     ui primitives (ui/) + feature components (Agent, Club, Events,
-                Gifts, Messages, Audio, Swag, Navbar, Footer, Browse) — see docs/COMPONENT-LIBRARY.md
+                Gifts, Messages, Audio, Swag, Navbar, Footer, Browse, ClubChat) — see docs/COMPONENT-LIBRARY.md
 utils/          supabase clients + queries, stripe client/server, auth helpers, floors map,
                 characters, events config, swag, rate limits, token-amount
-supabase/       migrations (83) — apply to hosted with scripts/migrate-hosted.mjs
+supabase/       migrations (87) — apply to hosted with scripts/migrate-hosted.mjs
 scripts/        dev utilities (migrate-hosted, backfill-*, check-*, smoke-*, purge-mmtest)
 styles/         global css (main.css) + floor palettes (styles/palettes/*.scss)
 docs/           PRD-foundation.md + PRDs + GAME-ENGINES.md (the two game engines

@@ -178,6 +178,19 @@ points — every push to `main` is production.
   flips (cards are deny-all at RLS — the client only sees what `matchmaker_flip` reveals),
   taskbar shows plays left, and `scripts/purge-mmtest.mjs` is the safety net for interrupted
   live runs. **10/10 live tests green** + L³/taskbar suites re-verified.
+- **The Cheeky Lounge is live** — the town square (PRD-club-chat.md, the most important
+  module per the founder). An always-available real-time chat overlay floating over every
+  member page: **five rooms** (Global + the four floor channels), the visibility ladder
+  (type on your floor and below; floors above are dimmed read-only — the climb), and **no
+  caps or rate limits to talk** (the room IS the retention play). The app's first realtime
+  surface (Supabase Realtime, RLS-authorised) with a presence member list, right-click /
+  long-press context menu (go private · whisper · mute · block · report · give gift),
+  **take-private = a match behind two-sided consent** counted against the daily allowances,
+  the **Horn** (10 tokens, 1/hour — lights up and crosses the club ticker), a chat-only
+  collectible badge family (Chatterbox I–IV, The Regular, Horn Blower), an always-on
+  profanity filter + escalating chat bans, and 24h visible / 30-day logs / nightly purge.
+  Privacy toggles on `/account` switch off private invites and gifts (senders are refused
+  with "this user does not accept…"). Schema + UI live-tested **11/11**, lint + build green.
 - **Tiki task bar diagrams** (`docs/event-diagrams/`): the founder's `.mmd` source and `.pdf`
   export now live in permanent repo storage instead of the repo root.
 - **Event-kind live suite** (`tests/events.live.test.mjs`): the hourly wheel (all four kinds

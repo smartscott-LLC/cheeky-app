@@ -208,4 +208,9 @@ book-ready: every badge carries its family + floor + rarity metadata now.
   1 day → 3 days by violation count (human-moderator catch).
 - Chat-only badge family (Chatterbox 50/200/500/1000, Regular, Horn
   Blower) — catalog is built book-ready for the future collectible book.
+- **Privacy toggles (added at build):** members can switch off accepting
+  private invites and/or gifts on `/account`. Both default ON; when off,
+  senders are refused with "this user does not accept private invites /
+  gifts" (`invites_disabled` / `gifts_disabled`, enforced server-side in
+  `club_chat_invite` and `send_gift`).
 - Retention: 24h visible / 30-day logs / nightly purge / request for older.
