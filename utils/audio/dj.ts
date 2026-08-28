@@ -18,7 +18,7 @@ function ensureCtx(): AudioContext {
   if (!ctx) {
     ctx = new AudioContext();
     master = ctx.createGain();
-    master.gain.value = muted ? 0 : 0.25;
+    master.gain.value = muted ? 0 : 0.45;
     master.connect(ctx.destination);
   }
   return ctx;
