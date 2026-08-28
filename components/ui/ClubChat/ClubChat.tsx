@@ -428,7 +428,7 @@ export default function ClubChat() {
       >
         <span className="text-xl">🍸</span>
         <span className="font-hero text-gold hidden text-sm sm:block">Lounge</span>
-        {unseen < 0 && (
+        {unseen > 0 && (
           <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-club px-1 text-[11px] font-bold text-white">
             {unseen > 9 ? '9+' : unseen}
           </span>
