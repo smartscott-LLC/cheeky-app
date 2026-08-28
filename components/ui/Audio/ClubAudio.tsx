@@ -3,19 +3,20 @@
 import { useEffect, useRef, useState } from 'react';
 
 // The club's music. The DJ's real tracks come first (founder-generated,
-// no licensing) — Pressure Gauge, Solar Flare Summit, Above the Clouds, and
-// Final Ascent, crossfaded like a live mix. If a track ever fails to load,
-// the synthesized house engine (below) takes over so the floor never goes
-// quiet.
+// no licensing) — Club Cheeky, Pressure Gauge, Solar Flare Summit, Above
+// the Clouds, and Final Ascent, crossfaded like a live mix. If a track
+// ever fails to load, the synthesized house engine (below) takes over so
+// the floor never goes quiet.
 
 const TRACKS = [
+  '/audio/Club_Cheeky.mp3',
   '/audio/pressure-gauge.mp3',
   '/audio/solar-flare-summit.mp3',
   '/audio/above-the-clouds.mp3',
   '/audio/final-ascent.mp3'
 ];
-const MIX_VOL = 0.5;
-const FADE_MS = 2000;
+const MIX_VOL = 0.45;
+const FADE_MS = 4000; // 4-second smooth crossfade
 
 // The fallback engine — synthesized live in the browser: 200 BPM, A minor,
 // bass-drum gallop, snare rolls, fast 16th hats, and a 12-beat hook that
@@ -304,15 +305,30 @@ export default function ClubAudio() {
     const tracks = tracksRef.current;
     if (!tracks || switchingRef.current) return;
     switchingRef.current = true;
+
+    // Wait for current track to naturally reach a good crossing point
+    // (near end) before starting the fade
     const from = currentRef.current;
-    // Four beats on the decks — spin to any track that isn't already up.
+    const currentTrack = tracks[from];
+    const timeLeft = (currentTrack.duration || 180) - currentTrack.currentTime;
+
+    // Only start fade if we're within the crossfade window
+    if (timeLeft > FADE_MS / 1000 + 2) {
+      // Not close enough to end yet — reschedule
+      mixTimerRef.current = setTimeout(mixTo, (timeLeft - FADE_MS / 1000 - 1) * 1000);
+      return;
+    }
+
+    // Pick next track (different from current)
     let to = Math.floor(Math.random() * tracks.length);
     if (to === from) to = (to + 1) % tracks.length;
+
     const startIn = tracks[to];
-    startIn.currentTime = 0;
     startIn.volume = 0;
+    startIn.currentTime = Math.max(0, currentTrack.currentTime - 2); // Start slightly behind current
     const start = performance.now();
     let aborted = false;
+
     startIn.play().catch(() => {
       // The deck skipped a beat — roll forward; the next mix tries again.
       aborted = true;
@@ -320,19 +336,24 @@ export default function ClubAudio() {
       switchingRef.current = false;
       scheduleMix();
     });
+
     const step = () => {
       if (aborted) return;
       const p = Math.min(1, (performance.now() - start) / FADE_MS);
-      // Equal-power crossfade: constant perceived loudness, no mid-fade
-      // pump where both beats are loud and it sounds like clipping.
-      const out = Math.cos((p * Math.PI) / 2);
-      const inn = Math.sin((p * Math.PI) / 2);
-      tracks[from].volume = MIX_VOL * out;
+      // Smooth ease-in-out curve for more natural transition
+      const eased = p < 0.5
+        ? 2 * p * p
+        : 1 - Math.pow(-2 * p + 2, 2) / 2;
+      // Equal-power crossfade: constant perceived loudness
+      const out = Math.cos((eased * Math.PI) / 2);
+      const inn = Math.sin((eased * Math.PI) / 2);
+      currentTrack.volume = MIX_VOL * out;
       startIn.volume = MIX_VOL * inn;
       if (p < 1) {
         requestAnimationFrame(step);
       } else {
-        tracks[from].pause();
+        currentTrack.pause();
+        currentTrack.volume = 0;
         currentRef.current = to;
         switchingRef.current = false;
         scheduleMix();
@@ -343,7 +364,13 @@ export default function ClubAudio() {
 
   const scheduleMix = () => {
     if (mixTimerRef.current) clearTimeout(mixTimerRef.current);
-    mixTimerRef.current = setTimeout(mixTo, 35000 + Math.random() * 25000);
+    // Schedule based on actual track duration, not arbitrary timer
+    const tracks = tracksRef.current;
+    if (!tracks) return;
+    const currentTrack = tracks[currentRef.current];
+    const timeUntilEnd = (currentTrack.duration || 180) - currentTrack.currentTime;
+    // Start planning the next mix ~5 seconds before track ends
+    mixTimerRef.current = setTimeout(mixTo, Math.max(1000, (timeUntilEnd - 5) * 1000));
   };
 
   const startTracks = (): Promise<void> => {
