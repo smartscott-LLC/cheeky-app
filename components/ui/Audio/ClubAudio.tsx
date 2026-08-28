@@ -380,6 +380,12 @@ export default function ClubAudio() {
         a.loop = true;
         a.volume = 0;
         a.preload = 'auto';
+        // When a track ends, queue the next mix
+        a.onended = () => {
+          if (!switchingRef.current) {
+            scheduleMix();
+          }
+        };
         return a;
       });
     }
