@@ -9,7 +9,7 @@
 import { createDeepSeek } from '@ai-sdk/deepseek';
 import { streamText } from 'ai';
 
-const DEEPSEEK_BASE = 'https://api.deepseek.com';
+const DEEPSEEK_BASE = '${DEEPSEEK_URL}';
 
 export interface DirectMessage {
   role: 'user' | 'assistant';

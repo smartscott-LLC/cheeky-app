@@ -76,10 +76,10 @@ export default async function LandingPage() {
           <p className="text-base font-bold tracking-[0.3em] text-club">
             Looking for your next crush?
           </p>
-          <h1 className="font-hero text-gold mx-auto mt-6 max-w-3xl text-6xl leading-tight sm:text-8xl">
+          <h1 className="font-hero text-gold mx-auto mt-6 max-w-3xl text-8xl leading-tight sm:text-8xl">
             CLUB CHEEKY
           </h1>
-          <h2 className="mx-auto mt-4 max-w-2xl text-2xl text-cyan sm:text-3xl">
+          <h2 className="mx-auto mt-4 max-w-2xl text-4xl text-cyan sm:text-5xl">
             Find your next date in our virtual nightclub!
           </h2>
 
