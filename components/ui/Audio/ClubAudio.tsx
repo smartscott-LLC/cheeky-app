@@ -377,14 +377,11 @@ export default function ClubAudio() {
     if (!tracksRef.current) {
       tracksRef.current = TRACKS.map((src) => {
         const a = new Audio(src);
-        a.loop = true;
+        a.loop = false;
         a.volume = 0;
         a.preload = 'auto';
-        // When a track ends, queue the next mix
         a.onended = () => {
-          if (!switchingRef.current) {
-            scheduleMix();
-          }
+          if (!switchingRef.current && !mixTimerRef.current) scheduleMix();
         };
         return a;
       });
