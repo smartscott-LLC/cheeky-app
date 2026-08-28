@@ -39,7 +39,8 @@ the database directly.
 | ------------------------ | ------------------------------------------------------------------------------------------ |
 | `ui/Navbar/`             | The marquee — logo, centered links, Enter-the-club/Lobby switch, account, swag, sign-out   |
 | `ui/PWA/`                | `ServiceWorkerRegister` (offline shell for the Android wrapper)                            |
-| `ui/Audio/`              | `ClubAudio` — the house DJ (synthesized fallback + the founder's tracks, crossfaded)       |
+| `ui/Audio/`              | `ClubAudio` — the house DJ (synthesized fallback + the founder's tracks, crossfaded)                                |
+| `utils/audio/dj.ts`      | The in-house DJ (procedural loop + announcer voice + MP3 tracks with smooth crossfades) — starts on match/pick, stops on exit |
 | `ui/ClubChat/`           | The Cheeky Lounge — the always-available chat overlay: `ClubChat` (floating button, draggable panel, five rooms with the dimmed climb, realtime + presence, the Horn), `ClubChatMenu` (right-click/long-press: go private · whisper · mute · block · report · gift), `ClubChatWhisper` (ephemeral pair rooms), `LoungePrefs` (the invites/gifts privacy toggles, mounted on `/account`) |
 | `ui/AnnouncementBanner/` | The floor marquee — ticker/roll/fade, fed from the `announcements` table via the Lions Den |
 

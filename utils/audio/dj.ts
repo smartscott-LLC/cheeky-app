@@ -1,8 +1,9 @@
 // The in-house DJ — a procedural club loop synthesized with the Web Audio
-// API plus the announcer voice (Web Speech API). No audio files, no
-// licensing, no payload. Kick, hats, and a walking bassline at 128 BPM.
-// Module-level singleton so the DJ survives navigation from the match
-// overlay into the song chat.
+// API plus the announcer voice (Web Speech API), now also plays the founder's
+// MP3 tracks (Club Cheeky, Pressure Gauge, Solar Flare Summit, etc.) with
+// smooth crossfades. Kick, hats, and walking bassline at 128 BPM layered
+// beneath the tracks at reduced volume. Module-level singleton so the DJ
+// survives navigation from the match overlay into the song chat.
 
 let ctx: AudioContext | null = null;
 let master: GainNode | null = null;
@@ -10,9 +11,29 @@ let playing = false;
 let muted = false;
 let loopTimer: ReturnType<typeof setInterval> | null = null;
 
+// Founder's tracks — MP3s crossfaded with smooth transitions
+const TRACKS = [
+  '/audio/Club_Cheeky.mp3',
+  '/audio/pressure-gauge.mp3',
+  '/audio/solar-flare-summit.mp3',
+  '/audio/above-the-clouds.mp3',
+  '/audio/final-ascent.mp3'
+];
+
+// Crossfade timing (milliseconds)
+const CROSSFADE_MS = 3000;
+
+// Procedural music settings
 const STEP = 60 / 128 / 2; // eighth notes at 128 BPM
 // A-minor walking bass: A A C A G G C A
 const BASS_LINE = [55, 55, 65.41, 55, 49, 49, 65.41, 55];
+
+// Track player state
+let tracks: HTMLAudioElement[] = [];
+let currentTrackIndex = 0;
+let trackGainNodes: GainNode[] = [];
+let crossfadeTimer: ReturnType<typeof setTimeout> | null = null;
+let trackScheduledEnd = 0;
 
 function ensureCtx(): AudioContext {
   if (!ctx) {
@@ -22,6 +43,104 @@ function ensureCtx(): AudioContext {
     master.connect(ctx.destination);
   }
   return ctx;
+}
+
+function initTracks() {
+  if (tracks.length > 0) return;
+  tracks = TRACKS.map((src) => {
+    const audio = new Audio(src);
+    audio.loop = true;
+    audio.preload = 'auto';
+    // Use MediaElementSource to connect HTML5 audio to Web Audio API
+    const mediaSource = ctx!.createMediaElementSource(audio);
+    const gain = ctx!.createGain();
+    gain.gain.value = 0;
+    mediaSource.connect(gain);
+    gain.connect(master!);
+    trackGainNodes.push(gain);
+    return audio;
+  });
+}
+
+function startTrack(index: number) {
+  // Stop all other tracks
+  tracks.forEach((track, i) => {
+    if (i !== index) {
+      track.pause();
+      trackGainNodes[i].gain.setValueAtTime(0, ctx!.currentTime);
+    }
+  });
+
+  // Start the new track
+  const track = tracks[index];
+  track.currentTime = 0;
+  trackGainNodes[index].gain.cancelScheduledValues(ctx!.currentTime);
+  trackGainNodes[index].gain.setValueAtTime(0, ctx!.currentTime);
+  trackGainNodes[index].gain.linearRampToValueAtTime(0.5, ctx!.currentTime + 0.5);
+
+  void track.play();
+  currentTrackIndex = index;
+  trackScheduledEnd = Date.now() + (track.duration || 180) * 1000;
+
+  // Schedule crossfade to next track
+  scheduleNextTrack();
+}
+
+function scheduleNextTrack() {
+  if (crossfadeTimer) clearTimeout(crossfadeTimer);
+
+  const timeUntilEnd = trackScheduledEnd - Date.now();
+  const crossfadeStart = Math.max(0, timeUntilEnd - CROSSFADE_MS);
+
+  crossfadeTimer = setTimeout(() => {
+    crossfadeToNextTrack();
+  }, crossfadeStart);
+}
+
+function crossfadeToNextTrack() {
+  if (!playing || !ctx) return;
+
+  const fromIndex = currentTrackIndex;
+  let toIndex = (fromIndex + 1) % tracks.length;
+
+  // Pick a different random track sometimes
+  if (Math.random() < 0.7 && tracks.length > 2) {
+    toIndex = Math.floor(Math.random() * tracks.length);
+    if (toIndex === fromIndex) toIndex = (fromIndex + 1) % tracks.length;
+  }
+
+  const t = ctx.currentTime;
+  const fadeDuration = CROSSFADE_MS / 1000;
+
+  // Fade out current track
+  trackGainNodes[fromIndex].gain.setTargetAtTime(0, t, fadeDuration / 3);
+
+  // Fade in next track
+  tracks[toIndex].currentTime = 0;
+  trackGainNodes[toIndex].gain.setValueAtTime(0, t);
+  trackGainNodes[toIndex].gain.linearRampToValueAtTime(0.5, t + fadeDuration);
+
+  void tracks[toIndex].play();
+
+  currentTrackIndex = toIndex;
+  trackScheduledEnd = Date.now() + (tracks[toIndex].duration || 180) * 1000;
+
+  // Schedule next crossfade
+  scheduleNextTrack();
+}
+
+function stopAllTracks() {
+  if (crossfadeTimer) clearTimeout(crossfadeTimer);
+  crossfadeTimer = null;
+
+  tracks.forEach((track) => {
+    track.pause();
+    track.currentTime = 0;
+  });
+
+  trackGainNodes.forEach((gain) => {
+    gain.gain.setValueAtTime(0, ctx!.currentTime);
+  });
 }
 
 function kick(t: number) {
@@ -85,11 +204,21 @@ export function startDJ() {
   const c = ensureCtx();
   if (playing) return;
   playing = true;
+
+  // Initialize tracks
+  initTracks();
+
+  // Start procedural loop
   let step = 0;
   loopTimer = setInterval(() => {
     stepAt(step++);
     if (step >= 64) step = 0;
   }, STEP * 1000);
+
+  // Start first track
+  currentTrackIndex = Math.floor(Math.random() * tracks.length);
+  startTrack(currentTrackIndex);
+
   void c.resume();
 }
 
@@ -97,6 +226,7 @@ export function stopDJ() {
   if (loopTimer) clearInterval(loopTimer);
   loopTimer = null;
   playing = false;
+  stopAllTracks();
 }
 
 /** The overhead announcement, straight from the booth. */
@@ -133,14 +263,14 @@ export function announce(lines: string[], onDone?: () => void) {
 /** Music up — the drop. */
 export function bumpDJ() {
   if (master && ctx) {
-    master.gain.setTargetAtTime(0.32, ctx.currentTime, 0.05);
+    master.gain.setTargetAtTime(0.6, ctx.currentTime, 0.05);
   }
 }
 
 export function toggleDJ(): boolean {
   muted = !muted;
   if (master && ctx) {
-    master.gain.setTargetAtTime(muted ? 0 : 0.25, ctx.currentTime, 0.02);
+    master.gain.setTargetAtTime(muted ? 0 : 0.45, ctx.currentTime, 0.02);
   }
   return muted;
 }
