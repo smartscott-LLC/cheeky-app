@@ -1,9 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { usePathname } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
-import { isTaskbarHidden } from '@/utils/taskbar';
 import { openConversation } from '@/app/messages/actions';
 import {
   loungeFriendIds,
@@ -78,7 +76,6 @@ function loadJson<T>(key: string, fallback: T): T {
  * moderation and the consent-gated take-private handled server-side.
  */
 export default function ClubChat() {
-  const pathname = usePathname();
   const supabaseRef = useRef(createClient());
   const supabase = supabaseRef.current;
 
@@ -143,14 +140,11 @@ export default function ClubChat() {
     [muted]
   );
 
-  // The gate: verified members only, and not on the street/door/office.
+  // The gate: verified members only. We never hide this on the home page —
+  // verified members are IN the club and should always have the Lounge.
   useEffect(() => {
-    loungeVerified().then(setVerified);
+    loungeVerified().then(setVerified).catch(() => setVerified(false));
   }, []);
-
-  useEffect(() => {
-    if (isTaskbarHidden(pathname)) setOpen(false);
-  }, [pathname]);
 
   // Identity, tier, friends, invites.
   useEffect(() => {
@@ -248,16 +242,24 @@ export default function ClubChat() {
     const pr = supabase
       .channel('lounge-presence')
       .on('presence', { event: 'sync' }, () => {
-        const state = pr.presenceState();
-        const members = Object.values(state)
-          .map((m) => m[0] as unknown as { id: string; name: string })
-          .filter((m) => m?.id)
-          .map((m) => ({ id: m.id, name: m.name, photo: null }));
-        setPresent(members);
+        try {
+          const state = pr.presenceState();
+          const members = Object.values(state)
+            .map((m) => m[0] as unknown as { id: string; name: string })
+            .filter((m): m is { id: string; name: string } => m?.id != null)
+            .map((m) => ({ id: m.id, name: m.name, photo: null }));
+          setPresent(members);
+        } catch {
+          // stale channel — ignore
+        }
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED' && meId) {
-          await pr.track({ id: meId, name: me?.name || 'You' });
+          try {
+            await pr.track({ id: meId, name: me?.name || 'You' });
+          } catch {
+            // channel already removed — best effort
+          }
         }
       });
 
@@ -283,21 +285,25 @@ export default function ClubChat() {
 
   // Load a room's recent 24h on first view; keep the list pinned to the bottom.
   useEffect(() => {
-    if (!open || messages[room]) return;
+    if (!open) return;
+    if (messages[room]) return;
     const dayAgo = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
-    supabase
+    const promise = supabase
       .from('club_chat_messages')
       .select('id, room, sender_id, body, floor_tag, horn, created_at')
       .eq('room', room)
       .gte('created_at', dayAgo)
       .order('created_at', { ascending: true })
-      .limit(100)
-      .then(({ data, error }) => {
-        if (error) return;
+      .limit(100);
+    // Supabase returns a thenable; catch via .then(null, err) to avoid TS issue
+    promise.then(
+      ({ data }) => {
         const rows = data ?? [];
         setMessages((prev) => ({ ...prev, [room]: rows }));
         ensurePeople(rows.map((r) => r.sender_id));
-      });
+      },
+      () => {} // silent fail — chat can recover on next open
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, room]);
 
@@ -431,7 +437,6 @@ export default function ClubChat() {
 
   if (verified === null) return null;
   if (!verified) return null;
-  if (isTaskbarHidden(pathname)) return null;
 
   const presentList = present;
 

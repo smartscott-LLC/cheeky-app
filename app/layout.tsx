@@ -15,6 +15,7 @@ import localFont from 'next/font/local';
 import { Great_Vibes } from 'next/font/google';
 import { getURL } from '@/utils/helpers';
 import 'styles/main.css';
+import ClubChatBoundary from '@/components/ui/ClubChat/ClubChatBoundary';
 
 // The nightclub type system (founder): Fascinate for heroes, Damion for
 // headers, Rancho for body. All three are single-weight display fonts —
@@ -88,7 +89,9 @@ export default async function RootLayout({ children }: PropsWithChildren) {
           <Concierge />
         </Suspense>
         <Suspense>
-          <ClubChat />
+          <ClubChatBoundary>
+            <ClubChat />
+          </ClubChatBoundary>
         </Suspense>
         <Suspense>
           <ClubAudio />
