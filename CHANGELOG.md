@@ -7,6 +7,38 @@ points — every push to `main` is production.
 
 ## [Unreleased]
 
+### Fixed
+
+- **ClubChat crashers** (pre-launch block): `TIER_RANK`, `drag`, and `longPress` were all
+  referenced but never declared — the component threw on load. `send()` and `horn()` were
+  called from JSX but never defined. All four symbols are now wired: the tier map, two drag
+  refs (`dragStartRef` for pointer coords, `anchorPosRef` synced from `pos` state via
+  `useEffect`), and the two RPCs (`loungeSend`, `loungeHorn`). Drag delta math was also
+  wrong — `pos.x + dx` compounded previous drags each stroke — replaced with
+  `anchorPosRef.current + (pointer - dragStartRef.start)`, and the anchor is snapped
+  forward synchronously after every `setPos` during an active stroke so subsequent moves
+  don't double-count. The floating pill button now hides behind `!open` so it never renders
+  under the panel; closing the panel restores it. The Horn success toast ("🎺 The club heard
+  that.") is back. Lint + build green.
+- **Stripe-template migration blew up on re-push**: `20230530034630_init.sql` used bare
+  `create table` for `users`, `customers`, `products`, `prices`, and `subscriptions` — any
+  existing Supabase project had those tables already, so `supabase db push` failed on the
+  first statement. Rewrote with `create table if not exists`, `drop policy if exists`
+  before each `create policy`, `create or replace function` for the auth trigger handler,
+  and `drop trigger if exists` before recreating the trigger. Also added `drop type if
+  exists` + recreate for the custom enums (PostgreSQL has no `CREATE TYPE IF NOT EXISTS`).
+  Rerunnable without side effects.
+- **Club Chat SECURITY DEFINER functions exposed to anon role**: `club_chat_invite`,
+  `club_chat_send`, `club_chat_horn`, and 6 other club_chat RPCs were grantable by anyone
+  (including unauthenticated users) because Postgres defaults PUBLIC EXECUTE on all
+  functions. Added revokes to `20260808075000_revoke_anon_execute.sql` so only
+  `authenticated` and `service_role` can call them. The grants to `authenticated` remain
+  intact — the app's behavior is unchanged.
+- **Duplicate realtime publication**: `supabase_realtime_messages_publication` was sitting
+  alongside the standard `supabase_realtime` publication, both containing the club_chat
+  message tables. Dropped the custom one via new migration `20260808164000` to prevent
+  duplicate broadcast events.
+
 ### Changed
 
 - **One env, period**: every script and live test now reads `env.new` (the master vault)

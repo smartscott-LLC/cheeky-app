@@ -67,3 +67,14 @@ revoke execute on function public.submit_rooftop_pick(p_event_id uuid, p_round i
 revoke execute on function public.tap_date_night(p_game uuid, p_index integer, p_pick smallint) from anon, public;
 revoke execute on function public.taskbar_state() from anon, public;
 revoke execute on function public.tick_rooftop_events() from anon, public;
+
+-- Club Chat functions — revoke anon/public, keep authenticated grants
+revoke execute on function public.club_chat_send(text, text) from anon, public;
+revoke execute on function public.club_chat_horn(text) from anon, public;
+revoke execute on function public.club_chat_whisper_get(uuid) from anon, public;
+revoke execute on function public.club_chat_whisper_send(uuid, text) from anon, public;
+revoke execute on function public.club_chat_invite(uuid) from anon, public;
+revoke execute on function public.club_chat_respond_invite(uuid, boolean) from anon, public;
+revoke execute on function public.club_chat_heartbeat(int) from anon, public;
+revoke execute on function public.club_chat_bump_badges(uuid) from anon, public;
+revoke execute on function public.bump_rate_limit(text, int, int) from anon, public;

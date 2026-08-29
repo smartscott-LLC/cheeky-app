@@ -48,17 +48,14 @@ const ROOMS = [
   { key: 'diamond', label: 'Diamond', emoji: '🔷', rank: 3 }
 ] as const;
 
-const TIER_RANK: Record<string, number> = {
-  silver: 0,
-  gold: 1,
-  platinum: 2,
-  diamond: 3
-};
+
 
 const PREFS_KEY = 'lounge:pos';
 const MUTED_KEY = 'lounge:muted';
 const HORN_KEY = 'lounge:hornAt';
 const PHOTO_BASE = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`;
+
+const TIER_RANK: Record<string, number> = { silver: 0, gold: 1, platinum: 2, diamond: 3 };
 
 const floorEmoji = (floor: string) =>
   floor === 'diamond' ? '🔷' : floor === 'platinum' ? '💎' : floor === 'gold' ? '🥇' : '🥈';
@@ -117,10 +114,24 @@ export default function ClubChat() {
     typeof window === 'undefined' ? 0 : Number(localStorage.getItem(HORN_KEY) ?? 0)
   );
   const [pos, setPos] = useState(() => loadJson(PREFS_KEY, { x: 0, y: 0 }));
-  const drag = useRef<{ dx: number; dy: number; moved: boolean } | null>(null);
-  const longPress = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  // Drag state — the panel's current render position (synced from pos state
+  // via a ref) plus the pointer coordinates at the start of the current stroke.
+  // Using a ref for anchorPos avoids a race: onPointerMove can fire before
+  // React flushes the setState from onPointerDown.
+  const anchorPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const dragStartRef = useRef<{ px: number; py: number } | null>(null);
+  const longPress = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 768;
+
+  // Keep anchorPosRef in sync with the rendered position.
+  // When dragging, snap the anchor forward immediately after setPos so the
+  // next move event doesn't re-apply the same delta from the old anchor.
+  useEffect(() => {
+    anchorPosRef.current = { x: pos.x, y: pos.y };
+  }, [pos]);
 
   const activeRoom = ROOMS.find((r) => r.key === room) ?? ROOMS[0];
   const canType = activeRoom.rank === -1 || activeRoom.rank <= tierRank;
@@ -309,42 +320,6 @@ export default function ClubChat() {
     }
   };
 
-  const send = async () => {
-    const body = draft.trim();
-    if (!body || sending || !canType) return;
-    setSending(true);
-    setError(null);
-    const res = await loungeSend(room, body);
-    setSending(false);
-    if (res.error) {
-      setError(res.error);
-      return;
-    }
-    setDraft('');
-  };
-
-  const horn = async () => {
-    const body = draft.trim();
-    if (!body || sending) return;
-    setSending(true);
-    setError(null);
-    const res = await loungeHorn(body);
-    setSending(false);
-    if (res.error) {
-      setError(res.error);
-      return;
-    }
-    const until = Date.now() + 3600 * 1000;
-    setHornUntil(until);
-    try {
-      localStorage.setItem(HORN_KEY, String(until));
-    } catch {
-      /* session-only */
-    }
-    setDraft('');
-    setNotice('🎺 The club heard that.');
-  };
-
   const respondInvite = async (inviteId: string, accept: boolean) => {
     setAccepting(inviteId);
     setError(null);
@@ -374,30 +349,73 @@ export default function ClubChat() {
   };
 
   // Drag the panel by its header (desktop only; mobile is a full sheet).
+  // anchorPosRef holds the current rendered position; dragStartRef holds the
+  // pointer coordinates at the start of the stroke. Deltas are computed
+  // against the ref on every move — no React batching delay.
   const onHeaderDown = (e: React.PointerEvent) => {
     if (!isDesktop) return;
-    drag.current = { dx: e.clientX, dy: e.clientY, moved: false };
+    // Snapshot the current rendered position as the drag anchor.
+    dragStartRef.current = { px: e.clientX, py: e.clientY };
     e.currentTarget.setPointerCapture(e.pointerId);
   };
   const onHeaderMove = (e: React.PointerEvent) => {
-    if (!drag.current) return;
-    const dx = e.clientX - drag.current.dx;
-    const dy = e.clientY - drag.current.dy;
-    if (Math.abs(dx) + Math.abs(dy) > 4) drag.current.moved = true;
-    if (!drag.current.moved) return;
+    if (!isDesktop || !dragStartRef.current) return;
+    const { px, py } = dragStartRef.current;
+    const dx = e.clientX - px;
+    const dy = e.clientY - py;
+    if (Math.abs(dx) + Math.abs(dy) <= 4) return; // click, not drag
+    // Read directly from the ref — no React batching delay.
+    const bp = anchorPosRef.current;
     const next = {
-      x: Math.min(Math.max(pos.x + dx, -300), window.innerWidth - 100),
-      y: Math.min(Math.max(pos.y + dy, -window.innerHeight + 80), window.innerHeight - 60)
+      x: Math.min(Math.max(bp.x + dx, -300), window.innerWidth - 100),
+      y: Math.min(Math.max(bp.y + dy, -window.innerHeight + 80), window.innerHeight - 60)
     };
     setPos(next);
+    // Snap the anchor forward synchronously so subsequent moves in the same
+    // stroke don't double-count the delta this frame already applied.
+    if (dragStartRef.current) anchorPosRef.current = next;
     try {
       localStorage.setItem(PREFS_KEY, JSON.stringify(next));
     } catch {
       /* session-only */
     }
   };
+
   const onHeaderUp = () => {
-    drag.current = null;
+    dragStartRef.current = null;
+  };
+
+  const send = async () => {
+    const body = draft.trim();
+    if (!body || sending) return;
+    setSending(true);
+    setError(null);
+    const res = await loungeSend(room, body);
+    setSending(false);
+    setDraft('');
+    if (res.error) setError(res.error);
+  };
+
+  const horn = async () => {
+    const body = draft.trim();
+    if (!body || sending || Date.now() < hornUntil) return;
+    setSending(true);
+    setError(null);
+    const res = await loungeHorn(body);
+    setSending(false);
+    setDraft('');
+    if (res.error) {
+      setError(res.error);
+    } else {
+      const cooldown = Date.now() + 60 * 60 * 1000; // 1 hour
+      setHornUntil(cooldown);
+      try {
+        localStorage.setItem(HORN_KEY, String(cooldown));
+      } catch {
+        /* session-only */
+      }
+      setNotice('🎺 The club heard that.');
+    }
   };
 
   // Long-press = context menu (mobile); right-click handled inline.
@@ -420,20 +438,22 @@ export default function ClubChat() {
   return (
     <>
       {/* Floating button — right side, clear of Chaz (bottom-right) and the
-          taskbar (bottom-left). Mobile: stacked above Chaz. */}
-      <button
-        onClick={() => setOpen((o) => !o)}
-        aria-label="The Cheeky Lounge"
-        className="fixed bottom-20 right-5 z-50 flex h-12 items-center gap-2 rounded-full border border-gold/60 bg-zinc-950/95 px-4 shadow-[0_0_20px_rgba(255,215,0,0.25)] transition hover:scale-105 md:bottom-5 md:right-24"
-      >
-        <span className="text-xl">🍸</span>
-        <span className="font-hero text-gold hidden text-sm sm:block">Lounge</span>
-        {unseen > 0 && (
-          <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-club px-1 text-[11px] font-bold text-white">
-            {unseen > 9 ? '9+' : unseen}
-          </span>
-        )}
-      </button>
+          taskbar (bottom-left). Mobile: stacked above Chaz. Hidden when panel is open. */}
+      {!open && (
+        <button
+          onClick={() => setOpen(true)}
+          aria-label="The Cheeky Lounge"
+          className="fixed bottom-20 right-5 z-50 flex h-12 items-center gap-2 rounded-full border border-gold/60 bg-zinc-950/95 px-4 shadow-[0_0_20px_rgba(255,215,0,0.25)] transition hover:scale-105 md:bottom-5 md:right-24"
+        >
+          <span className="text-xl">🍸</span>
+          <span className="font-hero text-gold hidden text-sm sm:block">Lounge</span>
+          {unseen > 0 && (
+            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-club px-1 text-[11px] font-bold text-white">
+              {unseen > 9 ? '9+' : unseen}
+            </span>
+          )}
+        </button>
+      )}
 
       {open && (
         <div
@@ -443,13 +463,14 @@ export default function ClubChat() {
               : 'inset-0 h-full w-full rounded-none'
           }`}
           style={
-            isDesktop && (pos.x || pos.y)
+            isDesktop && (pos.x !== 0 || pos.y !== 0)
               ? { transform: `translate(${pos.x}px, ${pos.y}px)` }
               : undefined
           }
         >
           {/* Header — the drag handle */}
           <div
+            data-drag-handle
             onPointerDown={onHeaderDown}
             onPointerMove={onHeaderMove}
             onPointerUp={onHeaderUp}

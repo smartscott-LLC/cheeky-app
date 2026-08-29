@@ -304,7 +304,6 @@ export default function ClubAudio() {
   const mixTo = () => {
     const tracks = tracksRef.current;
     if (!tracks || switchingRef.current) return;
-    switchingRef.current = true;
 
     // Wait for current track to naturally reach a good crossing point
     // (near end) before starting the fade
@@ -314,10 +313,14 @@ export default function ClubAudio() {
 
     // Only start fade if we're within the crossfade window
     if (timeLeft > FADE_MS / 1000 + 2) {
-      // Not close enough to end yet — reschedule
+      // Not close enough to end yet — reschedule. Don't set switchingRef
+      // here: if we did, the rescheduled call would bail out forever and
+      // the deck would get stuck on one track.
       mixTimerRef.current = setTimeout(mixTo, (timeLeft - FADE_MS / 1000 - 1) * 1000);
       return;
     }
+
+    switchingRef.current = true;
 
     // Pick next track (different from current)
     let to = Math.floor(Math.random() * tracks.length);
@@ -325,7 +328,7 @@ export default function ClubAudio() {
 
     const startIn = tracks[to];
     startIn.volume = 0;
-    startIn.currentTime = Math.max(0, currentTrack.currentTime - 2); // Start slightly behind current
+    startIn.currentTime = 0; // Start from the top so both decks stay in sync
     const start = performance.now();
     let aborted = false;
 
@@ -377,14 +380,11 @@ export default function ClubAudio() {
     if (!tracksRef.current) {
       tracksRef.current = TRACKS.map((src) => {
         const a = new Audio(src);
-        a.loop = true;
+        a.loop = false;
         a.volume = 0;
         a.preload = 'auto';
-        // When a track ends, queue the next mix
         a.onended = () => {
-          if (!switchingRef.current) {
-            scheduleMix();
-          }
+          if (!switchingRef.current && !mixTimerRef.current) scheduleMix();
         };
         return a;
       });
