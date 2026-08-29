@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(host *)",
+      "Bash(node *)",
+      "Bash(node_modules/.bin/supabase *)",
+      "Bash(ls *)",
+      "Bash(dig *)",
+      "Bash(nslookup *)"
+    ]
+  },
+  "$version": 4
+}
