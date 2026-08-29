@@ -151,6 +151,30 @@ points — every push to `main` is production.
   composer renders it as a red error banner above the input.
   Users see why the send failed (verify required, floor too high,
   insufficient tokens, etc.).
+- **Pill click made the panel disappear** (founder bug report #4):
+  the Stream watch effect ran an unhandled-promise-rejection path
+  when `ch.watch()` was called on a channel the user wasn't a
+  member of, or when a Stream event arrived with a shape the
+  hydration didn't anticipate. React then unmounted the whole
+  overlay, taking the pill with it. Fixes:
+  1. **Guard the effect**: it now runs only when the panel is
+     `open` (no wasted network + smaller error surface).
+  2. **Mounted-checks** on every state setter inside the effect
+     (`safeSetMessages`, `safeSetPresent`, `safeSetHornBurst`,
+     `safeSetUnseen`) so a state update after unmount can't fire.
+  3. **Try/catch** around every Stream SDK call — `ch.watch()`,
+     the `state.messages` hydration, the `ch.on('message.new',
+     ...)` registration, the presence listeners.
+  4. **Belt-and-braces** `.catch(...)` on the IIFE itself, so
+     anything that escapes the inner try/catch still doesn't
+     become an unhandled rejection.
+  5. **Error boundary** at the layout level: the overlay is now
+     mounted under `ClubChatBoundary`, which catches any remaining
+     synchronous render error and renders a recoverable retry
+     pill instead of unmounting.
+  6. **Pinned** the contract in `tests/lounge-resilience.unit.test.mjs`
+     (7 new tests) — a future "cleanup" can't quietly strip the
+     safety nets.
 
 > The Supabase chat overlay remains the foundation. The Stream overlay
 > is the new live transport; the Supabase chat is the runtime fallback

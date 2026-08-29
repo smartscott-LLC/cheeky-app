@@ -216,8 +216,20 @@ export default function StreamChatOverlay() {
 
   // Subscribe to the active room + presence; pipe message events into
   // local state so the UI re-renders.
+  //
+  // The whole effect is wrapped in a try/catch AND a promise catch
+  // because an unhandled throw from a Stream SDK call (a transient
+  // network blip, a server-side `watch()` rejection, a member
+  // hydration that doesn't match our shape) would otherwise bubble
+  // up to React and unmount the overlay — that's the bug the
+  // founder hit: the panel just vanished, and only a refresh
+  // brought it back.
   useEffect(() => {
     if (enabled !== true) return;
+    // Only watch when the panel is actually open. Watching on every
+    // mount (even when closed) is wasted work and increases the
+    // surface area for an error to fire.
+    if (!open) return;
     const c = clientRef.current;
     if (!c) return;
     const ch = c.channel('messaging', `cheeky-${room}`, {
@@ -227,45 +239,63 @@ export default function StreamChatOverlay() {
     channelRef.current = ch;
 
     let mounted = true;
+    const safeSetMessages = (
+      updater: (prev: Record<RoomKey, StreamMsg[]>) => Record<RoomKey, StreamMsg[]>
+    ) => {
+      if (!mounted) return;
+      try {
+        setMessages(updater);
+      } catch {
+        // ignore — never let a state update crash the overlay
+      }
+    };
+    const safeSetPresent = (next: StreamPerson[]) => {
+      if (!mounted) return;
+      try {
+        setPresent(next);
+      } catch {
+        // ignore
+      }
+    };
+    const safeSetHornBurst = (updater: (n: number) => number) => {
+      if (!mounted) return;
+      try {
+        setHornBurst(updater);
+      } catch {
+        // ignore
+      }
+    };
+    const safeSetUnseen = (updater: (n: number) => number) => {
+      if (!mounted) return;
+      try {
+        setUnseen(updater);
+      } catch {
+        // ignore
+      }
+    };
+
     (async () => {
       try {
         await ch.watch();
-      } catch {
-        // Channel may not exist yet — auto-create on first send.
+      } catch (err) {
+        // Channel may not exist yet (no one has ever posted) or the
+        // user isn't a member — neither is fatal. The UI still
+        // renders the empty state; the user can still send and the
+        // send will create the channel server-side.
+        console.warn('[lounge] watch failed (continuing):', err);
+        return;
       }
       if (!mounted) return;
 
-      const stateMessages = (ch.state.messages as unknown as Array<{
-        id: string;
-        text: string;
-        user?: { id: string; name?: string; image?: string };
-        created_at?: string;
-        custom?: { floor?: string; horn?: boolean };
-      }>);
-      const hydrated: StreamMsg[] = stateMessages.map((m) => ({
-        id: m.id,
-        text: m.text,
-        userId: m.user?.id ?? '',
-        userName: m.user?.name ?? 'Member',
-        userImage: m.user?.image,
-        floor: m.custom?.floor,
-        horn: m.custom?.horn,
-        createdAt: (m.created_at as string) ?? new Date().toISOString()
-      }));
-      setMessages((prev) => ({ ...prev, [room]: hydrated }));
-
-      const onMessageNew = (event: Event) => {
-        const m = event.message as
-          | {
-              id: string;
-              text: string;
-              user?: { id: string; name?: string; image?: string };
-              custom?: { floor?: string; horn?: boolean };
-              created_at?: string;
-            }
-          | undefined;
-        if (!m) return;
-        const next: StreamMsg = {
+      try {
+        const stateMessages = (ch.state.messages as unknown as Array<{
+          id: string;
+          text: string;
+          user?: { id: string; name?: string; image?: string };
+          created_at?: string;
+          custom?: { floor?: string; horn?: boolean };
+        }>) ?? [];
+        const hydrated: StreamMsg[] = stateMessages.map((m) => ({
           id: m.id,
           text: m.text,
           userId: m.user?.id ?? '',
@@ -274,23 +304,60 @@ export default function StreamChatOverlay() {
           floor: m.custom?.floor,
           horn: m.custom?.horn,
           createdAt: (m.created_at as string) ?? new Date().toISOString()
-        };
-        setMessages((prev) => ({
-          ...prev,
-          [room]: [...(prev[room] ?? []), next].slice(-200)
         }));
-        if (m.custom?.horn) setHornBurst((n) => n + 1);
-        if (!open) setUnseen((n) => n + 1);
+        safeSetMessages((prev) => ({ ...prev, [room]: hydrated }));
+      } catch (err) {
+        console.warn('[lounge] hydration failed:', err);
+      }
+
+      const onMessageNew = (event: Event) => {
+        try {
+          const m = event.message as
+            | {
+                id: string;
+                text: string;
+                user?: { id: string; name?: string; image?: string };
+                custom?: { floor?: string; horn?: boolean };
+                created_at?: string;
+              }
+            | undefined;
+          if (!m) return;
+          const next: StreamMsg = {
+            id: m.id,
+            text: m.text,
+            userId: m.user?.id ?? '',
+            userName: m.user?.name ?? 'Member',
+            userImage: m.user?.image,
+            floor: m.custom?.floor,
+            horn: m.custom?.horn,
+            createdAt: (m.created_at as string) ?? new Date().toISOString()
+          };
+          safeSetMessages((prev) => ({
+            ...prev,
+            [room]: [...(prev[room] ?? []), next].slice(-200)
+          }));
+          if (m.custom?.horn) safeSetHornBurst((n) => n + 1);
+          if (!open) safeSetUnseen((n) => n + 1);
+        } catch (err) {
+          console.warn('[lounge] onMessageNew failed:', err);
+        }
       };
-      ch.on('message.new', onMessageNew);
+      try {
+        ch.on('message.new', onMessageNew);
+      } catch (err) {
+        console.warn('[lounge] on(message.new) failed:', err);
+      }
 
       const refreshPresence = () => {
         try {
           const state = ch.state;
           const members = Object.values(
-            (state.members as Record<string, { user_id: string; user?: { name?: string; image?: string } }>) ?? {}
+            (state.members as Record<
+              string,
+              { user_id: string; user?: { name?: string; image?: string } }
+            >) ?? {}
           );
-          setPresent(
+          safeSetPresent(
             members.map((m) => ({
               id: m.user_id,
               name: m.user?.name ?? 'Member',
@@ -301,10 +368,18 @@ export default function StreamChatOverlay() {
           // ignore
         }
       };
-      refreshPresence();
-      ch.on('member.updated', refreshPresence);
-      ch.on('member.added', refreshPresence);
-    })();
+      try {
+        refreshPresence();
+        ch.on('member.updated', refreshPresence);
+        ch.on('member.added', refreshPresence);
+      } catch (err) {
+        console.warn('[lounge] presence listeners failed:', err);
+      }
+    })().catch((err) => {
+      // Belt-and-braces: anything that escapes the IIFE ends up here
+      // instead of becoming an unhandled promise rejection.
+      console.warn('[lounge] watch effect IIFE failed:', err);
+    });
 
     return () => {
       mounted = false;

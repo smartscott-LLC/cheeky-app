@@ -3,6 +3,7 @@ import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
 import TikiTaskbar from '@/components/ui/Taskbar/TikiTaskbar';
 import StreamChatOverlay from '@/components/ui/ClubChat/StreamChatOverlay';
+import ClubChatBoundary from '@/components/ui/ClubChat/ClubChatBoundary';
 import { Toaster } from '@/components/ui/Toasts/toaster';
 import Concierge from '@/components/ui/Agent/Concierge';
 import ClubAudio from '@/components/ui/Audio/ClubAudio';
@@ -89,7 +90,9 @@ export default async function RootLayout({ children }: PropsWithChildren) {
           <Concierge />
         </Suspense>
         <Suspense>
-          <StreamChatOverlay />
+          <ClubChatBoundary>
+            <StreamChatOverlay />
+          </ClubChatBoundary>
         </Suspense>
         <Suspense>
           <ClubAudio />
