@@ -4,49 +4,45 @@ import { Component, type ErrorInfo, type ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
-  fallback?: ReactNode;
+  name?: string;
 }
 
 interface State {
   hasError: boolean;
   error: Error | null;
+  errorAt: string;
 }
 
-/**
- * Lightweight error boundary for the Cheeky Lounge.
- *
- * Without this, any uncaught exception inside ClubChat (RLS denial, missing
- * table, race condition on presence tracking) swallows the entire component
- * — button vanishes, panel never appears. With it we get a visible error
- * state and a retry button so members aren't locked out forever.
- */
 export default class ClubChatBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false, error: null, errorAt: '' };
   }
 
   static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+    return { hasError: true, error, errorAt: new Date().toISOString() };
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error('[ClubChat boundary]', error, info.componentStack);
+    // Log to console so we can see it in DevTools even if the boundary
+    // fallback renders and hides the error visually.
+    console.error(
+      `[ClubChat:${this.props.name ?? 'unknown'}] boundary caught`,
+      error,
+      info.componentStack
+    );
   }
 
   render() {
     if (this.state.hasError) {
-      if (this.props.fallback) return this.props.fallback;
       return (
-        <div className="fixed bottom-20 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-club/50 bg-zinc-900 shadow-[0_0_20px_rgba(246,5,186,0.3)]">
-          <button
-            onClick={() => this.setState({ hasError: false, error: null })}
-            title="Lounge error — click to retry"
-            className="flex h-full w-full flex-col items-center justify-center gap-0.5"
-          >
-            <span className="text-lg">🍸</span>
-            <span className="text-[8px] text-club">err</span>
-          </button>
+        <div
+          className="fixed bottom-20 right-5 z-50 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-red-500/60 bg-zinc-900 shadow-[0_0_20px_rgba(239,68,68,0.4)]"
+          onClick={() => this.setState({ hasError: false, error: null, errorAt: '' })}
+          title={`Lounge error at ${this.state.errorAt} — click to retry`}
+        >
+          <span className="text-base">🍸</span>
+          <span className="absolute -bottom-0.5 -right-0.5 text-[8px] text-red-400">!</span>
         </div>
       );
     }

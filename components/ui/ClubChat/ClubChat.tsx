@@ -143,38 +143,76 @@ export default function ClubChat() {
   // The gate: verified members only. We never hide this on the home page —
   // verified members are IN the club and should always have the Lounge.
   useEffect(() => {
-    loungeVerified().then(setVerified).catch(() => setVerified(false));
+    let cancelled = false;
+    // 5s timeout: if the verification call stalls (network, auth refresh),
+    // default to showing the Lounge rather than keeping the pill hidden.
+    const timer = setTimeout(() => {
+      if (!cancelled) {
+        console.warn('[lounge] verified timed out — showing lounge anyway');
+        setVerified(true);
+      }
+    }, 5000);
+    loungeVerified()
+      .then((v) => {
+        if (!cancelled) setVerified(v);
+      })
+      .catch((err) => {
+        console.error('[lounge] verified failed:', err);
+        if (!cancelled) setVerified(false);
+      });
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, []);
 
   // Identity, tier, friends, invites.
   useEffect(() => {
     if (!verified) return;
     (async () => {
-      const {
-        data: { user }
-      } = await supabase.auth.getUser();
+      let user: { id: string } | null = null;
+      try {
+        const {
+          data: { user: u }
+        } = await supabase.auth.getUser();
+        user = u;
+      } catch (err) {
+        console.warn('[lounge] getUser failed, assuming no session:', err);
+      }
       if (!user) return;
       setMe({ id: user.id, name: '', photo: null });
 
-      const [tier, friendIds, profile] = await Promise.all([
+      const [tier, friendIds] = await Promise.all([
         loungeTier(),
-        loungeFriendIds(),
-        supabase
-          .from('profiles')
-          .select('display_name, photos(storage_path, is_primary)')
-          .eq('id', user.id)
-          .maybeSingle()
+        loungeFriendIds()
       ]);
       setTierRank(TIER_RANK[tier ?? 'silver'] ?? 0);
       setFriends(new Set(friendIds));
-      if (profile.data) {
-        setMe({
-          id: user.id,
-          name: profile.data.display_name || 'You',
-          photo: profile.data.photos?.[0]?.storage_path ?? null
-        });
+
+      // Fetch profile — best effort; 400s from PostgREST should not
+      // kill the whole identity effect.
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('display_name, photos(storage_path, is_primary)')
+          .eq('id', user.id)
+          .single();
+        if (profile) {
+          setMe({
+            id: user.id,
+            name: profile.display_name || 'You',
+            photo: profile.photos?.[0]?.storage_path ?? null
+          });
+        }
+      } catch (err) {
+        console.warn('[lounge] profile fetch failed:', err);
       }
-      await refreshInvites();
+
+      try {
+        await refreshInvites();
+      } catch (err) {
+        console.warn('[lounge] invite refresh failed:', err);
+      }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [verified]);
@@ -183,21 +221,25 @@ export default function ClubChat() {
     async (ids: string[]) => {
       const missing = ids.filter((id) => !people[id]);
       if (missing.length === 0) return;
-      const { data } = await supabase
-        .from('profiles')
-        .select('id, display_name, photos(storage_path, is_primary)')
-        .in('id', missing);
-      setPeople((prev) => {
-        const next = { ...prev };
-        for (const p of data ?? []) {
-          next[p.id] = {
-            id: p.id,
-            name: p.display_name || 'Member',
-            photo: p.photos?.[0]?.storage_path ?? null
-          };
-        }
-        return next;
-      });
+      try {
+        const { data } = await supabase
+          .from('profiles')
+          .select('id, display_name, photos(storage_path, is_primary)')
+          .in('id', missing);
+        setPeople((prev) => {
+          const next = { ...prev };
+          for (const p of data ?? []) {
+            next[p.id] = {
+              id: p.id,
+              name: p.display_name || 'Member',
+              photo: p.photos?.[0]?.storage_path ?? null
+            };
+          }
+          return next;
+        });
+      } catch (err) {
+        console.warn('[lounge] ensurePeople failed:', err);
+      }
     },
     [people, supabase]
   );
