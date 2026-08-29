@@ -1,10 +1,7 @@
--- Seed the supabase_migrations tracking table with versions already applied
--- on the hosted database. This fixes the drift between the tracking table
--- (which is missing) and the actual DB state (which has all tables/functions).
---
--- Run this once to sync the tracker, then normal pushes will work.
+-- Migration tracking setup (2026-08-08)
+-- Creates the tracking table and seeds it with all previously-applied versions.
+-- This must run FIRST so subsequent migrations are skipped if already applied.
 
--- Create the tracking table if it doesn't exist
 create table if not exists public.supabase_migrations (
   version text primary key,
   name text,
@@ -12,8 +9,7 @@ create table if not exists public.supabase_migrations (
   success boolean not null default true
 );
 
--- Insert all versions that are already on the hosted DB
--- (based on the tables that exist: profiles, events, token_ledger, etc.)
+-- Seed all versions already on the hosted DB (from previous successful pushes)
 insert into public.supabase_migrations (version, name) values
   ('20230530034630', 'init'),
   ('20260801033036', 'phase1_club_floor'),
