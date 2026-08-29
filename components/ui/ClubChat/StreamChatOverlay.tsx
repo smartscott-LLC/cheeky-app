@@ -106,6 +106,30 @@ export default function StreamChatOverlay() {
   const isDesktop =
     typeof window !== 'undefined' && window.innerWidth >= 768;
 
+  // Drag-to-move state. We use `top`/`left` (in pixels) anchored from
+  // the top-left of the viewport. Without this, the panel was a
+  // fixed-positioned `bottom-right` element that flew off-screen
+  // because no drag handler existed (Bug 2). The drag math: snapshot
+  // pointer coords on pointerdown, track the delta, snap the anchor
+  // forward each move so subsequent moves don't double-count.
+  const [pos, setPos] = useState<{ x: number; y: number }>(() => {
+    if (typeof window === 'undefined') return { x: 0, y: 0 };
+    try {
+      const raw = localStorage.getItem('lounge-stream:pos');
+      if (raw) {
+        const parsed = JSON.parse(raw) as { x: number; y: number };
+        if (Number.isFinite(parsed.x) && Number.isFinite(parsed.y)) {
+          return parsed;
+        }
+      }
+    } catch {
+      // ignore
+    }
+    return { x: 0, y: 0 };
+  });
+  const dragRef = useRef<{ startX: number; startY: number; pointerId: number } | null>(null);
+  const anchorRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+
   // Feature flag — fetch the Stream bundle. If the route reports
   // {enabled: false} (no keys) or errors, fall back to the Supabase
   // chat (the one that was on the site before Stream).
@@ -147,6 +171,14 @@ export default function StreamChatOverlay() {
           supabase.rpc('current_tier', { p_user: user.id })
         ]);
         if (cancelled) return;
+        // Verified-only gate (PRD: chat is for verified members).
+        // A private window / unverified user should never see the
+        // panel. Fall back to the Supabase overlay (which has its
+        // own check) and let IT decide whether to show.
+        if (!(profile as { verified_at?: string | null } | null)?.verified_at) {
+          if (!cancelled) setEnabled(false);
+          return;
+        }
         const primary = (profile?.photos ?? []).find(
           (p: { is_primary: boolean }) => p.is_primary
         );
@@ -308,6 +340,87 @@ export default function StreamChatOverlay() {
     }
   }, []);
 
+  // Keep the drag anchor in sync with the rendered position. When a
+  // stroke is active we ALSO snap it forward inside onPointerMove so
+  // the next move event in the same stroke doesn't re-apply the
+  // delta from the original anchor (the bug that made the panel fly
+  // off-screen on drag).
+  useEffect(() => {
+    anchorRef.current = { x: pos.x, y: pos.y };
+  }, [pos]);
+
+  // Drag handlers — the header is the drag handle on desktop. Mobile
+  // is a full sheet (no drag). pointer events cover mouse + touch +
+  // pen in one code path.
+  const onHeaderDown = (e: React.PointerEvent) => {
+    if (!isDesktop) return;
+    dragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      pointerId: e.pointerId
+    };
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      // ignore — capture is best effort
+    }
+  };
+  const onHeaderMove = (e: React.PointerEvent) => {
+    if (!isDesktop || !dragRef.current) return;
+    if (e.pointerId !== dragRef.current.pointerId) return;
+    const { startX, startY } = dragRef.current;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    // Clamp to the viewport so the panel can never escape the screen.
+    // The natural anchor is `pos = {0, 0}`, so the lower bound is 0
+    // (no offset from default). A small minimum keeps the panel
+    // visible on viewports that are smaller than the panel itself.
+    const PANEL_W = 400;
+    const PANEL_H = 620;
+    const minX = 0;
+    const minY = 0;
+    const maxX = Math.max(0, window.innerWidth - PANEL_W);
+    const maxY = Math.max(0, window.innerHeight - PANEL_H);
+    const next = {
+      x: Math.min(Math.max(anchorRef.current.x + dx, minX), maxX),
+      y: Math.min(Math.max(anchorRef.current.y + dy, minY), maxY)
+    };
+    setPos(next);
+    // Snap the anchor forward synchronously — this is the bit that
+    // stops the panel from flying off-screen. Without it, every move
+    // event adds (e.clientX - startX) on top of the *previous* next,
+    // and the cumulative drift eventually pushes the panel out of
+    // bounds.
+    anchorRef.current = next;
+  };
+  const onHeaderUp = (e: React.PointerEvent) => {
+    if (!isDesktop || !dragRef.current) return;
+    try {
+      e.currentTarget.releasePointerCapture(dragRef.current.pointerId);
+    } catch {
+      // ignore
+    }
+    dragRef.current = null;
+    try {
+      localStorage.setItem('lounge-stream:pos', JSON.stringify(pos));
+    } catch {
+      // session-only
+    }
+  };
+
+  // Reset to the default bottom-right anchor (used by the close /
+  // reset button if we ever wire one). Currently unused but the
+  // function documents the contract.
+  const resetPos = () => {
+    setPos({ x: 0, y: 0 });
+    anchorRef.current = { x: 0, y: 0 };
+    try {
+      localStorage.removeItem('lounge-stream:pos');
+    } catch {
+      // ignore
+    }
+  };
+
   const send = useCallback(async () => {
     const body = draft.trim();
     if (!body || sending) return;
@@ -386,16 +499,38 @@ export default function StreamChatOverlay() {
 
       {open && (
         <div
+          data-lounge-panel
           className={`fixed z-[60] flex flex-col overflow-hidden rounded-2xl border-2 border-gold/60 bg-zinc-950/90 backdrop-blur-xl shadow-[0_0_50px_rgba(255,215,0,0.18),0_0_120px_rgba(34,211,238,0.08)] animate-[panelIn_0.25s_ease-out] ${
             isDesktop
-              ? 'bottom-20 right-24 h-[620px] w-[400px] max-h-[78vh]'
+              ? 'h-[620px] w-[400px] max-h-[78vh]'
               : 'inset-0 h-full w-full rounded-none'
           }`}
+          style={
+            isDesktop
+              ? {
+                  // Default anchor (pos = {0,0}): bottom-right, 24px in
+                  // from the right and 80px up from the bottom (to clear
+                  // the taskbar + Chaz). The drag handler clamps `pos`
+                  // so the panel can never escape the viewport.
+                  top: `calc(100vh - 640px + ${pos.y}px)`,
+                  left: `calc(100vw - 424px + ${pos.x}px)`
+                }
+              : undefined
+          }
         >
           <HornBurst trigger={hornBurst} />
 
-          {/* Header */}
-          <div className="relative flex items-center justify-between border-b border-gold/30 bg-gradient-to-b from-zinc-900/90 to-zinc-900/40 px-3 py-2.5">
+          {/* Header — drag handle on desktop */}
+          <div
+            data-drag-handle
+            onPointerDown={onHeaderDown}
+            onPointerMove={onHeaderMove}
+            onPointerUp={onHeaderUp}
+            onPointerCancel={onHeaderUp}
+            className={`relative flex items-center justify-between border-b border-gold/30 bg-gradient-to-b from-zinc-900/90 to-zinc-900/40 px-3 py-2.5 ${
+              isDesktop ? 'cursor-grab select-none touch-none active:cursor-grabbing' : ''
+            }`}
+          >
             <div className="flex items-center gap-2">
               <span className="text-xl">🍸</span>
               <p className="font-header text-gold text-lg leading-none">
@@ -410,7 +545,11 @@ export default function StreamChatOverlay() {
                 {present.length} here
               </span>
               <button
-                onClick={() => setOpen(false)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpen(false);
+                }}
+                onPointerDown={(e) => e.stopPropagation()}
                 className="rounded px-1.5 py-0.5 text-sm text-zinc-400 transition hover:text-club"
                 title="Close the Lounge"
               >

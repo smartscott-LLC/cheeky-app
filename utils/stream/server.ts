@@ -60,6 +60,59 @@ export async function issueStreamToken(input: {
   };
 }
 
+/** Sends a message on behalf of a user (server-side moderation gate).
+ *  Uses a per-call user token so Stream attributes the message to the
+ *  right member. The channel is created idempotently and queried
+ *  before the send so membership is established. */
+export async function streamSendAsUser(input: {
+  userId: string;
+  userName: string;
+  room: string;
+  text: string;
+  floor: string;
+  horn?: boolean;
+}): Promise<{ id?: string; error?: string }> {
+  if (!streamEnabled()) return { error: 'stream_disabled' };
+  if (!['global', 'silver', 'gold', 'platinum', 'diamond'].includes(input.room)) {
+    return { error: 'invalid_room' };
+  }
+  const trimmed = input.text.trim();
+  if (trimmed.length < 1 || trimmed.length > 2000) {
+    return { error: 'invalid_message_length' };
+  }
+  const client = getStreamServer();
+  // Make sure the user exists in Stream before the channel lookup.
+  await client.upsertUsers([{ id: input.userId, name: input.userName }]);
+  // Sign a per-call user token. This is the official server-to-user
+  // send pattern: use the user's token (not the API secret) so Stream
+  // attributes the message correctly.
+  const userToken = client.createToken(input.userId);
+  const userClient = StreamChat.getInstance(
+    process.env.STREAM_API_KEY as string,
+    userToken
+  );
+  const channelId = `cheeky-${input.room}`;
+  const ch = userClient.channel('messaging', channelId, {
+    created_by_id: 'system'
+  } as Record<string, unknown>);
+  try {
+    await ch.watch();
+  } catch {
+    // Channel may not exist — create it.
+    try {
+      await ch.create();
+    } catch {
+      // already exists, fine
+    }
+  }
+  const sent = await ch.sendMessage({
+    text: trimmed,
+    user_id: input.userId,
+    custom: { floor: input.floor, horn: Boolean(input.horn) }
+  } as unknown as Parameters<typeof ch.sendMessage>[0]);
+  return { id: (sent.message as { id?: string } | undefined)?.id };
+}
+
 export const STREAM_ROOMS = [
   { key: 'global', label: 'The Lounge', emoji: '🌐', rank: -1 },
   { key: 'silver', label: 'Silver', emoji: '🥈', rank: 0 },

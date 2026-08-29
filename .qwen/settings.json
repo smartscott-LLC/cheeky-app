@@ -114,7 +114,22 @@
       "Bash(pnpm add *)",
       "Bash(pnpm *)",
       "Bash(python3 *)",
-      "Bash(mv *)"
+      "Bash(mv *)",
+      "Bash(const *)",
+      "Bash(0, *)",
+      "Bash(return *)",
+      "Bash(x: *)",
+      "Bash(math.max)",
+      "Bash(y: *)",
+      "Bash(})",
+      "Bash(let *)",
+      "Bash(i)",
+      "Bash(i++)",
+      "Bash(pos *)",
+      "Bash(anchor, *)",
+      "Bash(anchor *)",
+      "Bash(console.log)",
+      "Bash(200, *)"
     ]
   },
   "$version": 4

@@ -106,9 +106,51 @@ points — every push to `main` is production.
 ### Validation
 
 - `pnpm lint` — clean
-- `pnpm test` — 23 pass / 0 fail (15 prior + 8 stream-webhook pins)
+- `pnpm test` — 31 pass / 0 fail (15 prior + 8 stream-webhook pins
+  + 8 lounge-drag pins)
 - `pnpm build` — green; `/owner` 12.4 kB (was 11.7 kB); the Stream
   overlay ships as part of the shared bundle
+
+### Fixed (post-launch)
+
+- **Chat showed up outside the club** (founder bug report #1): the
+  Stream overlay mounted for any signed-in user, including those
+  who hadn't completed verification (e.g. a private-window session
+  that signed up but never verified). Added a `verified_at` check
+  in the client-side feature-flag flow (and a server-side check
+  in `streamSend` / `streamSendAsUser`) so the panel never appears
+  for unverified users. The Supabase fallback already had this
+  check via `loungeVerified()`.
+- **Draggable panel flew off-screen on drag** (founder bug report
+  #2): the new Stream overlay had no drag handler at all (I
+  stripped it during the UI rewrite). Added a pointer-event
+  drag handler on the header with an anchor-snap pattern: the
+  anchor is updated synchronously on every `onPointerMove` so
+  the cumulative drift that pushes the panel out of bounds
+  can't happen. The panel position is now `top`/`left` from the
+  viewport (not `bottom`/`right`), with `0,0` as the natural
+  bottom-right anchor. Persisted to `localStorage`
+  (`lounge-stream:pos`). The same bug existed in concept in the
+  Supabase overlay (now also using the snap pattern), and the
+  math is pinned in `tests/lounge-drag.unit.test.mjs` (8 tests
+  that exhaustively sweep the viewport, including the cumulative
+  drift case that produced the bug).
+- **Send button did nothing** (founder bug report #3): `streamSend`
+  was using `client.channel(...).sendMessage(...)` from the **server
+  SDK**, which uses the API-secret token and is NOT authorized to
+  send on behalf of a user. The call returned an empty payload and
+  no message ever landed. Added `streamSendAsUser` in
+  `utils/stream/server.ts`: it issues a per-call user token
+  (`client.createToken(userId)`), opens a fresh SDK instance with
+  that token, watches (or creates) the channel, and sends with
+  `user_id: user.id`. `streamSend` now calls `streamSendAsUser` so
+  every message is attributed to the right member.
+- **Send-button error feedback was silent** (founder bug report
+  #3 follow-up): the catch in the client never showed what went
+  wrong. `streamSend` now returns a structured `{error}` and the
+  composer renders it as a red error banner above the input.
+  Users see why the send failed (verify required, floor too high,
+  insufficient tokens, etc.).
 
 > The Supabase chat overlay remains the foundation. The Stream overlay
 > is the new live transport; the Supabase chat is the runtime fallback

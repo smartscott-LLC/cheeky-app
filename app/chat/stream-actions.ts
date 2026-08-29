@@ -6,7 +6,11 @@
 
 import { getUser } from '@/utils/supabase/queries';
 import { createClient } from '@/utils/supabase/server';
-import { getStreamServer, streamEnabled } from '@/utils/stream/server';
+import {
+  getStreamServer,
+  streamEnabled,
+  streamSendAsUser
+} from '@/utils/stream/server';
 import { supabaseAdmin } from '@/utils/supabase/admin';
 import { authorized } from '@/app/owner/actions-helpers';
 
@@ -26,7 +30,9 @@ async function getMyTier(): Promise<string> {
 }
 
 /** Send a message into a Stream town-square channel. The room gate is
- *  enforced here — Stream doesn't know about the floor ladder, we do. */
+ *  enforced here — Stream doesn't know about the floor ladder, we do.
+ *  Verified members only: if `verified_at` is null, refuse so the chat
+ *  never shows up for unverified users / private windows. */
 export async function streamSend(
   room: string,
   body: string,
@@ -39,6 +45,15 @@ export async function streamSend(
   const supabase = await createClient();
   const user = await getUser(supabase);
   if (!user) return { error: 'not_authenticated' };
+  // Verified-only gate — mirrors the Supabase overlay's check.
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('display_name, verified_at')
+    .eq('id', user.id)
+    .maybeSingle();
+  if (!profile?.verified_at) {
+    return { error: 'verify_required' };
+  }
   const trimmed = body.trim();
   if (trimmed.length < 1 || trimmed.length > 2000) {
     return { error: 'invalid_message_length' };
@@ -55,22 +70,15 @@ export async function streamSend(
     if (hornErr) return { error: hornErr };
     return { id: 'horn' };
   }
-  const client = getStreamServer();
-  const channelId = `cheeky-${room}`;
-  const ch = client.channel('messaging', channelId, { created_by_id: 'system' });
-  // Server SDK sendMessage uses the channel context; we use the admin
-  // client (server-side) and pass the user id explicitly so Stream
-  // attributes the message to the right member.
-  await ch.create().catch(() => undefined);
   const tier = await getMyTier();
-  const sent = await ch.sendMessage(
-    {
-      text: trimmed,
-      user_id: user.id,
-      custom: { floor: tier, horn: false }
-    } as unknown as Parameters<typeof ch.sendMessage>[0]
-  );
-  return { id: (sent.message as { id?: string } | undefined)?.id };
+  const displayName = (profile?.display_name as string) ?? 'Member';
+  return streamSendAsUser({
+    userId: user.id,
+    userName: displayName,
+    room,
+    text: trimmed,
+    floor: tier
+  });
 }
 
 /** Horn: debits 10 tokens, then posts a horn-flagged message into the
