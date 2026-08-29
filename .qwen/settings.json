@@ -109,7 +109,12 @@
       "Bash(nothing)",
       "Bash(drop *)",
       "Bash(eof)",
-      "Bash(rm *)"
+      "Bash(rm *)",
+      "WebFetch(getstream.io)",
+      "Bash(pnpm add *)",
+      "Bash(pnpm *)",
+      "Bash(python3 *)",
+      "Bash(mv *)"
     ]
   },
   "$version": 4

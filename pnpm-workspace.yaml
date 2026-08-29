@@ -2,6 +2,8 @@ allowBuilds:
   '@sentry/cli': true
   core-js: false
   sharp: true
+  stream-chat: true
+  stream-chat-react: true
   supabase: true
   unrs-resolver: true
 minimumReleaseAgeExclude:

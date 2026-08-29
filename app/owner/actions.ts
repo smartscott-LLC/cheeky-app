@@ -5,28 +5,14 @@ import { supabaseAdmin } from '@/utils/supabase/admin';
 import { generateSwagCode, type SwagBenefitType } from '@/utils/swag';
 import { sendClubMail } from '@/utils/email';
 import { CONTACT } from '@/utils/contact';
+import { authorized } from './actions-helpers';
+import { getStreamServer, streamEnabled } from '@/utils/stream/server';
 
 /**
  * The Owner's Back Door: authorized if the signed-in user IS the owner
  * (their account is in owner_accounts — no key to lose), OR the legacy
  * ADMIN_KEY matches (fallback path). Both checked server-side.
  */
-async function authorized(key?: string): Promise<boolean> {
-  const supabase = await createClient();
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
-  if (user) {
-    const { data } = await supabaseAdmin
-      .from('owner_accounts')
-      .select('user_id')
-      .eq('user_id', user.id)
-      .maybeSingle();
-    if (data) return true;
-  }
-  const adminKey = process.env.ADMIN_KEY;
-  return Boolean(adminKey && key === adminKey);
-}
 
 /** Fetches the full Booth state (engine, rules, codes, grants, flags). */
 export async function ownerFetchState(input: { key?: string }): Promise<{
@@ -600,6 +586,350 @@ export async function ownerToggleEngine(input: {
     .eq('id', true);
   if (error) return { error: error.message };
   return { enabled: input.enabled };
+}
+
+/**
+ * The Cheeky Lounge — owner view (PRD docs/PRD-club-chat.md §10 owner
+ * dashboard). The Den's monitoring channel: live room feed, the Horn
+ * ticker, pending take-private invites, and a one-click chat ban. Service
+ * role bypasses RLS so the owner can see every message regardless of
+ * blocks — moderation demands the full picture.
+ */
+export async function ownerFetchLounge(input: { key?: string }): Promise<{
+  messages?: {
+    id: number;
+    room: string;
+    sender_id: string;
+    body: string;
+    floor_tag: string;
+    horn: boolean;
+    created_at: string;
+    sender_name: string | null;
+  }[];
+  invites?: {
+    id: string;
+    inviter_id: string;
+    invitee_id: string;
+    status: string;
+    created_at: string;
+    inviter_name: string | null;
+    invitee_name: string | null;
+  }[];
+  bans?: {
+    id: string;
+    user_id: string;
+    banned_until: string;
+    reason: string;
+    created_at: string;
+    user_name: string | null;
+  }[];
+  announcements?: {
+    id: number;
+    body: string;
+    kind: string;
+    created_at: string;
+  }[];
+  totals?: {
+    messages_24h: number;
+    horn_24h: number;
+    invites_pending: number;
+    active_bans: number;
+  };
+  error?: string;
+}> {
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
+
+  const dayAgo = new Date(Date.now() - 24 * 3_600_000).toISOString();
+  const now = new Date().toISOString();
+
+  const [
+    messages,
+    invites,
+    bans,
+    announcements,
+    profileIds,
+    countMessages,
+    countHorn,
+    countInvites,
+    countBans
+  ] = await Promise.all([
+    supabaseAdmin
+      .from('club_chat_messages')
+      .select(
+        'id, room, sender_id, body, floor_tag, horn, created_at, profiles(display_name)'
+      )
+      .order('created_at', { ascending: false })
+      .limit(60),
+    supabaseAdmin
+      .from('club_chat_invites')
+      .select(
+        'id, inviter_id, invitee_id, status, created_at, inviter:profiles!club_chat_invites_inviter_id_fkey(display_name), invitee:profiles!club_chat_invites_invitee_id_fkey(display_name)'
+      )
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false })
+      .limit(20),
+    supabaseAdmin
+      .from('club_chat_bans')
+      .select(
+        'id, user_id, banned_until, reason, created_at, profiles(display_name)'
+      )
+      .gt('banned_until', now)
+      .order('created_at', { ascending: false })
+      .limit(20),
+    supabaseAdmin
+      .from('club_announcements')
+      .select('id, body, kind, created_at')
+      .eq('kind', 'horn')
+      .order('created_at', { ascending: false })
+      .limit(15),
+    (async () => {
+      // Collect every profile id we'll need to display.
+      const ids = new Set<string>();
+      return ids;
+    })(),
+    supabaseAdmin
+      .from('club_chat_messages')
+      .select('id', { count: 'exact', head: true })
+      .gte('created_at', dayAgo),
+    supabaseAdmin
+      .from('club_chat_messages')
+      .select('id', { count: 'exact', head: true })
+      .eq('horn', true)
+      .gte('created_at', dayAgo),
+    supabaseAdmin
+      .from('club_chat_invites')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'pending'),
+    supabaseAdmin
+      .from('club_chat_bans')
+      .select('id', { count: 'exact', head: true })
+      .gt('banned_until', now)
+  ]);
+  void profileIds;
+
+  const msgRows = (messages.data ?? []).map((m) => {
+    const p = (m as unknown as { profiles: { display_name: string } | null })
+      .profiles;
+    return {
+      id: m.id,
+      room: m.room,
+      sender_id: m.sender_id,
+      body: m.body,
+      floor_tag: m.floor_tag,
+      horn: m.horn,
+      created_at: m.created_at,
+      sender_name: p?.display_name ?? null
+    };
+  });
+  const inviteRows = (invites.data ?? []).map((i) => {
+    const r = i as unknown as {
+      inviter: { display_name: string } | null;
+      invitee: { display_name: string } | null;
+    };
+    return {
+      id: i.id,
+      inviter_id: i.inviter_id,
+      invitee_id: i.invitee_id,
+      status: i.status,
+      created_at: i.created_at,
+      inviter_name: r.inviter?.display_name ?? null,
+      invitee_name: r.invitee?.display_name ?? null
+    };
+  });
+  const banRows = (bans.data ?? []).map((b) => {
+    const p = (b as unknown as { profiles: { display_name: string } | null })
+      .profiles;
+    return {
+      id: b.id,
+      user_id: b.user_id,
+      banned_until: b.banned_until,
+      reason: b.reason,
+      created_at: b.created_at,
+      user_name: p?.display_name ?? null
+    };
+  });
+
+  return {
+    messages: msgRows,
+    invites: inviteRows,
+    bans: banRows,
+    announcements: announcements.data ?? [],
+    totals: {
+      messages_24h: countMessages.count ?? 0,
+      horn_24h: countHorn.count ?? 0,
+      invites_pending: countInvites.count ?? 0,
+      active_bans: countBans.count ?? 0
+    }
+  };
+}
+
+/**
+ * Owner one-click chat ban: hands the service-role RPC the right args.
+ * 24h is the founder's first-step default; the UI can override to 72h
+ * for repeat offenders (PRD: 1d -> 3d escalation).
+ */
+export async function ownerLoungeBan(input: {
+  key?: string;
+  userId: string;
+  hours: 24 | 72;
+  reason: string;
+}): Promise<{ error?: string }> {
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
+  const reason = input.reason.trim();
+  if (!reason) return { error: 'reason required' };
+  if (input.hours !== 24 && input.hours !== 72) {
+    return { error: 'hours must be 24 or 72' };
+  }
+  const { error } = await supabaseAdmin.rpc('club_chat_ban', {
+    p_user: input.userId,
+    p_hours: input.hours,
+    p_reason: reason
+  });
+  return error ? { error: error.message } : {};
+}
+
+/** Pardon a chat ban early (Den → service-role delete). */
+export async function ownerLoungePardon(input: {
+  key?: string;
+  banId: string;
+}): Promise<{ error?: string }> {
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
+  const { error } = await supabaseAdmin
+    .from('club_chat_bans')
+    .delete()
+    .eq('id', input.banId);
+  return error ? { error: error.message } : {};
+}
+
+/**
+ * The Stream Lounge — Lion Den monitor (PRD §10). Reads straight from
+ * the Stream server SDK so the owner sees the live transport, not the
+ * Supabase mirror. Returns the last few messages per room plus
+ * aggregate metrics.
+ */
+export async function ownerFetchStreamLounge(input: { key?: string }): Promise<{
+  rooms?: {
+    key: string;
+    label: string;
+    emoji: string;
+    count: number;
+    latest: {
+      id: string;
+      text: string;
+      userName: string;
+      userId: string;
+      horn: boolean;
+      createdAt: string;
+    }[];
+  }[];
+  totals?: { messages_24h: number; horns_24h: number };
+  error?: string;
+}> {
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
+  if (!streamEnabled()) return { error: 'stream_disabled' };
+  const client = getStreamServer();
+  const ROOMS = [
+    { key: 'global', label: 'The Lounge', emoji: '🌐' },
+    { key: 'silver', label: 'Silver', emoji: '🥈' },
+    { key: 'gold', label: 'Gold', emoji: '🥇' },
+    { key: 'platinum', label: 'Platinum', emoji: '💎' },
+    { key: 'diamond', label: 'Diamond', emoji: '🔷' }
+  ];
+  const dayAgo = new Date(Date.now() - 24 * 3_600_000);
+  const rooms = await Promise.all(
+    ROOMS.map(async (r) => {
+      const ch = client.channel('messaging', `cheeky-${r.key}`);
+      let count = 0;
+      let latest: {
+        id: string;
+        text: string;
+        userName: string;
+        userId: string;
+        horn: boolean;
+        createdAt: string;
+      }[] = [];
+      try {
+        const state = await (ch as unknown as {
+          query: (opts: Record<string, unknown>) => Promise<{
+            messages?: Array<{
+              id: string;
+              text: string;
+              user?: { id: string; name?: string };
+              custom?: { horn?: boolean; floor?: string };
+              created_at?: string;
+            }>;
+          }>;
+        }).query({
+          watch: true,
+          state: true,
+          message_limit: 30,
+          presence: false
+        });
+        const msgs = (state.messages ?? []) as Array<{
+          id: string;
+          text: string;
+          user?: { id: string; name?: string };
+          custom?: { horn?: boolean; floor?: string };
+          created_at?: string;
+        }>;
+        const recent = msgs.filter(
+          (m) => new Date(m.created_at ?? 0) > dayAgo
+        );
+        count = recent.length;
+        latest = msgs
+          .slice(-10)
+          .reverse()
+          .map((m) => ({
+            id: m.id,
+            text: m.text,
+            userName: m.user?.name ?? 'Member',
+            userId: m.user?.id ?? '',
+            horn: Boolean(m.custom?.horn),
+            createdAt: m.created_at ?? new Date().toISOString()
+          }));
+      } catch {
+        // Channel may not exist yet — fine.
+      }
+      return { ...r, count, latest };
+    })
+  );
+  const totals = rooms.reduce(
+    (acc, r) => {
+      acc.messages_24h += r.count;
+      acc.horns_24h += r.latest.filter((m) => m.horn).length;
+      return acc;
+    },
+    { messages_24h: 0, horns_24h: 0 }
+  );
+  return { rooms, totals };
+}
+
+/** Stream owner one-click ban. */
+export async function ownerStreamBanAction(input: {
+  key?: string;
+  userId: string;
+  reason: string;
+  hours: 24 | 72;
+}): Promise<{ error?: string }> {
+  if (!streamEnabled()) return { error: 'stream_disabled' };
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
+  const client = getStreamServer() as unknown as {
+    banUser: (
+      userId: string,
+      opts: Record<string, unknown>
+    ) => Promise<unknown>;
+  };
+  await client.banUser(input.userId, {
+    banned_by: 'system',
+    reason: input.reason,
+    timeout: input.hours * 60
+  });
+  await supabaseAdmin.from('club_chat_bans').insert({
+    user_id: input.userId,
+    banned_until: new Date(Date.now() + input.hours * 3_600_000).toISOString(),
+    reason: input.reason
+  });
+  return {};
 }
 
 /** Posts the floor announcement (or clears it) — the marquee goes live

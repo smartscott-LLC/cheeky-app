@@ -14,6 +14,8 @@ import {
   ownerSetBan,
   ownerLeaveMessage
 } from '@/app/owner/actions';
+import LoungeMonitor from '@/components/ui/Owner/LoungeMonitor';
+import StreamLoungeMonitor from '@/components/ui/Owner/StreamLoungeMonitor';
 
 type BenefitType = 'membership' | 'tokens' | 'gift';
 
@@ -792,6 +794,16 @@ export default function OwnerPage() {
               ))}
             </div>
           )}
+        </div>
+
+        {/* The Lounge monitor — live moderation channel for Club Chat. */}
+        <div className="mt-8">
+          <LoungeMonitor ownerKey={key} />
+        </div>
+
+        {/* The Stream Lounge — read straight from the live transport. */}
+        <div className="mt-8">
+          <StreamLoungeMonitor ownerKey={key} />
         </div>
 
         {/* The safety desk — reports needing a human */}

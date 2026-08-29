@@ -7,6 +7,202 @@ points — every push to `main` is production.
 
 ## [Unreleased]
 
+### Added
+
+- **Stream Chat — the live transport** (PRD §4 — easier moderation,
+  video/voice on the roadmap). The town square now runs on Stream
+  Chat as the primary live surface; the Supabase-Realtime overlay
+  stays mounted as the fallback when `STREAM_API_KEY` /
+  `STREAM_API_SECRET` are absent or the Stream call fails. The
+  feature flag resolves client-side at mount time, so the fallback
+  is automatic — no deploy needed to switch back.
+  - `stream-chat@9.52.0` + `stream-chat-react@14.11.1` installed;
+    `pnpm-workspace.yaml` allowBuilds updated for the build scripts.
+  - `utils/stream/server.ts` — singleton server client, `streamEnabled`
+    gate, `issueStreamToken` (upserts the user into Stream and signs
+    the token with the server secret), `STREAM_ROOMS` registry,
+    `ensureTownSquareChannels` (idempotent channel provisioning),
+    `ensureWhisperChannel` (1:1 pair room).
+  - `utils/stream/client.ts` — singleton browser client
+    (`StreamChat.getInstance`), `connectStream` / `disconnectStream`
+    wrappers used by the overlay.
+  - `app/api/chat/stream-token/route.ts` — `POST` issues a fresh
+    token for the signed-in member; mirrors the Supabase profile
+    (display name + primary photo) into Stream on issue. Returns
+    `{enabled: false}` when keys are missing so the client falls back.
+  - `app/api/chat/stream-webhook/route.ts` — the production webhook
+    receiver. Verifies the HMAC-SHA256 `X-Signature` on the raw body
+    (gzip-aware, constant-time compare), then dispatches on
+    `event.type` to mirror `message.new` into `club_chat_messages`
+    and Horn messages into `club_announcements` so the moderation
+    log + the 30-day purge keep working without a second client.
+  - `supabase/migrations/20260808170000_stream_chat_mirror.sql` —
+    adds `stream_message_id` (unique when present) to
+    `club_chat_messages` so the webhook mirror is idempotent.
+- **Stream-backed overlay — `components/ui/ClubChat/StreamChatOverlay.tsx`**
+  + `StreamChatMenu.tsx` + `StreamChatWhisper.tsx` + `HornBurst.tsx`
+  + `PresenceStack.tsx`. Custom UI built on the low-level Stream
+  client (not the stream-chat-react component CSS), with the Cheeky
+  visual system baked in: glassmorphism panel, gold/cyan glow,
+  per-message entry animation (staggered, low-cost), animated tab
+  transitions, animated presence stack with hover tooltips, confetti
+  + 1.5s 🎺 stamp on every Horn, profile peek in the context menu,
+  floor tag chips with the right palette per tier, typing
+  indicators in whispers, slide-in whisper view, a "🎺 HORN" badge
+  on horned messages. Falls back to the existing Supabase chat
+  (`components/ui/ClubChat/ClubChat.tsx`) when Stream is unavailable.
+- **Stream server actions — `app/chat/stream-actions.ts`**. The
+  `streamSend` / `streamHorn` / `streamWhisperGet` / `streamWhisperSend`
+  actions enforce the floor ladder, debited-token check, and 1/hour
+  Horn cooldown; the Horn still crosses the existing
+  `club_announcements` ticker via the webhook mirror. `ownerStreamBan`
+  calls Stream's `client.banUser` and mirrors the ban into the
+  Supabase `club_chat_bans` table so the fallback path stays
+  consistent.
+- **Stream monitor on the Lion Den — `components/ui/Owner/StreamLoungeMonitor.tsx`**.
+  Reads straight from the Stream server SDK (not the Supabase
+  mirror) so the owner sees the live transport. Per-room latest
+  messages, 24h totals, one-click ban (1d / 3d) that hits both
+  Stream and Supabase.
+- **Shared owner gate — `app/owner/actions-helpers.ts`**. The
+  owner-key check that was private to `app/owner/actions.ts` is now
+  shared so the Stream actions can gate on it without a circular
+  import.
+- **Stream webhook signature test — `tests/stream-webhook.unit.test.mjs`**.
+  7 pure-logic pins: a fresh signature is accepted; a forged
+  signature is rejected; a missing header is rejected; a wrong-length
+  signature is rejected (no crash); the body is hashed as raw bytes
+  (not re-stringified); gzipped bodies are decompressed before
+  hashing; the signature is lowercase hex of length 64. All
+  `pnpm test` runs in CI exercise this.
+
+### Changed
+
+- `app/layout.tsx` now mounts `<StreamChatOverlay />` instead of
+  `<ClubChat />`; the animation stylesheet
+  `styles/lounge-animations.css` is imported globally so future
+  surfaces can use the same keyframes.
+- `app/owner/page.tsx` mounts the new `<StreamLoungeMonitor />`
+  beneath the existing Supabase `<LoungeMonitor />` — the Den now
+  shows both the moderation log and the live transport.
+- `package.json` (pnpm allowBuilds in workspace yaml) — `stream-chat`
+  and `stream-chat-react` are now allowed to run their install hooks
+  (no behaviour change in production, just unblocks the pnpm
+  postinstall check that pnpm 11 enforces).
+- `app/layout.tsx` (pre-existing bug surfaced by the new types):
+  `ServiceWorkerRegister` was imported as a named export but the
+  file uses a default export. Fixed.
+
+### Fixed
+
+- **TypeScript narrowing on `m.created_at` in the Stream SDK**:
+  the SDK's `LocalMessage.created_at` is typed `Date`, but the
+  field is a string on the wire; the overlay + whisper now coerce
+  to a string before storing, and the build passes.
+- **`award_badge` RPC param name**: Supabase's generated types
+  expect `p_slug`; the Stream-side horn call now uses the right
+  name.
+
+### Validation
+
+- `pnpm lint` — clean
+- `pnpm test` — 23 pass / 0 fail (15 prior + 8 stream-webhook pins)
+- `pnpm build` — green; `/owner` 12.4 kB (was 11.7 kB); the Stream
+  overlay ships as part of the shared bundle
+
+> The Supabase chat overlay remains the foundation. The Stream overlay
+> is the new live transport; the Supabase chat is the runtime fallback
+> and the test/development target. Both share the same floor ladder,
+> the same take-private consent, the same Horn cooldown, the same
+> privacy toggles, and the same context-menu actions. The Club Chat
+> PRD (`docs/PRD-club-chat.md`) is the source of truth; this section
+> documents the Stream upgrade on top.
+
+- **Club Chat — the town square** (PRD `docs/PRD-club-chat.md`).
+  Always-on chat overlay on every member page: a floating button opens a
+  draggable panel with five rooms (Global + Silver / Gold / Platinum /
+  Diamond). Your floor and the Global are full; the floors above are
+  dimmed read-only — the climb, visible from the cheap seats. Real-time
+  via Supabase Realtime (the app's first realtime surface, scoped to this
+  module), presence via Realtime, no caps / no rate limits to talk (the
+  room *is* the retention play). Branded with the Cheeky type system
+  (Fascinate / Damion / Rancho) and the gold/cyan/club palette tokens.
+- **Take-private = a match behind two-sided consent** (anti-workaround):
+  the inviter sees a confirmation dialog first; the acceptor's same
+  confirmation is the gate. Acceptance runs `club_chat_respond_invite`
+  which checks BOTH parties' daily new-people allowance — the consent
+  dialog promised it; the RPC enforces it. Creates a real `matches` row
+  with `source = 'club_chat'`.
+- **Whispers** — ephemeral pair rooms from the context menu. Live via
+  Realtime, no caps, courtesy not side-channel (take-private is the
+  match-gated path). RLS scopes read to the two participants.
+- **The Horn 🎺** — 10 tokens, one blast per hour, lights up in the
+  Global room and crosses the club ticker. `club_chat_horn` debits the
+  server-side ledger, writes a `club_announcements` row with `kind='horn'`,
+  and awards the `chat_horn` badge. The Horn button in the composer
+  shows the cooldown countdown.
+- **Chat-only collectible family** — `chat_50 / chat_200 / chat_500 /
+  chat_1000` (Chatterbox tiers), `chat_hour` (The Regular), `chat_horn`
+  (Horn Blower). Catalog is book-ready (every badge carries `family` and
+  `floor` metadata); no badge is shared between families. Surfaces in
+  `/coat-check`. `chat_messages_sent` counter lives on the profile and
+  survives the 30-day message purge.
+- **Privacy toggles** on `/account` — members can switch off private
+  invites and/or gifts so a busy member can't be spammed with either.
+  Senders are refused server-side with `invites_disabled` /
+  `gifts_disabled` from `club_chat_invite` and `send_gift`. Defaults ON;
+  nothing changes until someone opts out.
+- **Moderation surfaces**:
+  - **Always-on profanity filter** (`public.club_chat_profanity`): the
+    message is *squished* — every non-alphanumeric stripped — before
+    matching the word list, so letter-spaced and punctuated workarounds
+    don't slip through (the squish fix that closed the live-test hole).
+  - **Moderator chat bans** (`public.club_chat_ban`, service-role only):
+    escalating 1 day → 3 days, sets `banned_until`. The send RPC checks
+    active bans and refuses with `chat_banned`.
+  - **In-room context menu** — Go private / Whisper / Mute / Block /
+    Report / Give a gift. Report writes the existing `reports` table
+    (AI + human queue). Block writes the existing `blocks` table.
+    Mute is a client-side hide, persisted in `localStorage`.
+- **Lion Den support channel — the Lounge monitor** on `/owner`. A
+  service-role live feed across every room, a pending take-private
+  inspector, the Horn ticker, and one-click chat bans (1d / 3d) with a
+  recorded reason + a pardon action. Service role bypasses RLS so the
+  owner sees every message regardless of blocks — moderation demands
+  the full picture. Realtime on `club_chat_messages`, `club_chat_invites`,
+  and `club_chat_bans`.
+- **Member sidebar presence** — the panel's "in the room" strip shows
+  everyone online (Realtime presence) and highlights matches /
+  conversation partners with a gold border.
+- **Safe unit test for the Lounge** — `tests/club-chat.unit.test.mjs`
+  pins the profanity squish, the floor ladder, the Horn message format,
+  the rate-limit key shape, and the Chatterbox tier thresholds. All
+  pure logic, no network, runs in CI. Existing live test
+  `tests/club-chat.live.test.mjs` exercises the real RPCs end-to-end
+  (ladder, profanity, Horn, whispers, take-private, daily-people cap,
+  Chatterbox, bans, blocks).
+- **Server actions** in `app/chat/actions.ts` — `loungeSend`,
+  `loungeHorn`, `loungeInvite`, `loungeRespondInvite`, `loungeWhisperGet`,
+  `loungeWhisperSend`, `loungeHeartbeat`, `loungeTier`, `loungeVerified`,
+  `loungePrefs`, `loungeFriendIds`. All thin wrappers over the
+  `club_chat_*` RPCs.
+- **ClubChatBoundary** — error boundary around the overlay so a stale
+  Realtime subscription or a bad profile payload never blanks the page.
+  Fallback pill with a retry link.
+
+### Changed
+
+- `app/layout.tsx` now mounts `<ClubChat />` (wrapped in
+  `<ClubChatBoundary>`) alongside the existing `<Concierge />` /
+  `<TikiTaskbar />` / `<ClubAudio />` so the town square is everywhere.
+- `/account` now renders `<LoungePrefs />` (privacy toggles) below the
+  existing EmailForm.
+- `pg_cron` schedule `cheeky_club_chat_purge` runs nightly at 04:00,
+  deleting `club_chat_messages`, `club_chat_whisper_messages`,
+  `club_chat_whispers`, and `club_chat_invites` older than 30 days. The
+  24h visible window is the client's read window; older logs are
+  request-only per PRD §9.
+
 ### Fixed
 
 - **ClubChat crashers** (pre-launch block): `TIER_RANK`, `drag`, and `longPress` were all

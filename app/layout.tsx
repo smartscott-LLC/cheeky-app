@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
 import TikiTaskbar from '@/components/ui/Taskbar/TikiTaskbar';
-import ClubChat from '@/components/ui/ClubChat/ClubChat';
+import StreamChatOverlay from '@/components/ui/ClubChat/StreamChatOverlay';
 import { Toaster } from '@/components/ui/Toasts/toaster';
 import Concierge from '@/components/ui/Agent/Concierge';
 import ClubAudio from '@/components/ui/Audio/ClubAudio';
@@ -15,7 +15,7 @@ import localFont from 'next/font/local';
 import { Great_Vibes } from 'next/font/google';
 import { getURL } from '@/utils/helpers';
 import 'styles/main.css';
-import ClubChatBoundary from '@/components/ui/ClubChat/ClubChatBoundary';
+import 'styles/lounge-animations.css';
 
 // The nightclub type system (founder): Fascinate for heroes, Damion for
 // headers, Rancho for body. All three are single-weight display fonts —
@@ -89,9 +89,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
           <Concierge />
         </Suspense>
         <Suspense>
-          <ClubChatBoundary>
-            <ClubChat />
-          </ClubChatBoundary>
+          <StreamChatOverlay />
         </Suspense>
         <Suspense>
           <ClubAudio />
