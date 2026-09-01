@@ -22,9 +22,9 @@ module.exports = {
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],
         body: ['var(--font-body)', ...fontFamily.sans],
-        hero: ['var(--font-hero)', 'cursive'],
+        hero: ['var(--font-hero)', 'regular'],
         header: ['var(--font-header)', 'cursive'],
-        script: ['var(--font-script)', 'cursive']
+        script: ['var(--font-script)', 'regular']
       },
       // Brand colors — the single live source is styles/palette-colors.js
       // (scales) merged with the sub-tokens below; values per the Club Cheeky
@@ -35,19 +35,17 @@ module.exports = {
         // classes (text-gold, bg-cyan, from-gold-graphite, ...) keep resolving.
         gold: {
           ...palette.gold,
-          DEFAULT: '#FFD700', // primary gold (style guide)
+          DEFAULT: '#FFD800', // primary gold (style guide)
           royal: '#FFE44D',
           graphite: '#434041',
           mocha: '#3E2E33'
         },
         cyan: {
           ...palette.cyan,
-          DEFAULT: '#00F5FF' // neon cyan (style guide)
+          DEFAULT: '#66FFFF' // neon cyan (style guide)
         },
-        bubblegum_fizz: palette[bubblegum_fizz],
-        'blue-violet': palette['blue-violet'],
         club: {
-          DEFAULT: '#FF4DA6', // neon pink (style guide)
+          DEFAULT: '#FF00FF', // neon pink (style guide)
           pink: '#FF4DA6',
           cotton: '#FF56D5',
           indigo: '#6C089B',
