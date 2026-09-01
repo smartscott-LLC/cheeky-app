@@ -1,0 +1,19 @@
+.root {
+  @apply sticky top-0 z-40 bg-black/80 backdrop-blur-md transition-all duration-150 h-16 md:h-20 border-b border-zinc-900;
+}
+
+.link {
+  @apply inline-flex items-center text-[12px] font-bold uppercase tracking-[0.16em] transition ease-in-out duration-75 cursor-pointer text-cyan rounded-md px-2 py-1.5 hover:text-gold;
+}
+
+.link:hover {
+  @apply text-gold;
+}
+
+.link:focus {
+  @apply outline-none text-gold ring-2 ring-gold ring-opacity-50;
+}
+
+.logo {
+  @apply flex cursor-pointer items-center rounded-full transform duration-100 ease-in-out hover:scale-[1.03] active:scale-95;
+}

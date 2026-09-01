@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*:focus:not(ol) {
+  @apply outline-none ring-2 ring-club ring-opacity-50;
+}
+
+html {
+  height: 100%;
+  touch-action: manipulation;
+  font-feature-settings:
+    'case' 1,
+    'rlig' 1,
+    'calt' 0;
+}
+
+html,
+body {
+  font-family:
+    var(--font-body), -apple-system, system-ui, BlinkMacSystemFont,
+    'Helvetica Neue', 'Helvetica', sans-serif;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  @apply text-white bg-zinc-800 antialiased;
+}
+
+/* Single-weight display fonts (Fascinate/Damion/Rancho) — never fake-bold
+   them; the type tiers are applied explicitly per element (font-hero/text-gold,
+   font-header/text-cyan, text-club body). */
+h1,
+h2,
+h3 {
+  font-synthesis: none;
+}
+
+body {
+  position: relative;
+  min-height: 100%;
+}
+
+a {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+p a {
+  @apply hover:underline;
+}
+
+.height-screen-helper {
+  min-height: calc(100vh - 80px);
+}
+
+/* Floating hearts — the landing hero's ember effect. The component sets
+   --x/--dur/--delay/--size/--drift/--rot/--op per heart; color comes from
+   token classes. Transform + opacity only, so it stays on the compositor. */
+@keyframes heart-float {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(var(--rot, 0deg));
+    opacity: 0;
+  }
+  10% {
+    opacity: var(--op, 0.5);
+  }
+  30% {
+    transform: translate3d(
+        calc(var(--drift, 20px) * -0.6),
+        -30vh,
+        0
+      )
+      rotate(calc(var(--rot, 0deg) + 10deg));
+  }
+  60% {
+    transform: translate3d(var(--drift, 20px), -65vh, 0)
+      rotate(calc(var(--rot, 0deg) - 8deg));
+  }
+  88% {
+    opacity: var(--op, 0.5);
+  }
+  100% {
+    transform: translate3d(calc(var(--drift, 20px) * 0.5), -108vh, 0)
+      rotate(calc(var(--rot, 0deg) + 12deg));
+    opacity: 0;
+  }
+}
+
+.floating-hearts {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.floating-hearts .heart {
+  position: absolute;
+  bottom: -3rem;
+  left: var(--x, 50%);
+  font-size: var(--size, 16px);
+  line-height: 1;
+  animation: heart-float var(--dur, 14s) linear var(--delay, 0s) infinite;
+  filter: drop-shadow(0 0 6px currentColor);
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-hearts {
+    display: none;
+  }
+}

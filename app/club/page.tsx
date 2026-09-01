@@ -1,0 +1,141 @@
+import Link from 'next/link';
+import { createClient } from '@/utils/supabase/server';
+import { getProfile, getUser } from '@/utils/supabase/queries';
+import { redirect } from 'next/navigation';
+import FloorLayout, { FloorSpot } from '@/components/ui/Club/FloorLayout';
+import AnnouncementBanner from '@/components/ui/AnnouncementBanner/AnnouncementBanner';
+
+// The lobby — the stopping zone. Floor 1's rooms, positioned per the
+// founder's entrance-scene guide: Dance Floor left (cyan), Gift Shop right
+// (gold), Chats + SPARX front and center (pink), elevators upper right.
+const SPOTS: FloorSpot[] = [
+  {
+    href: '/chat/brutus',
+    image: '/personas/brutus/door.webp',
+    emoji: '💪',
+    name: 'Brutus',
+    sub: 'The bouncer',
+    color:
+      'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+    pos: 'left-[6%] top-[8%]'
+  },
+  {
+    href: '/floor/silver',
+    emoji: '👑',
+    name: 'VIP area',
+    sub: 'The silver floor',
+    color:
+      'text-cyan hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
+    pos: 'left-[6%] top-[42%]'
+  },
+  {
+    href: '/gifts',
+    emoji: '🎁',
+    name: 'Gift Shop',
+    sub: 'Buy something',
+    color:
+      'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+    pos: 'right-[6%] top-[42%]'
+  },
+  {
+    href: '/messages',
+    emoji: '💬',
+    name: 'Cheeky Chats',
+    sub: 'Your conversations',
+    color:
+      'text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+    pos: 'left-[36%] top-[30%]'
+  },
+  {
+    href: '/browse',
+    emoji: '⚡',
+    name: 'SPARX',
+    sub: 'Who\u2019s out tonight',
+    color:
+      'text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+    pos: 'right-[36%] top-[30%]'
+  },
+  {
+    href: '/floors',
+    emoji: '🛗',
+    name: 'Elevators',
+    sub: 'Gold · Platinum · Diamond',
+    color:
+      'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+    pos: 'right-[5%] top-[8%]'
+  },
+  {
+    href: '/coat-check',
+    emoji: '🧥',
+    name: 'Coat Check',
+    sub: 'Your collection',
+    color:
+      'text-purple-neon hover:shadow-[0_0_24px_rgba(155,89,182,0.25)]',
+    pos: 'right-[6%] bottom-[10%]'
+  }
+];
+
+export default async function ClubPage() {
+  const supabase = await createClient();
+  const user = await getUser(supabase);
+  if (!user) {
+    return redirect('/signin');
+  }
+
+  const profile = await getProfile(supabase, user.id);
+  const verified = Boolean(profile?.verified_at);
+
+  // The velvet rope: you don't walk the floor until Brutus clears you.
+  if (!verified) {
+    return (
+      <div className="bg-black">
+        <div className="mx-auto max-w-xl px-6 py-24 text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-club/50 bg-zinc-900 text-3xl">
+            💪
+          </div>
+          <h1 className="font-hero text-gold mt-6 text-4xl">
+            The velvet rope is up.
+          </h1>
+          <p className="text-club mt-3 text-lg">
+            Brutus needs your ID before you walk the floor — free, quick, and
+            the VIP badge comes with it.
+          </p>
+          <Link
+            href="/verify"
+            className="mt-8 inline-block rounded-lg bg-club px-10 py-4 text-lg font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
+          >
+            Check in at the door
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-black">
+      {/* Consistent with every floor: name → ticker → info, all up top,
+          nothing at the bottom of the page. */}
+      <div className="mx-auto max-w-6xl px-6 pt-8 text-center">
+        <p className="font-header text-cyan text-base uppercase tracking-[0.3em]">
+          The Lobby
+        </p>
+        <div className="mt-5">
+          <AnnouncementBanner />
+        </div>
+        <p className="font-header text-cyan mt-5 text-base">
+          The hour spins on
+        </p>
+        <p className="text-club mx-auto mt-2 max-w-2xl text-lg">
+          The Dance Floor at :00, Speed Dating at :30, the Rooftop at :45 —
+          and Blind Date when the Gold floor&apos;s hostess opens the door. The
+          Event Center holds the whole playlist.
+        </p>
+      </div>
+
+      {/* The lobby — the base room, filled in with floor 1's rooms. */}
+      <div className="pt-6">
+        <FloorLayout background="/brand/club-interior.webp" spots={SPOTS} />
+      </div>
+    </div>
+  );
+}

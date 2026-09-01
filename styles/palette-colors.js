@@ -1,0 +1,58 @@
+// The full 50-950 color scales — the founder's Coolors-derived club neon kit.
+// (The original scale doc is archived in docs/archives/styles/.) Loaded by
+// tailwind.config.js and merged with the legacy sub-tokens so existing
+// classes keep resolving.
+module.exports = {
+  gold: {
+    50: '#fffbe5',
+    100: '#fff7cc',
+    200: '#fff099',
+    300: '#ffe866',
+    400: '#ffe033',
+    500: '#ffd900',
+    600: '#ccad00',
+    700: '#998200',
+    800: '#665700',
+    900: '#332b00',
+    950: '#241e00'
+  },
+  cyan: {
+    50: '#e5ffff',
+    100: '#ccffff',
+    200: '#99ffff',
+    300: '#66ffff',
+    400: '#33ffff',
+    500: '#00ffff',
+    600: '#00cccc',
+    700: '#009999',
+    800: '#006666',
+    900: '#003333',
+    950: '#002424'
+  },
+  bubblegum_fizz: {
+    50: '#ffe5f5',
+    100: '#ffcceb',
+    200: '#ff99d8',
+    300: '#ff66c4',
+    400: '#ff33b1',
+    500: '#ff009d',
+    600: '#cc007e',
+    700: '#99005e',
+    800: '#66003f',
+    900: '#33001f',
+    950: '#240016'
+  },
+  'blue-violet': {
+    50: '#f3e9fc',
+    100: '#e6d2f9',
+    200: '#cda5f3',
+    300: '#b478ed',
+    400: '#9c4be7',
+    500: '#831fe0',
+    600: '#6918b4',
+    700: '#4e1287',
+    800: '#340c5a',
+    900: '#1a062d',
+    950: '#12041f'
+  }
+};

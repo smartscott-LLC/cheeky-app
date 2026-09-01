@@ -1,0 +1,46 @@
+name: CI gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Public-only envs — the build may read these at prerender time. They are
+# public by design (they ship in the client bundle). Real secrets (service
+# role, Stripe, DeepSeek, OpenRouter, Sentry auth) never enter CI.
+env:
+  NEXT_PUBLIC_SITE_URL: https://smartscott.online
+  NEXT_PUBLIC_SUPABASE_URL: https://ioqeddpgdilyyajsygmz.supabase.co
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlvcWVkZHBnZGlseXlhanN5Z216Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NzcxNjksImV4cCI6MjEwMTM1MzE2OX0.UHFAPns3LWNSRWSXf65hgIiPKv8dx3ULWr9o_B20MMM
+  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_NVrPRgPjbGWWO1Ld6qjqNg_CqFdkLCZ
+
+jobs:
+  gate:
+    name: Lint + build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm lint
+      - name: Test
+        run: pnpm test
+      - name: Build
+        run: pnpm build
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
