@@ -24,7 +24,7 @@ module.exports = {
         body: ['var(--font-body)', ...fontFamily.sans],
         hero: ['var(--font-hero)', 'regular'],
         header: ['var(--font-header)', 'cursive'],
-        script: ['var(--font-script)', 'regular']
+        script: ['var(--font-header)', 'cursive']
       },
       // Brand colors — the single live source is styles/palette-colors.js
       // (scales) merged with the sub-tokens below; values per the Club Cheeky
