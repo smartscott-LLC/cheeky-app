@@ -11,15 +11,15 @@ import ServiceWorkerRegister from '@/components/ui/PWA/ServiceWorkerRegister';
 import InstallPrompt from '@/components/ui/PWA/InstallPrompt';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
-import { PropsWithChildren, Suspense } from 'react';
-import localFont from 'next/font/local';
-import { Great_Vibes } from 'next/font/google';
+import { Proppublic/brand/club-interior.webppublic/brand/club-interior.webppublic/brand/club-interior.webppublic/brand/club-interior.webppublic/brand/club-interior.webppublic/brand/club-interior.webppublic/brand/club-interior.webppublic/brand/club-interior.webppublic/brand/club-interior.webppublic/brand/club-interior.webp{ Great_Vibes } from 'next/font/google';
 import { getURL } from '@/utils/helpers';
-import 'styles/main.css';
-import 'styles/lounge-animations.css';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+import '../styles/main.css';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+import '../styles/lounge-animations.css';
 
 // The nightclub type system (founder): Fascinate for heroes, Damion for
-// headers, Rancho for body. All three are single-weight display fonts —
+// headppublic/brand/club-interior.webp..........ublic/brand/club-interior.webpers, Rancho for body. All three are single-weight display fonts —
 // main.css sets font-synthesis: none on headings so weight utilities never
 // fake-bold them.
 const hero = localFont({

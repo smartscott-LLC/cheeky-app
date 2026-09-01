@@ -333,7 +333,7 @@ points — every push to `main` is production.
   messaging card + token note pink. Headers stay as they were.
 - **Accent swap**: the text accent moved green → **cyan** (the founder's call — one hue, no
   straying; cyan on black is ~21:1, the strongest contrast in the kit). The full 50–950 scales
-  for gold / cyan / bubblegum-fizz / blue-violet are wired in (`styles/palette-colors.js`,
+  for gold / cyan / bubblegum_fizz / blue-violet are wired in (`styles/palette-colors.js`,
   mirrored from `styles/tailwind_color_scales.md`).
 - **Lighthouse pass**: Stripe's checkout is now lazy-loaded (`next/dynamic` in Pricing + the
   Exchange) — 265 KiB + the two longest main-thread tasks were loading on the landing page for

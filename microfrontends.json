@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/microfrontends.json",
+  "applications": {
+    "cheeky-app": {
+      "development": {
+        "fallback": "www.smartscott.online"
+      }
+    },
+    "in-gamechatui": {
+      "routing": [
+        {
+          "paths": [/* lounge.smartscott.online */]
+        }
+      ]
+    }
+  }
+}

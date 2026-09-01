@@ -29,7 +29,7 @@ module.exports = {
     900: '#003333',
     950: '#002424'
   },
-  'bubblegum-fizz': {
+  bubblegum_fizz: {
     50: '#ffe5f5',
     100: '#ffcceb',
     200: '#ff99d8',

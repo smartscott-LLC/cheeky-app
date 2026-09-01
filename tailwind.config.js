@@ -44,7 +44,7 @@ module.exports = {
           ...palette.cyan,
           DEFAULT: '#00F5FF' // neon cyan (style guide)
         },
-        'bubblegum-fizz': palette['bubblegum-fizz'],
+        bubblegum_fizz: palette[bubblegum_fizz],
         'blue-violet': palette['blue-violet'],
         club: {
           DEFAULT: '#FF4DA6', // neon pink (style guide)
