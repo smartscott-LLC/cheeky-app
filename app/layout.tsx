@@ -11,7 +11,7 @@ import ServiceWorkerRegister from '@/components/ui/PWA/ServiceWorkerRegister';
 import InstallPrompt from '@/components/ui/PWA/InstallPrompt';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
-import { Proppublic/brand/club-interior.webppublic/brand/club-interior.webppublic/brand/club-interior.webppublic/brand/club-interior.webppublic/brand/club-interior.webppublic/brand/club-interior.webppublic/brand/club-interior.webppublic/brand/club-interior.webppublic/brand/club-interior.webppublic/brand/club-interior.webp{ Great_Vibes } from 'next/font/google';
+import { Proppublic.brand.club-interior.webppublic.brand.club-interior.webppublic.brand.club-interior.webppublic.brand.club-interior.webppublic.brand.club-interior.webppublic.brand.club-interior.webppublic.brand.club-interior.webppublic.brand.club-interior.webppublic.brand.club-interior.webppublic.brand.club-interior.webp{ Great_Vibes } from 'next/font/google';
 import { getURL } from '@/utils/helpers';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import '../styles/main.css';
