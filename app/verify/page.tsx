@@ -69,6 +69,16 @@ export default async function VerifyPage({
       .maybeSingle()
   ]);
   if (profile?.verified_at) {
+    // Check if the user has completed the story — if not, send them on the Chase
+    const { data: storyProgress } = await supabase
+      .from('user_story_progress')
+      .select('is_complete, selected_persona')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (!storyProgress?.is_complete || !storyProgress?.selected_persona) {
+      return redirect('/story');
+    }
     return redirect('/club');
   }
 

@@ -48,8 +48,8 @@ export const metadata: Metadata = {
   // iOS "Add to Home Screen" ignores manifest icons — it needs this link,
   // or it screenshots the page as the icon. 192 works (iOS scales to 180).
   icons: {
-    apple: '/icons/icon-192.png',
-    icon: '/icons/icon-192.png'
+    apple: '/icons/entrance-logo.webp',
+    icon: '/icons/entrance-logo.webp'
   },
   openGraph: {
     title: title,

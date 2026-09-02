@@ -2,8 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@import "https://github.com/google/fonts/raw/main/ofl/fascinate/Fascinate-Regular.ttf";
+@import "https://github.com/google/fonts/raw/main/ofl/damion/Damion-Regular.ttf";
+@import "https://github.com/google/fonts/raw/main/apache/rancho/Rancho-Regular.ttf";
+
+
 *:focus:not(ol) {
-  @apply outline-none ring-2 ring-club ring-opacity-50;
+  @apply outline-none ring-2 ring-club/50;
 }
 
 html {
@@ -15,15 +21,22 @@ html {
     'calt' 0;
 }
 
-html,
-body {
-  font-family:
-    var(--font-body), -apple-system, system-ui, BlinkMacSystemFont,
-    'Helvetica Neue', 'Helvetica', sans-serif;
-  text-rendering: optimizeLegibility;
-  -moz-osx-font-smoothing: grayscale;
-  @apply text-white bg-zinc-800 antialiased;
+.fascinate-regular {
+  font-family: "Fascinate", system-ui;
+  font-weight: 400;
+  font-style: normal;
 }
+.damion-regular {
+  font-family: "Damion", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+.rancho-regular {
+  font-family: "Rancho", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
 
 /* Single-weight display fonts (Fascinate/Damion/Rancho) — never fake-bold
    them; the type tiers are applied explicitly per element (font-hero/text-gold,
@@ -106,4 +119,56 @@ p a {
   .floating-hearts {
     display: none;
   }
+}
+/* Custom Fonts Definition */
+@font-face {
+  font-family: 'Fascinate';
+  src: url('./fonts/Fascinate-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Damion';
+  src: url('./fonts/Damion-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Rancho';
+  src: url('./fonts/Rancho-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* CSS Variables for Fonts & Colors */
+:root {
+  --font-fascinate: 'Fascinate', display, system-ui;
+  --color-fascinate: #ffd800;
+
+  --font-damion: 'Damion', cursive;
+  --color-damion: #66ffff;
+
+  --font-rancho: 'Rancho', cursive;
+  --color-rancho: #FF00FF;
+}
+
+/* Utility Classes (Applies Font + Matching Color) */
+.font-fascinate {
+  font-family: var(--font-fascinate);
+  color: var(--color-fascinate);
+}
+
+.font-damion {
+  font-family: var(--font-damion);
+  color: var(--color-damion);
+}
+
+.font-rancho {
+  font-family: var(--font-rancho);
+  color: var(--color-rancho);
 }

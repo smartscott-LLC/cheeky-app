@@ -67,7 +67,7 @@ export default function InstallPrompt() {
         <div className="flex items-start gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/icons/icon-192.png"
+            src="/icons/entrance-logo.webp"
             alt=""
             className="h-10 w-10 rounded-lg"
           />

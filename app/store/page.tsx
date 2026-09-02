@@ -49,8 +49,7 @@ export default async function StorePage() {
             description: p.description,
             prices: (p.prices ?? []).map((pr) => ({
               id: pr.id,
-              type: pr.type,
-              interval: pr.interval,
+              interval_count: pr.interval_count,
               unit_amount: pr.unit_amount,
               currency: pr.currency
             }))

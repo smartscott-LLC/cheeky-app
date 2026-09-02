@@ -9,7 +9,7 @@
     "in-gamechatui": {
       "routing": [
         {
-          "paths": [/* lounge.smartscott.online */]
+          "paths": ["/lounge/:path*"]
         }
       ]
     }

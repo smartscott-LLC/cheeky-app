@@ -68,7 +68,7 @@ export async function checkoutWithStripe(
       'Trial end:',
       calculateTrialEndUnixTimestamp(price.trial_period_days)
     );
-    if (price.type === 'recurring') {
+    if (price.interval) {
       params = {
         ...params,
         mode: 'subscription',
@@ -76,7 +76,7 @@ export async function checkoutWithStripe(
           trial_end: calculateTrialEndUnixTimestamp(price.trial_period_days)
         }
       };
-    } else if (price.type === 'one_time') {
+    } else {
       params = {
         ...params,
         mode: 'payment'

@@ -33,7 +33,7 @@ export async function startCheckoutSession(
   // The real price from the DB (synced from Stripe via webhook).
   const { data: price } = await supabase
     .from('prices')
-    .select('id, type')
+    .select('id, interval_count')
     .eq('id', priceId)
     .maybeSingle();
   if (!price) {
@@ -56,7 +56,7 @@ export async function startCheckoutSession(
     redirect_on_completion: 'never',
     customer,
     line_items: [{ price: price.id, quantity: 1 }],
-    mode: price.type === 'recurring' ? 'subscription' : 'payment',
+    mode: price.interval_count ? 'subscription' : 'payment',
     allow_promotion_codes: true
   });
 

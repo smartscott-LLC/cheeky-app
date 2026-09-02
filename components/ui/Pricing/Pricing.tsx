@@ -142,16 +142,16 @@ export default function Pricing({
             {[...products]
               .sort(
                 (a, b) =>
-                  (a.prices?.some((p) => p.type === 'recurring' && !p.unit_amount)
+                  (a.prices?.some((p) => p.interval && !p.unit_amount)
                     ? 0
                     : 1) -
-                  (b.prices?.some((p) => p.type === 'recurring' && !p.unit_amount)
+                  (b.prices?.some((p) => p.interval && !p.unit_amount)
                     ? 0
                     : 1)
               )
               .map((product) => {
               const price = product?.prices?.find(
-                (p) => p.interval === billingInterval || p.type === 'one_time'
+                (p) => p.interval === billingInterval || !p.interval
               );
               if (!price) return null;
               const priceString = new Intl.NumberFormat('en-US', {
@@ -184,7 +184,7 @@ export default function Pricing({
                         {priceString}
                       </span>
                       <span className="text-base font-medium text-cyan">
-                        {price.type === 'recurring'
+                        {price.interval
                           ? `/${billingInterval}`
                           : ' one-time'}
                       </span>
@@ -203,7 +203,7 @@ export default function Pricing({
                         ? 'Manage'
                         : product.name === 'Standard Membership'
                           ? 'Get Silver Card'
-                          : price.type === 'one_time'
+                          : !price.interval
                             ? 'Buy'
                             : 'Join'}
                     </Button>

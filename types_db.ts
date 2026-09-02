@@ -1647,12 +1647,11 @@ export type Database = {
           currency: string | null
           description: string | null
           id: string
-          interval: Database["public"]["Enums"]["pricing_plan_interval"] | null
+          interval: string | null
           interval_count: number | null
           metadata: Json | null
           product_id: string | null
           trial_period_days: number | null
-          type: Database["public"]["Enums"]["pricing_type"] | null
           unit_amount: number | null
         }
         Insert: {
@@ -1660,12 +1659,11 @@ export type Database = {
           currency?: string | null
           description?: string | null
           id: string
-          interval?: Database["public"]["Enums"]["pricing_plan_interval"] | null
+          interval?: string | null
           interval_count?: number | null
           metadata?: Json | null
           product_id?: string | null
           trial_period_days?: number | null
-          type?: Database["public"]["Enums"]["pricing_type"] | null
           unit_amount?: number | null
         }
         Update: {
@@ -1673,12 +1671,11 @@ export type Database = {
           currency?: string | null
           description?: string | null
           id?: string
-          interval?: Database["public"]["Enums"]["pricing_plan_interval"] | null
+          interval?: string | null
           interval_count?: number | null
           metadata?: Json | null
           product_id?: string | null
           trial_period_days?: number | null
-          type?: Database["public"]["Enums"]["pricing_type"] | null
           unit_amount?: number | null
         }
         Relationships: [
@@ -2100,6 +2097,36 @@ export type Database = {
           },
         ]
       }
+      story_beat_completion: {
+        Row: {
+          beat_number: number
+          choice_made: string | null
+          completed_at: string | null
+          id: number
+          run_number: number
+          score_earned: number | null
+          user_id: string
+        }
+        Insert: {
+          beat_number: number
+          choice_made?: string | null
+          completed_at?: string | null
+          id?: number
+          run_number?: number
+          score_earned?: number | null
+          user_id: string
+        }
+        Update: {
+          beat_number?: number
+          choice_made?: string | null
+          completed_at?: string | null
+          id?: number
+          run_number?: number
+          score_earned?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           cancel_at: string | null
@@ -2114,7 +2141,6 @@ export type Database = {
           metadata: Json | null
           price_id: string | null
           quantity: number | null
-          status: Database["public"]["Enums"]["subscription_status"] | null
           trial_end: string | null
           trial_start: string | null
           user_id: string
@@ -2132,7 +2158,6 @@ export type Database = {
           metadata?: Json | null
           price_id?: string | null
           quantity?: number | null
-          status?: Database["public"]["Enums"]["subscription_status"] | null
           trial_end?: string | null
           trial_start?: string | null
           user_id: string
@@ -2150,7 +2175,6 @@ export type Database = {
           metadata?: Json | null
           price_id?: string | null
           quantity?: number | null
-          status?: Database["public"]["Enums"]["subscription_status"] | null
           trial_end?: string | null
           trial_start?: string | null
           user_id?: string
@@ -2164,6 +2188,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      supabase_migrations: {
+        Row: {
+          inserted_at: string
+          name: string | null
+          success: boolean
+          version: string
+        }
+        Insert: {
+          inserted_at?: string
+          name?: string | null
+          success?: boolean
+          version: string
+        }
+        Update: {
+          inserted_at?: string
+          name?: string | null
+          success?: boolean
+          version?: string
+        }
+        Relationships: []
       }
       swag_codes: {
         Row: {
@@ -2351,6 +2396,57 @@ export type Database = {
           id?: string
           options?: Json
           prompt?: string
+        }
+        Relationships: []
+      }
+      user_story_progress: {
+        Row: {
+          choices_made: Json | null
+          completion_date: string | null
+          created_at: string | null
+          current_beat: number | null
+          current_score: number | null
+          final_score: number | null
+          id: number
+          is_complete: boolean | null
+          last_tier_earned: string | null
+          reward_tiers_claimed: Json | null
+          selected_persona: string | null
+          total_runs: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          choices_made?: Json | null
+          completion_date?: string | null
+          created_at?: string | null
+          current_beat?: number | null
+          current_score?: number | null
+          final_score?: number | null
+          id?: number
+          is_complete?: boolean | null
+          last_tier_earned?: string | null
+          reward_tiers_claimed?: Json | null
+          selected_persona?: string | null
+          total_runs?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          choices_made?: Json | null
+          completion_date?: string | null
+          created_at?: string | null
+          current_beat?: number | null
+          current_score?: number | null
+          final_score?: number | null
+          id?: number
+          is_complete?: boolean | null
+          last_tier_earned?: string | null
+          reward_tiers_claimed?: Json | null
+          selected_persona?: string | null
+          total_runs?: number | null
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }

@@ -12,8 +12,7 @@ const Checkout = dynamic(() => import('@/components/checkout'), {
 
 interface StorePrice {
   id: string;
-  type: string | null;
-  interval: string | null;
+  interval_count: number | null;
   unit_amount: number | null;
   currency: string | null;
 }
@@ -55,7 +54,7 @@ export default function StoreClient({
     .filter((p) => TOKEN_RE.test(p.name))
     .flatMap((p) =>
       p.prices
-        .filter((pr) => pr.type === 'one_time')
+        .filter((pr) => !pr.interval_count)
         .map((pr) => ({ productName: p.name, ...pr }))
     );
 
@@ -97,7 +96,7 @@ export default function StoreClient({
         <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {memberships.map((product) => {
             const price =
-              product.prices.find((p) => p.type === 'recurring') ??
+              product.prices.find((p) => p.interval_count) ??
               product.prices[0];
             if (!price) return null;
             const isCurrent = subscriptionName === product.name;
