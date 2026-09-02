@@ -9,7 +9,7 @@
     "in-gamechatui": {
       "routing": [
         {
-          "paths": ["/lounge/:path*"]
+          "paths": ["https://in-gamechatui-git-main-smartscott.vercel.app/lounge.smartscott.online"]
         }
       ]
     }

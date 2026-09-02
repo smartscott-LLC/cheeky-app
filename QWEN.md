@@ -214,7 +214,7 @@ The entire app follows one consistent pattern — no grey, no alternate colors:
 |------|------|-------|-----|-------|
 | Hero / Headers / Section Labels | **Fascinate** | Gold | `#FFD800` | Large headers, section titles, major labels |
 | Small Headers / Element Labels | **Damion** | Cyan | `#66FFFF` | Small headers, labels on single elements |
-| Body Text | **Rancho** | Magenta | `#FF00FF` | All body copy, descriptions, paragraphs |
+| Body Text | **Rancho** | pink | `#FFB5FF` | All body copy, descriptions, paragraphs |
 
 - `font-synthesis: none` is set on headings so weight utilities never fake-bold these single-weight display fonts.
 - Floor color schemes live in `styles/palette-colors.js` (source of truth), mirrored as Tailwind tokens in `tailwind.config.js`. Never hardcode hex in components.

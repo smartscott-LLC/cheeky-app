@@ -45,7 +45,7 @@ module.exports = {
           DEFAULT: '#66FFFF' // neon cyan (style guide)
         },
         club: {
-          DEFAULT: '#FF00FF', // neon pink (style guide)
+          DEFAULT: '#FFB5FF', // neon pink (style guide)
           pink: '#FF4DA6',
           cotton: '#FF56D5',
           indigo: '#6C089B',

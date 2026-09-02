@@ -52,7 +52,7 @@ Jax is the guy everybody wants to chat with before hitting the floor. He’s got
 
 * **Style:** Pixar/DreamWorks hyper-detailed 3D animated character style, matching DJ D34D\_B34T and Chad Sterling.  
 * **Look:** Thick stylized dark hair, sharp jawline with light stubble, warm brown eyes, mischievous crooked smirk. Wearing a fitted dark vest over a rolled-sleeve dark shirt with "CLUB CHEEKY" embroidered on the chest, holding a vintage metallic coat key.  
-* **Midjourney / DALL-E Prompt:**3D animated character portrait of an effortlessly handsome 27-year-old male coat check attendant in Pixar DreamWorks render style, messy modern styled dark hair, sharp jawline with subtle stubble, warm seductive brown eyes, charming crooked smirk, wearing a dark fitted vest over a black collared shirt with rolled-up sleeves and pink "CLUB CHEEKY" text logo, holding a brass coat check key, high-end club cloakroom background with luxury jackets on racks and glowing neon "CLUB CHEEKY" sign in soft focus, ambient amber and magenta neon lighting, hyper-detailed 3D render, octane render, 8k \--ar 3:4
+* **Midjourney / DALL-E Prompt:**3D animated character portrait of an effortlessly handsome 27-year-old male coat check attendant in Pixar DreamWorks render style, messy modern styled dark hair, sharp jawline with subtle stubble, warm seductive brown eyes, charming crooked smirk, wearing a dark fitted vest over a black collared shirt with rolled-up sleeves and pink "CLUB CHEEKY" text logo, holding a brass coat check key, high-end club cloakroom background with luxury jackets on racks and glowing neon "CLUB CHEEKY" sign in soft focus, ambient amber and pink neon lighting, hyper-detailed 3D render, octane render, 8k \--ar 3:4
 
 ## **🎮 RPG & Vault Integration**
 
