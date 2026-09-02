@@ -60,3 +60,6 @@ certificates
 # founder's dummy-member source images (seeded via scripts/seed-test-members.mjs)
 /dummy_images
 .stream/
+
+/In-gamwChatUI
+/In-gameChatUI/*
