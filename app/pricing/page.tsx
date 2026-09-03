@@ -23,7 +23,7 @@ export default async function PricingPage() {
         <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           💎 Membership & Pricing
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-club">
+        <p className="font-header mx-auto mt-3 max-w-xl text-center text-cyan">
           The only price of admission is being a real person. Money buys floors,
           never entry — the free tier is genuinely free.
         </p>
@@ -37,7 +37,7 @@ export default async function PricingPage() {
           />
         </div>
 
-        <p className="mx-auto mt-8 max-w-xl text-center text-xs text-club">
+        <p className=" mx-auto mt-8 max-w-xl text-center text-xs font-body text-club">
           Cancel anytime in one click from your Account page — no phone calls,
           no retention scripts, no surprise charges. Tokens are never spent on
           messaging; they power events and gifts only.
@@ -46,7 +46,7 @@ export default async function PricingPage() {
         <div className="mt-8 text-center">
           <Link
             href="/#membership"
-            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold text-club transition hover:bg-club/10"
+            className="inline-block rounded-lg border border-club/40 px-6 py-2.5  font-body text-club transition hover:bg-club/10"
           >
             ← Back to the club
           </Link>

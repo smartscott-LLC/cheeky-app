@@ -22,11 +22,11 @@ export default async function SpeedDatingPage() {
     return (
       <div className="bg-black">
         <div className="mx-auto max-w-2xl px-6 py-16 text-center">
-          <p className="text-club text-5xl">💘</p>
+          <p className="font-body text-club text-5xl">💘</p>
           <h1 className="font-hero text-gold mt-6 text-4xl">
             Speed Dating is behind the rope.
           </h1>
-          <p className="text-club mx-auto mt-3 max-w-md">
+          <p className="font-body text-club mx-auto mt-3 max-w-md">
             Come see what&apos;s on this floor with a Platinum card today — the
             room&apos;s worth it.
           </p>
@@ -39,7 +39,7 @@ export default async function SpeedDatingPage() {
             </Link>
             <Link
               href="/events"
-              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-club transition hover:border-zinc-500 hover:text-white"
+              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold font-body text-club transition hover:border-zinc-500 hover:text-white"
             >
               The Event Center
             </Link>
@@ -136,7 +136,7 @@ export default async function SpeedDatingPage() {
         <h1 className="font-hero text-gold text-center text-4xl sm:text-5xl">
           Speed Dating
         </h1>
-        <p className="text-club mx-auto mt-3 max-w-xl text-center">
+        <p className="font-body text-club mx-auto mt-3 max-w-xl text-center">
           Platinum floor. Groups of six. Ninety seconds with each person, then
           pick who you&apos;d like to meet again.
         </p>
@@ -157,7 +157,7 @@ export default async function SpeedDatingPage() {
               photoBase={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`}
             />
           ) : (
-            <p className="text-club text-center">
+            <p className="font-body text-club text-center">
               No Speed Dating slots scheduled — check back later.
             </p>
           )}

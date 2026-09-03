@@ -50,11 +50,11 @@ const ACCENTS: Record<
   }
 > = {
   dance_floor: {
-    kicker: 'text-club',
+    kicker: 'font-body text-club',
     cta: 'bg-club hover:bg-club-cotton',
     lockedBorder: 'border-club/60',
-    lockedText: 'text-club/70',
-    verified: 'text-club'
+    lockedText: 'font-body text-club/70',
+    verified: 'font-body text-club'
   },
   themed_night: {
     kicker: 'text-gold',
@@ -306,7 +306,7 @@ export default function EventFloor({
                 : 'The floor is moving'}
         </p>
         <h2 className="font-header text-cyan mt-2 text-3xl">{statusBanner.title}</h2>
-        <p className="mt-1 text-club">{statusBanner.body}</p>
+        <p className="mt-1 font-body text-club">{statusBanner.body}</p>
 
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
           {!joined && eventStatus === 'open' && (
@@ -335,9 +335,9 @@ export default function EventFloor({
           )}
         </div>
 
-        {error && <p className="mt-3 text-base text-club">{error}</p>}
+        {error && <p className="mt-3 text-base font-body text-club">{error}</p>}
         {joined && eventStatus !== 'running' && eventStatus !== 'closed' && (
-          <p className="mt-3 text-sm text-club">
+          <p className="mt-3 text-sm font-body text-club">
             {participants.length} on the floor now. Needs {event.minFill} to
             run.
           </p>
@@ -398,7 +398,7 @@ export default function EventFloor({
                   )}
                 </div>
                 <div className="p-3">
-                  <p className="text-club truncate text-base font-bold">
+                  <p className="font-body text-club truncate text-base font-bold">
                     {p.profile?.display_name || 'Member'}
                   </p>
                   <div className="mt-2 flex items-center justify-between">
@@ -430,7 +430,7 @@ export default function EventFloor({
       </div>
 
       {participants.length === 0 && (
-        <p className="mt-10 text-center text-club">
+        <p className="mt-10 text-center font-body text-club">
           No one on the floor yet. Be the first through the door.
         </p>
       )}

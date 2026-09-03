@@ -32,7 +32,7 @@ const CHAT = {
   name: 'Cheeky Chats',
   sub: 'Your conversations',
   color:
-    'text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+    'font-body text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
   pos: 'left-[36%] top-[30%]'
 };
 const SPARK = {
@@ -41,7 +41,7 @@ const SPARK = {
   name: 'SPARX',
   sub: 'Who\u2019s out tonight',
   color:
-    'text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+    'font-body text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
   pos: 'right-[36%] top-[30%]'
 };
 const GIFT = {
@@ -102,7 +102,7 @@ const TRIXIE = {
   name: 'Trixie',
   sub: 'The waitress',
   color:
-    'text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+    'font-body text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
   pos: 'left-[6%] top-[8%]'
 };
 const VALENTINA = {

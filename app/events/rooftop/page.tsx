@@ -23,11 +23,11 @@ export default async function RooftopPage() {
     return (
       <div className="bg-black">
         <div className="mx-auto max-w-2xl px-6 py-16 text-center">
-          <p className="text-club text-5xl">🌇</p>
+          <p className="font-body text-club text-5xl">🌇</p>
           <h1 className="font-hero text-gold mt-6 text-4xl">
             The Rooftop is behind the rope.
           </h1>
-          <p className="text-club mx-auto mt-3 max-w-md">
+          <p className="font-body text-club mx-auto mt-3 max-w-md">
             Come see what&apos;s on this floor with a Diamond card today — the
             pool&apos;s worth it.
           </p>
@@ -40,7 +40,7 @@ export default async function RooftopPage() {
             </Link>
             <Link
               href="/events"
-              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-club transition hover:border-zinc-500 hover:text-white"
+              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold font-body text-club transition hover:border-zinc-500 hover:text-white"
             >
               The Event Center
             </Link>
@@ -77,7 +77,7 @@ export default async function RooftopPage() {
       <div className="bg-black">
         <div className="mx-auto max-w-2xl px-6 py-16 text-center">
           <h1 className="font-hero text-gold text-4xl">🌇 The Rooftop</h1>
-          <p className="text-club mt-3">
+          <p className="font-body text-club mt-3">
             No pool scheduled right now — check back at the next :45.
           </p>
         </div>
@@ -145,14 +145,14 @@ export default async function RooftopPage() {
       <div className="mx-auto max-w-4xl px-6 py-16">
         <Link
           href="/events"
-          className="text-base font-semibold text-club hover:text-white"
+          className="text-base font-semibold font-body text-club hover:text-white"
         >
           ← The Event Center
         </Link>
         <h1 className="font-hero text-gold mt-6 text-center text-4xl sm:text-5xl">
           🌇 The Rooftop
         </h1>
-        <p className="text-club mx-auto mt-3 max-w-xl text-center">
+        <p className="font-body text-club mx-auto mt-3 max-w-xl text-center">
           The Diamond floor&apos;s pool. Ten-second rounds, three picks each —
           mutuals leave the board, and when it&apos;s down to two, that&apos;s the
           date.

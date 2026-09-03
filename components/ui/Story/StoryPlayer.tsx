@@ -115,7 +115,7 @@ export default function StoryPlayer({
           <h1 className="font-hero text-gold mt-6 text-4xl sm:text-5xl">
             Choose Your Keeper
           </h1>
-          <p className="text-club mx-auto mt-3 max-w-xl">
+          <p className="font-body text-club mx-auto mt-3 max-w-xl">
             You&apos;ve climbed every floor. The Coat Check is yours.
             Pick the persona who will keep your vault — your collectibles,
             your memories, your story.
@@ -150,9 +150,9 @@ export default function StoryPlayer({
                       className="h-full w-full object-cover transition group-hover:scale-105"
                     />
                   </div>
-                  <p className="text-club mt-3 font-bold">{p.name}</p>
-                  <p className="text-club text-sm">{p.variant}</p>
-                  <p className="text-club mt-1 text-[13px]">{p.description}</p>
+                  <p className="font-body text-club mt-3 font-bold">{p.name}</p>
+                  <p className="font-body text-club text-sm">{p.variant}</p>
+                  <p className="font-body text-club mt-1 text-[13px]">{p.description}</p>
                 </button>
               ))}
             </div>
@@ -181,9 +181,9 @@ export default function StoryPlayer({
                       className="h-full w-full object-cover transition group-hover:scale-105"
                     />
                   </div>
-                  <p className="text-club mt-3 font-bold">{p.name}</p>
-                  <p className="text-club text-sm">{p.variant}</p>
-                  <p className="text-club mt-1 text-[13px]">{p.description}</p>
+                  <p className="font-body text-club mt-3 font-bold">{p.name}</p>
+                  <p className="font-body text-club text-sm">{p.variant}</p>
+                  <p className="font-body text-club mt-1 text-[13px]">{p.description}</p>
                 </button>
               ))}
             </div>
@@ -216,7 +216,7 @@ export default function StoryPlayer({
           <h1 className="font-hero text-gold mt-6 text-4xl sm:text-5xl">
             You Made It
           </h1>
-          <p className="text-club mx-auto mt-4 max-w-lg">
+          <p className="font-body text-club mx-auto mt-4 max-w-lg">
             You&apos;ve climbed every floor, met the crew, and reached the
             Coat Check. The club is yours.
           </p>
@@ -224,12 +224,12 @@ export default function StoryPlayer({
           <div className="mx-auto mt-8 inline-block rounded-2xl border border-club/40 bg-zinc-900/70 px-8 py-6">
             <p className="font-header text-cyan text-lg">Final Score</p>
             <p className="font-hero text-gold mt-2 text-5xl">{score}</p>
-            <p className="text-club mt-2 text-base uppercase tracking-[0.15em]">
+            <p className="font-body text-club mt-2 text-base uppercase tracking-[0.15em]">
               {tierLabel} tier
             </p>
           </div>
 
-          <p className="text-club mx-auto mt-6 max-w-md text-sm">
+          <p className="font-body text-club mx-auto mt-6 max-w-md text-sm">
             {tier === 'diamond'
               ? 'Perfect run. You left nothing on the floor.'
               : tier === 'platinum'
@@ -248,7 +248,7 @@ export default function StoryPlayer({
                 setShowResponse(false);
                 setLastResponse('');
               }}
-              className="rounded-lg border border-zinc-700 px-8 py-3 font-semibold text-club transition hover:border-zinc-500 hover:text-white"
+              className="rounded-lg border border-zinc-700 px-8 py-3 font-semibold font-body text-club transition hover:border-zinc-500 hover:text-white"
             >
               Play Again
             </button>
@@ -269,16 +269,16 @@ export default function StoryPlayer({
     return (
       <div className="bg-black">
         <div className="mx-auto max-w-2xl px-6 py-20 text-center">
-          <p className="text-club text-5xl">🤔</p>
+          <p className="font-body text-club text-5xl">🤔</p>
           <h1 className="font-hero text-gold mt-6 text-4xl">
             Story not found
           </h1>
-          <p className="text-club mx-auto mt-3 max-w-md">
+          <p className="font-body text-club mx-auto mt-3 max-w-md">
             Something went wrong. Try starting over.
           </p>
           <a
             href="/story"
-            className="mt-8 inline-block rounded-lg border border-zinc-700 px-8 py-3 font-semibold text-club transition hover:border-zinc-500 hover:text-white"
+            className="mt-8 inline-block rounded-lg border border-zinc-700 px-8 py-3 font-semibold font-body text-club transition hover:border-zinc-500 hover:text-white"
           >
             Start Over
           </a>
@@ -307,7 +307,7 @@ export default function StoryPlayer({
           <span className="font-header text-cyan text-sm uppercase tracking-[0.15em]">
             Beat {beat.number} of 5
           </span>
-          <span className="text-club text-sm">
+          <span className="font-body text-club text-sm">
             Score: {score}
           </span>
         </div>
@@ -315,11 +315,11 @@ export default function StoryPlayer({
         <h1 className="font-hero text-gold text-3xl sm:text-4xl">
           {beat.title}
         </h1>
-        <p className="text-club mt-1 text-sm">{beat.location}</p>
+        <p className="font-body text-club mt-1 text-sm">{beat.location}</p>
 
         {/* Scene narrative */}
         <div className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6">
-          <p className="text-club leading-relaxed">{beat.narrative}</p>
+          <p className="font-body text-club leading-relaxed">{beat.narrative}</p>
         </div>
 
         {/* Character dialogue */}
@@ -327,7 +327,7 @@ export default function StoryPlayer({
           <p className="font-header text-cyan text-sm uppercase tracking-[0.1em]">
             {beat.characterName}
           </p>
-          <p className="text-club mt-3 leading-relaxed">{beat.dialogue}</p>
+          <p className="font-body text-club mt-3 leading-relaxed">{beat.dialogue}</p>
         </div>
 
         {/* Response after choice */}
@@ -336,7 +336,7 @@ export default function StoryPlayer({
             <p className="font-header text-cyan text-sm uppercase tracking-[0.1em]">
               {beat.characterName} responds
             </p>
-            <p className="text-club mt-3 leading-relaxed">{lastResponse}</p>
+            <p className="font-body text-club mt-3 leading-relaxed">{lastResponse}</p>
             {currentBeat < 5 && (
               <button
                 onClick={handleNextBeat}
@@ -369,14 +369,14 @@ export default function StoryPlayer({
                 disabled={busy}
                 className="w-full rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 text-left transition hover:border-club/60 hover:bg-zinc-900/80 disabled:opacity-50"
               >
-                <span className="text-club font-semibold">{choice.text}</span>
+                <span className="font-body text-club font-semibold">{choice.text}</span>
               </button>
             ))}
           </div>
         )}
 
         {/* Learning goal (subtle) */}
-        <p className="text-club mt-8 text-center text-xs opacity-50">
+        <p className="font-body text-club mt-8 text-center text-xs opacity-50">
           💡 {beat.learningGoal}
         </p>
       </div>

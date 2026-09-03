@@ -64,7 +64,7 @@ export default function LoungePrefs() {
     <div className="flex items-center justify-between gap-4 py-3">
       <div>
         <p className="text-sm font-semibold text-white">{label}</p>
-        <p className="text-xs text-club">{hint}</p>
+        <p className="text-xs font-body text-club">{hint}</p>
       </div>
       <button
         onClick={() => onToggle(!on)}

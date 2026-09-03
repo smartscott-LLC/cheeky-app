@@ -131,9 +131,9 @@ export default function BlindDateSuitor({
   if (eventStatus === 'canceled') {
     return (
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
-        <p className="text-club text-4xl">🚪</p>
+        <p className="font-body text-club text-4xl">🚪</p>
         <h2 className="font-header text-cyan mt-3 text-2xl">The room closed.</h2>
-        <p className="mx-auto mt-2 max-w-md text-base text-club">
+        <p className="mx-auto mt-2 max-w-md text-base font-body text-club">
           It didn&apos;t fill in time, or the room failed — either way your 15
           tokens were returned. No harm done.
         </p>
@@ -152,11 +152,11 @@ export default function BlindDateSuitor({
     const won = top?.[0] === myUserId;
     return (
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
-        <p className="text-club text-4xl">{won ? '💘' : '🎩'}</p>
+        <p className="font-body text-club text-4xl">{won ? '💘' : '🎩'}</p>
         <h2 className="font-header text-cyan mt-3 text-3xl">
           {won ? 'You got the date.' : 'Not this time.'}
         </h2>
-        <p className="mx-auto mt-2 max-w-md text-base text-club">
+        <p className="mx-auto mt-2 max-w-md text-base font-body text-club">
           {won
             ? 'She picked you — the chat is open. Make it count.'
             : 'The seat was the chance; the answers did the talking. That one’s on the answers.'}
@@ -169,7 +169,7 @@ export default function BlindDateSuitor({
             Open your chat →
           </Link>
         )}
-        <p className="mt-4 text-sm text-club">
+        <p className="mt-4 text-sm font-body text-club">
           Your {tokenCost} tokens were spent on the chance — that&apos;s the deal.
         </p>
       </div>
@@ -204,12 +204,12 @@ export default function BlindDateSuitor({
       <div className="text-center">
         <p
           className={`text-sm font-extrabold uppercase tracking-[0.3em] ${
-            final ? 'text-gold' : 'text-club'
+            final ? 'text-gold' : 'font-body text-club'
           }`}
         >
           {roundLabel}
         </p>
-        <p className="mt-1 text-base text-club">
+        <p className="mt-1 text-base font-body text-club">
           {phase === 'question' && 'She’s writing her question…'}
           {phase === 'answer' && 'Answer her — you have a minute.'}
           {phase === 'selection' && 'She’s reading and choosing…'}
@@ -221,7 +221,7 @@ export default function BlindDateSuitor({
       </div>
 
       {error && (
-        <p className="mt-4 rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-2 text-center text-sm text-club">
+        <p className="mt-4 rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-2 text-center text-sm font-body text-club">
           {error}
         </p>
       )}
@@ -235,8 +235,8 @@ export default function BlindDateSuitor({
           className="h-24 w-20 rounded-xl object-cover"
         />
         <div>
-          <p className="text-club text-xl font-extrabold">{hostName ?? 'The hostess'}</p>
-          <p className="text-sm text-club">
+          <p className="font-body text-club text-xl font-extrabold">{hostName ?? 'The hostess'}</p>
+          <p className="text-sm font-body text-club">
             She can&apos;t see any of you — personality decides tonight.
           </p>
         </div>
@@ -244,10 +244,10 @@ export default function BlindDateSuitor({
 
       {round?.question && (
         <div className="mt-6 rounded-lg border border-gold/30 bg-gold/5 px-4 py-3 text-center">
-          <p className="text-club text-sm font-bold uppercase tracking-[0.2em]">
+          <p className="font-body text-club text-sm font-bold uppercase tracking-[0.2em]">
             Her question
           </p>
-          <p className="mt-1 text-base text-club">“{round.question}”</p>
+          <p className="mt-1 text-base font-body text-club">“{round.question}”</p>
         </div>
       )}
 
@@ -276,17 +276,17 @@ export default function BlindDateSuitor({
 
       {/* The standing — you get to see who's leading, never what they said. */}
       <div className="mt-6">
-        <p className="text-club text-sm font-bold uppercase tracking-[0.2em]">
+        <p className="font-body text-club text-sm font-bold uppercase tracking-[0.2em]">
           The standing
         </p>
         {leading.length === 0 ? (
-          <p className="mt-2 text-sm text-club">
+          <p className="mt-2 text-sm font-body text-club">
             No marks yet — it’s all still to play for.
           </p>
         ) : (
           <ul className="mt-2 space-y-1">
             {leading.map((s) => (
-              <li key={s.userId} className="text-club flex justify-between text-base">
+              <li key={s.userId} className="font-body text-club flex justify-between text-base">
                 <span className="text-white">{s.displayName ?? 'Gentleman'}</span>
                 <span className="font-mono font-bold text-gold">
                   {s.count} {s.count === 1 ? 'mark' : 'marks'}
@@ -297,7 +297,7 @@ export default function BlindDateSuitor({
         )}
       </div>
 
-      <p className="mt-6 text-center text-sm text-club">
+      <p className="mt-6 text-center text-sm font-body text-club">
         {tokenCost} tokens for the chance. Most marks at the end wins the date.
       </p>
     </div>

@@ -56,7 +56,7 @@ export default function SitemapPage() {
         <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           🗺️ The Map of the Club
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-club">
+        <p className="mx-auto mt-3 max-w-xl text-center font-body text-club">
           Every room in the building, one list. If you can walk it, it&apos;s
           here.
         </p>
@@ -69,7 +69,7 @@ export default function SitemapPage() {
               </h2>
               <ul className="space-y-3">
                 {group.items.map((item) => (
-                  <li key={item.href} className="text-club">
+                  <li key={item.href} className="font-body text-club">
                     <Link
                       href={item.href}
                       className="group block rounded-lg border border-zinc-800 bg-zinc-900/50 p-3 transition hover:border-gold/50 hover:bg-zinc-900"

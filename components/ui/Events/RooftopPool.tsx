@@ -155,9 +155,9 @@ export default function RooftopPool({
   if (eventStatus === 'canceled') {
     return (
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
-        <p className="text-club text-4xl">🚪</p>
+        <p className="font-body text-club text-4xl">🚪</p>
         <h2 className="font-header text-cyan mt-3 text-2xl">The pool didn&apos;t fill.</h2>
-        <p className="mx-auto mt-2 max-w-md text-base text-club">
+        <p className="mx-auto mt-2 max-w-md text-base font-body text-club">
           Not enough heads on the rooftop — everyone&apos;s 40 tokens were
           returned.
         </p>
@@ -174,11 +174,11 @@ export default function RooftopPool({
   if (eventStatus === 'closed') {
     return (
       <div className="rounded-xl border border-diamond/40 bg-zinc-900/50 p-6 text-center">
-        <p className="text-club text-4xl">{refunded ? '🎩' : '💘'}</p>
+        <p className="font-body text-club text-4xl">{refunded ? '🎩' : '💘'}</p>
         <h2 className="font-header text-cyan mt-3 text-3xl">
           {refunded ? 'The odd one out.' : 'You got picked.'}
         </h2>
-        <p className="mx-auto mt-2 max-w-md text-base text-club">
+        <p className="mx-auto mt-2 max-w-md text-base font-body text-club">
           {refunded
             ? 'The pool ended with nobody left to pair you with — so your 40 tokens came right back. No charge for a chance that never came.'
             : 'The final 1v1 (or an earlier round) did it — the chat is open up here. Make it count.'}
@@ -204,10 +204,10 @@ export default function RooftopPool({
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
       <div className="text-center">
-        <p className="text-club text-sm font-extrabold uppercase tracking-[0.3em]">
+        <p className="font-body text-club text-sm font-extrabold uppercase tracking-[0.3em]">
           The Rooftop pool
         </p>
-        <p className="mt-1 text-base text-club">
+        <p className="mt-1 text-base font-body text-club">
           {round
             ? `Round ${round.round_index + 1} — ${MAX_PICKS} picks, ${ROUND_SECONDS} seconds. Boom, boom, boom.`
             : 'The pool is forming — the first round is about to drop.'}
@@ -215,13 +215,13 @@ export default function RooftopPool({
         <div className="mt-2 font-mono text-xl font-bold text-diamond">
           {round ? `${left}s` : '—'}
         </div>
-        <p className="mt-1 text-sm text-club">
+        <p className="mt-1 text-sm font-body text-club">
           {myPicks.length}/{MAX_PICKS} picks fired
         </p>
       </div>
 
       {error && (
-        <p className="mt-4 rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-2 text-center text-sm text-club">
+        <p className="mt-4 rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-2 text-center text-sm font-body text-club">
           {error}
         </p>
       )}
@@ -247,11 +247,11 @@ export default function RooftopPool({
                 alt=""
                 className="mx-auto h-20 w-16 rounded-lg object-cover"
               />
-              <p className="mt-2 text-sm font-bold text-club">
+              <p className="mt-2 text-sm font-bold font-body text-club">
                 {m.displayName ?? 'Member'}
               </p>
               {picked && (
-                <p className="mt-1 text-sm font-extrabold text-club">✓ picked</p>
+                <p className="mt-1 text-sm font-extrabold font-body text-club">✓ picked</p>
               )}
             </button>
           );
@@ -259,12 +259,12 @@ export default function RooftopPool({
       </div>
 
       {others.length === 0 && (
-        <p className="mt-6 text-center text-base text-club">
+        <p className="mt-6 text-center text-base font-body text-club">
           You&apos;re the last one on the board — the final pair is coming.
         </p>
       )}
 
-      <p className="mt-6 text-center text-sm text-club">
+      <p className="mt-6 text-center text-sm font-body text-club">
         Mutual picks match at the end of the {ROUND_SECONDS}s and the couple
         leaves the board. When it&apos;s down to two, that&apos;s the date. {tokenCost}{' '}
         tokens, charged when you match.

@@ -69,7 +69,7 @@ export default function MatchedOverlay({ onDone }: MatchedOverlayProps) {
         className="text-center"
         style={{ animation: 'matchedFly 0.8s cubic-bezier(0.16,1,0.3,1) both' }}
       >
-        <p className="text-base font-bold uppercase tracking-[0.5em] text-club">
+        <p className="text-base font-bold uppercase tracking-[0.5em] font-body text-club">
           The floor says
         </p>
         <h1
@@ -78,11 +78,11 @@ export default function MatchedOverlay({ onDone }: MatchedOverlayProps) {
         >
           MATCHED
         </h1>
-        <p className="mt-6 text-2xl text-club sm:text-3xl">
-          You have <span className="font-bold text-club">one song</span> to make
+        <p className="mt-6 text-2xl font-body text-club sm:text-3xl">
+          You have <span className="font-bold font-body text-club">one song</span> to make
           this count.
         </p>
-        <p className="mt-2 text-xl uppercase tracking-[0.3em] text-club">
+        <p className="mt-2 text-xl uppercase tracking-[0.3em] font-body text-club">
           Get… your… groove… on!
         </p>
       </div>
@@ -95,7 +95,7 @@ export default function MatchedOverlay({ onDone }: MatchedOverlayProps) {
         </button>
         <button
           onClick={skip}
-          className="rounded-full border border-zinc-700 px-4 py-2 text-sm text-cyan hover:border-club hover:text-club"
+          className="rounded-full border border-zinc-700 px-4 py-2 text-sm text-cyan hover:border-club hover:font-body text-club"
         >
           Skip →
         </button>

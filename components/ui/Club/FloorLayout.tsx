@@ -55,7 +55,7 @@ export default function FloorLayout({
             href={spot.href}
             className={`absolute ${spot.pos} group rounded-xl border border-gold bg-black/70 px-5 py-4 backdrop-blur-sm transition hover:bg-black/85 ${spot.color}`}
           >
-            <p className="text-club text-2xl">
+            <p className="font-body text-club text-2xl">
               {spot.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -70,7 +70,7 @@ export default function FloorLayout({
             <p className="font-header text-cyan mt-1 text-lg group-hover:text-white">
               {spot.name}
             </p>
-            <p className="text-sm text-club">{spot.sub}</p>
+            <p className="text-sm font-body text-club">{spot.sub}</p>
           </Link>
         ))}
         <Link
@@ -91,7 +91,7 @@ export default function FloorLayout({
               href={spot.href}
               className={`rounded-xl border border-gold bg-black/80 p-4 backdrop-blur-sm ${spot.color}`}
             >
-              <p className="text-club text-2xl">
+              <p className="font-body text-club text-2xl">
                 {spot.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -106,7 +106,7 @@ export default function FloorLayout({
               <p className="font-header text-cyan mt-1 text-lg">
                 {spot.name}
               </p>
-              <p className="text-sm text-club">{spot.sub}</p>
+              <p className="text-sm font-body text-club">{spot.sub}</p>
             </Link>
           ))}
         </div>

@@ -52,7 +52,7 @@ export default function PrivacyPage() {
         <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           🛡️ What the Bouncer Knows
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-club">
+        <p className="mx-auto mt-3 max-w-xl text-center font-body text-club">
           Privacy Policy. The club keeps the door, not your secrets — here is
           exactly what we hold and why.
         </p>
@@ -68,9 +68,9 @@ export default function PrivacyPage() {
                 {s.items.map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-3 text-sm text-club"
+                    className="flex items-start gap-3 text-sm font-body text-club"
                   >
-                    <span className="text-club">✓</span>
+                    <span className="font-body text-club">✓</span>
                     {item}
                   </li>
                 ))}
@@ -79,16 +79,16 @@ export default function PrivacyPage() {
           ))}
         </div>
 
-        <p className="mt-8 text-xs text-club">
+        <p className="mt-8 text-xs font-body text-club">
           Policy source: docs/Governance/privacy.md (binding on the build).
           Living document — refined as the club grows.
         </p>
 
-        <p className="mt-4 text-sm text-club">
+        <p className="mt-4 text-sm font-body text-club">
           Questions about your data or your rights? Email{' '}
           <a
             href={`mailto:${CONTACT.info}`}
-            className="text-club underline hover:text-club-cotton"
+            className="font-body text-club underline hover:font-body text-club-cotton"
           >
             {CONTACT.info}
           </a>
@@ -98,7 +98,7 @@ export default function PrivacyPage() {
         <div className="mt-8 text-center">
           <Link
             href="/best-practices"
-            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold text-club transition hover:bg-club/10"
+            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold font-body text-club transition hover:bg-club/10"
           >
             Read the Best Practices →
           </Link>

@@ -31,14 +31,14 @@ export default async function StorePage() {
       <div className="mx-auto max-w-6xl px-6 py-14">
         <Link
           href={floorHref}
-          className="text-sm font-semibold text-club hover:text-white"
+          className="text-lg font-body font-body text-club hover:text-white"
         >
           ← Back to the floor
         </Link>
         <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           🪙 The Exchange
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-club">
+        <p className="font-body mx-auto mt-3 max-w-xl text-center font-body text-club">
           Cards and tokens, right here on the floor — no need to leave the club.
         </p>
 

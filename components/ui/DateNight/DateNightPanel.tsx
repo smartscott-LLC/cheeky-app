@@ -121,21 +121,21 @@ export default function DateNightPanel({
     const total = leaderboard.length;
     return (
       <div className="rounded-xl border border-club/30 bg-gradient-to-b from-club/10 to-zinc-900 p-5 text-center">
-        <p className="text-club text-3xl">💘</p>
+        <p className="font-body text-club text-3xl">💘</p>
         <h3 className="font-header text-cyan mt-2 text-xl">Date Night complete</h3>
-        <p className="mt-1 text-club">
+        <p className="mt-1 font-body text-club">
           {state.score} of {state.total} — you two locked {state.score}{' '}
           {state.score === 1 ? 'answer' : 'answers'} together.
         </p>
         {total > 0 && (
-          <p className="mt-1 text-sm text-club">
+          <p className="mt-1 text-sm font-body text-club">
             You beat {beaten} of {total} couples on this pack
             {beaten >= total / 2
               ? ' — the floor noticed. 🏆'
               : ' — keep training.'}
           </p>
         )}
-        <p className="mt-3 inline-block rounded-full border border-club/40 bg-club/10 px-3 py-1 text-xs font-bold text-club">
+        <p className="mt-3 inline-block rounded-full border border-club/40 bg-club/10 px-3 py-1 text-xs font-bold font-body text-club">
           💘 Date Night badge earned
         </p>
         <div className="mt-4 flex justify-center gap-2">
@@ -164,20 +164,20 @@ export default function DateNightPanel({
   return (
     <div className="rounded-xl border border-club/30 bg-zinc-900/80 p-4">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-bold uppercase tracking-[0.3em] text-club">
+        <p className="text-xs font-bold uppercase tracking-[0.3em] font-body text-club">
           💘 Date Night · {state.current_index + 1}/{state.total}
         </p>
         <span
           className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
-            left <= 10 ? 'bg-club/20 text-club' : 'bg-zinc-800 text-cyan'
+            left <= 10 ? 'bg-club/20 font-body text-club' : 'bg-zinc-800 text-cyan'
           }`}
         >
           {mm}:{ss}
         </span>
       </div>
 
-      <p className="text-club mt-3 text-sm font-bold">{question.prompt}</p>
-      <p className="mt-1 text-xs text-club">
+      <p className="font-body text-club mt-3 text-sm font-bold">{question.prompt}</p>
+      <p className="mt-1 text-xs font-body text-club">
         Huddle with {otherName} in the chat — your answer only locks when you
         both pick the same one.
       </p>
@@ -191,7 +191,7 @@ export default function DateNightPanel({
               onClick={() => handleTap(i)}
               className={`rounded-lg border px-3 py-2 text-left text-sm transition ${
                 picked
-                  ? 'border-club bg-club/20 font-bold text-club'
+                  ? 'border-club bg-club/20 font-bold font-body text-club'
                   : 'border-zinc-700 text-cyan hover:border-club/50'
               }`}
             >
@@ -206,21 +206,21 @@ export default function DateNightPanel({
 
       <div className="mt-3 flex items-center justify-between text-xs">
         {myPick === null ? (
-          <p className="text-club">Pick an answer — then talk it out.</p>
+          <p className="font-body text-club">Pick an answer — then talk it out.</p>
         ) : disagree ? (
-          <p className="font-semibold text-club">
+          <p className="font-semibold font-body text-club">
             They picked differently — hash it out in the chat, then re-pick.
           </p>
         ) : partnerPicked ? (
-          <p className="text-club">
+          <p className="font-body text-club">
             They&apos;ve picked — match them to lock it.
           </p>
         ) : (
-          <p className="text-club">
+          <p className="font-body text-club">
             Your pick is in. Waiting on {otherName}…
           </p>
         )}
-        <p className="font-bold text-club">Score: {state.score}</p>
+        <p className="font-bold font-body text-club">Score: {state.score}</p>
       </div>
     </div>
   );

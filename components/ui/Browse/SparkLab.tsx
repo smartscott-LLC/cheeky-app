@@ -31,16 +31,16 @@ export default function SparkLab({ spark }: { spark: ReactNode }) {
 
   const description =
     mode === 'spark' ? (
-      <p className="mx-auto mt-4 max-w-xl text-center text-base text-club">
+      <p className="mx-auto mt-4 max-w-xl text-center text-base font-body text-club">
         One face at a time. Say yes or skip — a mutual yes is an instant spark.
       </p>
     ) : mode === 'l3' ? (
-      <p className="mx-auto mt-4 max-w-xl text-center text-base text-club">
+      <p className="mx-auto mt-4 max-w-xl text-center text-base font-body text-club">
         Three faces at once. Rank them — Leave, Like, Love — then the next trio. Mutual Love is
         a super match.
       </p>
     ) : (
-      <p className="mx-auto mt-4 max-w-xl text-center text-base text-club">
+      <p className="mx-auto mt-4 max-w-xl text-center text-base font-body text-club">
         16 cards, 8 faces. Match a pair — unlock a first impression to that person, even if they
         never liked you back.
       </p>
@@ -48,7 +48,7 @@ export default function SparkLab({ spark }: { spark: ReactNode }) {
 
   const detailsBlock =
     mode === 'l3' ? (
-      <div className="mx-auto mt-3 max-w-xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 text-sm text-club">
+      <div className="mx-auto mt-3 max-w-xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 text-sm font-body text-club">
         <p>
           <span className="font-bold text-cyan">Like + Like</span> or{' '}
           <span className="font-bold text-cyan">Like + Love</span> — a match with{' '}
@@ -64,7 +64,7 @@ export default function SparkLab({ spark }: { spark: ReactNode }) {
         </p>
       </div>
     ) : mode === 'matchmaker' ? (
-      <div className="mx-auto mt-3 max-w-xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 text-sm text-club">
+      <div className="mx-auto mt-3 max-w-xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 text-sm font-body text-club">
         <p>
           <span className="font-bold text-gold">2 matches win</span>, 3 strikes lose. Matching a
           pair earns one first impression — it never touches your message limits.

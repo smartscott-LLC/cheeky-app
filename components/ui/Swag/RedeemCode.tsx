@@ -58,7 +58,7 @@ export default function RedeemCode() {
 
   return (
     <div className="mt-8 rounded-xl border border-club/30 bg-club/5 p-6">
-      <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
+      <p className="text-sm font-bold uppercase tracking-[0.3em] font-body text-club">
         🎟️ Got a code?
       </p>
       <div className="mt-3 flex flex-col gap-3 sm:flex-row">
@@ -79,7 +79,7 @@ export default function RedeemCode() {
       </div>
       {result && (
         <p
-          className={`mt-3 text-base ${result.ok ? 'text-emerald-400' : 'text-club'}`}
+          className={`mt-3 text-base ${result.ok ? 'text-emerald-400' : 'font-body text-club'}`}
         >
           {result.text}
         </p>

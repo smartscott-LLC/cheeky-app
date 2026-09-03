@@ -30,14 +30,14 @@ export default async function CrewPage() {
       <div className="mx-auto max-w-6xl px-6 py-16">
         <Link
           href={floorHref}
-          className="text-sm font-semibold text-club hover:text-white"
+          className="text-sm font-semibold font-body font-body text-club hover:text-white"
         >
           ← Back to the floor
         </Link>
         <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           🎭 Meet the Crew
         </h1>
-        <p className="text-club mx-auto mt-3 max-w-xl text-center">
+        <p className="font-body font-body text-club mx-auto mt-3 max-w-xl text-center">
           They&apos;re not actors — they&apos;re the people who run the club.
           Each one works their own floor. Tap their door and say hi.
         </p>
@@ -70,15 +70,15 @@ export default async function CrewPage() {
                     />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-club truncate text-lg font-extrabold">{c.name}</p>
-                    <p className="text-club truncate text-xs uppercase tracking-wide">
+                    <p className="font-body font-body text-club truncate text-lg font-extrabold">{c.name}</p>
+                    <p className="font-body font-body text-club truncate text-xs uppercase tracking-wide">
                       {c.role}
                     </p>
                   </div>
                 </div>
 
-                <p className="text-club mt-3 text-sm">{c.tagline}</p>
-                <p className="text-club mt-2 text-xs font-bold uppercase tracking-wide">
+                <p className="font-body font-body text-club mt-3 text-sm">{c.tagline}</p>
+                <p className="font-body font-body text-club mt-2 text-xs font-bold uppercase tracking-wide">
                   {characterFloorName(c.slug)}
                 </p>
 
@@ -93,7 +93,7 @@ export default async function CrewPage() {
           ))}
         </div>
 
-        <p className="text-club mt-10 text-center text-xs">
+        <p className="font-body font-body text-club mt-10 text-center text-xs">
           The crew are AI characters in-character for fun — no real people are
           working the floor. For real safety, use Report/Block in any chat.
         </p>

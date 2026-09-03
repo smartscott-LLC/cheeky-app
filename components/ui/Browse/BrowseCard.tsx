@@ -35,11 +35,11 @@ export default function BrowseCard({
   if (matched) {
     return (
       <div className="mx-auto max-w-xl rounded-xl border border-club/60 bg-zinc-900/80 p-10 text-center">
-        <p className="text-base font-bold uppercase tracking-[0.3em] text-club">
+        <p className="text-base font-bold uppercase tracking-[0.3em] font-body text-club">
           The floor just cleared for you two
         </p>
         <h2 className="font-header text-cyan mt-4 text-5xl">It&apos;s a match!</h2>
-        <p className="mt-3 text-club">
+        <p className="mt-3 font-body text-club">
           You and{' '}
           <span className="font-bold text-white">
             {matched.display_name || 'your match'}
@@ -71,7 +71,7 @@ export default function BrowseCard({
     return (
       <div className="mx-auto max-w-xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-10 text-center">
         <h2 className="font-header text-cyan text-3xl">You&apos;ve seen the room.</h2>
-        <p className="mt-3 text-club">
+        <p className="mt-3 font-body text-club">
           Everyone&apos;s been shown. Check back when the club&apos;s busier —
           new faces land here.
         </p>
@@ -112,12 +112,12 @@ export default function BrowseCard({
             {person.display_name || 'New member'}
           </h3>
           {person.verified_at && (
-            <span className="rounded-full bg-club/20 px-2 py-0.5 text-sm font-bold uppercase tracking-wide text-club">
+            <span className="rounded-full bg-club/20 px-2 py-0.5 text-sm font-bold uppercase tracking-wide font-body text-club">
               Verified
             </span>
           )}
         </div>
-        <p className="mt-2 text-club">
+        <p className="mt-2 font-body text-club">
           {person.one_liner || person.bio || 'Just got through the door.'}
         </p>
       </div>

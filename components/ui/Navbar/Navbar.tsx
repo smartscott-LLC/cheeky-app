@@ -11,7 +11,7 @@ export default async function Navbar() {
 
   return (
     <nav className={s.root}>
-      <a href="#skip" className="text-club sr-only focus:not-sr-only">
+      <a href="#skip" className="font-body text-club sr-only focus:not-sr-only">
         Skip to content
       </a>
       <div className="max-w-6xl px-6 mx-auto">

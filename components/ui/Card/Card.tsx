@@ -12,7 +12,7 @@ export default function Card({ title, description, footer, children }: Props) {
     <div className="w-full max-w-3xl m-auto my-8 border rounded-md p border-zinc-700">
       <div className="px-5 py-4">
         <h3 className="font-header text-cyan mb-1 text-2xl">{title}</h3>
-        <p className="text-club">{description}</p>
+        <p className="font-body text-club">{description}</p>
         {children}
       </div>
       {footer && (

@@ -183,7 +183,7 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
           <h2 className="font-header text-amber-300 text-2xl">
             🍸 Lounge monitor
           </h2>
-          <p className="text-club mt-1 text-sm">
+          <p className="font-body text-club mt-1 text-sm">
             Live feed across every room — service role sees all, even blocked
             pairs. The Den&apos;s only moderation surface.
           </p>
@@ -199,7 +199,7 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
 
       {msg && (
         <p
-          className={`mt-3 text-sm ${msg.ok ? 'text-emerald-400' : 'text-club'}`}
+          className={`mt-3 text-sm ${msg.ok ? 'text-emerald-400' : 'font-body text-club'}`}
         >
           {msg.text}
         </p>
@@ -217,10 +217,10 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
               key={t.label}
               className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3 text-center"
             >
-              <p className="text-club text-2xl font-extrabold">
+              <p className="font-body text-club text-2xl font-extrabold">
                 {t.icon} {t.value.toLocaleString()}
               </p>
-              <p className="text-club mt-1 text-[10px] uppercase tracking-wider">
+              <p className="font-body text-club mt-1 text-[10px] uppercase tracking-wider">
                 {t.label}
               </p>
             </div>
@@ -232,10 +232,10 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
         {/* Live messages */}
         <div className="lg:col-span-2">
           <h3 className="font-header text-cyan text-lg">Live feed</h3>
-          <p className="text-club text-sm">Latest 60 across every room.</p>
+          <p className="font-body text-club text-sm">Latest 60 across every room.</p>
           <div className="mt-3 max-h-[28rem] space-y-2 overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-950/60 p-3">
             {messages.length === 0 && (
-              <p className="text-club py-6 text-center text-sm">
+              <p className="font-body text-club py-6 text-center text-sm">
                 The room is quiet.
               </p>
             )}
@@ -249,10 +249,10 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
                 }`}
               >
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <p className="text-club text-sm font-bold">
+                  <p className="font-body text-club text-sm font-bold">
                     {m.horn && '🎺 '}
                     {m.sender_name ?? 'Member'}{' '}
-                    <span className="text-club text-xs">in</span>{' '}
+                    <span className="font-body text-club text-xs">in</span>{' '}
                     <span className="text-cyan text-xs">
                       {ROOM_LABEL[m.room] ?? m.room}
                     </span>{' '}
@@ -264,15 +264,15 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
                       · {m.floor_tag}
                     </span>
                   </p>
-                  <p className="text-club text-[10px]">{ago(m.created_at)}</p>
+                  <p className="font-body text-club text-[10px]">{ago(m.created_at)}</p>
                 </div>
-                <p className="text-club mt-1 break-words text-sm">{m.body}</p>
+                <p className="font-body text-club mt-1 break-words text-sm">{m.body}</p>
                 <div className="mt-1.5 flex gap-2">
                   <button
                     onClick={() =>
                       setBanDraft({ userId: m.sender_id, name: m.sender_name })
                     }
-                    className="text-club text-[10px] uppercase tracking-wider transition hover:text-club-cotton"
+                    className="font-body text-club text-[10px] uppercase tracking-wider transition hover:font-body text-club-cotton"
                   >
                     Ban from chat →
                   </button>
@@ -286,17 +286,17 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
         <div className="space-y-6">
           <div>
             <h3 className="font-header text-cyan text-lg">💌 Take-private invites</h3>
-            <p className="text-club text-sm">Pending consents.</p>
+            <p className="font-body text-club text-sm">Pending consents.</p>
             <div className="mt-3 max-h-72 space-y-2 overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-950/60 p-3">
               {invites.length === 0 && (
-                <p className="text-club py-4 text-center text-sm">None open.</p>
+                <p className="font-body text-club py-4 text-center text-sm">None open.</p>
               )}
               {invites.map((i) => (
                 <div
                   key={i.id}
                   className="rounded-lg border border-club/30 bg-club/5 p-2.5"
                 >
-                  <p className="text-club text-sm">
+                  <p className="font-body text-club text-sm">
                     <span className="font-bold text-white">
                       {i.inviter_name ?? 'Member'}
                     </span>{' '}
@@ -305,7 +305,7 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
                       {i.invitee_name ?? 'Member'}
                     </span>
                   </p>
-                  <p className="text-club mt-0.5 text-[10px]">
+                  <p className="font-body text-club mt-0.5 text-[10px]">
                     {ago(i.created_at)}
                   </p>
                 </div>
@@ -315,10 +315,10 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
 
           <div>
             <h3 className="font-header text-cyan text-lg">🚫 Active chat bans</h3>
-            <p className="text-club text-sm">1d → 3d escalation.</p>
+            <p className="font-body text-club text-sm">1d → 3d escalation.</p>
             <div className="mt-3 max-h-72 space-y-2 overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-950/60 p-3">
               {bans.length === 0 && (
-                <p className="text-club py-4 text-center text-sm">
+                <p className="font-body text-club py-4 text-center text-sm">
                   No active bans. The room is calm.
                 </p>
               )}
@@ -327,17 +327,17 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
                   key={b.id}
                   className="rounded-lg border border-club/40 bg-club/10 p-2.5"
                 >
-                  <p className="text-club text-sm font-bold">
+                  <p className="font-body text-club text-sm font-bold">
                     {b.user_name ?? 'Member'}
                   </p>
-                  <p className="text-club mt-0.5 text-xs">{b.reason}</p>
-                  <p className="text-club mt-0.5 text-[10px]">
+                  <p className="font-body text-club mt-0.5 text-xs">{b.reason}</p>
+                  <p className="font-body text-club mt-0.5 text-[10px]">
                     until {new Date(b.banned_until).toLocaleString()}
                   </p>
                   <button
                     onClick={() => pardon(b.id, b.user_name)}
                     disabled={busy}
-                    className="mt-1.5 text-club text-[10px] uppercase tracking-wider transition hover:text-club-cotton disabled:opacity-40"
+                    className="mt-1.5 font-body text-club text-[10px] uppercase tracking-wider transition hover:font-body text-club-cotton disabled:opacity-40"
                   >
                     Pardon →
                   </button>
@@ -348,17 +348,17 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
 
           <div>
             <h3 className="font-header text-cyan text-lg">🎺 Horn ticker</h3>
-            <p className="text-club text-sm">Last 15 across the club.</p>
+            <p className="font-body text-club text-sm">Last 15 across the club.</p>
             <div className="mt-3 max-h-44 space-y-1 overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-950/60 p-3 text-sm">
               {announcements.length === 0 && (
-                <p className="text-club py-2 text-center text-xs">
+                <p className="font-body text-club py-2 text-center text-xs">
                   Quiet on the horn.
                 </p>
               )}
               {announcements.map((a) => (
-                <p key={a.id} className="text-club text-xs">
+                <p key={a.id} className="font-body text-club text-xs">
                   <span className="text-amber-300">{a.body}</span>{' '}
-                  <span className="text-club">· {ago(a.created_at)}</span>
+                  <span className="font-body text-club">· {ago(a.created_at)}</span>
                 </p>
               ))}
             </div>
@@ -379,7 +379,7 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
             <h3 className="font-header text-amber-300 text-xl">
               Ban from chat
             </h3>
-            <p className="text-club mt-1 text-sm">
+            <p className="font-body text-club mt-1 text-sm">
               Banning{' '}
               <span className="font-bold text-white">
                 {banDraft.name ?? 'this member'}
@@ -390,7 +390,7 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
             </p>
             <div className="mt-4 space-y-3">
               <div>
-                <label className="text-club text-xs uppercase tracking-wider">
+                <label className="font-body text-club text-xs uppercase tracking-wider">
                   Duration
                 </label>
                 <div className="mt-1 flex gap-2">
@@ -408,12 +408,12 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
                     </button>
                   ))}
                 </div>
-                <p className="text-club mt-1 text-[10px]">
+                <p className="font-body text-club mt-1 text-[10px]">
                   Founder default: 1d, then 3d for repeat offenders.
                 </p>
               </div>
               <div>
-                <label className="text-club text-xs uppercase tracking-wider">
+                <label className="font-body text-club text-xs uppercase tracking-wider">
                   Reason (recorded)
                 </label>
                 <textarea

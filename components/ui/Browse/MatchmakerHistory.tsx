@@ -44,7 +44,7 @@ export default function MatchmakerHistory() {
     <div className="mt-12">
       <h2 className="font-header text-cyan text-center text-2xl">Your finds</h2>
       {error && (
-        <p className="mt-3 text-center text-sm text-club">{error}</p>
+        <p className="mt-3 text-center text-sm font-body text-club">{error}</p>
       )}
       <div className="mx-auto mt-6 max-w-2xl space-y-4">
         {boards.map((board) => (
@@ -59,13 +59,13 @@ export default function MatchmakerHistory() {
                   {dateLabel(board.created_at)}
                 </span>
               </p>
-              <p className="text-sm text-club">
+              <p className="text-sm font-body text-club">
                 {board.matches_found}/2 found · {board.strikes} strikes
               </p>
             </div>
 
             {board.unlocks.length === 0 ? (
-              <p className="mt-3 text-sm text-club">
+              <p className="mt-3 text-sm font-body text-club">
                 No unlocks this board — every board is a new shot.
               </p>
             ) : (
@@ -101,7 +101,7 @@ export default function MatchmakerHistory() {
                                 : 'First impression sent'}
                           </span>
                         </p>
-                        <p className="truncate text-sm text-club italic">
+                        <p className="truncate text-sm font-body text-club italic">
                           “{unlock.message}”
                         </p>
                       </div>
@@ -118,10 +118,10 @@ export default function MatchmakerHistory() {
 
                     {unlock.status === 'declined' && (
                       <div className="mt-3 rounded-lg border border-gold/30 bg-gold/5 p-3 text-center">
-                        <p className="text-sm text-club">
+                        <p className="text-sm font-body text-club">
                           They declined — <span className="font-semibold text-gold">but you still won the game.</span>
                         </p>
-                        <p className="mt-1 text-sm text-club">
+                        <p className="mt-1 text-sm font-body text-club">
                           {unlock.consolation ? (
                             <>
                               Your{' '}

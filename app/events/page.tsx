@@ -53,14 +53,14 @@ export default async function EventsPage() {
       <div className="mx-auto max-w-6xl px-6 py-16">
         <Link
           href={floorHref}
-          className="text-base font-semibold text-club hover:text-white"
+          className="text-base font-semibold font-body font-body text-club hover:text-white"
         >
           ← Back to the floor
         </Link>
         <h1 className="font-hero text-gold text-center text-4xl sm:text-5xl">
           The Event Center
         </h1>
-        <p className="text-club mx-auto mt-3 max-w-xl text-center">
+        <p className="font-body font-body text-club mx-auto mt-3 max-w-xl text-center">
           The playlist: the Dance Floor, Speed Dating, and the Rooftop, every
           hour on the quarter — plus Blind Date, whenever the Gold
           floor&apos;s hostess opens the door.
@@ -69,12 +69,12 @@ export default async function EventsPage() {
         {/* The overhead ticker — anonymous, in-app only. */}
         {(announcements ?? []).length > 0 && (
           <div className="mx-auto mt-8 max-w-2xl overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50">
-            <p className="border-b border-zinc-800 px-4 py-2 text-sm font-bold uppercase tracking-[0.3em] text-club">
+            <p className="border-b border-zinc-800 px-4 py-2 text-sm font-bold uppercase tracking-[0.3em] font-body font-body text-club">
               📢 Over the house speakers
             </p>
             <ul className="divide-y divide-zinc-800">
               {(announcements ?? []).map((a, i) => (
-                <li key={i} className="text-club px-4 py-2 text-base">
+                <li key={i} className="font-body font-body text-club px-4 py-2 text-base">
                   {a.body}{' '}
                   <span className="text-sm text-cyan">
                     {new Date(a.created_at).toLocaleTimeString([], {
@@ -123,14 +123,14 @@ export default async function EventsPage() {
                       {meta.floor}
                     </span>
                   </div>
-                  <p className="text-club mt-1 text-sm">
+                  <p className="font-body font-body text-club mt-1 text-sm">
                     {next
                       ? `${timeLabel(next.starts_at)} · ${next.token_cost} tokens`
                       : 'Between sets'}
                   </p>
-                  <p className="text-club mt-2 text-sm">{meta.tagline}</p>
+                  <p className="font-body font-body text-club mt-2 text-sm">{meta.tagline}</p>
                   {locked ? (
-                    <p className="text-club mt-4 text-base font-bold">
+                    <p className="font-body font-body text-club mt-4 text-base font-bold">
                       Behind the rope. Come see what&apos;s on these floors with
                       a {meta.floor} card today.
                     </p>
@@ -153,7 +153,7 @@ export default async function EventsPage() {
           <div className="flex flex-wrap items-center justify-between gap-4 p-5">
             <div>
               <h3 className="font-header text-cyan text-xl">💘 Blind Date</h3>
-              <p className="text-club mt-1 text-sm">
+              <p className="font-body font-body text-club mt-1 text-sm">
                 The Gold floor&apos;s room. One hostess, up to five suitors, four
                 rounds of questions — most marks wins the date. Host when
                 you&apos;re ready; the room runs when a lady opens the door.
@@ -173,7 +173,7 @@ export default async function EventsPage() {
           <div className="flex flex-wrap items-center justify-between gap-4 p-5">
             <div>
               <h3 className="font-header text-cyan text-xl">🧊 Icebreakers</h3>
-              <p className="text-club mt-1 text-sm">
+              <p className="font-body font-body text-club mt-1 text-sm">
                 Not events — things for matched couples to do instead of
                 staring at empty chat. Date Night is the first one: five
                 questions, both of you tap the same answer to lock it. Free,
@@ -193,7 +193,7 @@ export default async function EventsPage() {
         <div className="mt-8 text-center">
           <Link
             href="/gifts"
-            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold text-club transition hover:bg-club/10"
+            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold font-body text-club transition hover:bg-club/10"
           >
             🎁 Buy something for someone at the Gift Shop
           </Link>

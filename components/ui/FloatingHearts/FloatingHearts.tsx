@@ -7,8 +7,8 @@
 import type { CSSProperties } from 'react';
 
 const PINK_SHADES = [
-  'text-club-pink', // #FF4DA6 — brand neon pink
-  'text-club-cotton', // #FF56D5 — lighter cotton pink
+  'font-body text-club-pink', // #FF4DA6 — brand neon pink
+  'font-body text-club-cotton', // #FF56D5 — lighter cotton pink
   'text-bubblegum_fizz-400', // #FF33B1 — hot pink
   'text-bubblegum_fizz-500' // #FF009D — the pink end
 ];

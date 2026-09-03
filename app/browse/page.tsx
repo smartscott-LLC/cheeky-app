@@ -86,14 +86,14 @@ export default async function BrowsePage() {
       <div className="mx-auto max-w-6xl px-6 py-16">
         <Link
           href={floorHref}
-          className="text-base font-semibold text-club hover:text-white"
+          className="text-base font-semibold font-body font-body text-club hover:text-white"
         >
           ← Back to the floor
         </Link>
         <h1 className="text-center text-4xl font-hero text-gold sm:text-5xl">
           SPARX
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-club">
+        <p className="mx-auto mt-3 max-w-xl text-center font-body font-body text-club">
           Everyone&apos;s out tonight. Pick who you like — if they pick you
           back, it&apos;s instant. No waiting, no wondering.
         </p>

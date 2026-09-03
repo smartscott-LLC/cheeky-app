@@ -64,7 +64,7 @@ export default function AupPage() {
         <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           ⚖️ Acceptable Use Policy
         </h1>
-        <p className="text-club mx-auto mt-3 max-w-xl text-center">
+        <p className="font-body font-body text-club mx-auto mt-3 max-w-xl text-center">
           How we keep the floor safe — what&apos;s allowed, what isn&apos;t, and
           what happens when someone crosses the line.
         </p>
@@ -76,19 +76,19 @@ export default function AupPage() {
               className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6"
             >
               <h2 className="font-header text-cyan">
-                <span className="mr-2 text-club">{s.num}.</span>
+                <span className="mr-2 font-body font-body text-club">{s.num}.</span>
                 {s.title}
               </h2>
               {s.intro && (
-                <p className="text-club mt-3 text-sm">{s.intro}</p>
+                <p className="font-body font-body text-club mt-3 text-sm">{s.intro}</p>
               )}
               <ul className="mt-3 space-y-2">
                 {s.items.map((item) => (
                   <li
                     key={item}
-                    className="text-club flex items-start gap-3 text-sm"
+                    className="font-body font-body text-club flex items-start gap-3 text-sm"
                   >
-                    <span className="text-club">✓</span>
+                    <span className="font-body font-body text-club">✓</span>
                     {item}
                   </li>
                 ))}
@@ -100,13 +100,13 @@ export default function AupPage() {
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
             href="/terms"
-            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold text-club transition hover:bg-club/10"
+            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold font-body font-body text-club transition hover:bg-club/10"
           >
             ← Terms of Use
           </Link>
           <Link
             href="/privacy"
-            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold text-club transition hover:bg-club/10"
+            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold font-body font-body text-club transition hover:bg-club/10"
           >
             Privacy Policy →
           </Link>

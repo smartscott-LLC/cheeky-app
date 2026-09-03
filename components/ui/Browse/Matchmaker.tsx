@@ -83,14 +83,14 @@ export default function Matchmaker() {
 
   if (loading) {
     return (
-      <p className="py-10 text-center text-base text-club">Shuffling the deck…</p>
+      <p className="py-10 text-center text-base font-body text-club">Shuffling the deck…</p>
     );
   }
 
   return (
     <div>
       {error && (
-        <p className="mx-auto mb-4 max-w-md rounded-lg border border-club/40 bg-club/10 px-4 py-2 text-center text-base text-club">
+        <p className="mx-auto mb-4 max-w-md rounded-lg border border-club/40 bg-club/10 px-4 py-2 text-center text-base font-body text-club">
           {error}
         </p>
       )}
@@ -125,7 +125,7 @@ export default function Matchmaker() {
                     <p className="font-semibold text-white">
                       {u.display_name || 'Someone'} discovered you in Matchmaker
                     </p>
-                    <p className="mt-1 text-sm text-club italic">
+                    <p className="mt-1 text-sm font-body text-club italic">
                       “{u.message}”
                     </p>
                     <div className="mt-3 flex gap-2">
@@ -161,7 +161,7 @@ export default function Matchmaker() {
       ) : active ? (
         <MatchmakerDraft playsLeft={playsLeft} onBoardStarted={refresh} />
       ) : playsLeft === 0 ? (
-        <p className="mt-6 text-center text-base text-club">
+        <p className="mt-6 text-center text-base font-body text-club">
           You&apos;ve used today&apos;s plays — the dial resets in 24 hours.
         </p>
       ) : (

@@ -73,17 +73,17 @@ export default function InstallPrompt() {
             className="h-10 w-10 rounded-lg"
           />
           <div className="flex-1">
-            <p className="text-club text-sm font-extrabold">
+            <p className="font-body text-club text-sm font-extrabold">
               Take the club with you.
             </p>
             {ios ? (
-              <p className="mt-1 text-xs text-club">
+              <p className="mt-1 text-xs font-body text-club">
                 Tap <span className="font-bold">Share</span> →{' '}
                 <span className="font-bold">Add to Home Screen</span> and the
                 club lives on your home screen like an app.
               </p>
             ) : (
-              <p className="mt-1 text-xs text-club">
+              <p className="mt-1 text-xs font-body text-club">
                 Install Club Cheeky — it runs full-screen, works offline, and
                 loads straight from the floor.
               </p>

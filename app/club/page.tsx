@@ -44,7 +44,7 @@ const SPOTS: FloorSpot[] = [
     name: 'Cheeky Chats',
     sub: 'Your conversations',
     color:
-      'text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+      'font-body font-body text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
     pos: 'left-[36%] top-[30%]'
   },
   {
@@ -53,7 +53,7 @@ const SPOTS: FloorSpot[] = [
     name: 'SPARX',
     sub: 'Who\u2019s out tonight',
     color:
-      'text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+      'font-body font-body text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
     pos: 'right-[36%] top-[30%]'
   },
   {
@@ -97,7 +97,7 @@ export default async function ClubPage() {
           <h1 className="font-hero text-gold mt-6 text-4xl">
             The velvet rope is up.
           </h1>
-          <p className="text-club mt-3 text-lg">
+          <p className="font-body font-body text-club mt-3 text-lg">
             Brutus needs your ID before you walk the floor — free, quick, and
             the VIP badge comes with it.
           </p>
@@ -126,7 +126,7 @@ export default async function ClubPage() {
         <p className="font-header text-cyan mt-5 text-base">
           The hour spins on
         </p>
-        <p className="text-club mx-auto mt-2 max-w-2xl text-lg">
+        <p className="font-body font-body text-club mx-auto mt-2 max-w-2xl text-lg">
           The Dance Floor at :00, Speed Dating at :30, the Rooftop at :45 —
           and Blind Date when the Gold floor&apos;s hostess opens the door. The
           Event Center holds the whole playlist.

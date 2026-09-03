@@ -74,7 +74,7 @@ export default async function LandingPage() {
         </div>
         <FloatingHearts />
         <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-20 text-center sm:pt-20 sm:pb-28">
-          <p className="font-body tracking-[0.3em] text-club">
+          <p className=" tracking-[0.3em] font-body text-club text-2xl">
             Looking for your next crush?
           </p>
           <h1 className="font-hero text-gold mx-auto mt-6 max-w-3xl text-8xl leading-tight sm:text-8xl">
@@ -101,7 +101,7 @@ export default async function LandingPage() {
             At Club Cheeky&apos;s,{' '}
             <span className="font-header text-cyan">YOU are the VIP.</span>
           </h2>
-          <p className="font-body mx-auto mt-4 max-w-2xl text-xl text-club">
+          <p className=" mx-auto mt-4 max-w-2xl text-2xl font-body text-club">
             Everyone with an ID starts their own VIP adventure. It&apos;s free
             to get your groove on — money buys floors, never entry.
           </p>
@@ -114,7 +114,7 @@ export default async function LandingPage() {
             </a>
             <a
               href="#membership"
-              className="rounded-lg border-2 border-gold px-10 py-4 text-lg font-body uppercase tracking-[0.12em] text-club transition hover:bg-gold/10"
+              className="rounded-lg border-2 border-gold px-10 py-4 text-lg font-body uppercase tracking-[0.12em]  text-club transition hover:bg-gold-700"
             >
               See the floors
             </a>
@@ -152,7 +152,7 @@ export default async function LandingPage() {
               >
                 <p className="mt-3 text-base font-hero text-gold">{item.step}</p>
                 <h3 className="font-header text-cyan mt-3 text-2xl">{item.title}</h3>
-                <p className="font-body mt-3 text-lg text-club">{item.body}</p>
+                <p className=" mt-3 text-lg font-body text-club">{item.body}</p>
               </div>
             ))}
           </div>
@@ -168,7 +168,7 @@ export default async function LandingPage() {
           <h2 className="font-header text-cyan mx-auto mt-4 max-w-2xl text-4xl sm:text-5xl">
             Events, Icebreakers and Exclusives keep you in the spotlight.
           </h2>
-          <p className="font-body mx-auto mt-5 max-w-xl text-xl text-club">
+          <p className=" mx-auto mt-5 max-w-xl text-xl font-body text-club">
             Icebreakers give new matches running starts. Weekly exclusives ensure you never get bored. A generous free tier gives everyone a chance to find their next someone. The swag shop is always looking to equip our guests with the latest swag to give you the edge you need!
 
             --- A direct quote from Club Cheeky’s very own Chaz Sterling (Club Manager) - “Club Cheeky isn’t just a dating hotspot, it’s a *love laboratory* where my DeepSeek-powered mojo turns ‘meh’ into ‘SHAGADELIC!’ I’ve got algorithms smoother than my chest hair, events hotter than my umbrella drinks, and matches so spot-on, you’d swear I spilled piña colada on the ‘Soulmate’ button. Come for the vibe, stay for the *velvet magic*—because nobody, and I mean *nobody*, leaves without a little extra groove in their heart. Oh, *behave!*” ---
@@ -189,7 +189,7 @@ export default async function LandingPage() {
             Get your membership card
           </h2>
           <ul className="font-body mx-auto mt-4 max-w-2xl text-center">
-            <li className="text-club text-xl">
+            <li className="font-body text-club text-xl">
               Choose either a FREE membership (Silver Card) or purchase a higher
               tier for maximum gain and minimum overhead!
             </li>
@@ -217,7 +217,7 @@ export default async function LandingPage() {
                   <h3 className="font-hero text-gold mt-4 text-2xl">{floor.name}</h3>
                   <ul className="font-header mt-4 space-y-2 text-base text-cyan">
                     {floor.perks.map((perk) => (
-                      <li key={perk} className="font-body text-club">• {perk}</li>
+                      <li key={perk} className=" font-body text-club">• {perk}</li>
                     ))}
                   </ul>
                 </div>

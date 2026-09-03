@@ -70,7 +70,7 @@ export default function StoreClient({
     <div className="mt-10 space-y-14">
       {!verified && (
         <div className="rounded-xl border border-gold/40 bg-gold/10 p-5 text-center">
-          <p className="text-club text-sm font-semibold">
+          <p className="font-body text-club text-sm font-semibold">
             The card comes before the cash — pass the Door Check first.
             It&apos;s free, and takes two minutes.
           </p>
@@ -88,9 +88,9 @@ export default function StoreClient({
       <section>
         <div className="flex items-end justify-between gap-4">
           <h2 className="font-header text-cyan text-xl">💳 Your card</h2>
-          <p className="text-sm text-club">
+          <p className="text-sm font-body text-club">
             Your tab:{' '}
-            <span className="font-bold text-club">{tokenBalance} tokens</span>
+            <span className="font-bold font-body text-club">{tokenBalance} tokens</span>
           </p>
         </div>
         <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -106,10 +106,10 @@ export default function StoreClient({
                 className="flex flex-col rounded-xl border border-zinc-800 bg-zinc-900/60 p-6"
               >
                 <h3 className="font-header text-cyan text-lg">{product.name}</h3>
-                <p className="mt-1 flex-1 text-sm text-club">
+                <p className="mt-1 flex-1 text-sm font-body text-club">
                   {product.description}
                 </p>
-                <p className="text-club mt-4">
+                <p className="font-body text-club mt-4">
                   <span className="text-3xl font-extrabold text-white">
                     {money(price)}
                   </span>
@@ -138,7 +138,7 @@ export default function StoreClient({
       {tokenPacks.length > 0 && (
         <section>
           <h2 className="font-header text-cyan text-xl">🪙 Tokens</h2>
-          <p className="mt-1 text-sm text-club">
+          <p className="mt-1 text-sm font-body text-club">
             Fuel the Dance Floor, events, and gifts. Never messaging.
           </p>
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -153,7 +153,7 @@ export default function StoreClient({
                     ''
                   )}
                 </h3>
-                <p className="mt-4 text-3xl font-extrabold text-club">
+                <p className="mt-4 text-3xl font-extrabold font-body text-club">
                   {money(pack)}
                 </p>
                 <Button
@@ -172,7 +172,7 @@ export default function StoreClient({
       {selectedPrice && (
         <div className="mx-auto max-w-2xl">
           <div className="mb-4 flex items-center justify-between">
-            <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
+            <p className="text-sm font-bold uppercase tracking-[0.3em] font-body text-club">
               Checkout
             </p>
             <button

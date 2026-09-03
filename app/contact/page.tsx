@@ -36,7 +36,7 @@ export default function ContactPage() {
         <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           📞 Talk to the Club
         </h1>
-        <p className="text-club mx-auto mt-3 max-w-xl text-center">
+        <p className="font-body font-body text-club mx-auto mt-3 max-w-xl text-center">
           A real human reads every desk. Pick the one that fits and we&apos;ll
           route it right — usually a same-day reply.
         </p>
@@ -48,16 +48,16 @@ export default function ContactPage() {
               href={`mailto:${d.email}`}
               className="block rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 transition hover:border-club/50"
             >
-              <p className="font-bold text-club">{d.label}</p>
-              <p className="text-club mt-1 text-sm">{d.body}</p>
-              <p className="text-club mt-2 text-sm font-semibold underline decoration-club/50">
+              <p className="font-bold font-body font-body text-club">{d.label}</p>
+              <p className="font-body font-body text-club mt-1 text-sm">{d.body}</p>
+              <p className="font-body font-body text-club mt-2 text-sm font-semibold underline decoration-club/50">
                 {d.email}
               </p>
             </a>
           ))}
         </div>
 
-        <p className="text-club mt-8 text-xs">
+        <p className="font-body font-body text-club mt-8 text-xs">
           Emails are fielded through our parent mailbox (smartscott.com) and
           routed to the right desk. If it&apos;s an emergency involving someone
           &apos;s immediate safety, contact local emergency services first —
@@ -67,7 +67,7 @@ export default function ContactPage() {
         <div className="mt-8 text-center">
           <Link
             href="/"
-            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold text-club transition hover:bg-club/10"
+            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold font-body font-body text-club transition hover:bg-club/10"
           >
             ← Back to the club
           </Link>

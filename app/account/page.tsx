@@ -137,7 +137,7 @@ export default async function Account() {
       <div className="max-w-6xl px-4 py-8 mx-auto sm:px-6 sm:pt-24 lg:px-8">
         <Link
           href={floorHref}
-          className="text-sm font-semibold text-club hover:text-white"
+          className="text-sm font-semibold font-body font-body text-club hover:text-white"
         >
           ← Back to the floor
         </Link>
@@ -145,7 +145,7 @@ export default async function Account() {
           <h1 className="font-hero text-gold text-4xl sm:text-center sm:text-6xl">
             Account
           </h1>
-          <p className="text-club max-w-2xl m-auto mt-5 text-xl sm:text-center sm:text-2xl">
+          <p className="font-body font-body text-club max-w-2xl m-auto mt-5 text-xl sm:text-center sm:text-2xl">
             We partnered with Stripe for a simplified billing.
           </p>
         </div>
@@ -155,14 +155,14 @@ export default async function Account() {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <h2 className="font-header text-cyan text-xl">{cardLabel}</h2>
-              <p className="text-club mt-1">
+              <p className="font-body font-body text-club mt-1">
                 {profile?.verified_at
                   ? 'Verified — VIP badge active.'
                   : 'Not verified yet. Brutus is at the door.'}
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <span className="text-lg font-bold text-club">
+              <span className="text-lg font-bold font-body font-body text-club">
                 {tokenBalance} tokens
               </span>
               {!profile?.verified_at && (
@@ -176,7 +176,7 @@ export default async function Account() {
               {tier === 'standard' && (
                 <Link
                   href="/#membership"
-                  className="rounded-lg border-2 border-gold px-4 py-2 text-xs font-extrabold uppercase tracking-[0.1em] text-club transition hover:bg-gold/10"
+                  className="rounded-lg border-2 border-gold px-4 py-2 text-xs font-extrabold uppercase tracking-[0.1em] font-body font-body text-club transition hover:bg-gold/10"
                 >
                   ✦ Boost your chances — obtain a membership today
                 </Link>
@@ -191,9 +191,9 @@ export default async function Account() {
         />
         <div className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="font-header text-cyan text-xl">Your floor</h2>
-          <p className="text-club mt-1">
+          <p className="font-body font-body text-club mt-1">
             Current floor:{' '}
-            <span className="font-bold text-club">{tierLabel}</span>
+            <span className="font-bold font-body font-body text-club">{tierLabel}</span>
             {tier !== 'standard' &&
               (grants?.data?.[0] || passes?.data?.[0]) && (
                 <span className="ml-2 text-sm text-cyan">
@@ -238,7 +238,7 @@ export default async function Account() {
           <h2 className="font-header text-cyan text-xl">
             💎 Certificates
           </h2>
-          <p className="text-club mt-1">
+          <p className="font-body font-body text-club mt-1">
             Speed Dating matches that made it count.
           </p>
           {certPartners.length > 0 ? (
@@ -246,13 +246,13 @@ export default async function Account() {
               {certPartners.map((p) => (
                 <li
                   key={p.certificateId}
-                  className="text-club flex flex-wrap items-center justify-between gap-3 rounded-lg border border-platinum/20 bg-platinum/5 px-4 py-3"
+                  className="font-body font-body text-club flex flex-wrap items-center justify-between gap-3 rounded-lg border border-platinum/20 bg-platinum/5 px-4 py-3"
                 >
                   <div>
-                    <p className="text-club text-sm font-bold">
+                    <p className="font-body font-body text-club text-sm font-bold">
                       Speed Dating certificate
                     </p>
-                    <p className="text-club text-sm">
+                    <p className="font-body font-body text-club text-sm">
                       Matched with {nameOf(p.otherId)} ·{' '}
                       {new Date(p.issuedAt).toLocaleDateString()}
                     </p>
@@ -260,7 +260,7 @@ export default async function Account() {
                   {convoByOther.has(p.otherId) && (
                     <Link
                       href={`/messages/${convoByOther.get(p.otherId)}`}
-                      className="rounded-lg border border-platinum/40 px-3 py-1.5 text-xs font-semibold text-club transition hover:bg-platinum hover:text-platinum-navy"
+                      className="rounded-lg border border-platinum/40 px-3 py-1.5 text-xs font-semibold font-body font-body text-club transition hover:bg-platinum hover:text-platinum-navy"
                     >
                       Open chat
                     </Link>
@@ -269,7 +269,7 @@ export default async function Account() {
               ))}
             </ul>
           ) : (
-            <p className="text-club mt-3 text-sm">
+            <p className="font-body font-body text-club mt-3 text-sm">
               No certificates yet. Meet someone at Speed Dating on the Platinum
               floor and this shelf lights up.
             </p>
@@ -282,14 +282,14 @@ export default async function Account() {
               {interestRows.data.map((i) => (
                 <li
                   key={i.id}
-                  className="text-club rounded-full border border-platinum/30 bg-platinum/10 px-3 py-1 text-xs font-semibold"
+                  className="font-body font-body text-club rounded-full border border-platinum/30 bg-platinum/10 px-3 py-1 text-xs font-semibold"
                 >
                   ⭐ {nameOf(i.interest_user_id)}
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-club mt-2 text-sm">
+            <p className="font-body font-body text-club mt-2 text-sm">
               Nobody yet. Certificate matches can be added from the chat.
             </p>
           )}

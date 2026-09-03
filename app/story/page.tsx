@@ -38,11 +38,11 @@ export default async function StoryPage({
           <h1 className="font-hero text-gold mt-6 text-4xl sm:text-5xl">
             The Chase to the Coat Check
           </h1>
-          <p className="text-club mx-auto mt-4 max-w-lg leading-relaxed">
+          <p className="font-body text-club mx-auto mt-4 max-w-lg leading-relaxed">
             You&apos;ve got your Silver card. The club is open. But the real
             night hasn&apos;t started yet.
           </p>
-          <p className="text-club mt-4 max-w-lg leading-relaxed">
+          <p className="font-body text-club mt-4 max-w-lg leading-relaxed">
             Five floors. Five characters. One question — who will you be
             when you reach the top?
           </p>
@@ -50,21 +50,21 @@ export default async function StoryPage({
           <div className="mt-8 space-y-3 text-left">
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
               <p className="font-header text-cyan text-sm">🎭 Meet the Crew</p>
-              <p className="text-club mt-1 text-sm">
+              <p className="font-body text-club mt-1 text-sm">
                 Brutus at the door, D34D_B34T on the decks, Roxy behind the
                 bar, Trixie working the room, Valentina at the top.
               </p>
             </div>
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
               <p className="font-header text-cyan text-sm">🎯 Make Choices</p>
-              <p className="text-club mt-1 text-sm">
+              <p className="font-body text-club mt-1 text-sm">
                 Every choice shapes your story and your score. Higher score
                 means better rewards.
               </p>
             </div>
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
               <p className="font-header text-cyan text-sm">🧥 Unlock the Coat Check</p>
-              <p className="text-club mt-1 text-sm">
+              <p className="font-body text-club mt-1 text-sm">
                 Reach the rooftop and choose your persona — your vault keeper
                 for everything you collect.
               </p>
@@ -82,7 +82,7 @@ export default async function StoryPage({
             </form>
             <Link
               href="/club"
-              className="rounded-lg border border-zinc-700 px-8 py-4 font-semibold text-club transition hover:border-zinc-500 hover:text-white"
+              className="rounded-lg border border-zinc-700 px-8 py-4 font-semibold font-body text-club transition hover:border-zinc-500 hover:text-white"
             >
               Skip — go to the club
             </Link>

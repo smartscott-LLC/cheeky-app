@@ -34,7 +34,7 @@ export default async function FloorsPage() {
         <h1 className="text-center text-4xl font-hero text-gold sm:text-5xl">
           🛗 The Floors
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-lg text-club">
+        <p className="mx-auto mt-3 max-w-xl text-center text-lg font-body text-club">
           Every floor is its own room. Pick where you want to go — the elevators
           take you there.
         </p>
@@ -68,18 +68,18 @@ export default async function FloorsPage() {
                             : '· free'}
                     </span>
                   </p>
-                  <p className="mt-1 text-base text-club">{floor.tagline}</p>
+                  <p className="mt-1 text-base font-body text-club">{floor.tagline}</p>
                   {locked ? (
-                    <p className="mt-2 text-base font-bold text-club">
+                    <p className="mt-2 text-base font-bold font-body text-club">
                       Come see what&apos;s on these floors with a {floor.name}{' '}
                       card today.
                     </p>
                   ) : closedFloors.has(floor.slug) ? (
-                    <p className="mt-2 text-base font-bold text-club">
+                    <p className="mt-2 text-base font-bold font-body text-club">
                       🚧 Under construction
                     </p>
                   ) : (
-                    <p className="mt-2 text-base font-bold text-club opacity-0 transition group-hover:opacity-100">
+                    <p className="mt-2 text-base font-bold font-body text-club opacity-0 transition group-hover:opacity-100">
                       Step in →
                     </p>
                   )}

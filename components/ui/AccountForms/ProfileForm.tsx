@@ -149,7 +149,7 @@ export default function ProfileForm({
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
       <h2 className="font-header text-cyan text-xl">Your profile</h2>
-      <p className="mt-1 text-sm text-club">
+      <p className="mt-1 text-sm font-body text-club">
         Up to {photoLimit} photos on this floor. This is what the club sees.
       </p>
 
@@ -192,7 +192,7 @@ export default function ProfileForm({
           <button
             onClick={() => fileRef.current?.click()}
             disabled={uploading}
-            className="flex aspect-square items-center justify-center rounded-lg border-2 border-dashed border-club/60 bg-club/5 text-3xl font-bold text-club transition hover:border-club hover:bg-club/10"
+            className="flex aspect-square items-center justify-center rounded-lg border-2 border-dashed border-club/60 bg-club/5 text-3xl font-bold font-body text-club transition hover:border-club hover:bg-club/10"
           >
             {uploading ? '…' : '+'}
           </button>
@@ -214,7 +214,7 @@ export default function ProfileForm({
           <label htmlFor="displayName" className="text-sm font-semibold">
             Choose your avatar name
           </label>
-          <p className="text-xs text-club">
+          <p className="text-xs font-body text-club">
             This is the name the club calls you. Your real name stays private
             unless you put it here.
           </p>
@@ -238,7 +238,7 @@ export default function ProfileForm({
             placeholder="What's your best pickup line?"
             className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
           />
-          <p className="text-xs text-club">
+          <p className="text-xs font-body text-club">
             A little insight goes a long way. SPARX shows it under your
             name.
           </p>
@@ -261,7 +261,7 @@ export default function ProfileForm({
             <option value="gentleman">Gentleman</option>
             <option value="lady">Lady</option>
           </select>
-          <p className="text-xs text-club">
+          <p className="text-xs font-body text-club">
             The club pairs real gentlemen and real ladies. This tells the floor
             who you are — required, and never shown as a label.
           </p>
@@ -282,7 +282,7 @@ export default function ProfileForm({
             <option value="women">Ladies</option>
             <option value="men">Gentlemen</option>
           </select>
-          <p className="text-xs text-club">
+          <p className="text-xs font-body text-club">
             Who you&apos;re here to meet — personal, and never shown publicly.
             It groups you with the right company at events and guides the
             club&apos;s suggestions.
@@ -303,7 +303,7 @@ export default function ProfileForm({
         </div>
       </div>
 
-      {error && <p className="mt-3 text-sm text-club">{error}</p>}
+      {error && <p className="mt-3 text-sm font-body text-club">{error}</p>}
       {saved && <p className="mt-3 text-sm text-emerald-400">Saved.</p>}
 
       {/* Honeypot — hidden from humans, irresistible to bots. */}

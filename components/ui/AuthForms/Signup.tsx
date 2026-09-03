@@ -70,7 +70,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               required
               className="w-full p-3 rounded-md bg-zinc-800 [color-scheme:dark]"
             />
-            <p className="text-xs text-club">
+            <p className="text-xs font-body text-club">
               You must be 18 or older. Brutus double-checks it at the door.
             </p>
             <label htmlFor="gender">What are you?</label>
@@ -87,7 +87,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               <option value="gentleman">Gentleman</option>
               <option value="lady">Lady</option>
             </select>
-            <p className="text-xs text-club">
+            <p className="text-xs font-body text-club">
               The club pairs real gentlemen and real ladies — no surprises. This
               tells the floor who you are.
             </p>
@@ -102,7 +102,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               <option value="women">Ladies</option>
               <option value="men">Gentlemen</option>
             </select>
-            <p className="text-xs text-club">
+            <p className="text-xs font-body text-club">
               Who you&apos;re here to meet. Personal, and never shown publicly.
             </p>
             <label htmlFor="messageRetentionDays">
@@ -119,7 +119,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               <option value="30">30 days</option>
               <option value="90">90 days</option>
             </select>
-            <p className="text-xs text-club">
+            <p className="text-xs font-body text-club">
               Messages are purged after your window. In a chat, the stricter
               window wins.
             </p>
@@ -151,7 +151,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               <span>
                 I understand the club is in-app — meeting up or moving outside
                 the app is my choice, on me. Read the{' '}
-                <Link href="/best-practices" className="text-club underline">
+                <Link href="/best-practices" className="font-body text-club underline">
                   Best Practices
                 </Link>{' '}
                 (v1).
@@ -177,15 +177,15 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
           />
         </div>
       </form>
-      <p className="text-club">Already have an account?</p>
-      <p className="text-club">
-        <Link href="/signin/password_signin" className="text-club font-light text-sm">
+      <p className="font-body text-club">Already have an account?</p>
+      <p className="font-body text-club">
+        <Link href="/signin/password_signin" className="font-body text-club font-light text-sm">
           Sign in with email and password
         </Link>
       </p>
       {allowEmail && (
-        <p className="text-club">
-          <Link href="/signin/email_signin" className="text-club font-light text-sm">
+        <p className="font-body text-club">
+          <Link href="/signin/email_signin" className="font-body text-club font-light text-sm">
             Sign in via magic link
           </Link>
         </p>

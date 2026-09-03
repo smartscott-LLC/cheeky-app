@@ -190,13 +190,13 @@ export default function MatchmakerBoard({ boardId, flippedCardId, onFinished }: 
         <h2 className="font-header text-cyan mt-3 text-3xl">
           {won ? 'FULL HOUSE!' : 'Three strikes'}
         </h2>
-        <p className="text-club mx-auto mt-2 max-w-md text-base">
+        <p className="font-body text-club mx-auto mt-2 max-w-md text-base">
           {won
             ? `You found ${ended.matches} pairs and unlocked ${unlockSentFor.size} first impression${unlockSentFor.size === 1 ? '' : 's'}.`
             : `You found ${ended.matches} pair${ended.matches === 1 ? '' : 's'} before the strikes ran out.`}
         </p>
         {!won && ended.matches > 0 && (
-          <p className="text-club mx-auto mt-1 max-w-md text-sm">
+          <p className="font-body text-club mx-auto mt-1 max-w-md text-sm">
             The pair you matched stays unlocked — a win is a win.
           </p>
         )}
@@ -234,20 +234,20 @@ export default function MatchmakerBoard({ boardId, flippedCardId, onFinished }: 
     <div>
       <div className="mx-auto flex max-w-md items-center justify-between">
         <div className="flex items-center gap-1">
-          <span className="mr-1 text-sm font-semibold text-club">Strikes</span>
+          <span className="mr-1 text-sm font-semibold font-body text-club">Strikes</span>
           {[0, 1, 2].map((i) => (
             <span key={i} className={`text-lg ${i < strikes ? '' : 'opacity-25'}`}>
               ❤️
             </span>
           ))}
         </div>
-        <p className="text-base font-semibold text-club">
+        <p className="text-base font-semibold font-body text-club">
           Found <span className="text-gold">{matches}/2</span>
         </p>
       </div>
 
       {error && (
-        <p className="mx-auto mt-3 max-w-md rounded-lg border border-club/40 bg-club/10 px-4 py-2 text-center text-base text-club">
+        <p className="mx-auto mt-3 max-w-md rounded-lg border border-club/40 bg-club/10 px-4 py-2 text-center text-base font-body text-club">
           {error}
         </p>
       )}
@@ -307,7 +307,7 @@ export default function MatchmakerBoard({ boardId, flippedCardId, onFinished }: 
             <h3 className="font-header text-cyan mt-2 text-2xl">
               You found {unlockTarget.person.display_name}!
             </h3>
-            <p className="text-club mt-1 text-sm">
+            <p className="font-body text-club mt-1 text-sm">
               {unlockSent
                 ? 'Your first impression is on its way. They decide — accept opens the chat, decline is silent. Either way, you won the game.'
                 : 'One first impression — even if they never liked you back. It never touches your message limits.'}
@@ -334,7 +334,7 @@ export default function MatchmakerBoard({ boardId, flippedCardId, onFinished }: 
                   className="mt-4 w-full rounded-lg border border-zinc-700 bg-black p-3 text-base text-white placeholder-zinc-600 outline-none focus:border-gold"
                 />
                 {error && (
-                  <p className="mt-2 text-sm text-club">{error}</p>
+                  <p className="mt-2 text-sm font-body text-club">{error}</p>
                 )}
                 <button
                   onClick={sendUnlock}

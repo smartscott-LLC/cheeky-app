@@ -1,11 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-
 @import "https://github.com/google/fonts/raw/main/ofl/fascinate/Fascinate-Regular.ttf";
 @import "https://github.com/google/fonts/raw/main/ofl/damion/Damion-Regular.ttf";
 @import "https://github.com/google/fonts/raw/main/apache/rancho/Rancho-Regular.ttf";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 
 *:focus:not(ol) {
@@ -40,7 +39,7 @@ html {
 
 /* Single-weight display fonts (Fascinate/Damion/Rancho) — never fake-bold
    them; the type tiers are applied explicitly per element (font-hero/text-gold,
-   font-header/text-cyan, text-club body). */
+   font-header/text-cyan, font-body text-club body). */
 h1,
 h2,
 h3 {

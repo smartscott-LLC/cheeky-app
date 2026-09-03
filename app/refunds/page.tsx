@@ -56,7 +56,7 @@ export default function RefundsPage() {
         <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           💸 Refund Policy
         </h1>
-        <p className="mx-auto mt-3 max-w-xl text-center text-club">
+        <p className="mx-auto mt-3 max-w-xl text-center font-body text-club">
           Tokens, no-match refunds, canceled events, and where the money belongs
           when it goes sideways.
         </p>
@@ -68,16 +68,16 @@ export default function RefundsPage() {
               className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6"
             >
               <h2 className="font-header text-cyan">
-                <span className="mr-2 text-club">{s.num}.</span>
+                <span className="mr-2 font-body text-club">{s.num}.</span>
                 {s.title}
               </h2>
               <ul className="mt-3 space-y-2">
                 {s.items.map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-3 text-sm text-club"
+                    className="flex items-start gap-3 text-sm font-body text-club"
                   >
-                    <span className="text-club">✓</span>
+                    <span className="font-body text-club">✓</span>
                     {item}
                   </li>
                 ))}
@@ -86,11 +86,11 @@ export default function RefundsPage() {
           ))}
         </div>
 
-        <p className="mt-8 text-sm text-club">
+        <p className="mt-8 text-sm font-body text-club">
           Questions? Write{' '}
           <a
             href={`mailto:${CONTACT.helpdesk}`}
-            className="text-club underline hover:text-club-cotton"
+            className="font-body text-club underline hover:font-body text-club-cotton"
           >
             {CONTACT.helpdesk}
           </a>
@@ -100,7 +100,7 @@ export default function RefundsPage() {
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
             href="/terms"
-            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold text-club transition hover:bg-club/10"
+            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold font-body text-club transition hover:bg-club/10"
           >
             ← Terms of Use
           </Link>

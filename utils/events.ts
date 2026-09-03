@@ -22,7 +22,7 @@ export const KIND_META: Record<string, KindMeta> = {
     rank: 0,
     emoji: '🪩',
     tagline: 'Hourly. 2 minutes to pick. One song to make it count.',
-    accent: 'text-club border-club/40',
+    accent: 'font-body text-club border-club/40',
     image: ASSETS.brand.floorFree,
     gradient: 'from-club-indigo via-club to-club-cotton',
     cta: 'bg-club text-white hover:bg-club-cotton'

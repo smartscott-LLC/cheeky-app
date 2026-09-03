@@ -27,17 +27,17 @@ export default function CheckInForm({ error }: { error?: string | null }) {
         </div>
         <div>
           <h2 className="font-header text-cyan text-2xl">Brutus the Bouncer</h2>
-          <p className="text-sm text-club">The Door Check</p>
+          <p className="text-sm font-body text-club">The Door Check</p>
         </div>
       </div>
 
-      <p className="mt-4 text-sm text-club">
+      <p className="mt-4 text-sm font-body text-club">
         One stop: your details and your consents right here, then the ID check —
         then you&apos;re in. Everything at the door, nothing twice.
       </p>
 
       {error && ERRORS[error] && (
-        <p className="mt-4 rounded-md border border-club/50 bg-club/10 px-3 py-2 text-sm text-club">
+        <p className="mt-4 rounded-md border border-club/50 bg-club/10 px-3 py-2 text-sm font-body text-club">
           {ERRORS[error]}
         </p>
       )}
@@ -100,7 +100,7 @@ export default function CheckInForm({ error }: { error?: string | null }) {
             <option value="gentleman">Gentleman</option>
             <option value="lady">Lady</option>
           </select>
-          <p className="text-xs text-club">
+          <p className="text-xs font-body text-club">
             The club pairs real gentlemen and real ladies — no surprises.
           </p>
 
@@ -162,7 +162,7 @@ export default function CheckInForm({ error }: { error?: string | null }) {
             <span>
               I understand the club is in-app — meeting up or moving outside the
               app is my choice, on me. Read the{' '}
-              <Link href="/best-practices" className="text-club underline">
+              <Link href="/best-practices" className="font-body text-club underline">
                 Best Practices
               </Link>{' '}
               (v1).
@@ -192,11 +192,11 @@ export default function CheckInForm({ error }: { error?: string | null }) {
         </button>
       </form>
 
-      <p className="mt-4 text-center text-sm text-club">
+      <p className="mt-4 text-center text-sm font-body text-club">
         Already a member?{' '}
         <Link
           href="/signin"
-          className="font-semibold text-club hover:underline"
+          className="font-semibold font-body text-club hover:underline"
         >
           Sign in
         </Link>

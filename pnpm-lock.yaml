@@ -299,6 +299,9 @@ importers:
       react-merge-refs:
         specifier: ^2.1.1
         version: 2.1.1
+      require-in-the-middle:
+        specifier: ^8.0.1
+        version: 8.0.1(supports-color@8.1.1)
       resend:
         specifier: ^6.18.1
         version: 6.25.0

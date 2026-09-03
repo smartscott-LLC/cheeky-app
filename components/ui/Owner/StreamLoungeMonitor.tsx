@@ -85,7 +85,7 @@ export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) 
     return (
       <div className="rounded-2xl border border-amber-400/30 bg-zinc-900/50 p-6">
         <p className="font-header text-amber-300 text-2xl">📡 Stream Lounge</p>
-        <p className="text-club mt-1 text-sm">Loading rooms…</p>
+        <p className="font-body text-club mt-1 text-sm">Loading rooms…</p>
       </div>
     );
   }
@@ -95,7 +95,7 @@ export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="font-header text-amber-300 text-2xl">📡 Stream Lounge</h2>
-          <p className="text-club mt-1 text-sm">
+          <p className="font-body text-club mt-1 text-sm">
             Live read from the Stream server SDK — what the members see
             right now, regardless of blocks.
           </p>
@@ -111,7 +111,7 @@ export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) 
 
       {msg && (
         <p
-          className={`mt-3 text-sm ${msg.ok ? 'text-emerald-400' : 'text-club'}`}
+          className={`mt-3 text-sm ${msg.ok ? 'text-emerald-400' : 'font-body text-club'}`}
         >
           {msg.text}
         </p>
@@ -127,10 +127,10 @@ export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) 
               key={t.label}
               className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3 text-center"
             >
-              <p className="text-club text-2xl font-extrabold">
+              <p className="font-body text-club text-2xl font-extrabold">
                 {t.icon} {t.value.toLocaleString()}
               </p>
-              <p className="text-club mt-1 text-[10px] uppercase tracking-wider">
+              <p className="font-body text-club mt-1 text-[10px] uppercase tracking-wider">
                 {t.label}
               </p>
             </div>
@@ -145,14 +145,14 @@ export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) 
             className="rounded-xl border border-zinc-800 bg-zinc-950/60 p-3"
           >
             <div className="flex items-center justify-between">
-              <p className="text-club text-sm font-bold">
+              <p className="font-body text-club text-sm font-bold">
                 {r.emoji} {r.label}
               </p>
-              <p className="text-club text-[10px]">{r.count} · 24h</p>
+              <p className="font-body text-club text-[10px]">{r.count} · 24h</p>
             </div>
             <div className="mt-2 max-h-44 space-y-1 overflow-y-auto text-xs">
               {r.latest.length === 0 && (
-                <p className="text-club py-2 text-center">No messages yet.</p>
+                <p className="font-body text-club py-2 text-center">No messages yet.</p>
               )}
               {r.latest.map((m) => (
                 <div
@@ -163,16 +163,16 @@ export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) 
                       : 'border-zinc-800 bg-zinc-900/60'
                   }`}
                 >
-                  <p className="text-club text-[10px] font-bold">
+                  <p className="font-body text-club text-[10px] font-bold">
                     {m.horn && '🎺 '}
                     {m.userName}
                   </p>
-                  <p className="text-club line-clamp-1 text-xs">{m.text}</p>
+                  <p className="font-body text-club line-clamp-1 text-xs">{m.text}</p>
                   <button
                     onClick={() =>
                       setBanDraft({ userId: m.userId, name: m.userName })
                     }
-                    className="text-club mt-0.5 text-[9px] uppercase tracking-wider transition hover:text-club-cotton"
+                    className="font-body text-club mt-0.5 text-[9px] uppercase tracking-wider transition hover:font-body text-club-cotton"
                   >
                     Ban from chat →
                   </button>
@@ -195,7 +195,7 @@ export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) 
             <h3 className="font-header text-amber-300 text-xl">
               Stream + Supabase ban
             </h3>
-            <p className="text-club mt-1 text-sm">
+            <p className="font-body text-club mt-1 text-sm">
               Banning{' '}
               <span className="font-bold text-white">{banDraft.name}</span>{' '}
               from chat on the live transport. Mirrored to Supabase so the
@@ -203,7 +203,7 @@ export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) 
             </p>
             <div className="mt-4 space-y-3">
               <div>
-                <label className="text-club text-xs uppercase tracking-wider">
+                <label className="font-body text-club text-xs uppercase tracking-wider">
                   Duration
                 </label>
                 <div className="mt-1 flex gap-2">
@@ -223,7 +223,7 @@ export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) 
                 </div>
               </div>
               <div>
-                <label className="text-club text-xs uppercase tracking-wider">
+                <label className="font-body text-club text-xs uppercase tracking-wider">
                   Reason
                 </label>
                 <textarea

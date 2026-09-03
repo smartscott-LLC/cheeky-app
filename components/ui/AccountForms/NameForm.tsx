@@ -29,7 +29,7 @@ export default function NameForm({ userName }: { userName: string }) {
       description="Please enter your full name, or a display name you are comfortable with."
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          <p className="text-club pb-4 sm:pb-0">64 characters maximum</p>
+          <p className="font-body text-club pb-4 sm:pb-0">64 characters maximum</p>
           <Button
             variant="slim"
             type="submit"

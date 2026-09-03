@@ -71,10 +71,10 @@ export default function Pricing({
       <section className="bg-black">
         <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
           <div className="sm:flex sm:flex-col sm:align-center"></div>
-          <p className="text-club text-4xl font-extrabold sm:text-center sm:text-6xl">
+          <p className="font-body text-club text-4xl font-extrabold sm:text-center sm:text-6xl">
             No subscription pricing plans found. Create them in your{' '}
             <a
-              className="text-club underline"
+              className="font-body text-club underline"
               href="https://dashboard.stripe.com/products"
               rel="noopener noreferrer"
               target="_blank"
@@ -100,7 +100,7 @@ export default function Pricing({
               with an ID is a VIP.
             </h2>
             <ul className="max-w-2xl m-auto mt-3 text-center">
-              <li className="text-club text-xl">
+              <li className="font-body text-club text-xl">
                 Everyone gets in with a verified ID — FREE! You can expand your
                 options by obtaining membership to the higher floors.
               </li>
@@ -112,7 +112,7 @@ export default function Pricing({
                   type="button"
                   className={`${
                     billingInterval === 'month'
-                      ? 'relative w-1/2 bg-zinc-700 border-zinc-800 shadow-sm text-white'
+                      ? 'relative w-1/2 bg-zinc-700 border-gold shadow-sm text-gold'
                       : 'ml-0.5 relative w-1/2 border border-transparent text-cyan'
                   } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-club focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
                 >
@@ -125,7 +125,7 @@ export default function Pricing({
                   type="button"
                   className={`${
                     billingInterval === 'year'
-                      ? 'relative w-1/2 bg-zinc-700 border-zinc-800 shadow-sm text-white'
+                      ? 'relative w-1/2 bg-zinc-700 border-gold shadow-sm text-gold'
                       : 'ml-0.5 relative w-1/2 border border-transparent text-cyan'
                   } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-club focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
                 >
@@ -163,9 +163,9 @@ export default function Pricing({
                 <div
                   key={product.id}
                   className={cn(
-                    'flex flex-col rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900',
+                    'flex flex-col border-gold text-gold rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900',
                     {
-                      'border border-club': subscription
+                      'border border-gold': subscription
                         ? product.name === subscription?.prices?.products?.name
                         : product.name === 'Standard Membership'
                     },
@@ -178,8 +178,8 @@ export default function Pricing({
                     <h2 className="font-header text-cyan text-2xl leading-6">
                       {product.name}
                     </h2>
-                    <p className="mt-4 text-club">{product.description}</p>
-                    <p className="text-club mt-8">
+                    <p className="mt-4 font-body text-club">{product.description}</p>
+                    <p className="font-body text-club mt-8">
                       <span className="text-5xl font-extrabold white">
                         {priceString}
                       </span>
@@ -192,12 +192,13 @@ export default function Pricing({
                     <Button
                       variant="slim"
                       type="button"
+                      color="black"
                       onClick={() =>
                         subscription
                           ? router.push('/account')
                           : handleSelect(price)
                       }
-                      className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
+                      className="block w-full py-2 mt-8 text-lg border-gold font-semibold font-body text-center text-gold rounded-md hover:bg-zinc-900"
                     >
                       {subscription
                         ? 'Manage'
@@ -219,47 +220,47 @@ export default function Pricing({
             <h2 className="font-header text-cyan mt-3 text-xl">
               Messaging is never for sale
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm text-club">
+            <p className="mx-auto mt-3 max-w-xl text-sm font-body text-club">
               You can&apos;t buy more messages. No message packs, no upsells, no
               pay-to-talk — ever. Messaging is a membership perk, not a product:
               it&apos;s the room you&apos;re in, and every card gets in.
             </p>
             <div className="mt-6 grid grid-cols-1 gap-3 text-left sm:grid-cols-2">
-              <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">
-                <p className="text-club text-xs font-bold uppercase tracking-wide">
+              <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
+                <p className="font-body text-club text-xs font-bold uppercase tracking-wide">
                   Silver — free
                 </p>
-                <p className="mt-1 text-sm text-club">
+                <p className="mt-1 text-sm font-body text-club">
                   30 messages + 5 new conversations a day. Generous on purpose,
                   never shrunk.
                 </p>
               </div>
-              <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">
-                <p className="text-club text-xs font-bold uppercase tracking-wide">
+              <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
+                <p className="font-body text-club text-xs font-bold uppercase tracking-wide">
                   Gold
                 </p>
-                <p className="mt-1 text-sm text-club">
+                <p className="mt-1 text-sm font-body text-club">
                   75 messages + 15 new people a day.
                 </p>
               </div>
-              <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">
-                <p className="text-club text-xs font-bold uppercase tracking-wide">
+              <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
+                <p className="font-body text-club text-xs font-bold uppercase tracking-wide">
                   Platinum
                 </p>
-                <p className="mt-1 text-sm text-club">
+                <p className="mt-1 text-sm font-body text-club">
                   Unlimited messages + 40 new people a day.
                 </p>
               </div>
-              <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">
-                <p className="text-club text-xs font-bold uppercase tracking-wide">
+              <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
+                <p className="font-body text-club text-xs font-bold uppercase tracking-wide">
                   Diamond
                 </p>
-                <p className="mt-1 text-sm text-club">
+                <p className="mt-1 text-sm font-body text-club">
                   Unlimited messages + 100 new people a day.
                 </p>
               </div>
             </div>
-            <p className="mt-5 text-xs text-club">
+            <p className="mt-5 text-xs font-body text-club">
               Tokens power events and gifts only — never messaging.
             </p>
           </div>
@@ -267,12 +268,12 @@ export default function Pricing({
           {selectedPrice && (
             <div className="mx-auto mt-12 max-w-2xl">
               <div className="mb-4 flex items-center justify-between">
-                <p className="text-sm font-bold uppercase tracking-[0.3em] text-club">
+                <p className="text-sm font-bold uppercase tracking-[0.3em] font-body text-club">
                   Checkout
                 </p>
                 <button
                   onClick={() => setSelectedPrice(null)}
-                  className="text-sm text-cyan hover:text-white"
+                  className="text-lg text-cyan hover:text-white"
                 >
                   Cancel
                 </button>

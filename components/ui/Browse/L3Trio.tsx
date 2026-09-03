@@ -81,7 +81,7 @@ export default function L3Trio() {
   };
 
   if (busy && people.length === 0) {
-    return <p className="py-10 text-center text-base text-club">Rounding up tonight&apos;s trio…</p>;
+    return <p className="py-10 text-center text-base font-body text-club">Rounding up tonight&apos;s trio…</p>;
   }
 
   if (done) {
@@ -89,7 +89,7 @@ export default function L3Trio() {
       <div className="rounded-xl border border-gold bg-zinc-900/50 p-10 text-center">
         <p className="text-4xl">🌹</p>
         <h2 className="font-header text-cyan mt-3 text-2xl">The room&apos;s empty — for now</h2>
-        <p className="text-club mx-auto mt-2 max-w-md text-base">
+        <p className="font-body text-club mx-auto mt-2 max-w-md text-base">
           You&apos;ve picked everyone out there. New faces land after the next event — come back
           soon.
         </p>
@@ -116,7 +116,7 @@ export default function L3Trio() {
             <h2 className="font-header text-cyan mt-2 text-2xl">
               {result.tier === 't2' ? 'SUPER MATCH!' : 'It’s a match!'}
             </h2>
-            <p className="text-club mt-2 text-base">
+            <p className="font-body text-club mt-2 text-base">
               {result.tier === 't2'
                 ? 'The club popped a cork — a gift’s on its way to both of you, and you’ve got a free line to talk.'
                 : 'You matched with them — and the club gave you a free line to start the conversation.'}
@@ -133,7 +133,7 @@ export default function L3Trio() {
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
             <p className="text-4xl">🫧</p>
             <h2 className="font-header text-cyan mt-2 text-2xl">No sparks this time</h2>
-            <p className="text-club mt-2 text-base">
+            <p className="font-body text-club mt-2 text-base">
               Nothing came back — quietly. Nobody knows. The next trio might be the one.
             </p>
           </div>
@@ -151,7 +151,7 @@ export default function L3Trio() {
   return (
     <div>
       {error && (
-        <p className="mb-4 rounded-lg border border-club/40 bg-club/10 px-4 py-2 text-base text-club">
+        <p className="mb-4 rounded-lg border border-club/40 bg-club/10 px-4 py-2 text-base font-body text-club">
           {error}
         </p>
       )}
@@ -178,7 +178,7 @@ export default function L3Trio() {
             <div className="p-4">
               <h3 className="font-header text-cyan text-xl">{person.display_name || 'Member'}</h3>
               {person.one_liner && (
-                <p className="mt-1 text-sm text-club">{person.one_liner}</p>
+                <p className="mt-1 text-sm font-body text-club">{person.one_liner}</p>
               )}
               <div className="mt-3 grid grid-cols-3 gap-2">
                 {SLOTS.map((slot) => {
