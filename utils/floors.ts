@@ -1,3 +1,5 @@
+import { ASSETS } from '@/utils/assets';
+
 export interface FloorRoom {
   href: string;
   emoji: string;
@@ -75,7 +77,7 @@ const CENTER = {
 // they're visible without scrolling. The floor map doc lists who is where.
 const DJ = {
   href: '/chat/dj',
-  image: '/personas/dj/crowd.webp',
+  image: ASSETS.personas.djCrowd,
   emoji: '🎧',
   name: 'The DJ',
   sub: 'D34D_B34T on the decks',
@@ -85,7 +87,7 @@ const DJ = {
 };
 const ROXY = {
   href: '/chat/bartender',
-  image: '/personas/bartender/fullbody.webp',
+  image: ASSETS.personas.bartenderFullbody,
   emoji: '🍸',
   name: 'Roxy',
   sub: 'The mixologist',
@@ -95,7 +97,7 @@ const ROXY = {
 };
 const TRIXIE = {
   href: '/chat/trixie',
-  image: '/personas/trixie/fullbody.webp',
+  image: ASSETS.personas.trixieFullbody,
   emoji: '🛎️',
   name: 'Trixie',
   sub: 'The waitress',
@@ -105,7 +107,7 @@ const TRIXIE = {
 };
 const VALENTINA = {
   href: '/chat/hostess',
-  image: '/personas/hostess/fullbody.webp',
+  image: ASSETS.personas.hostessFullbody,
   emoji: '💎',
   name: 'Valentina',
   sub: 'The hostess',
@@ -119,7 +121,7 @@ export const FLOORS: FloorMeta[] = [
     slug: 'silver',
     name: 'Silver',
     rank: 0,
-    art: '/brand/floor-free.webp',
+    art: ASSETS.brand.floorFree,
     tagline:
       'The base of the club — free, and it stays fun. The Dance Floor spins every hour.',
     accent: 'text-silver border-silver/50',
@@ -145,7 +147,7 @@ export const FLOORS: FloorMeta[] = [
     slug: 'gold',
     name: 'Gold',
     rank: 1,
-    art: '/brand/floor-gold.webp',
+    art: ASSETS.brand.floorGold,
     tagline: 'Blind Date, deeper crowds, more to do.',
     accent: 'text-gold border-gold/50',
     rooms: [
@@ -170,7 +172,7 @@ export const FLOORS: FloorMeta[] = [
     slug: 'platinum',
     name: 'Platinum',
     rank: 2,
-    art: '/brand/floor-platinum.webp',
+    art: ASSETS.brand.floorPlatinum,
     tagline: 'Speed Dating at its finest, plus the upper rooms.',
     accent: 'text-platinum border-platinum/50',
     rooms: [
@@ -195,7 +197,7 @@ export const FLOORS: FloorMeta[] = [
     slug: 'diamond',
     name: 'Diamond',
     rank: 3,
-    art: '/brand/floor-diamond.webp',
+    art: ASSETS.brand.floorDiamond,
     tagline: 'The penthouse. The Rooftop, the whole building.',
     accent: 'text-diamond border-diamond/50',
     rooms: [

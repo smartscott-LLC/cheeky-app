@@ -8,12 +8,14 @@ import { useEffect, useRef, useState } from 'react';
 // ever fails to load, the synthesized house engine (below) takes over so
 // the floor never goes quiet.
 
+import { ASSETS } from '@/utils/assets';
+
 const TRACKS = [
-  '/audio/Club_Cheeky.mp3',
-  '/audio/pressure-gauge.mp3',
-  '/audio/solar-flare-summit.mp3',
-  '/audio/above-the-clouds.mp3',
-  '/audio/final-ascent.mp3'
+  ASSETS.audio.clubCheeky,
+  ASSETS.audio.pressureGauge,
+  ASSETS.audio.solarFlareSummit,
+  ASSETS.audio.aboveTheClouds,
+  ASSETS.audio.finalAscent
 ];
 const MIX_VOL = 0.45;
 const FADE_MS = 4000; // 4-second smooth crossfade

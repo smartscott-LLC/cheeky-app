@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
+import { ASSETS } from '@/utils/assets';
 import { submitRooftopPick } from '@/app/events/actions';
 
 interface BoardMember {
@@ -242,7 +243,7 @@ export default function RooftopPool({
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={m.photo ? `${photoBase}${m.photo}` : '/brand/entrance.webp'}
+                src={m.photo ? `${photoBase}${m.photo}` : ASSETS.brand.entrance}
                 alt=""
                 className="mx-auto h-20 w-16 rounded-lg object-cover"
               />

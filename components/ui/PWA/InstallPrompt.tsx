@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { ASSETS } from '@/utils/assets';
 
 /**
  * The "take the app with you" nudge — the PWA install path, done right:
@@ -67,7 +68,7 @@ export default function InstallPrompt() {
         <div className="flex items-start gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/icons/entrance-logo.webp"
+            src={ASSETS.brand.entranceLogo}
             alt=""
             className="h-10 w-10 rounded-lg"
           />

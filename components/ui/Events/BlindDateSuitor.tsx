@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
+import { ASSETS } from '@/utils/assets';
 import { submitBlindAnswer } from '@/app/events/actions';
 
 interface RoundRow {
@@ -229,7 +230,7 @@ export default function BlindDateSuitor({
       <div className="mt-6 flex items-center justify-center gap-4">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={hostPhoto ? `${photoBase}${hostPhoto}` : '/brand/entrance.webp'}
+          src={hostPhoto ? `${photoBase}${hostPhoto}` : ASSETS.brand.entrance}
           alt=""
           className="h-24 w-20 rounded-xl object-cover"
         />

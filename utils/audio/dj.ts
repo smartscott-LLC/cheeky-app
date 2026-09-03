@@ -5,19 +5,21 @@
 // beneath the tracks at reduced volume. Module-level singleton so the DJ
 // survives navigation from the match overlay into the song chat.
 
+import { ASSETS } from '@/utils/assets';
+
 let ctx: AudioContext | null = null;
 let master: GainNode | null = null;
 let playing = false;
 let muted = false;
 let loopTimer: ReturnType<typeof setInterval> | null = null;
 
-// Founder's tracks — MP3s crossfaded with smooth transitions
+// Founder's tracks — MP3s from CDN, crossfaded with smooth transitions
 const TRACKS = [
-  '/audio/Club_Cheeky.mp3',
-  '/audio/pressure-gauge.mp3',
-  '/audio/solar-flare-summit.mp3',
-  '/audio/above-the-clouds.mp3',
-  '/audio/final-ascent.mp3'
+  ASSETS.audio.clubCheeky,
+  ASSETS.audio.pressureGauge,
+  ASSETS.audio.solarFlareSummit,
+  ASSETS.audio.aboveTheClouds,
+  ASSETS.audio.finalAscent
 ];
 
 // Crossfade timing (milliseconds)

@@ -12,6 +12,7 @@ import InstallPrompt from '@/components/ui/PWA/InstallPrompt';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import { getURL } from '@/utils/helpers';
+import { ASSETS } from '@/utils/assets';
 import '../styles/main.css';
 
 // The nightclub type system (founder): Fascinate for heroes, Damion for
@@ -48,8 +49,8 @@ export const metadata: Metadata = {
   // iOS "Add to Home Screen" ignores manifest icons — it needs this link,
   // or it screenshots the page as the icon. 192 works (iOS scales to 180).
   icons: {
-    apple: '/icons/entrance-logo.webp',
-    icon: '/icons/entrance-logo.webp'
+    apple: ASSETS.brand.entranceLogo,
+    icon: ASSETS.brand.entranceLogo
   },
   openGraph: {
     title: title,

@@ -4,6 +4,7 @@ import { getProfile, getUser } from '@/utils/supabase/queries';
 import { redirect } from 'next/navigation';
 import FloorLayout, { FloorSpot } from '@/components/ui/Club/FloorLayout';
 import AnnouncementBanner from '@/components/ui/AnnouncementBanner/AnnouncementBanner';
+import { ASSETS } from '@/utils/assets';
 
 // The lobby — the stopping zone. Floor 1's rooms, positioned per the
 // founder's entrance-scene guide: Dance Floor left (cyan), Gift Shop right
@@ -11,7 +12,7 @@ import AnnouncementBanner from '@/components/ui/AnnouncementBanner/AnnouncementB
 const SPOTS: FloorSpot[] = [
   {
     href: '/chat/brutus',
-    image: '/personas/brutus/door.webp',
+    image: ASSETS.personas.brutusDoor,
     emoji: '💪',
     name: 'Brutus',
     sub: 'The bouncer',
@@ -134,7 +135,7 @@ export default async function ClubPage() {
 
       {/* The lobby — the base room, filled in with floor 1's rooms. */}
       <div className="pt-6">
-        <FloorLayout background="/brand/club-interior.webp" spots={SPOTS} />
+        <FloorLayout background={ASSETS.brand.clubInterior} spots={SPOTS} />
       </div>
     </div>
   );

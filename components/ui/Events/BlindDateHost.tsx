@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
+import { ASSETS } from '@/utils/assets';
 import {
   submitBlindQuestion,
   selectBlindTally
@@ -328,7 +329,7 @@ export default function BlindDateHost({
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={s.photo ? `${photoBase}${s.photo}` : '/brand/entrance.webp'}
+                src={s.photo ? `${photoBase}${s.photo}` : ASSETS.brand.entrance}
                 alt=""
                 className="mx-auto h-20 w-16 rounded-lg object-cover blur-[3px]"
               />

@@ -194,4 +194,11 @@ export const ASSETS = {
     chaz: personaUrl('chaz'),
     chazStrut: personaUrl('chaz', 'strut'),
   },
+  audio: {
+    clubCheeky: `${ASSETS_BASE_URL}/audio/Club_Cheeky.mp3`,
+    pressureGauge: `${ASSETS_BASE_URL}/audio/pressure-gauge.mp3`,
+    solarFlareSummit: `${ASSETS_BASE_URL}/audio/solar-flare-summit.mp3`,
+    aboveTheClouds: `${ASSETS_BASE_URL}/audio/above-the-clouds.mp3`,
+    finalAscent: `${ASSETS_BASE_URL}/audio/final-ascent.mp3`,
+  },
 } as const;

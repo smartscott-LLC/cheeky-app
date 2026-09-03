@@ -2,6 +2,8 @@
 // 5-beat narrative RPG onboarding. Each beat has a scene, character dialogue,
 // choices with score values, and a learning goal.
 
+import { ASSETS } from '@/utils/assets';
+
 export interface StoryChoice {
   id: string;
   text: string;
@@ -239,7 +241,7 @@ export const PERSONAS: Persona[] = [
     name: 'Sasha',
     variant: 'Blonde Thai',
     gender: 'female',
-    imagePath: '/coat_check/Sasha v2 – Blonde Thai.webp',
+    imagePath: ASSETS.coatCheck.sashaBlondeThai,
     description: 'Warm and radiant — she sees the best in everyone.'
   },
   {
@@ -247,7 +249,7 @@ export const PERSONAS: Persona[] = [
     name: 'Sasha',
     variant: 'The Keeper',
     gender: 'female',
-    imagePath: '/coat_check/Sasha – The Keeper.webp',
+    imagePath: ASSETS.coatCheck.sashaTheKeeper,
     description: 'Steady and wise — nothing gets past her watch.'
   },
   {
@@ -255,7 +257,7 @@ export const PERSONAS: Persona[] = [
     name: 'Sasha',
     variant: 'Black Hair Edgy',
     gender: 'female',
-    imagePath: '/coat_check/Sasha v3 – Black Hair Edgy.webp',
+    imagePath: ASSETS.coatCheck.sashaBlackHairEdgy,
     description: 'Sharp and bold — she tells it like it is.'
   },
   {
@@ -263,7 +265,7 @@ export const PERSONAS: Persona[] = [
     name: 'Jax',
     variant: 'Default',
     gender: 'male',
-    imagePath: '/coat_check/jax2.webp',
+    imagePath: ASSETS.coatCheck.jaxDefault,
     description: 'Calm and grounded — he keeps the vault steady.'
   },
   {
@@ -271,7 +273,7 @@ export const PERSONAS: Persona[] = [
     name: 'Jax',
     variant: 'The Vaultkeeper',
     gender: 'male',
-    imagePath: '/coat_check/Jax – The Vaultkeeper.webp',
+    imagePath: ASSETS.coatCheck.jaxVaultkeeper,
     description: 'Quiet and strong — your secrets are safe with him.'
   },
   {
@@ -279,7 +281,7 @@ export const PERSONAS: Persona[] = [
     name: 'Jax',
     variant: 'Slicked Back',
     gender: 'male',
-    imagePath: '/coat_check/Jax v2 – Slicked Back.webp',
+    imagePath: ASSETS.coatCheck.jaxSlickedBack,
     description: 'Smooth and confident — he knows the room.'
   }
 ];

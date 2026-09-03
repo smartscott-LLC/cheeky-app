@@ -7,6 +7,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { getRedirectMethod } from '@/utils/auth-helpers/settings';
 import { type FormEvent } from 'react';
 import s from './Navbar.module.css';
+import { ASSETS } from '@/utils/assets';
 
 interface NavlinksProps {
   user?: {
@@ -43,13 +44,14 @@ export default function Navlinks({ user }: NavlinksProps) {
     // right group (links + the marquee button) pinned to the FAR right as a
     // single unit — they move together, no stragglers. (Founder fix: the old
     // three-zone grid let the group drift off-center next to the crew pill.)
+
     <div className="flex items-center gap-2 py-3 md:py-4">
       <div className="flex items-center justify-start">
         <Link href="/" className={s.logo} aria-label="Club Cheeky home">
           <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-gold shadow-[0_0_14px_rgba(255,215,0,0.35)]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/brand/entrance-logo.webp"
+              src={ASSETS.brand.entranceLogo}
               alt="Club Cheeky entrance"
               className="h-full w-full object-cover"
             />
