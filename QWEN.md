@@ -26,7 +26,7 @@ It's a dating app with gamification — floors, events, collectibles, crew chara
 | AI Chat | **Agnes-02.5-flash** from [AgnesAI](https://apihub.agnes-ai.com/v1) via `/api/agent` (crew character brains) |
 | Error Tracking | **Sentry** |
 | Deployment | **Vercel** (auto-deploy from `main`) |
-| Lounge Chat (microfrontend) | **In-gameChatUI** (`cheeky-lounge-app` — separate Vite + React 19 + Tailwind v4 app at `/home/server/In-gameChatUI/`) |
+| Lounge Chat (microfrontend) | **chub** (Chat Hub) — separate Next.js 16 app at `/home/server/chub/` with full-page lounge UI, Stream Chat, horn, gifts, ticker, floating hearts |
 
 ### Key Dependencies
 
@@ -132,7 +132,7 @@ pnpm supabase:push / pull / reset                   # Schema sync (hosted)
 
 ## Microfrontend Routing (Vercel)
 
-The app uses Vercel microfrontends to serve the lounge chat (In-gameChatUI) as a separate application with its own deployment cadence.
+The app uses Vercel microfrontends to serve the lounge chat (chub) as a separate application with its own deployment cadence.
 
 ### Current `microfrontends.json`
 

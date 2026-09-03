@@ -6,10 +6,10 @@
         "fallback": "www.smartscott.online"
       }
     },
-    "in-gamechatui": {
+    "chub": {
       "routing": [
         {
-          "paths": ["https://in-gamechatui-git-main-smartscott.vercel.app/lounge.smartscott.online"]
+          "paths": ["/lounge/:path*"]
         }
       ]
     }

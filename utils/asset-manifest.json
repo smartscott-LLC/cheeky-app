@@ -1,0 +1,1320 @@
+{
+  "generatedAt": "2026-09-02T19:33:38.471Z",
+  "bucket": "cheeky-assets",
+  "baseUrl": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets",
+  "total": 164,
+  "assets": [
+    {
+      "slug": "club-cheeky",
+      "category": "audio",
+      "filename": "Club_Cheeky.mp3",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/audio/Club_Cheeky.mp3",
+      "sizeBytes": 744609,
+      "mimeType": "audio/mpeg"
+    },
+    {
+      "slug": "above-the-clouds",
+      "category": "audio",
+      "filename": "above-the-clouds.mp3",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/audio/above-the-clouds.mp3",
+      "sizeBytes": 744609,
+      "mimeType": "audio/mpeg"
+    },
+    {
+      "slug": "final-ascent",
+      "category": "audio",
+      "filename": "final-ascent.mp3",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/audio/final-ascent.mp3",
+      "sizeBytes": 744609,
+      "mimeType": "audio/mpeg"
+    },
+    {
+      "slug": "pressure-gauge",
+      "category": "audio",
+      "filename": "pressure-gauge.mp3",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/audio/pressure-gauge.mp3",
+      "sizeBytes": 744609,
+      "mimeType": "audio/mpeg"
+    },
+    {
+      "slug": "solar-flare-summit",
+      "category": "audio",
+      "filename": "solar-flare-summit.mp3",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/audio/solar-flare-summit.mp3",
+      "sizeBytes": 744609,
+      "mimeType": "audio/mpeg"
+    },
+    {
+      "slug": "club-interior",
+      "category": "brand",
+      "filename": "club-interior.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/brand/club-interior.webp",
+      "sizeBytes": 207158,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "entrance-logo",
+      "category": "brand",
+      "filename": "entrance-logo.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/brand/entrance-logo.webp",
+      "sizeBytes": 2632,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "entrance",
+      "category": "brand",
+      "filename": "entrance.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/brand/entrance.webp",
+      "sizeBytes": 71208,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "floor-diamond",
+      "category": "brand",
+      "filename": "floor-diamond.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/brand/floor-diamond.webp",
+      "sizeBytes": 192604,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "floor-free",
+      "category": "brand",
+      "filename": "floor-free.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/brand/floor-free.webp",
+      "sizeBytes": 183122,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "floor-gold",
+      "category": "brand",
+      "filename": "floor-gold.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/brand/floor-gold.webp",
+      "sizeBytes": 160362,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "floor-platinum",
+      "category": "brand",
+      "filename": "floor-platinum.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/brand/floor-platinum.webp",
+      "sizeBytes": 152842,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "firstdate",
+      "category": "icons",
+      "filename": "?firstdate?.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/?firstdate?.webp",
+      "sizeBytes": 30906,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "amethyst-badge",
+      "category": "icons",
+      "filename": "amethyst_badge.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/amethyst_badge.webp",
+      "sizeBytes": 47486,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "badge-chat-champion",
+      "category": "icons",
+      "filename": "badge_chat_champion.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/badge_chat_champion.webp",
+      "sizeBytes": 25964,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "badge-chat-champiuon-gold",
+      "category": "icons",
+      "filename": "badge_chat_champiuon_gold.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/badge_chat_champiuon_gold.webp",
+      "sizeBytes": 27906,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "badge-chill-zone",
+      "category": "icons",
+      "filename": "badge_chill_zone.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/badge_chill_zone.webp",
+      "sizeBytes": 30106,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "badge-cocktail-bar",
+      "category": "icons",
+      "filename": "badge_cocktail_bar.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/badge_cocktail_bar.webp",
+      "sizeBytes": 28604,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "badge-date-master",
+      "category": "icons",
+      "filename": "badge_date_master.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/badge_date_master.webp",
+      "sizeBytes": 29454,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "badge-date-master3",
+      "category": "icons",
+      "filename": "badge_date_master3.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/badge_date_master3.webp",
+      "sizeBytes": 28800,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "badge-fancy-foods",
+      "category": "icons",
+      "filename": "badge_fancy_foods.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/badge_fancy_foods.webp",
+      "sizeBytes": 30958,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "badge-first-date",
+      "category": "icons",
+      "filename": "badge_first_date.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/badge_first_date.webp",
+      "sizeBytes": 30488,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "badge-flirt-king",
+      "category": "icons",
+      "filename": "badge_flirt_king.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/badge_flirt_king.webp",
+      "sizeBytes": 28126,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "badge-flirt-king2",
+      "category": "icons",
+      "filename": "badge_flirt_king2.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/badge_flirt_king2.webp",
+      "sizeBytes": 30082,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "badge-new-arrival",
+      "category": "icons",
+      "filename": "badge_new_arrival.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/badge_new_arrival.webp",
+      "sizeBytes": 25164,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "badge-opal2",
+      "category": "icons",
+      "filename": "badge_opal2.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/badge_opal2.webp",
+      "sizeBytes": 21880,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "badge-spark-finder",
+      "category": "icons",
+      "filename": "badge_spark_finder.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/badge_spark_finder.webp",
+      "sizeBytes": 26738,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "badge-spark-finder2",
+      "category": "icons",
+      "filename": "badge_spark_finder2.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/badge_spark_finder2.webp",
+      "sizeBytes": 31662,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "badge-vip-lounge",
+      "category": "icons",
+      "filename": "badge_vip_lounge.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/badge_vip_lounge.webp",
+      "sizeBytes": 28544,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "chat-bubble",
+      "category": "icons",
+      "filename": "chat_bubble.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/chat_bubble.webp",
+      "sizeBytes": 2188,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "cheeky-chats",
+      "category": "icons",
+      "filename": "cheeky_chats.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/cheeky_chats.webp",
+      "sizeBytes": 19036,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "chill-zone",
+      "category": "icons",
+      "filename": "chill_zone.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/chill_zone.webp",
+      "sizeBytes": 18662,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "chill-zone2",
+      "category": "icons",
+      "filename": "chill_zone2.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/chill_zone2.webp",
+      "sizeBytes": 19856,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "coat-check",
+      "category": "icons",
+      "filename": "coat_check.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/coat_check.webp",
+      "sizeBytes": 18214,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "cocktail2",
+      "category": "icons",
+      "filename": "cocktail2.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/cocktail2.webp",
+      "sizeBytes": 20098,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "cocktail3",
+      "category": "icons",
+      "filename": "cocktail3.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/cocktail3.webp",
+      "sizeBytes": 19702,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "cocktail-bar",
+      "category": "icons",
+      "filename": "cocktail_bar.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/cocktail_bar.webp",
+      "sizeBytes": 19372,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "cocktail-bar2",
+      "category": "icons",
+      "filename": "cocktail_bar2.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/cocktail_bar2.webp",
+      "sizeBytes": 19036,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "cocktail-sign",
+      "category": "icons",
+      "filename": "cocktail_sign.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/cocktail_sign.webp",
+      "sizeBytes": 17206,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "collectible-card-back1",
+      "category": "icons",
+      "filename": "collectible_card_back1.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/collectible_card_back1.webp",
+      "sizeBytes": 54538,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "collectible-card-back2",
+      "category": "icons",
+      "filename": "collectible_card_back2.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/collectible_card_back2.webp",
+      "sizeBytes": 52068,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "congo-drums1",
+      "category": "icons",
+      "filename": "congo_drums1.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/congo_drums1.webp",
+      "sizeBytes": 25606,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "congo-drums2",
+      "category": "icons",
+      "filename": "congo_drums2.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/congo_drums2.webp",
+      "sizeBytes": 27320,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "crown",
+      "category": "icons",
+      "filename": "crown.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/crown.webp",
+      "sizeBytes": 3652,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "crown-prince",
+      "category": "icons",
+      "filename": "crown_prince.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/crown_prince.webp",
+      "sizeBytes": 3224,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "crown-queens",
+      "category": "icons",
+      "filename": "crown_queens.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/crown_queens.webp",
+      "sizeBytes": 3936,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "crown-sign",
+      "category": "icons",
+      "filename": "crown_sign.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/crown_sign.webp",
+      "sizeBytes": 24496,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "crowns-sign",
+      "category": "icons",
+      "filename": "crowns_sign.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/crowns_sign.webp",
+      "sizeBytes": 49542,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "cupcake",
+      "category": "icons",
+      "filename": "cupcake.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/cupcake.webp",
+      "sizeBytes": 29318,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "cupcake-sign",
+      "category": "icons",
+      "filename": "cupcake_sign.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/cupcake_sign.webp",
+      "sizeBytes": 27766,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "cursive1",
+      "category": "icons",
+      "filename": "cursive1.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/cursive1.webp",
+      "sizeBytes": 58274,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "cursive-bold",
+      "category": "icons",
+      "filename": "cursive_bold.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/cursive_bold.webp",
+      "sizeBytes": 57104,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "cursive-thin",
+      "category": "icons",
+      "filename": "cursive_thin.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/cursive_thin.webp",
+      "sizeBytes": 44232,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "dance-floor",
+      "category": "icons",
+      "filename": "dance_floor.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/dance_floor.webp",
+      "sizeBytes": 20302,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "dance-floor2",
+      "category": "icons",
+      "filename": "dance_floor2.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/dance_floor2.webp",
+      "sizeBytes": 19244,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "diamond",
+      "category": "icons",
+      "filename": "diamond.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/diamond.webp",
+      "sizeBytes": 2840,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "diamond-badge",
+      "category": "icons",
+      "filename": "diamond_badge.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/diamond_badge.webp",
+      "sizeBytes": 42350,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "diamond-floor",
+      "category": "icons",
+      "filename": "diamond_floor.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/diamond_floor.webp",
+      "sizeBytes": 22156,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "drink",
+      "category": "icons",
+      "filename": "drink.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/drink.webp",
+      "sizeBytes": 3658,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "enigmatic",
+      "category": "icons",
+      "filename": "enigmatic.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/enigmatic.webp",
+      "sizeBytes": 32752,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "enter-club",
+      "category": "icons",
+      "filename": "enter_club.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/enter_club.webp",
+      "sizeBytes": 17008,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "event-center",
+      "category": "icons",
+      "filename": "event_center.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/event_center.webp",
+      "sizeBytes": 18022,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "first-chat",
+      "category": "icons",
+      "filename": "first_chat.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/first_chat.webp",
+      "sizeBytes": 30096,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "first-date",
+      "category": "icons",
+      "filename": "first_date.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/first_date.webp",
+      "sizeBytes": 32928,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "first-date2",
+      "category": "icons",
+      "filename": "first_date2.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/first_date2.webp",
+      "sizeBytes": 32736,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "gfift-shop",
+      "category": "icons",
+      "filename": "gfift_shop.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/gfift_shop.webp",
+      "sizeBytes": 19514,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "gift",
+      "category": "icons",
+      "filename": "gift.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/gift.webp",
+      "sizeBytes": 24402,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "gold-badge",
+      "category": "icons",
+      "filename": "gold_badge.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/gold_badge.webp",
+      "sizeBytes": 45132,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "gold-floor",
+      "category": "icons",
+      "filename": "gold_floor.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/gold_floor.webp",
+      "sizeBytes": 21380,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "golden-coffee",
+      "category": "icons",
+      "filename": "golden_coffee.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/golden_coffee.webp",
+      "sizeBytes": 29386,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "golden-gift",
+      "category": "icons",
+      "filename": "golden_gift.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/golden_gift.webp",
+      "sizeBytes": 23610,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "happy",
+      "category": "icons",
+      "filename": "happy.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/happy.webp",
+      "sizeBytes": 5508,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "heart",
+      "category": "icons",
+      "filename": "heart.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/heart.webp",
+      "sizeBytes": 2984,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "heart-and-key",
+      "category": "icons",
+      "filename": "heart_and_key.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/heart_and_key.webp",
+      "sizeBytes": 22362,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "join-now",
+      "category": "icons",
+      "filename": "join_now.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/join_now.webp",
+      "sizeBytes": 24512,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "kay",
+      "category": "icons",
+      "filename": "kay.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/kay.webp",
+      "sizeBytes": 2206,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "layered-cake",
+      "category": "icons",
+      "filename": "layered_cake.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/layered_cake.webp",
+      "sizeBytes": 30686,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "lock",
+      "category": "icons",
+      "filename": "lock.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/lock.webp",
+      "sizeBytes": 4572,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "mail",
+      "category": "icons",
+      "filename": "mail.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/mail.webp",
+      "sizeBytes": 5108,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "microphone",
+      "category": "icons",
+      "filename": "microphone.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/microphone.webp",
+      "sizeBytes": 18916,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "neon-globe",
+      "category": "icons",
+      "filename": "neon_globe.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/neon_globe.webp",
+      "sizeBytes": 33486,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "neon-heart",
+      "category": "icons",
+      "filename": "neon_heart.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/neon_heart.webp",
+      "sizeBytes": 20638,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "neon-heart-sign",
+      "category": "icons",
+      "filename": "neon_heart_sign.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/neon_heart_sign.webp",
+      "sizeBytes": 23486,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "neon-limo",
+      "category": "icons",
+      "filename": "neon_limo.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/neon_limo.webp",
+      "sizeBytes": 47060,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "neon-print",
+      "category": "icons",
+      "filename": "neon_print.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/neon_print.webp",
+      "sizeBytes": 46666,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "new-arrival",
+      "category": "icons",
+      "filename": "new_arrival.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/new_arrival.webp",
+      "sizeBytes": 29004,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "novelty-box",
+      "category": "icons",
+      "filename": "novelty_box.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/novelty_box.webp",
+      "sizeBytes": 30662,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "opal-badge",
+      "category": "icons",
+      "filename": "opal_badge.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/opal_badge.webp",
+      "sizeBytes": 45516,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "pancakes",
+      "category": "icons",
+      "filename": "pancakes.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/pancakes.webp",
+      "sizeBytes": 31120,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "platinum-badge",
+      "category": "icons",
+      "filename": "platinum_badge.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/platinum_badge.webp",
+      "sizeBytes": 37908,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "platinum-floor",
+      "category": "icons",
+      "filename": "platinum_floor.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/platinum_floor.webp",
+      "sizeBytes": 15986,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "prizes",
+      "category": "icons",
+      "filename": "prizes.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/prizes.webp",
+      "sizeBytes": 30030,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "ruby-badge",
+      "category": "icons",
+      "filename": "ruby_badge.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/ruby_badge.webp",
+      "sizeBytes": 47224,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "sad",
+      "category": "icons",
+      "filename": "sad.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/sad.webp",
+      "sizeBytes": 4856,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "sad2",
+      "category": "icons",
+      "filename": "sad2.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/sad2.webp",
+      "sizeBytes": 5608,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "sad3",
+      "category": "icons",
+      "filename": "sad3.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/sad3.webp",
+      "sizeBytes": 5368,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "sapphire-badge",
+      "category": "icons",
+      "filename": "sapphire_badge.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/sapphire_badge.webp",
+      "sizeBytes": 48130,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "sappling-sign",
+      "category": "icons",
+      "filename": "sappling_sign.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/sappling_sign.webp",
+      "sizeBytes": 20330,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "sapplings-sign",
+      "category": "icons",
+      "filename": "sapplings_sign.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/sapplings_sign.webp",
+      "sizeBytes": 27114,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "silver-badge",
+      "category": "icons",
+      "filename": "silver_badge.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/silver_badge.webp",
+      "sizeBytes": 43394,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "silver-floor",
+      "category": "icons",
+      "filename": "silver_floor.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/silver_floor.webp",
+      "sizeBytes": 19100,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "smailey",
+      "category": "icons",
+      "filename": "smailey.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/smailey.webp",
+      "sizeBytes": 6064,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "smiley2",
+      "category": "icons",
+      "filename": "smiley2.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/smiley2.webp",
+      "sizeBytes": 5342,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "spark-list",
+      "category": "icons",
+      "filename": "spark_list.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/spark_list.webp",
+      "sizeBytes": 22760,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "spark-list2",
+      "category": "icons",
+      "filename": "spark_list2.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/spark_list2.webp",
+      "sizeBytes": 23648,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "spark-list3",
+      "category": "icons",
+      "filename": "spark_list3.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/spark_list3.webp",
+      "sizeBytes": 18888,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "speed-dating1",
+      "category": "icons",
+      "filename": "speed_dating1.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/speed_dating1.webp",
+      "sizeBytes": 19650,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "speed-dating2",
+      "category": "icons",
+      "filename": "speed_dating2.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/speed_dating2.webp",
+      "sizeBytes": 21130,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "speed-dating3",
+      "category": "icons",
+      "filename": "speed_dating3.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/speed_dating3.webp",
+      "sizeBytes": 20532,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "star",
+      "category": "icons",
+      "filename": "star.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/star.webp",
+      "sizeBytes": 5078,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "strawberry-cake",
+      "category": "icons",
+      "filename": "strawberry_cake.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/strawberry_cake.webp",
+      "sizeBytes": 30894,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "sushi",
+      "category": "icons",
+      "filename": "sushi.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/sushi.webp",
+      "sizeBytes": 29782,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "swag-shop",
+      "category": "icons",
+      "filename": "swag_shop.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/swag_shop.webp",
+      "sizeBytes": 20042,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "tiramasu",
+      "category": "icons",
+      "filename": "tiramasu.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/tiramasu.webp",
+      "sizeBytes": 27506,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "treasure-chest-sign",
+      "category": "icons",
+      "filename": "treasure_chest_sign.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/treasure_chest_sign.webp",
+      "sizeBytes": 27954,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "upgrade",
+      "category": "icons",
+      "filename": "upgrade.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/upgrade.webp",
+      "sizeBytes": 15834,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "velvet-rope",
+      "category": "icons",
+      "filename": "velvet_rope.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/velvet_rope.webp",
+      "sizeBytes": 16922,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "velvet-ropes",
+      "category": "icons",
+      "filename": "velvet_ropes.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/velvet_ropes.webp",
+      "sizeBytes": 34078,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "view-profile",
+      "category": "icons",
+      "filename": "view_profile.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/view_profile.webp",
+      "sizeBytes": 15296,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "vip-lounge",
+      "category": "icons",
+      "filename": "vip_lounge.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/vip_lounge.webp",
+      "sizeBytes": 19126,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "wings",
+      "category": "icons",
+      "filename": "wings.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/wings.webp",
+      "sizeBytes": 2256,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "wink",
+      "category": "icons",
+      "filename": "wink.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/wink.webp",
+      "sizeBytes": 5208,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "wink2",
+      "category": "icons",
+      "filename": "wink2.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/wink2.webp",
+      "sizeBytes": 5624,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "winky-sign",
+      "category": "icons",
+      "filename": "winky_sign.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/winky_sign.webp",
+      "sizeBytes": 26630,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "jax2",
+      "category": "coat-check",
+      "filename": "jax2.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/coat-check/jax2.webp",
+      "sizeBytes": 202778,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "favicon",
+      "category": "misc",
+      "filename": "favicon.ico",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/misc/favicon.ico",
+      "sizeBytes": 2632,
+      "mimeType": "image/x-icon"
+    },
+    {
+      "slug": "card-diamond",
+      "category": "floors",
+      "filename": "card-diamond.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/floors/card-diamond.webp",
+      "sizeBytes": 42570,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "card-gold",
+      "category": "floors",
+      "filename": "card-gold.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/floors/card-gold.webp",
+      "sizeBytes": 41358,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "card-platinum",
+      "category": "floors",
+      "filename": "card-platinum.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/floors/card-platinum.webp",
+      "sizeBytes": 44112,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "card-silver",
+      "category": "floors",
+      "filename": "card-silver.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/floors/card-silver.webp",
+      "sizeBytes": 46050,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "diamond",
+      "category": "floors",
+      "filename": "diamond.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/floors/diamond.webp",
+      "sizeBytes": 192604,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "gold",
+      "category": "floors",
+      "filename": "gold.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/floors/gold.webp",
+      "sizeBytes": 160362,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "platinum",
+      "category": "floors",
+      "filename": "platinum.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/floors/platinum.webp",
+      "sizeBytes": 152842,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "silver",
+      "category": "floors",
+      "filename": "silver.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/floors/silver.webp",
+      "sizeBytes": 183122,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "github",
+      "category": "misc",
+      "filename": "github.svg",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/misc/github.svg",
+      "sizeBytes": 2729,
+      "mimeType": "image/svg+xml"
+    },
+    {
+      "slug": "cheeky-signature",
+      "category": "icons",
+      "filename": "cheeky_signature.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/cheeky_signature.webp",
+      "sizeBytes": 2646,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "entrance-logo",
+      "category": "icons",
+      "filename": "entrance-logo.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/entrance-logo.webp",
+      "sizeBytes": 2632,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "ex",
+      "category": "icons",
+      "filename": "ex.icon-192.png",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/ex.icon-192.png",
+      "sizeBytes": 82046,
+      "mimeType": "image/png"
+    },
+    {
+      "slug": "ex",
+      "category": "icons",
+      "filename": "ex.icon-512.png",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/ex.icon-512.png",
+      "sizeBytes": 527496,
+      "mimeType": "image/png"
+    },
+    {
+      "slug": "icon-192",
+      "category": "icons",
+      "filename": "icon-192.png",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/icon-192.png",
+      "sizeBytes": 12594,
+      "mimeType": "image/png"
+    },
+    {
+      "slug": "icon-512",
+      "category": "icons",
+      "filename": "icon-512.png",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/icon-512.png",
+      "sizeBytes": 7992,
+      "mimeType": "image/png"
+    },
+    {
+      "slug": "nextjs",
+      "category": "misc",
+      "filename": "nextjs.svg",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/misc/nextjs.svg",
+      "sizeBytes": 3993,
+      "mimeType": "image/svg+xml"
+    },
+    {
+      "slug": "fullbody",
+      "category": "personas",
+      "filename": "fullbody.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/personas/fullbody.webp",
+      "sizeBytes": 127666,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "portrait",
+      "category": "personas",
+      "filename": "portrait.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/personas/portrait.webp",
+      "sizeBytes": 133620,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "door",
+      "category": "personas",
+      "filename": "door.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/personas/door.webp",
+      "sizeBytes": 67532,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "portrait",
+      "category": "personas",
+      "filename": "portrait.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/personas/portrait.webp",
+      "sizeBytes": 114302,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "portrait",
+      "category": "personas",
+      "filename": "portrait.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/personas/portrait.webp",
+      "sizeBytes": 163286,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "strut",
+      "category": "personas",
+      "filename": "strut.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/personas/strut.webp",
+      "sizeBytes": 176054,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "crowd",
+      "category": "personas",
+      "filename": "crowd.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/personas/crowd.webp",
+      "sizeBytes": 143114,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "stage",
+      "category": "personas",
+      "filename": "stage.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/personas/stage.webp",
+      "sizeBytes": 161506,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "fullbody",
+      "category": "personas",
+      "filename": "fullbody.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/personas/fullbody.webp",
+      "sizeBytes": 126694,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "portrait",
+      "category": "personas",
+      "filename": "portrait.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/personas/portrait.webp",
+      "sizeBytes": 135506,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "fullbody",
+      "category": "personas",
+      "filename": "fullbody.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/personas/fullbody.webp",
+      "sizeBytes": 130842,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "portrait",
+      "category": "personas",
+      "filename": "portrait.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/personas/portrait.webp",
+      "sizeBytes": 78416,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "stripe",
+      "category": "misc",
+      "filename": "stripe.svg",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/misc/stripe.svg",
+      "sizeBytes": 1828,
+      "mimeType": "image/svg+xml"
+    },
+    {
+      "slug": "supabase",
+      "category": "misc",
+      "filename": "supabase.svg",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/misc/supabase.svg",
+      "sizeBytes": 5612,
+      "mimeType": "image/svg+xml"
+    },
+    {
+      "slug": "vercel",
+      "category": "misc",
+      "filename": "vercel.svg",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/misc/vercel.svg",
+      "sizeBytes": 2073,
+      "mimeType": "image/svg+xml"
+    },
+    {
+      "slug": "gift-shop",
+      "category": "icons",
+      "filename": "gift_shop.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/gift_shop.webp",
+      "sizeBytes": 19514,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "key",
+      "category": "icons",
+      "filename": "key.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/key.webp",
+      "sizeBytes": 2206,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "jax-v2-slicked-back",
+      "category": "coat-check",
+      "filename": "jax-v2-slicked-back.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/coat-check/jax-v2-slicked-back.webp",
+      "sizeBytes": 79260,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "jax-the-vaultkeeper",
+      "category": "coat-check",
+      "filename": "jax-the-vaultkeeper.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/coat-check/jax-the-vaultkeeper.webp",
+      "sizeBytes": 91640,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "sasha-v2-blonde-thai",
+      "category": "coat-check",
+      "filename": "sasha-v2-blonde-thai.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/coat-check/sasha-v2-blonde-thai.webp",
+      "sizeBytes": 61334,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "sasha-v3-black-hair-edgy",
+      "category": "coat-check",
+      "filename": "sasha-v3-black-hair-edgy.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/coat-check/sasha-v3-black-hair-edgy.webp",
+      "sizeBytes": 58944,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "sasha-the-keeper",
+      "category": "coat-check",
+      "filename": "sasha-the-keeper.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/coat-check/sasha-the-keeper.webp",
+      "sizeBytes": 90064,
+      "mimeType": "image/webp"
+    }
+  ]
+}
