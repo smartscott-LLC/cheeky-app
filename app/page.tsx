@@ -74,13 +74,13 @@ export default async function LandingPage() {
         </div>
         <FloatingHearts />
         <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-20 text-center sm:pt-20 sm:pb-28">
-          <p className="text-base font-bold tracking-[0.3em] text-club">
+          <p className="font-body tracking-[0.3em] text-club">
             Looking for your next crush?
           </p>
           <h1 className="font-hero text-gold mx-auto mt-6 max-w-3xl text-8xl leading-tight sm:text-8xl">
             CLUB CHEEKY
           </h1>
-          <h2 className="mx-auto mt-4 max-w-2xl text-4xl text-cyan sm:text-5xl">
+          <h2 className="font-header mx-auto mt-4 max-w-2xl text-4xl text-cyan sm:text-5xl">
             Find your next date in our virtual nightclub!
           </h2>
 
@@ -97,24 +97,24 @@ export default async function LandingPage() {
             </div>
           </div>
 
-          <h2 className="mt-12 text-3xl font-extrabold text-cyan sm:text-4xl">
+          <h2 className="mt-12 text-3xl font-header text-cyan sm:text-4xl">
             At Club Cheeky&apos;s,{' '}
-            <span className="text-cyan">YOU are the VIP.</span>
+            <span className="font-header text-cyan">YOU are the VIP.</span>
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-xl text-club">
+          <p className="font-body mx-auto mt-4 max-w-2xl text-xl text-club">
             Everyone with an ID starts their own VIP adventure. It&apos;s free
             to get your groove on — money buys floors, never entry.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
               href="/verify"
-              className="rounded-lg bg-club px-12 py-4 text-lg font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
+              className="rounded-lg bg-gold px-12 py-4 text-lg font-body uppercase tracking-[0.12em] text-black transition hover:bg-club-cotton"
             >
               Join now
             </a>
             <a
               href="#membership"
-              className="rounded-lg border-2 border-gold px-10 py-4 text-lg font-extrabold uppercase tracking-[0.12em] text-club transition hover:bg-gold/10"
+              className="rounded-lg border-2 border-gold px-10 py-4 text-lg font-body uppercase tracking-[0.12em] text-club transition hover:bg-gold/10"
             >
               See the floors
             </a>
@@ -150,9 +150,9 @@ export default async function LandingPage() {
                 key={item.step}
                 className="rounded-xl border border-gold-700 bg-zinc-900/50 p-8"
               >
-                <p className="mt-3 text-base font-bold text-gold">{item.step}</p>
+                <p className="mt-3 text-base font-hero text-gold">{item.step}</p>
                 <h3 className="font-header text-cyan mt-3 text-2xl">{item.title}</h3>
-                <p className="mt-3 text-lg text-club">{item.body}</p>
+                <p className="font-body mt-3 text-lg text-club">{item.body}</p>
               </div>
             ))}
           </div>
@@ -162,13 +162,13 @@ export default async function LandingPage() {
       {/* Dance Floor teaser */}
       <section className="border-t border-zinc-900">
         <div className="mx-auto max-w-6xl px-6 py-20 text-center">
-          <p className="text-base font-bold uppercase tracking-[0.3em] text-gold">
+          <p className="text-base font-hero uppercase tracking-[0.3em] text-gold">
             Non-stop Action
           </p>
           <h2 className="font-header text-cyan mx-auto mt-4 max-w-2xl text-4xl sm:text-5xl">
             Events, Icebreakers and Exclusives keep you in the spotlight.
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-xl text-club">
+          <p className="font-body mx-auto mt-5 max-w-xl text-xl text-club">
             Icebreakers give new matches running starts. Weekly exclusives ensure you never get bored. A generous free tier gives everyone a chance to find their next someone. The swag shop is always looking to equip our guests with the latest swag to give you the edge you need!
 
             --- A direct quote from Club Cheeky’s very own Chaz Sterling (Club Manager) - “Club Cheeky isn’t just a dating hotspot, it’s a *love laboratory* where my DeepSeek-powered mojo turns ‘meh’ into ‘SHAGADELIC!’ I’ve got algorithms smoother than my chest hair, events hotter than my umbrella drinks, and matches so spot-on, you’d swear I spilled piña colada on the ‘Soulmate’ button. Come for the vibe, stay for the *velvet magic*—because nobody, and I mean *nobody*, leaves without a little extra groove in their heart. Oh, *behave!*” ---
@@ -188,7 +188,7 @@ export default async function LandingPage() {
           <h2 className="font-header text-cyan mt-4 text-center text-3xl sm:text-4xl">
             Get your membership card
           </h2>
-          <ul className="mx-auto mt-4 max-w-2xl text-center">
+          <ul className="font-body mx-auto mt-4 max-w-2xl text-center">
             <li className="text-club text-xl">
               Choose either a FREE membership (Silver Card) or purchase a higher
               tier for maximum gain and minimum overhead!
@@ -214,10 +214,10 @@ export default async function LandingPage() {
                 />
                 <div className="p-6">
                   <div className={`h-3 w-3 rounded-full ${floor.color}`} />
-                  <h3 className="font-header text-cyan mt-4 text-2xl">{floor.name}</h3>
-                  <ul className="mt-4 space-y-2 text-base text-club">
+                  <h3 className="font-hero text-gold mt-4 text-2xl">{floor.name}</h3>
+                  <ul className="font-header mt-4 space-y-2 text-base text-cyan">
                     {floor.perks.map((perk) => (
-                      <li key={perk} className="text-club">• {perk}</li>
+                      <li key={perk} className="font-body text-club">• {perk}</li>
                     ))}
                   </ul>
                 </div>

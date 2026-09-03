@@ -33,7 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/refunds',
     '/law-enforcement',
     '/contact',
-    '/sitemap'
+    '/sitemap-page'
   ];
   return routes.map((route) => ({
     url: `${base}${route}`,
