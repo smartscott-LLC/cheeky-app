@@ -7,7 +7,7 @@
       }
     },
     "chub": {
-      "packageName": "nextjs-mongo-template",
+      "packageName": "chub",
       "routing": [
         {
           "paths": [
