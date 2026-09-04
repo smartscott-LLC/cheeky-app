@@ -25,7 +25,7 @@ interface BarState {
   tiles: Tile[];
 }
 
-type Position = 'top' | 'bottom';
+type Position = 'top' | 'bottom' | 'center' | 'left' | 'right';
 interface Prefs {
   hidden: boolean;
   collapsed: boolean;
@@ -116,7 +116,7 @@ export default function TikiTaskbar() {
       className={`${
         prefs.position === 'top'
           ? 'sticky top-[4rem] z-40 w-1/3 min-w-[240px] md:top-[5rem]'
-          : 'fixed bottom-3 left-3 z-40 w-1/3 min-w-[240px]'
+          : 'fixed bottom-3 left-1/2 z-40 -translate-x-1/2 w-auto min-w-[240px]'
       }`}
     >
       {prefs.collapsed ? (
@@ -132,8 +132,8 @@ export default function TikiTaskbar() {
         <div>
           {/* Label — centered over the bar, small. Controls hug the corner. */}
           <div className="relative pr-20">
-            <h2 className="font-hero text-gold text-center text-sm tracking-wide sm:text-base">
-              Tiki Taskbar
+            <h2 className="font-hero text-gold text-sm tracking-wide sm:text-base">
+             Tiki Taskbar
             </h2>
             <div className="absolute right-0 top-0 flex items-center gap-1 text-zinc-500">
               <button

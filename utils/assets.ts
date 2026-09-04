@@ -154,6 +154,7 @@ export const ASSETS = {
     star: iconUrl('star'),
     swagShop: iconUrl('swag_shop'),
     velvetRope: iconUrl('velvet_rope'),
+    vipLounge: iconUrl('vip_lounge'),
     wink: iconUrl('wink'),
   },
   brand: {

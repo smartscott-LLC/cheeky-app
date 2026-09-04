@@ -450,7 +450,7 @@ export default function ClubAudio() {
       onClick={toggle}
       aria-label={muted ? 'Turn on the club music' : 'Turn off the club music'}
       title="The DJ is on the decks"
-      className={`fixed bottom-5 left-5 z-50 flex h-11 w-11 items-center justify-center rounded-full border text-lg transition hover:scale-105 ${
+      className={`fixed top-[70%] left-4 z-50 flex h-11 w-11 items-center justify-center rounded-full border text-lg transition hover:scale-105 ${
         muted
           ? 'border-zinc-700 bg-zinc-900 text-cyan'
           : 'border-club/60 bg-zinc-900 font-body text-club shadow-[0_0_16px_rgba(255,45,155,0.35)]'

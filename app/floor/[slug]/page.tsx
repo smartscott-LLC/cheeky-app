@@ -4,8 +4,7 @@ import { getUser } from '@/utils/supabase/queries';
 import { redirect } from 'next/navigation';
 import { notFound } from 'next/navigation';
 import { floorBySlug } from '@/utils/floors';
-import FloorLayout from '@/components/ui/Club/FloorLayout';
-import AnnouncementBanner from '@/components/ui/AnnouncementBanner/AnnouncementBanner';
+import FloorPageLayout from '@/components/ui/Club/FloorPageLayout';
 
 export default async function FloorPage({
   params
@@ -44,16 +43,16 @@ export default async function FloorPage({
   if (closed) {
     return (
       <div className="bg-black">
-        <div className="mx-auto max-w-2xl px-6 py-16 text-center">
+        <div className="mx-auto max-w-2xl px-6 py-10 text-center">
           <p className="font-body text-club text-5xl">🚧</p>
-          <h1 className="font-hero text-gold mt-6 text-4xl">
+          <h1 className="font-hero text-gold pt-6 text-4xl">
             The {floor.name} floor is under construction
           </h1>
           <p className="font-body text-club mx-auto mt-3 max-w-md text-lg">
             {closure?.reason ??
               'The crew is setting up the room — come back soon.'}
           </p>
-          <div className="mt-8">
+          <div className="mt-6">
             <Link
               href="/floors"
               className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold font-body text-club transition hover:border-zinc-500 hover:text-white"
@@ -78,7 +77,7 @@ export default async function FloorPage({
       </div>
 
       {locked ? (
-        <div className="mx-auto max-w-2xl px-6 py-16 text-center">
+        <div className="mx-auto max-w-2xl px-6 py-8 text-center">
           <p className="font-body text-club text-5xl">🛗</p>
           <h1 className="font-hero text-gold mt-6 text-4xl">
             The {floor.name} floor is behind the rope.
@@ -103,25 +102,24 @@ export default async function FloorPage({
           </div>
         </div>
       ) : (
-        <>
-          <div className="mx-auto max-w-6xl px-6 pt-6 text-center">
-            {/* The floor kicker follows the type system — Damion, cyan —
-                on every floor (founder: the diamond one rendered in its
-                raspberry accent; headers are always cyan). */}
-            <p className="font-header text-cyan text-base uppercase tracking-[0.3em]">
-              The {floor.name} floor
-            </p>
-            <p className="font-body text-club mx-auto mt-2 max-w-xl text-lg">
-              {floor.tagline}
-            </p>
-            <div className="mt-5">
-              <AnnouncementBanner />
-            </div>
-          </div>
-          <div className="pt-6">
-            <FloorLayout background={floor.art} spots={floor.rooms} />
-          </div>
-        </>
+        <FloorPageLayout
+          background={floor.art}
+          floorName={floor.name}
+          floorTagline={floor.tagline}
+          floorSlug={slug}
+          eventSlug={
+            slug === 'silver' ? 'dance_floor' :
+            slug === 'gold' ? 'blind_date' :
+            slug === 'platinum' ? 'speed' :
+            slug === 'diamond' ? 'rooftop' : undefined
+          }
+          eventLabel={
+            slug === 'silver' ? 'Dance Floor' :
+            slug === 'gold' ? 'Blind Date' :
+            slug === 'platinum' ? 'Speed Dating' :
+            slug === 'diamond' ? 'The Rooftop' : 'Floor Event'
+          }
+        />
       )}
     </div>
   );

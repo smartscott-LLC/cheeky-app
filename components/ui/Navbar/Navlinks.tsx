@@ -83,6 +83,14 @@ export default function Navlinks({ user }: NavlinksProps) {
             <Link href="/account" className={s.link}>
               Account
             </Link>
+            {!onTheStreet && (
+              <Link
+                href="/lounge"
+                className="rounded-lg border border-gold/50 px-4 py-2 text-sm font-extrabold uppercase tracking-[0.12em] text-gold transition hover:border-gold hover:bg-gold/10"
+              >
+                🍸 Lounge
+              </Link>
+            )}
             <Link
               href="/club"
               className="rounded-lg bg-club px-5 py-2 text-sm font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
