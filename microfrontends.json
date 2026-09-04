@@ -3,13 +3,17 @@
   "applications": {
     "cheeky-app": {
       "development": {
-        "fallback": "www.smartscott.online"
+        "fallback": "smartscott.online"
       }
     },
     "chub": {
+      "packageName": "nextjs-mongo-template",
       "routing": [
         {
-          "paths": ["/lounge/:path*"]
+          "paths": [
+            "/lounge",
+            "/lounge/:path*"
+          ]
         }
       ]
     }
