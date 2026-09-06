@@ -52,8 +52,8 @@ const ROOM_LABEL: Record<string, string> = {
   global: '🌐 The Lounge',
   silver: '🥈 Silver',
   gold: '🥇 Gold',
-  platinum: '💎 Platinum',
-  diamond: '🔷 Diamond'
+  platinum: '🔷 Platinum',
+  diamond: '💎 Diamond'
 };
 
 const FLOOR_TONE: Record<string, string> = {

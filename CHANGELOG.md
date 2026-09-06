@@ -342,7 +342,7 @@ points — every push to `main` is production.
   floor cards ~170→42 KiB each (full-res kept for the room backgrounds).
 - **PostHog removed entirely** (founder's call — underused, heavy, and the config headaches
   weren't paying for it): `posthog-js`/`posthog-node` dropped, all capture/identify calls and
-  the client init gone, env vars + docs cleaned. Sentry stays for errors; Stripe + GA can cover
+  the client init gone, env vars + docs cleaned. Sentry is removed; Stripe + GA can cover
   analytics when we actually need funnels.
 - **Swag codes hardened** (founder): every code now defaults to a **30-day window to be
   used** (redeem already refused expired codes — minting just never set one), and gift codes

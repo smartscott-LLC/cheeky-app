@@ -40,7 +40,6 @@
   "dependencies": {
     "@ai-sdk/deepseek": "^3.0.19",
     "@radix-ui/react-toast": "^1.2.23",
-    "@sentry/nextjs": "^10.69.0",
     "@stripe/react-stripe-js": "^6.8.0",
     "@stripe/stripe-js": "9.12.1",
     "@supabase/ssr": "^0.1.0",

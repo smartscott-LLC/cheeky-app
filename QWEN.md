@@ -24,7 +24,6 @@ It's a dating app with gamification — floors, events, collectibles, crew chara
 | User Storage | **MongoDB** (photos, collectibles, user-owned content) |
 | Lounge Chat | **Stream Chat** (full moderation: blocks, mutes, rate limits, violations, whispers, tier-gated channels) |
 | AI Chat | **Agnes-02.5-flash** from [AgnesAI](https://apihub.agnes-ai.com/v1) via `/api/agent` (crew character brains) |
-| Error Tracking | **Sentry** |
 | Deployment | **Vercel** (auto-deploy from `main`) |
 | Lounge Chat (microfrontend) | **chub** (Chat Hub) — separate Next.js 16 app at `/home/server/chub/` with full-page lounge UI, Stream Chat, horn, gifts, ticker, floating hearts |
 

@@ -1,5 +1,4 @@
 allowBuilds:
-  '@sentry/cli': true
   sharp: true
   stream-chat: true
   stream-chat-react: true

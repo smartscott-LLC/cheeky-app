@@ -30,7 +30,7 @@ create table public.gift_catalog (
 insert into public.gift_catalog (slug, name, emoji, floor, token_cost, kind) values
   ('teddy', 'Stuffed Bear', '🧸', 'silver', 25, 'special'),
   ('golden_roses', 'Golden Bouquet', '🌹', 'gold', 50, 'special'),
-  ('jewelry', 'Jewelry', '💎', 'platinum', 100, 'special'),
+  ('jewelry', 'Jewelry', '🔷', 'platinum', 100, 'special'),
   ('champagne', 'Bottle of Champagne', '🍾', 'diamond', 200, 'special'),
   ('gift_basket', 'The Gift Basket', '🧺', 'silver', 300, 'basket')
 on conflict (slug) do nothing;

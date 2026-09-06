@@ -117,8 +117,8 @@ export const STREAM_ROOMS = [
   { key: 'global', label: 'The Lounge', emoji: '🌐', rank: -1 },
   { key: 'silver', label: 'Silver', emoji: '🥈', rank: 0 },
   { key: 'gold', label: 'Gold', emoji: '🥇', rank: 1 },
-  { key: 'platinum', label: 'Platinum', emoji: '💎', rank: 2 },
-  { key: 'diamond', label: 'Diamond', emoji: '🔷', rank: 3 }
+  { key: 'platinum', label: 'Platinum', emoji: '🔷', rank: 2 },
+  { key: 'diamond', label: 'Diamond', emoji: '💎', rank: 3 }
 ] as const;
 
 export type StreamRoomKey = (typeof STREAM_ROOMS)[number]['key'];

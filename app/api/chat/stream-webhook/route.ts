@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'bad_json' }, { status: 400 });
   }
 
-  // Log to Sentry-equivalent console; surfaces in Vercel logs.
+  // Surfaces in Vercel logs.
   console.log('[stream-webhook]', event.type, { webhookId: req.headers.get('x-webhook-id') });
 
   try {

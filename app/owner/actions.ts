@@ -832,8 +832,8 @@ export async function ownerFetchStreamLounge(input: { key?: string }): Promise<{
     { key: 'global', label: 'The Lounge', emoji: '🌐' },
     { key: 'silver', label: 'Silver', emoji: '🥈' },
     { key: 'gold', label: 'Gold', emoji: '🥇' },
-    { key: 'platinum', label: 'Platinum', emoji: '💎' },
-    { key: 'diamond', label: 'Diamond', emoji: '🔷' }
+    { key: 'platinum', label: 'Platinum', emoji: '🔷' },
+    { key: 'diamond', label: 'Diamond', emoji: '💎' }
   ];
   const dayAgo = new Date(Date.now() - 24 * 3_600_000);
   const rooms = await Promise.all(

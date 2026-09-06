@@ -75,7 +75,6 @@ report/block from any chat, honeypots for bots.
 - **Stripe** — subscriptions, checkout, and Identity (verification).
 - **DeepSeek** (`/api/agent`) — the crew's brains; persona prompts live in
   the `characters` table.
-- **Sentry** — error tracking (wizard setup).
 - **Vercel** — the only build gate: every push to `main` builds, deploys,
   and fails loud.
 
@@ -100,7 +99,7 @@ pnpm stripe:fixtures               # bootstrap products/prices from fixtures/
 ```
 
 The crew's chat needs `DEEPSEEK_API_KEY`. Verification needs real Stripe
-keys. Sentry is optional locally.
+keys.
 
 ## Environment variables
 
@@ -120,7 +119,6 @@ The full set (see `.env.local.example` for the core local-dev values).
 | `DEEPSEEK_API_KEY`                                                                   | `/api/agent` — the crew's chat engine                                                                         |
 | `OPENROUTER_API_KEY`                                                                 | DateSafe — the image-review watchdog (vision model)                                                           |
 | `RESEND_API_KEY` · `REGISTERED_DOMAIN`                                               | Transactional mail — welcome, apology, ban notices                                                            |
-| `SENTRY_AUTH_TOKEN`                                                                  | Sentry source-map uploads                                                                                     |
 | `VERCEL_OIDC_TOKEN`                                                                  | Created by `vercel link` for CI builds                                                                        |
 
 ## Scripts
