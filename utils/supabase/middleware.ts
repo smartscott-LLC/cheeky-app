@@ -30,6 +30,7 @@ export const createClient = (request: NextRequest) => {
         response.cookies.set({
           name,
           value,
+          path: '/',
           ...options
         });
       },
@@ -48,6 +49,7 @@ export const createClient = (request: NextRequest) => {
         response.cookies.set({
           name,
           value: '',
+          path: '/',
           ...options
         });
       }
