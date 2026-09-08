@@ -129,7 +129,13 @@
       "Bash(anchor, *)",
       "Bash(anchor *)",
       "Bash(console.log)",
-      "Bash(200, *)"
+      "Bash(200, *)",
+      "Read(//home/server/chub/**)",
+      "Bash(head *)",
+      "Bash(cd *)",
+      "Bash(tail *)",
+      "Bash(grep *)",
+      "Bash(printf *)"
     ]
   },
   "$version": 4

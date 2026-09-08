@@ -145,6 +145,16 @@ async function mirrorMessageNew(event: StreamMessageNew) {
     stream_message_id: msg.id ?? null
   });
 
+  // Chatterbox counter: messages that arrive via Stream (lounge/chub
+  // or the main app's streamSend path) never pass through the
+  // club_chat_send RPC, so bump the profile counter here. Messages
+  // sent through club_chat_send never hit Stream, so no double-count.
+  if (!msg.custom?.horn) {
+    await supabaseAdmin.rpc('club_chat_bump_badges', {
+      p_user: msg.user.id
+    });
+  }
+
   if (msg.custom?.horn) {
     await supabaseAdmin.from('club_announcements').insert({
       body: `🎺 ${msg.text}`,
