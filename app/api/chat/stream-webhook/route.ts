@@ -145,13 +145,13 @@ async function mirrorMessageNew(event: StreamMessageNew) {
   // used for the mirror so the policy is a no-op for us.
   await supabaseAdmin.from('club_chat_messages').insert({
     room,
-    sender_id: msg.user.id,
-    body: msg.text,
+    sender_id: msg.user.id as string,
+    body: msg.text as string,
     floor_tag: (msg.custom?.floor as string) || 'silver',
     horn: Boolean(msg.custom?.horn),
-    created_at: msg.created_at ?? new Date().toISOString(),
-    stream_message_id: msg.id ?? null
-  });
+    created_at: (msg.created_at ?? new Date().toISOString()) as string,
+    stream_message_id: msg.id ?? undefined
+  } as any);
 
   // Chatterbox counter: messages that arrive via Stream (lounge/chub
   // or the main app's streamSend path) never pass through the
@@ -182,6 +182,6 @@ async function mirrorMessageUpdate(event: {
     await supabaseAdmin
       .from('club_chat_messages')
       .update({ body: '[deleted]' })
-      .eq('stream_message_id', event.message.id);
+      .eq('stream_message_id' as any, event.message.id);
   }
 }

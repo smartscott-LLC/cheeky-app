@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   matchmakerHistory,
   type MatchmakerHistoryBoard
@@ -18,17 +18,20 @@ export default function MatchmakerHistory() {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const res = await matchmakerHistory();
-    setBoards(res.boards);
-    setLoaded(true);
-    if (res.error) setError(res.error);
-  }, []);
-
-  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    void load();
-  }, [load]);
+    let cancelled = false;
+    const run = async () => {
+      const res = await matchmakerHistory();
+      if (cancelled) return;
+      setBoards(res.boards);
+      setLoaded(true);
+      if (res.error) setError(res.error);
+    };
+    run();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const photoBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`;
 

@@ -93,14 +93,18 @@ export default async function GiftsPage() {
           .filter('photos.held_at', 'is', 'null')
       : { data: [] };
 
-  const people = (peopleProfiles ?? []).map((p) => ({
-    id: p.id,
-    display_name: p.display_name,
-    photo:
-      p.photos?.find((ph) => ph.is_primary)?.storage_path ??
-      p.photos?.[0]?.storage_path ??
-      null
-  }));
+  const people = (peopleProfiles ?? []).map((p) => {
+    const gph = p.photos as unknown as
+      Array<{ storage_path: string; is_primary: boolean }> | undefined;
+    return {
+      id: p.id,
+      display_name: p.display_name,
+      photo:
+        gph?.find((pp) => pp.is_primary)?.storage_path ??
+        gph?.[0]?.storage_path ??
+        null
+    };
+  });
 
   // Sender profiles for incoming gifts (recipient sees everything — photo too).
   const senderIds = [
@@ -118,16 +122,20 @@ export default async function GiftsPage() {
       : { data: [] };
 
   const profileMap = new Map(
-    (senderProfiles ?? []).map((p) => [
-      p.id,
-      {
-        display_name: p.display_name,
-        photo:
-          p.photos?.find((ph) => ph.is_primary)?.storage_path ??
-          p.photos?.[0]?.storage_path ??
-          null
-      }
-    ])
+    (senderProfiles ?? []).map((p) => {
+      const saph = p.photos as unknown as
+        Array<{ storage_path: string; is_primary: boolean }> | undefined;
+      return [
+        p.id,
+        {
+          display_name: p.display_name,
+          photo:
+            saph?.find((ph) => ph.is_primary)?.storage_path ??
+            saph?.[0]?.storage_path ??
+            null
+        }
+      ];
+    })
   );
 
   const stash = (stashRows ?? []).map((s) => {

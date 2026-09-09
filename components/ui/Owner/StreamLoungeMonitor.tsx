@@ -59,12 +59,31 @@ export default function StreamLoungeMonitor({
     setTotals(res.totals ?? null);
   }, [ownerKey]);
 
-  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    void refresh();
-    const t = setInterval(refresh, 15_000);
-    return () => clearInterval(t);
-  }, [refresh]);
+    let cancelled = false;
+    const run = async () => {
+      setBusy(true);
+      const res = await ownerFetchStreamLounge({ key: ownerKey });
+      if (cancelled) return;
+      setBusy(false);
+      if (res.error) {
+        setMsg({ ok: false, text: res.error });
+        return;
+      }
+      setRooms(res.rooms ?? []);
+      setTotals(res.totals ?? null);
+    };
+    run();
+    const t = setInterval(() => {
+      if (!cancelled) {
+        run();
+      }
+    }, 15_000);
+    return () => {
+      cancelled = true;
+      clearInterval(t);
+    };
+  }, [ownerKey]);
 
   const submitBan = async () => {
     if (!banDraft || !banReason.trim()) return;

@@ -2,7 +2,8 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { cache } from 'react';
 import { Database } from '@/types_db';
 
-type Client = SupabaseClient<Database, 'public', Database['public']>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Client = SupabaseClient<Database, any>;
 
 export const getUser = cache(async (supabase: Client) => {
   const {

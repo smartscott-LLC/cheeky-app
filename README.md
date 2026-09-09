@@ -68,13 +68,16 @@ report/block from any chat, honeypots for bots.
 
 ## Stack
 
-- **Next.js 15** (App Router) + **TypeScript** + **Tailwind** — server
-  components by default; `'use client'` only where interactivity requires.
+- **Next.js 16** (App Router) + **TypeScript** + **Tailwind 4** (`@import "tailwindcss"` + `@theme`) —
+  server components by default; `'use client'` only where interactivity requires.
 - **Supabase** — auth, Postgres with **Row Level Security on every table**,
   migrations, generated types.
 - **Stripe** — subscriptions, checkout, and Identity (verification).
 - **AGNES** (`/api/agent`) — the crew's brains; persona prompts live in
-  the `characters` table.
+  the `characters` table. Direct REST fetch to `apihub.agnes-ai.com/v1` (no provider SDK).
+- **Lounge (chub)** — separate Next.js 16 app at `/home/server/chub/`, served as a
+  Vercel microfrontend under `/lounge/:path*`. Same Supabase project, separate deploy.
+- **Oxlint** — linter, configured in `oxlint.config.ts`. Zero dependency on eslint.
 - **Vercel** — the only build gate: every push to `main` builds, deploys,
   and fails loud.
 
@@ -125,7 +128,7 @@ The full set (see `.env.local.example` for the core local-dev values).
 
 | Command                                                      | What it does                                                                                          |
 | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
-| `pnpm dev` / `pnpm build` / `pnpm lint`                      | Dev server (turbo) / production build / lint                                                          |
+| `pnpm dev` / `pnpm build` / `pnpm lint` / `pnpm lint:fix`    | Dev server (turbo) / production build / oxlint / auto-fix                                             |
 | `pnpm test`                                                  | Safe test suite (`node:test`, zero deps). Live suites with `RUN_LIVE_TESTS=1` — see `tests/README.md` |
 | `pnpm prettier-fix`                                          | Format everything (Prettier is enforced)                                                              |
 | `pnpm stripe:listen` / `pnpm stripe:fixtures`                | Local webhooks / bootstrap products                                                                   |
@@ -166,10 +169,11 @@ components/     ui primitives (ui/) + feature components (Agent, Club, Events,
                 Gifts, Messages, Audio, Swag, Navbar, Footer, Browse, ClubChat) — see
                 docs/COMPONENT-LIBRARY.md
 utils/          supabase clients + queries, stripe, auth helpers, floors map,
-                characters, events config, swag, rate limits, token-amount
-supabase/       migrations (87) — apply to hosted with scripts/migrate-hosted.mjs
+                characters, events config, swag, rate limits, token-amount, agent
+chub/           (/home/server/chub) Lounge microfrontend — separate Next.js 16 app
+supabase/       migrations — apply to hosted with scripts/migrate-hosted.mjs
 scripts/        dev utilities (migrate-hosted, backfill-*, check-*, test-*)
-styles/         global css (main.css) + floor palettes (styles/palettes/*.scss)
+styles/         globals.css (Tailwind v4 @theme), palette-colors.js
 docs/           PRD-foundation.md + PRDs + GAME-ENGINES.md (the two game
                 engines + Playability Check) + Governance/ + COMPONENT-LIBRARY.md +
                 ENVIRONMENT.md + floor-map.md + event-diagrams/ +
@@ -178,30 +182,17 @@ docs/           PRD-foundation.md + PRDs + GAME-ENGINES.md (the two game
 tests/          node:test suite — safe (pnpm test) + live (RUN_LIVE_TESTS=1)
 fixtures/       Stripe fixture JSON for bootstrapping products/prices
 public/         served assets: brand/ (floor art, entrance), personas/ (crew
-                images), audio/ (DJ tracks)
+                images), audio/ (DJ tracks), cheeky_icons_and_things/ (112 icons)
+types_db.ts     generated Supabase types — commit after regenerating
+oxlint.config.ts    oxlint ruleset
+next.config.ts      Next.js configuration
+postcss.config.ts   PostCSS with @tailwindcss/postcss
+tailwind.config.ts  Tailwind v3 compat (colors resolved from globals.css @theme)
 ```
-
-## Working here
-
-- **PRD first.** Product decisions land in `docs/` before code — and when a
-  decision changes, the doc and the code change together.
-- **Governance is code.** The policies in `docs/Governance/` (terms, privacy,
-  safety, retention, refunds) are binding — schema and flows satisfy them.
-- **Surgical changes.** In existing code, do exactly what the task asks. No
-  opportunistic refactors.
-- **Ask when it's ambiguous.** When a product decision is unclear, ask rather
-  than inventing an answer that contradicts the PRD.
-
-Read [`AGENTS.md`](AGENTS.md) — the working guidelines — and
-[`docs/PRD-foundation.md`](docs/PRD-foundation.md) — the product spec.
-[`docs/floor-map.md`](docs/floor-map.md) is the source of truth for what
-belongs on every floor. [`docs/GAME-ENGINES.md`](docs/GAME-ENGINES.md) is
-where new games get checked against the two engines. [`CONTRIBUTING.md`](CONTRIBUTING.md) is the process
-discipline — the standing rule, migrations, testing, secrets.
 
 ## Validation checklist
 
-- [ ] `pnpm lint` passes
+- [ ] `pnpm lint` passes (oxlint — 0 warnings, 0 errors)
 - [ ] `pnpm test` passes (safe suite; run live suites if the change touches events/tokens/webhooks)
 - [ ] `pnpm build` passes
 - [ ] Affected user flow manually verified (signup, verification, checkout, event)

@@ -1,3 +1,4 @@
+@reference "tailwindcss";
 .root {
   @apply inline-flex text-center items-center leading-7;
 }

@@ -62,10 +62,28 @@ export default function L3Trio() {
     setDone(res.done);
   }, []);
 
-  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    void loadTrio();
-  }, [loadTrio]);
+    let cancelled = false;
+    const run = async () => {
+      setBusy(true);
+      setError(null);
+      setAssigned({});
+      setOutcomes(null);
+      const res = await l3NextTrio();
+      if (cancelled) return;
+      setBusy(false);
+      if (res.error) {
+        setError(res.error);
+        return;
+      }
+      setPeople(res.people);
+      setDone(res.done);
+    };
+    run();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const photoBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`;
   const allAssigned = people.length > 0 && people.every((p) => assigned[p.id]);

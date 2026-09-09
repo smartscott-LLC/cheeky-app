@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { getReturnFloor } from '@/utils/return-floor';
+import { dateNow } from '@/utils/date-now';
 import {
   getSubscription,
   getUser,
@@ -15,6 +16,7 @@ import {
 } from '@/utils/supabase/queries';
 
 export default async function Account() {
+  await connection();
   const supabase = await createClient();
   const [user, subscription] = await Promise.all([
     getUser(supabase),
@@ -83,7 +85,7 @@ export default async function Account() {
           : '🪪 Your Silver card';
   // Far-future grants (owner comps, giveaways) read as permanent — no
   // misreading a 2126 date as days.
-  const now = Date.now();
+  const now = dateNow();
   const grantExpiry = (iso: string) => {
     const exp = new Date(iso).getTime();
     if (exp - now > 10 * 365 * 86400000) return 'permanent';

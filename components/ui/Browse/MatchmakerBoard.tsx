@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   matchmakerBoardCards,
   matchmakerBoardUnlocks,
@@ -58,44 +58,45 @@ export default function MatchmakerBoard({
 
   const photoBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`;
 
-  const load = useCallback(async () => {
-    const [cardsRes, unlocksRes] = await Promise.all([
-      matchmakerBoardCards(boardId),
-      matchmakerBoardUnlocks(boardId)
-    ]);
-    if (cardsRes.error || unlocksRes.error) {
-      setError(cardsRes.error ?? unlocksRes.error ?? null);
-      return;
-    }
-    setCards(cardsRes.cards);
-    setUnlockSentFor(unlocksRes.sent);
-    // Restore face-up state: matched pairs + the current flip (resume-safe).
-    const up: Record<string, Reveal> = {};
-    for (const c of cardsRes.cards) {
-      if (c.matched && c.display_name) {
-        up[c.id] = {
-          target_id: c.target_id!,
-          display_name: c.display_name,
-          photo_path: c.photo_path
-        };
-      } else if (c.id === flippedCardId && c.display_name) {
-        up[c.id] = {
-          target_id: c.target_id!,
-          display_name: c.display_name,
-          photo_path: c.photo_path
-        };
-      }
-    }
-    setFaceUp(up);
-  }, [boardId, flippedCardId]);
-
-  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    void load();
+    let cancelled = false;
+    const run = async () => {
+      const [cardsRes, unlocksRes] = await Promise.all([
+        matchmakerBoardCards(boardId),
+        matchmakerBoardUnlocks(boardId)
+      ]);
+      if (cancelled) return;
+      if (cardsRes.error || unlocksRes.error) {
+        setError(cardsRes.error ?? unlocksRes.error ?? null);
+        return;
+      }
+      setCards(cardsRes.cards);
+      setUnlockSentFor(unlocksRes.sent);
+      // Restore face-up state: matched pairs + the current flip (resume-safe).
+      const up: Record<string, Reveal> = {};
+      for (const c of cardsRes.cards) {
+        if (c.matched && c.display_name) {
+          up[c.id] = {
+            target_id: c.target_id!,
+            display_name: c.display_name,
+            photo_path: c.photo_path
+          };
+        } else if (c.id === flippedCardId && c.display_name) {
+          up[c.id] = {
+            target_id: c.target_id!,
+            display_name: c.display_name,
+            photo_path: c.photo_path
+          };
+        }
+      }
+      setFaceUp(up);
+    };
+    run();
     return () => {
+      cancelled = true;
       if (strikeTimer.current) clearTimeout(strikeTimer.current);
     };
-  }, [load]);
+  }, [boardId, flippedCardId]);
 
   const flip = async (card: MatchmakerCard) => {
     if (busyId || ended || unlockTarget || sendingUnlock) return;

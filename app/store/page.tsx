@@ -47,12 +47,19 @@ export default async function StorePage() {
             id: p.id,
             name: p.name ?? '',
             description: p.description,
-            prices: (p.prices ?? []).map((pr) => ({
-              id: pr.id,
-              interval_count: pr.interval_count,
-              unit_amount: pr.unit_amount,
-              currency: pr.currency
-            }))
+            prices: (p.prices ?? []).map(
+              (pr: {
+                id: string;
+                interval_count: number | null;
+                unit_amount: number | null;
+                currency: string;
+              }) => ({
+                id: pr.id,
+                interval_count: pr.interval_count,
+                unit_amount: pr.unit_amount,
+                currency: pr.currency
+              })
+            )
           }))}
           subscriptionName={subscription?.prices?.products?.name ?? null}
           verified={Boolean(profile?.verified_at)}

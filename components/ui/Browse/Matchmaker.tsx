@@ -35,15 +35,31 @@ export default function Matchmaker() {
     if (res.error) setError(res.error);
   }, []);
 
-  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    void refresh();
+    let cancelled = false;
+    const run = async () => {
+      const res = await matchmakerState();
+      if (cancelled) return;
+      setPlaysLeft(res.playsLeft);
+      setIncoming(res.incoming);
+      setActive(res.active);
+      setLoading(false);
+      if (res.error) setError(res.error);
+    };
+    run();
     // The alert is time-sensitive: check for new discoveries on a light poll.
     const t = setInterval(() => {
-      void matchmakerState().then((res) => setIncoming(res.incoming));
+      if (!cancelled) {
+        matchmakerState().then((res) => {
+          if (!cancelled) setIncoming(res.incoming);
+        });
+      }
     }, 15000);
-    return () => clearInterval(t);
-  }, [refresh]);
+    return () => {
+      cancelled = true;
+      clearInterval(t);
+    };
+  }, []);
 
   const beginDraft = async () => {
     setError(null);

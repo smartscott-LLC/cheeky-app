@@ -1,10 +1,33 @@
-@import 'https://github.com/google/fonts/raw/main/ofl/fascinate/Fascinate-Regular.ttf';
-@import 'https://github.com/google/fonts/raw/main/ofl/damion/Damion-Regular.ttf';
-@import 'https://github.com/google/fonts/raw/main/apache/rancho/Rancho-Regular.ttf';
+@import 'tailwindcss';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Club Cheeky brand palette — gold, cyan, pink, black. 3 fonts. That's it. */
+@theme {
+  --font-fascinate: 'Fascinate', display;
+  --font-damion: 'Damion', cursive;
+  --font-rancho: 'Rancho', cursive;
+
+  --color-gold: #ffd800;
+  --color-cyan: #66ffff;
+  --color-club: #ffb5ff;
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
 
 *:focus:not(ol) {
   @apply outline-none ring-2 ring-club/50;

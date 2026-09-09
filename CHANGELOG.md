@@ -9,6 +9,72 @@ points — every push to `main` is production.
 
 ### Added
 
+- **Lounge (chub) inline auth** — the lounge entrance now has an inline sign-in / sign-up /
+  magic-link form. No redirect to the main app's `/signin` page — the user never leaves
+  `/lounge`. Auth endpoints at `/api/auth/signin`, `/api/auth/signup`, `/api/auth/magic-link`,
+  `/api/auth/signout`, and `/auth/callback` (magic link landing). The callback exchanges the
+  code and redirects back to `/lounge`.
+- **Lounge coat check panel** — sidebar button fetches `/api/coat-check` and shows badges,
+  gems, daily streak, and persona in a glassmorphism overlay.
+- **Lounge challenge tables** — migration `20260903000001_lounge_challenge.sql` creates
+  `challenge_queue`, `challenge_matches`, `challenge_leaderboard` with RLS and RPCs. Challenge
+  handlers rewritten from in-memory to DB-backed.
+- **Lounge ticker connected to live data** — reads main app's `announcements` marquee +
+  `club_announcements` (horn/gift ticker) instead of static hardcoded array.
+- **Supabase migration pipeline synced** — `supabase/migrations/` now tracks all schema
+  changes (was 4 files, now 6 with the lounge challenge + status column fix).
+
+### Changed
+
+- **Oxlint replaces eslint** — removed `.eslintrc.json`, all `eslint-config-*` /
+  `eslint-plugin-*` packages. Linting is now `oxlint --config oxlint.config.ts` via
+  `pnpm lint` / `pnpm lint:fix`. Type-aware rules, Next.js plugin, React plugin active.
+- **Tailwind v3 → v4** — migrated from `@tailwind base/components/utilities` to
+  `@import "tailwindcss"` + `@theme`. CSS modules use `@reference "tailwindcss"` for
+  `@apply`. Brand palette trimmed to 3 colors (gold `#FFD800`, cyan `#66FFFF`,
+  pink/club `#FF97FF`). Config files: `next.config.js` → `next.config.ts`,
+  `postcss.config.js` → `postcss.config.ts`, `tailwind.config.ts` simplified.
+- **`"type": "module"`** — package.json set to ESM mode. The 3 `.js` config files were
+  renamed to `.ts` (native ESM compatibility).
+- **TypeScript resolved to 0 errors** — went from 28 build errors to 0. Fixed photo
+  relationship type casts across 15+ files, ESM import paths, missing imports
+  (`localFont`, `Github` icon), and type narrowing.
+- **Schema fix: missing `subscriptions.status`** — the live Supabase `subscriptions` table
+  was missing the `status` column. Every RPC calling `current_tier()` crashed with
+  `column s.status does not exist`. Migration `20260904000001_add_subscription_status.sql`
+  added the column and backfilled existing rows to `'active'`.
+- **AGNES/deepseek direct fetch** — `utils/agent/deepseek-direct.ts` rewritten to use
+  direct REST fetch instead of the missing `createAGNES` / `streamText` SDK. Works with
+  any OpenAI-compatible API key.
+- **Lounge (chub) session sync** — `proxy.js` renamed to `middleware.js` (Next.js only
+  recognizes `middleware` export). Both apps now force `path: /` on Supabase cookies so
+  the session is visible across the microfrontend boundary.
+- **Lounge API URL prefix** — all client-side API fetches in page.js prefixed with
+  `/lounge` (`const B = '/lounge'`) so they hit the chub's route handler instead of the
+  main app's (which returns 404).
+- **Lounge PWA paths** — manifest URL set to `/lounge/manifest.json`, SW scope set to
+  `/lounge/`, SW precache updated, fetch handler matches `/lounge/api/` for network-first
+  strategy.
+
+### Fixed
+
+- **Test suite pass rate** — 65 pass / 28 fail → 76 pass / 15 fail. The `s.status does not
+exist` schema crash eliminated all ~13 failures. Remaining 15 are transient Supabase auth
+  rate limits and event-scheduler timing windows.
+- **Chatterbox badge count** — Stream webhook now calls `club_chat_bump_badges` for
+  Stream-path messages (no double-count with the `club_chat_send` RPC). Lounge chatter
+  feeds the badge family.
+
+### Validation
+
+- `pnpm lint` — **0 warnings, 0 errors** (oxlint, 215 files, 96 rules)
+- `pnpm test` — 92 tests, 76 pass, 15 fail (transient)
+- `pnpm build` — green, both apps (cheeky-app + chub)
+
+## [v0.4-stream-lounge] — 2026-09-06
+
+### Added
+
 - **Stream Chat — the live transport** (PRD §4 — easier moderation,
   video/voice on the roadmap). The town square now runs on Stream
   Chat as the primary live surface; the Supabase-Realtime overlay

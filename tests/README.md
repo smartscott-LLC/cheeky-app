@@ -6,8 +6,8 @@ that matter at scale: **the webhook handlers**, **the token engine**, and
 
 ## Running
 
-| Command                      | What it runs                                                                      |
-| ---------------------------- | --------------------------------------------------------------------------------- |
+| Command         | What it runs  |
+| ---------------------------- | --------------------------------------------- |
 | `pnpm test`                  | Safe tests only — pure logic, no network, no DB. CI runs this.                    |
 | `RUN_LIVE_TESTS=1 pnpm test` | Everything, including the live tests below (hits the production app + hosted DB). |
 

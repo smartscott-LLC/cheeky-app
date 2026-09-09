@@ -4,8 +4,11 @@ import { getReturnFloor } from '@/utils/return-floor';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { KIND_META, eventUrl, timeLabel } from '@/utils/events';
+import { pastDateCutoff } from '@/utils/date-now';
+import { connection } from 'next/server';
 
 export default async function EventsPage() {
+  await connection();
   const supabase = await createClient();
   const user = await getUser(supabase);
   if (!user) {
@@ -26,7 +29,7 @@ export default async function EventsPage() {
     tier === 'gold' ? 1 : tier === 'platinum' ? 2 : tier === 'diamond' ? 3 : 0;
 
   const kinds = Object.keys(KIND_META);
-  const cutoff = new Date(Date.now() - 3 * 60 * 1000).toISOString();
+  const cutoff = pastDateCutoff(3);
   const [{ data: events }, { data: announcements }] = await Promise.all([
     supabase
       .from('events')

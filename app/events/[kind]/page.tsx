@@ -6,12 +6,15 @@ import { getReturnFloor } from '@/utils/return-floor';
 import { redirect, notFound } from 'next/navigation';
 import Link from 'next/link';
 import { KIND_META, timeLabel } from '@/utils/events';
+import { connection } from 'next/server';
+import { pastDateCutoff } from '@/utils/date-now';
 
 export default async function EventRoomPage({
   params
 }: {
   params: Promise<{ kind: string }>;
 }) {
+  await connection()
   const { kind } = await params;
   const meta = KIND_META[kind];
   if (!meta) {
@@ -78,7 +81,7 @@ export default async function EventRoomPage({
   // Make sure the playlist for the next couple of hours exists, then find
   // this room's next slot — join it any time, even early.
   await supabase.rpc('ensure_floor_events', { p_hours: 2 });
-  const cutoff = new Date(Date.now() - 3 * 60 * 1000).toISOString();
+  const cutoff = pastDateCutoff(3);
   const { data: events } = await supabase
     .from('events')
     .select('*')
@@ -138,19 +141,23 @@ export default async function EventRoomPage({
         : { data: [] };
 
     const profileMap = new Map(
-      (profiles ?? []).map((p) => [
-        p.id,
-        {
-          display_name: p.display_name,
-          verified_at: p.verified_at,
-          gender: p.gender,
-          interested_in: p.interested_in,
-          photo:
-            p.photos?.find((ph) => ph.is_primary)?.storage_path ??
-            p.photos?.[0]?.storage_path ??
-            null
-        }
-      ])
+      (profiles ?? []).map((p) => {
+        const ph = p.photos as unknown as
+          Array<{ storage_path: string; is_primary: boolean }> | undefined;
+        return [
+          p.id,
+          {
+            display_name: p.display_name,
+            verified_at: p.verified_at,
+            gender: p.gender,
+            interested_in: p.interested_in,
+            photo:
+              ph?.find((pp) => pp.is_primary)?.storage_path ??
+              ph?.[0]?.storage_path ??
+              null
+          }
+        ];
+      })
     );
 
     participants =

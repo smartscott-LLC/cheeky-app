@@ -143,17 +143,21 @@ export default function SpeedDatingFloor({
             .in('id', ids)
         : { data: [] };
     const profileMap = new Map(
-      (profiles ?? []).map((p) => [
-        p.id,
-        {
-          display_name: p.display_name,
-          verified_at: p.verified_at,
-          photo:
-            p.photos?.find((ph) => ph.is_primary)?.storage_path ??
-            p.photos?.[0]?.storage_path ??
-            null
-        }
-      ])
+      (profiles ?? []).map((p) => {
+        const photos = p.photos as unknown as
+          Array<{ storage_path: string; is_primary: boolean }> | undefined;
+        return [
+          p.id,
+          {
+            display_name: p.display_name,
+            verified_at: p.verified_at,
+            photo:
+              photos?.find((ph) => ph.is_primary)?.storage_path ??
+              photos?.[0]?.storage_path ??
+              null
+          }
+        ];
+      })
     );
     setParticipants(
       (entries ?? []).map((e) => ({

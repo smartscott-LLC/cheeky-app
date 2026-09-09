@@ -3,8 +3,11 @@ import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { connection } from 'next/server';
+import { pastDateCutoff } from '@/utils/date-now';
 
 export default async function SpeedDatingPage() {
+  await connection();
   const supabase = await createClient();
   const user = await getUser(supabase);
   if (!user) {
@@ -51,7 +54,7 @@ export default async function SpeedDatingPage() {
 
   await supabase.rpc('ensure_floor_events', { p_hours: 2 });
 
-  const fifteenMinAgo = new Date(Date.now() - 15 * 60 * 1000).toISOString();
+  const fifteenMinAgo = pastDateCutoff(15);
   const { data: events } = await supabase
     .from('events')
     .select('*')
@@ -94,17 +97,21 @@ export default async function SpeedDatingPage() {
         : { data: [] };
 
     const profileMap = new Map(
-      (profiles ?? []).map((p) => [
-        p.id,
-        {
-          display_name: p.display_name,
-          verified_at: p.verified_at,
-          photo:
-            p.photos?.find((ph) => ph.is_primary)?.storage_path ??
-            p.photos?.[0]?.storage_path ??
-            null
-        }
-      ])
+      (profiles ?? []).map((p) => {
+        const sph = p.photos as unknown as
+          Array<{ storage_path: string; is_primary: boolean }> | undefined;
+        return [
+          p.id,
+          {
+            display_name: p.display_name,
+            verified_at: p.verified_at,
+            photo:
+              sph?.find((pp) => pp.is_primary)?.storage_path ??
+              sph?.[0]?.storage_path ??
+              null
+          }
+        ];
+      })
     );
 
     participants =

@@ -33,9 +33,11 @@ export default async function MessagesPage() {
       : { data: [] };
   const wavePhoto = (id: string) => {
     const p = (waveProfiles ?? []).find((w) => w.id === id);
+    const wPh = p?.photos as unknown as
+      Array<{ storage_path: string; is_primary: boolean }> | undefined;
     return (
-      p?.photos?.find((ph) => ph.is_primary)?.storage_path ??
-      p?.photos?.[0]?.storage_path ??
+      wPh?.find((ph) => ph.is_primary)?.storage_path ??
+      wPh?.[0]?.storage_path ??
       null
     );
   };

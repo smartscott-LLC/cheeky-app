@@ -40,7 +40,6 @@ export default function DateNightPanel({
   } | null>(null);
   const [now, setNow] = useState(() => Date.now());
   const [leaderboard, setLeaderboard] = useState<number[]>([]);
-  const [timedOut, setTimedOut] = useState(false);
 
   const poll = useCallback(async () => {
     const { data } = await supabase.rpc('date_night_state', {
@@ -55,12 +54,10 @@ export default function DateNightPanel({
       setState(d.game);
       setMyPick(d.my_pick);
       setPartnerPicked(Boolean(d.partner_picked));
-      setTimedOut(false);
     }
   }, [gameId, supabase]);
 
   // Fetch the live question whenever it changes.
-  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
     if (!state?.question_id) return;
     supabase
@@ -74,19 +71,37 @@ export default function DateNightPanel({
   }, [state?.question_id, supabase]);
 
   // Poll the game + keep a local clock.
-  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    void poll();
-    const t = setInterval(poll, 2000);
+    let cancelled = false;
+    const run = async () => {
+      const { data } = await supabase.rpc('date_night_state', {
+        p_game: gameId
+      });
+      if (cancelled) return;
+      if (data) {
+        const d = data as unknown as {
+          game: GameState;
+          my_pick: number | null;
+          partner_picked: boolean;
+        };
+        setState(d.game);
+        setMyPick(d.my_pick);
+        setPartnerPicked(Boolean(d.partner_picked));
+      }
+    };
+    run();
+    const t = setInterval(() => {
+      if (!cancelled) run();
+    }, 2000);
     const clock = setInterval(() => setNow(Date.now()), 500);
     return () => {
+      cancelled = true;
       clearInterval(t);
       clearInterval(clock);
     };
-  }, [poll]);
+  }, [gameId, supabase]);
 
   // On finish, pull the couples leaderboard for this pack (scores only).
-  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
     if (state?.status === 'finished' && state.pack_id) {
       supabase
@@ -102,12 +117,11 @@ export default function DateNightPanel({
     ? new Date(state.question_started_at).getTime() + ROUND_SECONDS * 1000
     : 0;
   const left = live ? Math.max(0, Math.floor((endsAt - now) / 1000)) : 0;
+  const timedOut = left <= 0 && live;
 
   // Timeout: nobody locked it — skip the question (server closes it as missed).
-  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
     if (!live || left > 0 || timedOut || !state) return;
-    setTimedOut(true);
     void tapDateNight(gameId, state.current_index, null);
   }, [live, left, timedOut, gameId, state]);
 

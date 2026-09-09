@@ -1,3 +1,7 @@
+@reference "tailwindcss";
+@theme {
+  --color-cyan: #66ffff;
+}
 .root {
   @apply bg-black py-2 px-3 w-full appearance-none transition duration-150 ease-in-out border border-zinc-500 text-cyan;
 }

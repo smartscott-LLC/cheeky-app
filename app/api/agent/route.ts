@@ -2,7 +2,10 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { supabaseAdmin } from '@/utils/supabase/admin';
 import { streamAgent, GatewayMessage } from '@/utils/agent/gateway';
-import { streamAGNESDirect, DirectMessage } from '@/utils/agent/deepseek-direct';
+import {
+  streamAGNESDirect,
+  DirectMessage
+} from '@/utils/agent/deepseek-direct';
 import {
   hasSwagAccess,
   swagSystemNote,

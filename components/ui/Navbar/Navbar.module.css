@@ -1,3 +1,8 @@
+@reference "tailwindcss";
+@theme {
+  --color-gold: #ffd800;
+  --color-cyan: #66ffff;
+}
 .root {
   @apply sticky top-0 z-40 bg-black/80 backdrop-blur-md transition-all duration-150 h-16 md:h-20 border-b border-zinc-900;
 }
@@ -11,7 +16,7 @@
 }
 
 .link:focus {
-  @apply outline-none text-gold ring-2 ring-gold ring-opacity-50;
+  @apply outline-none text-gold ring-2 ring-gold/50;
 }
 
 .logo {

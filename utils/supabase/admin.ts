@@ -3,7 +3,7 @@ import { toDateTime } from '@/utils/helpers';
 import { stripe } from '@/utils/stripe/config';
 import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
-import type { Database, Tables, TablesInsert } from 'types_db';
+import type { Database, Tables, TablesInsert } from '@/types_db';
 import { supabaseUrl, supabaseServiceKey } from '@/utils/supabase/keys';
 import { sendClubMail } from '@/utils/email';
 import { parseTokenAmount } from '@/utils/token-amount';
@@ -357,7 +357,7 @@ const copyBillingDetailsToCustomer = async (
     .from('users')
     .update({
       billing_address: { ...address },
-      payment_method: { ...payment_method[payment_method.type] }
+      payment_method: { ...(payment_method as any)[payment_method.type] }
     })
     .eq('id', uuid);
   if (updateError)
@@ -401,10 +401,10 @@ const manageSubscriptionStatusChange = async (
       ? toDateTime(subscription.canceled_at).toISOString()
       : null,
     current_period_start: toDateTime(
-      subscription.current_period_start
+      (subscription as any).current_period_start
     ).toISOString(),
     current_period_end: toDateTime(
-      subscription.current_period_end
+      (subscription as any).current_period_end
     ).toISOString(),
     created: toDateTime(subscription.created).toISOString(),
     ended_at: subscription.ended_at
@@ -538,7 +538,7 @@ const grantMembershipTokens = async (
   if (!grant) return; // not a membership (token pack, etc.)
 
   const periodStartIso = toDateTime(
-    subscription.current_period_start
+    (subscription as any).current_period_start
   ).toISOString();
   const ref = membershipGrantRef(subscription.id, periodStartIso, price.id);
   const grantRank = membershipTierRank(grant.reason);

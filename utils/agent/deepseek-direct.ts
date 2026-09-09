@@ -1,12 +1,12 @@
-// Direct AGNES via the official AI SDK provider — best of both worlds:
-// the `ai` package's machinery (streaming, robust parsing, future tools)
-// pointed straight at apihub.agnes-ai.com/v1 with your own key. No gateway, no
-// aggregator markup (Baseten/OpenRouter all add a cut).
-//
-// Model: AGNES_MODEL (default AGNES-chat; AGNES-reasoner for the
-// R1 chain-of-thought mode).
+// Direct AGNES via REST — no provider packages needed; the API is
+// OpenAI-compatible and the probe in tests/ai-probe.live.test.mjs
+// proves fetch works fine. The `ai` SDK streamText/createAGNES were
+// removed during the dep migration; this is the zero-dep path.
 
-const AGNES_BASE = '${AGNES_URL}';
+const AGNES_BASE =
+  process.env.AGNES_URL ||
+  process.env.DEEPSEEK_URL ||
+  'https://apihub.agnes-ai.com/v1';
 
 export interface DirectMessage {
   role: 'user' | 'assistant';
@@ -31,23 +31,26 @@ export async function streamAGNESDirect(opts: {
     throw new Error(`AGNES_http_${probe.status}`);
   }
 
-  const AGNES = createAGNES({ apiKey: opts.apiKey });
-  const result = streamText({
-    model: AGNES(opts.model),
-    system: opts.system,
-    messages: opts.messages
+  const response = await fetch(`${AGNES_BASE}/chat/completions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${opts.apiKey}`
+    },
+    body: JSON.stringify({
+      model: opts.model,
+      stream: true,
+      messages: [
+        ...(opts.system ? [{ role: 'system', content: opts.system }] : []),
+        ...opts.messages
+      ]
+    })
   });
 
-  return new ReadableStream<Uint8Array>({
-    async start(controller) {
-      try {
-        for await (const chunk of result.textStream) {
-          controller.enqueue(new TextEncoder().encode(chunk));
-        }
-        controller.close();
-      } catch (err) {
-        controller.error(err);
-      }
-    }
-  });
+  if (!response.ok) {
+    const text = await response.text().catch(() => '');
+    throw new Error(`AGNES_http_${response.status}: ${text.slice(0, 200)}`);
+  }
+
+  return response.body!;
 }

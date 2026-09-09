@@ -39,13 +39,17 @@ export default function CustomerPortalForm({
   const currentPath = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const priceDetails = subscription?.prices as unknown as {
+    currency: string;
+    unit_amount: number;
+  } | null;
   const subscriptionPrice =
-    subscription &&
+    priceDetails &&
     new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: subscription?.prices?.currency,
+      currency: priceDetails.currency,
       minimumFractionDigits: 0
-    }).format((subscription?.prices?.unit_amount || 0) / 100);
+    }).format((priceDetails.unit_amount || 0) / 100);
 
   const handleStripePortalRequest = async () => {
     setIsSubmitting(true);

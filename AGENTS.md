@@ -45,10 +45,12 @@ A dating app built like a nightclub. Three pillars:
 
 ## Engineering conventions
 
-- **Stack:** Next.js 15 (App Router), Supabase (auth + Postgres + RLS), Stripe (billing + Identity + checkout), Tailwind, TypeScript.
+- **Stack:** Next.js 16 (App Router), Supabase (auth + Postgres + RLS), Stripe (billing + Identity + checkout), Tailwind 4 (`@import "tailwindcss"` + `@theme`), TypeScript, Oxlint.
 - **Components:** server components by default; `'use client'` only where interactivity requires it. UI primitives live in `components/ui/`. Keep `components/ui/` presentational — business logic goes in `utils/`.
 - **Two game engines, one club:** clock-driven scheduled rooms run on the Events Engine (`events`/`event_entries`/the minute cron — `docs/PRD-event-logic.md`); instant solo games (Swipes, L³, Matchmaker) run on the Spark Game Spine (matches/rewards/gifts/messages/rate-limits — each game adds its own value-resolution RPCs). Before building a new game, run it through the Playability Check in `docs/GAME-ENGINES.md` — and when a game hits an architecture fork, ask the founder first.
-- **Styling:** Tailwind utility classes; CSS modules for component-specific styles (`components/ui/Navbar/Navbar.module.css` pattern). Floor color schemes live in `styles/palettes/*.scss` (source of truth) and are mirrored as Tailwind tokens (`club`, `gold`, `platinum`, `diamond`) in `tailwind.config.js` — never hardcode hex in components.
+- **Styling:** Tailwind utility classes; CSS modules for component-specific styles (`components/ui/Navbar/Navbar.module.css` pattern) using `@reference "tailwindcss"` for `@apply`. Color palette defined in `styles/globals.css` via `@theme` (gold `#FFD800`, cyan `#66FFFF`, pink/club `#FF97FF`). Three fonts: Fascinate (heroes/gold), Damion (headers/cyan), Rancho (body/pink). Never hardcode hex in components — use `text-gold`, `text-cyan`, `text-club`.
+- **Oxlint:** linter is `oxlint` (not eslint). Run `pnpm lint` (zero warnings allowed) or `pnpm lint:fix` for auto-fix. Config at `oxlint.config.ts`.
+- **Lounge (chub):** separate Next.js 16 app at `/home/server/chub/` served as a Vercel microfrontend under `/lounge/:path*`. Same Supabase project, separate deploy. Middleware shares session cookies via `path: /` override. Changes to `microfrontends.json` require extreme care — deploy chub first, then cheeky-app.
 - **Supabase:**
   - Row Level Security is mandatory on every table. Never disable RLS "just for now."
   - Service role key is server-only. Client code uses the anon key.
@@ -88,7 +90,7 @@ CONTRIBUTING.md the discipline doc: standing rule, migrations, testing, secrets
 
 ## Validation checklist (before any PR)
 
-- [ ] `pnpm lint` passes
+- [ ] `pnpm lint` passes (oxlint — 0 warnings, 0 errors)
 - [ ] `pnpm test` passes (safe suite; run the live suites if the change touches events/tokens/webhooks)
 - [ ] `pnpm build` passes
 - [ ] Affected user flow manually verified (signup, verification, checkout, event)

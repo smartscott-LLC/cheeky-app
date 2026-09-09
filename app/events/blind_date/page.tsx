@@ -33,11 +33,13 @@ async function profileMap(
     { display_name: string | null; photo: string | null }
   >();
   for (const p of data ?? []) {
+    const bdPhotos = p.photos as unknown as
+      Array<{ storage_path: string; is_primary: boolean }> | undefined;
     map.set(p.id, {
       display_name: p.display_name,
       photo:
-        p.photos?.find((ph) => ph.is_primary)?.storage_path ??
-        p.photos?.[0]?.storage_path ??
+        bdPhotos?.find((ph) => ph.is_primary)?.storage_path ??
+        bdPhotos?.[0]?.storage_path ??
         null
     });
   }

@@ -1,0 +1,157 @@
+@import 'tailwindcss';
+
+/* ── CSS Vars ─────────────────────────────────────────────────── */
+:root {
+  --cc-bg: #080808;
+  --cc-gold: #ffd800;
+  --cc-cyan: #66ffff;
+  --cc-pink: #ff97ff;
+  --cc-glass: rgba(6, 3, 16, 0.92);
+  --cc-text: #f8f8f2;
+}
+
+@theme {
+  --color-gold: #ffd800;
+  --color-cyan: #66ffff;
+  --color-club: #ff97ff;
+
+  --font-fascinate: 'Fascinate', display, system-ui;
+  --font-damion: 'Damion', cursive;
+  --font-rancho: 'Rancho', cursive;
+}
+
+/* ── Reset ────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #080808;
+}
+h1,
+h2,
+h3 {
+  font-synthesis: none;
+}
+
+/* ── Font Utility Classes (font + matching colour) ────────────── */
+.font-fascinate {
+  font-family: var(--font-fascinate);
+  color: var(--color-fascinate, #ffd800);
+}
+.font-damion {
+  font-family: var(--font-damion);
+  color: var(--color-damion, #66ffff);
+}
+.font-rancho {
+  font-family: var(--font-rancho);
+  color: var(--color-rancho, #ff97ff);
+}
+
+.fascinate-regular {
+  font-family: 'Fascinate', system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+.damion-regular {
+  font-family: 'Damion', cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+.rancho-regular {
+  font-family: 'Rancho', cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 216, 0, 0.25);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 216, 0, 0.45);
+}
+
+/* ── Ticker ───────────────────────────────────────────────────── */
+@keyframes ticker-loop {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.ticker-track {
+  display: inline-block;
+  white-space: nowrap;
+  animation: ticker-loop 40s linear infinite;
+}
+
+/* ── Floating Hearts ──────────────────────────────────────────── */
+@keyframes heart-float {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(var(--rot, 0deg));
+    opacity: 0;
+  }
+  10% {
+    opacity: var(--op, 0.55);
+  }
+  30% {
+    transform: translate3d(calc(var(--drift, 20px) * -0.6), -30vh, 0)
+      rotate(calc(var(--rot, 0deg) + 10deg));
+  }
+  60% {
+    transform: translate3d(var(--drift, 20px), -65vh, 0)
+      rotate(calc(var(--rot, 0deg) - 8deg));
+  }
+  88% {
+    opacity: var(--op, 0.55);
+  }
+  100% {
+    transform: translate3d(calc(var(--drift, 20px) * 0.5), -108vh, 0)
+      rotate(calc(var(--rot, 0deg) + 12deg));
+    opacity: 0;
+  }
+}
+.floating-hearts {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.floating-hearts .heart {
+  position: absolute;
+  bottom: -3rem;
+  left: var(--x, 50%);
+  font-size: var(--size, 16px);
+  line-height: 1;
+  animation: heart-float var(--dur, 14s) linear var(--delay, 0s) infinite;
+  filter: drop-shadow(0 0 6px currentColor);
+  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  .floating-hearts {
+    display: none;
+  }
+}
+
+/* ── Glass ────────────────────────────────────────────────────── */
+.glass {
+  background: var(--cc-glass);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 216, 0, 0.14);
+}

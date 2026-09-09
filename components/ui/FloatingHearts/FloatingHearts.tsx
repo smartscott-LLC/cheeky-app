@@ -4,7 +4,7 @@
 // auto-pauses in background tabs, respects prefers-reduced-motion. The four
 // pink shades come from tokens (club pink, cotton, bubblegum 400/500), so the
 // theme stays in one place.
-import type { CSSProperties } from 'react';
+import { useMemo, type CSSProperties } from 'react';
 
 const PINK_SHADES = [
   'font-body text-club-pink', // #FF4DA6 — brand neon pink
@@ -15,10 +15,8 @@ const PINK_SHADES = [
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
 
-export default function FloatingHearts({ count = 16 }: { count?: number }) {
-  // Decorative hearts — randomness is intentional, computed once on mount.
-  // oxlint-disable-next-line react(purity)
-  const hearts = Array.from({ length: count }, (_, i) => ({
+function generateHearts(count: number) {
+  return Array.from({ length: count }, (_, i) => ({
     color: PINK_SHADES[i % PINK_SHADES.length],
     x: rand(2, 98),
     size: Math.pow(Math.random(), 1.4) * 16 + 10,
@@ -28,6 +26,10 @@ export default function FloatingHearts({ count = 16 }: { count?: number }) {
     rot: rand(-16, 16),
     opacity: rand(0.25, 0.65)
   }));
+}
+
+export default function FloatingHearts({ count = 16 }: { count?: number }) {
+  const hearts = useMemo(() => generateHearts(count), [count]);
 
   return (
     <div className="floating-hearts" aria-hidden="true">

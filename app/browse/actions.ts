@@ -86,7 +86,7 @@ export async function l3NextTrio(): Promise<{
   const myProfile = await getProfile(supabase, user.id);
 
   const [trio, liked, matched] = await Promise.all([
-    supabase.rpc('l3_trio', {}),
+    supabase.rpc('l3_trio', {} as unknown as undefined),
     supabase.from('likes').select('likee_id').eq('liker_id', user.id),
     supabase
       .from('matches')
@@ -403,7 +403,9 @@ export async function matchmakerHistory(): Promise<{
       p.id,
       {
         display_name: p.display_name,
-        photo_path: p.photos?.[0]?.storage_path ?? null
+        photo_path:
+          (p.photos as unknown as Array<{ storage_path: string }>)?.[0]
+            ?.storage_path ?? null
       }
     ])
   );

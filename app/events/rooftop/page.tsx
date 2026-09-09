@@ -102,16 +102,20 @@ export default async function RooftopPage() {
           .filter('photos.held_at', 'is', 'null')
       : { data: [] };
   const profileMap = new Map(
-    (profiles ?? []).map((p) => [
-      p.id,
-      {
-        displayName: p.display_name,
-        photo:
-          p.photos?.find((ph) => ph.is_primary)?.storage_path ??
-          p.photos?.[0]?.storage_path ??
-          null
-      }
-    ])
+    (profiles ?? []).map((p) => {
+      const rph = p.photos as unknown as
+        Array<{ storage_path: string; is_primary: boolean }> | undefined;
+      return [
+        p.id,
+        {
+          displayName: p.display_name,
+          photo:
+            rph?.find((pp) => pp.is_primary)?.storage_path ??
+            rph?.[0]?.storage_path ??
+            null
+        }
+      ];
+    })
   );
   const board = reservedIds.map((id) => ({
     userId: id,

@@ -82,10 +82,27 @@ export default function TikiTaskbar() {
 
   // Refetch on mount and every navigation (the bar lives in the layout,
   // so it doesn't re-render with the page — this is how it stays current).
-  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    void fetchState();
-  }, [fetchState, pathname]);
+    let cancelled = false;
+    const run = async () => {
+      if (inFlight.current) return;
+      inFlight.current = true;
+      try {
+        const res = await fetch('/api/taskbar', { cache: 'no-store' });
+        if (cancelled) return;
+        if (!res.ok) {
+          setState(null);
+          return;
+        }
+        setState((await res.json()) as BarState);
+      } catch {
+        // Keep the last good state — the bar must never flicker on a blip.
+      } finally {
+        inFlight.current = false;
+      }
+    };
+    run();
+  }, [pathname]);
 
   // Light poll + refocus refresh; pause while the tab is hidden.
   useEffect(() => {

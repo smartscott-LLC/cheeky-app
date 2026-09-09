@@ -1,5 +1,6 @@
 import { Suspense, PropsWithChildren } from 'react';
 import { Metadata } from 'next';
+import localFont from 'next/font/local';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
 import TikiTaskbar from '@/components/ui/Taskbar/TikiTaskbar';
@@ -12,7 +13,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import { getURL } from '@/utils/helpers';
 import { ASSETS } from '@/utils/assets';
-import '../styles/main.css';
+import '../styles/globals.css';
 
 // The nightclub type system (founder): Fascinate for heroes, Damion for
 // headers, Rancho for body. All three are single-weight display fonts —

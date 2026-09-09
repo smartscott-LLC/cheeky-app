@@ -107,9 +107,24 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
     setTotals(res.totals ?? null);
   }, [ownerKey]);
 
-  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    void refresh();
+    let cancelled = false;
+    const run = async () => {
+      setBusy(true);
+      const res = await ownerFetchLounge({ key: ownerKey });
+      if (cancelled) return;
+      setBusy(false);
+      if (res.error) {
+        setMsg({ ok: false, text: res.error });
+        return;
+      }
+      setMessages(res.messages ?? []);
+      setInvites(res.invites ?? []);
+      setBans(res.bans ?? []);
+      setAnnouncements(res.announcements ?? []);
+      setTotals(res.totals ?? null);
+    };
+    run();
     const supabase = createClient();
     // Realtime: new messages anywhere in the Lounge land in the monitor.
     // We use a service-channel created by the Den's own key — the page
@@ -123,24 +138,29 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
           // Light-touch refresh — a full page of latest 60 keeps the
           // ordering deterministic. The Den doesn't need true live insert
           // timing to the millisecond.
-          void refresh();
+          if (!cancelled) run();
         }
       )
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'club_chat_invites' },
-        () => refresh()
+        () => {
+          if (!cancelled) run();
+        }
       )
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'club_chat_bans' },
-        () => refresh()
+        () => {
+          if (!cancelled) run();
+        }
       )
       .subscribe();
     return () => {
+      cancelled = true;
       void supabase.removeChannel(ch);
     };
-  }, [refresh]);
+  }, [ownerKey]);
 
   const submitBan = async () => {
     if (!banDraft || !banReason.trim()) return;

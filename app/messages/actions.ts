@@ -29,8 +29,9 @@ async function runDateSafeForReport(
     .eq('id', reportedId)
     .maybeSingle();
 
-  const photo =
-    profile?.photos?.find((p) => p.is_primary) ?? profile?.photos?.[0] ?? null;
+  const actPhotos = profile?.photos as unknown as
+    Array<{ storage_path: string; is_primary: boolean }> | undefined;
+  const photo = actPhotos?.find((p) => p.is_primary) ?? actPhotos?.[0] ?? null;
   const imageUrl = photo?.storage_path
     ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/${photo.storage_path}`
     : null;

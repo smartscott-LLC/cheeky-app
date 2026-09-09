@@ -72,10 +72,17 @@ export default async function BrowsePage() {
       bio: p.bio,
       one_liner: p.one_liner,
       verified_at: p.verified_at,
-      photos: (p.photos ?? []).slice(0, photoLimit).map((photo) => ({
-        storage_path: photo.storage_path,
-        is_primary: photo.is_primary
-      }))
+      photos: (
+        (p.photos as unknown as Array<{
+          storage_path: string;
+          is_primary: boolean;
+        }>) ?? []
+      )
+        .slice(0, photoLimit)
+        .map((photo) => ({
+          storage_path: photo.storage_path,
+          is_primary: photo.is_primary
+        }))
     }));
 
   const photoBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`;

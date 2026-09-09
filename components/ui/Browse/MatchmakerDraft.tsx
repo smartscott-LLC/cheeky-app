@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   matchmakerDraftCandidates,
   matchmakerPickDraft,
@@ -27,23 +27,26 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
   const [building, setBuilding] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    setBusy(true);
-    setError(null);
-    const res = await matchmakerDraftCandidates();
-    setBusy(false);
-    if (res.error) {
-      setError(res.error);
-      return;
-    }
-    setPeople(res.people);
-    setPicked(new Set(res.people.filter((p) => p.picked).map((p) => p.id)));
-  }, []);
-
-  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    void load();
-  }, [load]);
+    let cancelled = false;
+    const run = async () => {
+      setBusy(true);
+      setError(null);
+      const res = await matchmakerDraftCandidates();
+      if (cancelled) return;
+      setBusy(false);
+      if (res.error) {
+        setError(res.error);
+        return;
+      }
+      setPeople(res.people);
+      setPicked(new Set(res.people.filter((p) => p.picked).map((p) => p.id)));
+    };
+    run();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const photoBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`;
 

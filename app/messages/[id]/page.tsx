@@ -2,12 +2,15 @@ import MessageThread from '@/components/ui/Messages/MessageThread';
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
 import { redirect } from 'next/navigation';
+import { connection } from 'next/server';
+import { isPast } from '@/utils/date-now';
 
 export default async function ThreadPage({
   params
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await connection();
   const { id } = await params;
   const supabase = await createClient();
   const user = await getUser(supabase);
@@ -78,7 +81,7 @@ export default async function ThreadPage({
     (match?.source ? GRID_KINDS.includes(match.source) : false) &&
     match?.status === 'active' &&
     songEndsAt !== null &&
-    songEndsAt > Date.now(); // eslint-disable-line react(purity) — render-time comparison for real-time song state
+    isPast(songEndsAt);
 
   // Certificate room: a Speed Dating match issues one certificate per
   // participant — if I hold one for this match, the chat gets the skin.
@@ -108,9 +111,11 @@ export default async function ThreadPage({
         .maybeSingle()
     ]);
 
+  const oPhotos = otherProfile?.photos as unknown as
+    Array<{ storage_path: string; is_primary: boolean }> | undefined;
   const primaryPhoto =
-    otherProfile?.photos?.find((p) => p.is_primary)?.storage_path ??
-    otherProfile?.photos?.[0]?.storage_path ??
+    oPhotos?.find((pp) => pp.is_primary)?.storage_path ??
+    oPhotos?.[0]?.storage_path ??
     null;
 
   return (

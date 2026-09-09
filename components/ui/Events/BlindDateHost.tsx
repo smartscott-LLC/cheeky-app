@@ -123,16 +123,21 @@ export default function BlindDateHost({
           .filter('photos.held_at', 'is', 'null');
         if (alive && profiles) {
           const map = new Map(
-            profiles.map((p) => [
-              p.id,
-              {
-                displayName: p.display_name,
-                photo:
-                  p.photos?.find((ph) => ph.is_primary)?.storage_path ??
-                  p.photos?.[0]?.storage_path ??
-                  null
-              }
-            ])
+            profiles.map((p) => {
+              const photos = p.photos as unknown as
+                | Array<{ storage_path: string; is_primary: boolean }>
+                | undefined;
+              return [
+                p.id,
+                {
+                  displayName: p.display_name,
+                  photo:
+                    photos?.find((ph) => ph.is_primary)?.storage_path ??
+                    photos?.[0]?.storage_path ??
+                    null
+                }
+              ];
+            })
           );
           fresh.forEach((id) => knownRef.current.add(id));
           setSuitors((prev) => [
