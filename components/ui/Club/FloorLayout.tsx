@@ -103,9 +103,7 @@ export default function FloorLayout({
                   spot.emoji
                 )}
               </p>
-              <p className="font-header text-cyan mt-1 text-lg">
-                {spot.name}
-              </p>
+              <p className="font-header text-cyan mt-1 text-lg">{spot.name}</p>
               <p className="text-sm font-body text-club">{spot.sub}</p>
             </Link>
           ))}

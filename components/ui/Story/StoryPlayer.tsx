@@ -1,7 +1,13 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, useCallback } from 'react';
-import { STORY_BEATS, type StoryBeat, PERSONAS, getTierForScore } from '@/utils/story/beats';
+import {
+  STORY_BEATS,
+  type StoryBeat,
+  PERSONAS,
+  getTierForScore
+} from '@/utils/story/beats';
 
 interface StoryPlayerProps {
   initialBeat: number;
@@ -84,24 +90,21 @@ export default function StoryPlayer({
     }
   }, [beat, currentBeat]);
 
-  const handlePersonaSelect = useCallback(
-    async (personaSlug: string) => {
-      setBusy(true);
-      try {
-        await fetch('/api/story/persona', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ personaSlug })
-        });
-      } catch {
-        // Continue even if API fails
-      }
-      setChosenPersona(personaSlug);
-      setShowPersonaSelect(false);
-      setBusy(false);
-    },
-    []
-  );
+  const handlePersonaSelect = useCallback(async (personaSlug: string) => {
+    setBusy(true);
+    try {
+      await fetch('/api/story/persona', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ personaSlug })
+      });
+    } catch {
+      // Continue even if API fails
+    }
+    setChosenPersona(personaSlug);
+    setShowPersonaSelect(false);
+    setBusy(false);
+  }, []);
 
   // ── Persona Selection Screen ──────────────────────────────────
   if (showPersonaSelect) {
@@ -116,9 +119,9 @@ export default function StoryPlayer({
             Choose Your Keeper
           </h1>
           <p className="font-body text-club mx-auto mt-3 max-w-xl">
-            You&apos;ve climbed every floor. The Coat Check is yours.
-            Pick the persona who will keep your vault — your collectibles,
-            your memories, your story.
+            You&apos;ve climbed every floor. The Coat Check is yours. Pick the
+            persona who will keep your vault — your collectibles, your memories,
+            your story.
           </p>
 
           <div className="mt-4 inline-block rounded-full border border-club/40 bg-zinc-900/70 px-5 py-2">
@@ -152,7 +155,9 @@ export default function StoryPlayer({
                   </div>
                   <p className="font-body text-club mt-3 font-bold">{p.name}</p>
                   <p className="font-body text-club text-sm">{p.variant}</p>
-                  <p className="font-body text-club mt-1 text-[13px]">{p.description}</p>
+                  <p className="font-body text-club mt-1 text-[13px]">
+                    {p.description}
+                  </p>
                 </button>
               ))}
             </div>
@@ -183,7 +188,9 @@ export default function StoryPlayer({
                   </div>
                   <p className="font-body text-club mt-3 font-bold">{p.name}</p>
                   <p className="font-body text-club text-sm">{p.variant}</p>
-                  <p className="font-body text-club mt-1 text-[13px]">{p.description}</p>
+                  <p className="font-body text-club mt-1 text-[13px]">
+                    {p.description}
+                  </p>
                 </button>
               ))}
             </div>
@@ -191,12 +198,12 @@ export default function StoryPlayer({
 
           {chosenPersona && (
             <div className="mt-10">
-              <a
+              <Link
                 href="/club"
                 className="inline-block rounded-lg bg-club px-10 py-4 font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
               >
                 Enter the Club →
-              </a>
+              </Link>
             </div>
           )}
         </div>
@@ -217,8 +224,8 @@ export default function StoryPlayer({
             You Made It
           </h1>
           <p className="font-body text-club mx-auto mt-4 max-w-lg">
-            You&apos;ve climbed every floor, met the crew, and reached the
-            Coat Check. The club is yours.
+            You&apos;ve climbed every floor, met the crew, and reached the Coat
+            Check. The club is yours.
           </p>
 
           <div className="mx-auto mt-8 inline-block rounded-2xl border border-club/40 bg-zinc-900/70 px-8 py-6">
@@ -252,12 +259,12 @@ export default function StoryPlayer({
             >
               Play Again
             </button>
-            <a
+            <Link
               href="/club"
               className="rounded-lg bg-club px-8 py-3 font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
             >
               Enter the Club →
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -270,18 +277,16 @@ export default function StoryPlayer({
       <div className="bg-black">
         <div className="mx-auto max-w-2xl px-6 py-20 text-center">
           <p className="font-body text-club text-5xl">🤔</p>
-          <h1 className="font-hero text-gold mt-6 text-4xl">
-            Story not found
-          </h1>
+          <h1 className="font-hero text-gold mt-6 text-4xl">Story not found</h1>
           <p className="font-body text-club mx-auto mt-3 max-w-md">
             Something went wrong. Try starting over.
           </p>
-          <a
+          <Link
             href="/story"
             className="mt-8 inline-block rounded-lg border border-zinc-700 px-8 py-3 font-semibold font-body text-club transition hover:border-zinc-500 hover:text-white"
           >
             Start Over
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -307,9 +312,7 @@ export default function StoryPlayer({
           <span className="font-header text-cyan text-sm uppercase tracking-[0.15em]">
             Beat {beat.number} of 5
           </span>
-          <span className="font-body text-club text-sm">
-            Score: {score}
-          </span>
+          <span className="font-body text-club text-sm">Score: {score}</span>
         </div>
 
         <h1 className="font-hero text-gold text-3xl sm:text-4xl">
@@ -319,7 +322,9 @@ export default function StoryPlayer({
 
         {/* Scene narrative */}
         <div className="mt-6 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6">
-          <p className="font-body text-club leading-relaxed">{beat.narrative}</p>
+          <p className="font-body text-club leading-relaxed">
+            {beat.narrative}
+          </p>
         </div>
 
         {/* Character dialogue */}
@@ -327,7 +332,9 @@ export default function StoryPlayer({
           <p className="font-header text-cyan text-sm uppercase tracking-[0.1em]">
             {beat.characterName}
           </p>
-          <p className="font-body text-club mt-3 leading-relaxed">{beat.dialogue}</p>
+          <p className="font-body text-club mt-3 leading-relaxed">
+            {beat.dialogue}
+          </p>
         </div>
 
         {/* Response after choice */}
@@ -336,7 +343,9 @@ export default function StoryPlayer({
             <p className="font-header text-cyan text-sm uppercase tracking-[0.1em]">
               {beat.characterName} responds
             </p>
-            <p className="font-body text-club mt-3 leading-relaxed">{lastResponse}</p>
+            <p className="font-body text-club mt-3 leading-relaxed">
+              {lastResponse}
+            </p>
             {currentBeat < 5 && (
               <button
                 onClick={handleNextBeat}
@@ -369,7 +378,9 @@ export default function StoryPlayer({
                 disabled={busy}
                 className="w-full rounded-xl border border-zinc-700 bg-zinc-900/50 p-4 text-left transition hover:border-club/60 hover:bg-zinc-900/80 disabled:opacity-50"
               >
-                <span className="font-body text-club font-semibold">{choice.text}</span>
+                <span className="font-body text-club font-semibold">
+                  {choice.text}
+                </span>
               </button>
             ))}
           </div>

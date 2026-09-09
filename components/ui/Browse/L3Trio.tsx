@@ -2,30 +2,36 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { openConversation } from '@/app/messages/actions';
-import { l3NextTrio, l3Pick, type L3Person, type L3PickResult } from '@/app/browse/actions';
+import {
+  l3NextTrio,
+  l3Pick,
+  type L3Person,
+  type L3PickResult
+} from '@/app/browse/actions';
 
 type Choice = 'leave' | 'like' | 'love';
 
-const SLOTS: { choice: Choice; label: string; cls: string; active: string }[] = [
-  {
-    choice: 'leave',
-    label: 'Leave',
-    cls: 'border-zinc-600 text-zinc-300 hover:border-zinc-400',
-    active: 'bg-zinc-600 text-white border-zinc-500'
-  },
-  {
-    choice: 'like',
-    label: 'Like',
-    cls: 'border-cyan/50 text-cyan hover:border-cyan',
-    active: 'bg-cyan text-black border-cyan'
-  },
-  {
-    choice: 'love',
-    label: 'Love',
-    cls: 'border-gold/50 text-gold hover:border-gold',
-    active: 'bg-gold text-black border-gold'
-  }
-];
+const SLOTS: { choice: Choice; label: string; cls: string; active: string }[] =
+  [
+    {
+      choice: 'leave',
+      label: 'Leave',
+      cls: 'border-zinc-600 text-zinc-300 hover:border-zinc-400',
+      active: 'bg-zinc-600 text-white border-zinc-500'
+    },
+    {
+      choice: 'like',
+      label: 'Like',
+      cls: 'border-cyan/50 text-cyan hover:border-cyan',
+      active: 'bg-cyan text-black border-cyan'
+    },
+    {
+      choice: 'love',
+      label: 'Love',
+      cls: 'border-gold/50 text-gold hover:border-gold',
+      active: 'bg-gold text-black border-gold'
+    }
+  ];
 
 type Outcome = {
   person: L3Person;
@@ -56,8 +62,9 @@ export default function L3Trio() {
     setDone(res.done);
   }, []);
 
+  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    loadTrio();
+    void loadTrio();
   }, [loadTrio]);
 
   const photoBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`;
@@ -81,17 +88,23 @@ export default function L3Trio() {
   };
 
   if (busy && people.length === 0) {
-    return <p className="py-10 text-center text-base font-body text-club">Rounding up tonight&apos;s trio…</p>;
+    return (
+      <p className="py-10 text-center text-base font-body text-club">
+        Rounding up tonight&apos;s trio…
+      </p>
+    );
   }
 
   if (done) {
     return (
       <div className="rounded-xl border border-gold bg-zinc-900/50 p-10 text-center">
         <p className="text-4xl">🌹</p>
-        <h2 className="font-header text-cyan mt-3 text-2xl">The room&apos;s empty — for now</h2>
+        <h2 className="font-header text-cyan mt-3 text-2xl">
+          The room&apos;s empty — for now
+        </h2>
         <p className="font-body text-club mx-auto mt-2 max-w-md text-base">
-          You&apos;ve picked everyone out there. New faces land after the next event — come back
-          soon.
+          You&apos;ve picked everyone out there. New faces land after the next
+          event — come back soon.
         </p>
         <button
           onClick={loadTrio}
@@ -132,9 +145,12 @@ export default function L3Trio() {
         {matches.length === 0 && (
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
             <p className="text-4xl">🫧</p>
-            <h2 className="font-header text-cyan mt-2 text-2xl">No sparks this time</h2>
+            <h2 className="font-header text-cyan mt-2 text-2xl">
+              No sparks this time
+            </h2>
             <p className="font-body text-club mt-2 text-base">
-              Nothing came back — quietly. Nobody knows. The next trio might be the one.
+              Nothing came back — quietly. Nobody knows. The next trio might be
+              the one.
             </p>
           </div>
         )}
@@ -176,9 +192,13 @@ export default function L3Trio() {
               )}
             </div>
             <div className="p-4">
-              <h3 className="font-header text-cyan text-xl">{person.display_name || 'Member'}</h3>
+              <h3 className="font-header text-cyan text-xl">
+                {person.display_name || 'Member'}
+              </h3>
               {person.one_liner && (
-                <p className="mt-1 text-sm font-body text-club">{person.one_liner}</p>
+                <p className="mt-1 text-sm font-body text-club">
+                  {person.one_liner}
+                </p>
               )}
               <div className="mt-3 grid grid-cols-3 gap-2">
                 {SLOTS.map((slot) => {
@@ -189,7 +209,10 @@ export default function L3Trio() {
                       type="button"
                       disabled={busy}
                       onClick={() =>
-                        setAssigned((prev) => ({ ...prev, [person.id]: slot.choice }))
+                        setAssigned((prev) => ({
+                          ...prev,
+                          [person.id]: slot.choice
+                        }))
                       }
                       className={`rounded-md border px-2 py-1.5 text-xs font-bold uppercase tracking-wide transition ${
                         selected ? slot.active : slot.cls

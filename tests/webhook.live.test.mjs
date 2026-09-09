@@ -47,7 +47,7 @@ const post = (body, sig) =>
     body
   });
 
-test(
+void test(
   'webhook handlers (live)',
   { skip: !RUN_LIVE && 'set RUN_LIVE_TESTS=1' },
   async (t) => {

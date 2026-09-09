@@ -38,7 +38,9 @@ export default function BrowseCard({
         <p className="text-base font-bold uppercase tracking-[0.3em] font-body text-club">
           The floor just cleared for you two
         </p>
-        <h2 className="font-header text-cyan mt-4 text-5xl">It&apos;s a match!</h2>
+        <h2 className="font-header text-cyan mt-4 text-5xl">
+          It&apos;s a match!
+        </h2>
         <p className="mt-3 font-body text-club">
           You and{' '}
           <span className="font-bold text-white">
@@ -70,7 +72,9 @@ export default function BrowseCard({
   if (!person) {
     return (
       <div className="mx-auto max-w-xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-10 text-center">
-        <h2 className="font-header text-cyan text-3xl">You&apos;ve seen the room.</h2>
+        <h2 className="font-header text-cyan text-3xl">
+          You&apos;ve seen the room.
+        </h2>
         <p className="mt-3 font-body text-club">
           Everyone&apos;s been shown. Check back when the club&apos;s busier —
           new faces land here.

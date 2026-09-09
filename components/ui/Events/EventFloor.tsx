@@ -217,7 +217,7 @@ export default function EventFloor({
   };
 
   const handleLeave = async () => {
-    const res = await leaveEvent(event.id);
+    await leaveEvent(event.id);
     await refresh();
   };
 
@@ -305,7 +305,9 @@ export default function EventFloor({
                 ? 'Canceled'
                 : 'The floor is moving'}
         </p>
-        <h2 className="font-header text-cyan mt-2 text-3xl">{statusBanner.title}</h2>
+        <h2 className="font-header text-cyan mt-2 text-3xl">
+          {statusBanner.title}
+        </h2>
         <p className="mt-1 font-body text-club">{statusBanner.body}</p>
 
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3">

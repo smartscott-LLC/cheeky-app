@@ -12,7 +12,7 @@ export default async function GiftsPage() {
     return redirect('/signin');
   }
 
-  const [profile, tokenBalance, tierData] = await Promise.all([
+  const [, tokenBalance, tierData] = await Promise.all([
     getProfile(supabase, user.id),
     getTokenBalance(supabase),
     supabase.rpc('current_tier', { p_user: user.id })

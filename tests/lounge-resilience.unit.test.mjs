@@ -20,7 +20,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-test('resilience: a setState that throws does not bubble to the caller', () => {
+void test('resilience: a setState that throws does not bubble to the caller', () => {
   // Mirror of `safeSetMessages` — wraps a state setter in a mounted
   // check + try/catch so a bad updater can never crash the overlay.
   let mounted = true;
@@ -46,7 +46,7 @@ test('resilience: a setState that throws does not bubble to the caller', () => {
   assert.ok(true);
 });
 
-test('resilience: an async IIFE that rejects still calls .catch', async () => {
+void test('resilience: an async IIFE that rejects still calls .catch', async () => {
   // The watch effect uses `(async () => {...})().catch(err => ...)`
   // so a rejection at the top of the IIFE doesn't become an
   // unhandled rejection.
@@ -60,7 +60,7 @@ test('resilience: an async IIFE that rejects still calls .catch', async () => {
   assert.equal(caught.message, 'transient watch failure');
 });
 
-test('resilience: a watch() rejection is not fatal', async () => {
+void test('resilience: a watch() rejection is not fatal', async () => {
   // Mirror of the first try/catch around ch.watch().
   async function watchSafely() {
     try {
@@ -73,7 +73,7 @@ test('resilience: a watch() rejection is not fatal', async () => {
   assert.equal(outcome, 'continuing');
 });
 
-test('resilience: missing messages array hydrates to empty list', () => {
+void test('resilience: missing messages array hydrates to empty list', () => {
   // If ch.state.messages is undefined for any reason, we want an
   // empty list, not a crash. The production code does
   // `(ch.state.messages as unknown as Array<...>) ?? []`.
@@ -82,7 +82,7 @@ test('resilience: missing messages array hydrates to empty list', () => {
   assert.deepEqual(hydrated, []);
 });
 
-test('resilience: a malformed message object survives the hydration', () => {
+void test('resilience: a malformed message object survives the hydration', () => {
   // Real-world: a message with a missing `user` (Stream edge case
   // during reconnect) shouldn't crash the overlay.
   const chState = {
@@ -102,11 +102,15 @@ test('resilience: a malformed message object survives the hydration', () => {
   }));
   assert.equal(hydrated.length, 3, 'all messages preserved');
   assert.equal(hydrated[1].userId, '', 'missing user has empty id');
-  assert.equal(hydrated[1].userName, 'Member', 'missing user has fallback name');
+  assert.equal(
+    hydrated[1].userName,
+    'Member',
+    'missing user has fallback name'
+  );
   assert.equal(hydrated[2].floor, undefined, 'missing custom is allowed');
 });
 
-test('resilience: the watch effect does not run when the panel is closed', () => {
+void test('resilience: the watch effect does not run when the panel is closed', () => {
   // Production: `if (!open) return;` early in the effect. The
   // effect should be a no-op until the user actually opens the
   // panel — that's what keeps the surface area for errors small.
@@ -120,7 +124,7 @@ test('resilience: the watch effect does not run when the panel is closed', () =>
   assert.equal(watchCalled, false, 'no work done while closed');
 });
 
-test('resilience: error boundary catches a synchronous throw from a child', () => {
+void test('resilience: error boundary catches a synchronous throw from a child', () => {
   // The overlay is now mounted under ClubChatBoundary, which
   // catches errors and renders a recoverable retry pill.
   class Boundary {

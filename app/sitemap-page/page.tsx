@@ -5,20 +5,56 @@ const GROUPS = [
     title: 'The club',
     items: [
       { href: '/', label: 'The street', note: 'The marquee — enter the club.' },
-      { href: '/club', label: 'The lobby', note: 'The entrance room, rooms and all.' },
-      { href: '/floors', label: 'The floors', note: 'Silver → Gold → Platinum → Diamond.' },
-      { href: '/floor/silver', label: 'Silver floor', note: 'The Dance Floor and the base rooms.' },
-      { href: '/floor/gold', label: 'Gold floor', note: 'Blind Date and the upper rooms.' },
-      { href: '/floor/platinum', label: 'Platinum floor', note: 'Speed Dating lives here.' },
-      { href: '/floor/diamond', label: 'Diamond floor', note: 'The Rooftop at the top.' }
+      {
+        href: '/club',
+        label: 'The lobby',
+        note: 'The entrance room, rooms and all.'
+      },
+      {
+        href: '/floors',
+        label: 'The floors',
+        note: 'Silver → Gold → Platinum → Diamond.'
+      },
+      {
+        href: '/floor/silver',
+        label: 'Silver floor',
+        note: 'The Dance Floor and the base rooms.'
+      },
+      {
+        href: '/floor/gold',
+        label: 'Gold floor',
+        note: 'Blind Date and the upper rooms.'
+      },
+      {
+        href: '/floor/platinum',
+        label: 'Platinum floor',
+        note: 'Speed Dating lives here.'
+      },
+      {
+        href: '/floor/diamond',
+        label: 'Diamond floor',
+        note: 'The Rooftop at the top.'
+      }
     ]
   },
   {
     title: 'Events & the crew',
     items: [
-      { href: '/events', label: 'Event Center', note: 'The hourly playlist — join any room.' },
-      { href: '/crew', label: 'Meet the Crew', note: 'The six who run the place.' },
-      { href: '/pricing', label: 'Memberships', note: 'The cards, the floors, no gouging.' },
+      {
+        href: '/events',
+        label: 'Event Center',
+        note: 'The hourly playlist — join any room.'
+      },
+      {
+        href: '/crew',
+        label: 'Meet the Crew',
+        note: 'The six who run the place.'
+      },
+      {
+        href: '/pricing',
+        label: 'Memberships',
+        note: 'The cards, the floors, no gouging.'
+      },
       { href: '/store', label: 'The Exchange', note: 'Cards and token packs.' }
     ]
   },
@@ -26,25 +62,57 @@ const GROUPS = [
     title: 'The rooms',
     items: [
       { href: '/browse', label: 'SPARX', note: "Who's out tonight." },
-      { href: '/messages', label: 'Cheeky Chats', note: 'Conversations, waves, Date Night.' },
+      {
+        href: '/messages',
+        label: 'Cheeky Chats',
+        note: 'Conversations, waves, Date Night.'
+      },
       { href: '/gifts', label: 'Gift Shop', note: 'Buy gifts with tokens.' },
       { href: '/swag', label: 'Swag Shop', note: 'Redeem giveaway codes.' },
-      { href: '/coat-check', label: 'Coat Check', note: 'Gems, badges, your collection.' }
+      {
+        href: '/coat-check',
+        label: 'Coat Check',
+        note: 'Gems, badges, your collection.'
+      }
     ]
   },
   {
     title: 'The door & fine print',
     items: [
       { href: '/signin', label: 'Sign in', note: 'Back in the building.' },
-      { href: '/verify', label: 'Check in at the door', note: 'Verified ID → Silver card.' },
+      {
+        href: '/verify',
+        label: 'Check in at the door',
+        note: 'Verified ID → Silver card.'
+      },
       { href: '/account', label: 'Account', note: 'Your card, your details.' },
       { href: '/terms', label: 'Terms of Use', note: 'The rules of the club.' },
-      { href: '/privacy', label: 'Privacy Policy', note: 'How your data is handled.' },
+      {
+        href: '/privacy',
+        label: 'Privacy Policy',
+        note: 'How your data is handled.'
+      },
       { href: '/aup', label: 'Acceptable Use', note: 'The floor rules.' },
-      { href: '/best-practices', label: 'Best Practices', note: 'Staying safe, having fun.' },
-      { href: '/refunds', label: 'Refund Policy', note: 'Tokens, holds, no-match rules.' },
-      { href: '/law-enforcement', label: 'Law Enforcement', note: 'Valid process, preservation.' },
-      { href: '/contact', label: 'Contact', note: 'The desks — info, helpdesk, safety.' }
+      {
+        href: '/best-practices',
+        label: 'Best Practices',
+        note: 'Staying safe, having fun.'
+      },
+      {
+        href: '/refunds',
+        label: 'Refund Policy',
+        note: 'Tokens, holds, no-match rules.'
+      },
+      {
+        href: '/law-enforcement',
+        label: 'Law Enforcement',
+        note: 'Valid process, preservation.'
+      },
+      {
+        href: '/contact',
+        label: 'Contact',
+        note: 'The desks — info, helpdesk, safety.'
+      }
     ]
   }
 ];

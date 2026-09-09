@@ -88,7 +88,7 @@ export async function ownerFetchState(input: { key?: string }): Promise<{
   error?: string;
 }> {
   if (!(await authorized(input.key))) return { error: 'forbidden' };
-  const now = new Date().toISOString();
+
   const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
   const dayAgo = new Date(Date.now() - 24 * 3_600_000).toISOString();
   const sixHoursAgo = new Date(Date.now() - 6 * 3_600_000).toISOString();
@@ -277,9 +277,8 @@ export async function ownerFetchState(input: { key?: string }): Promise<{
     })),
     ledger: (ledger.data ?? []) as never,
     catalog: (catalog.data ?? []) as never,
-    castModel: modelRow.data?.cast_model ?? 'deepseek-chat',
-    watchdogModel:
-      modelRow.data?.watchdog_model ?? 'nvidia/nemotron-nano-12b-v2-vl:free',
+    castModel: modelRow.data?.cast_model ?? 'AGNES-chat',
+    watchdogModel: modelRow.data?.watchdog_model ?? 'agnes-2,5-flash',
     closures: (closures.data ?? []) as never,
     reports: (reports.data ?? []) as never,
     banned: (banned.data ?? []) as never
@@ -346,11 +345,11 @@ export async function ownerResolveReport(input: {
 export async function ownerLeaveMessage(
   formData: FormData
 ): Promise<{ error?: string }> {
-  if (String(formData.get('company') ?? '').trim()) {
+  if ((formData.get('company') || '').toString().trim()) {
     return { error: 'nice try, robot' };
   }
-  const email = String(formData.get('email') ?? '').trim();
-  const message = String(formData.get('message') ?? '').trim();
+  const email = (formData.get('email') || '').toString().trim();
+  const message = (formData.get('message') || '').toString().trim();
   if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email)) {
     return {
       error: 'A real email, please — so the owner can get back to you.'
@@ -421,9 +420,8 @@ export async function ownerUpdateModels(input: {
   const { error } = await supabaseAdmin
     .from('model_config')
     .update({
-      cast_model: input.castModel.trim() || 'deepseek-chat',
-      watchdog_model:
-        input.watchdogModel.trim() || 'nvidia/nemotron-nano-12b-v2-vl:free',
+      cast_model: input.castModel.trim() || 'AGNES-chat',
+      watchdog_model: input.watchdogModel.trim() || 'agnes-2.5-flash',
       updated_at: new Date().toISOString()
     })
     .eq('id', true);
@@ -849,17 +847,19 @@ export async function ownerFetchStreamLounge(input: { key?: string }): Promise<{
         createdAt: string;
       }[] = [];
       try {
-        const state = await (ch as unknown as {
-          query: (opts: Record<string, unknown>) => Promise<{
-            messages?: Array<{
-              id: string;
-              text: string;
-              user?: { id: string; name?: string };
-              custom?: { horn?: boolean; floor?: string };
-              created_at?: string;
+        const state = await (
+          ch as unknown as {
+            query: (opts: Record<string, unknown>) => Promise<{
+              messages?: Array<{
+                id: string;
+                text: string;
+                user?: { id: string; name?: string };
+                custom?: { horn?: boolean; floor?: string };
+                created_at?: string;
+              }>;
             }>;
-          }>;
-        }).query({
+          }
+        ).query({
           watch: true,
           state: true,
           message_limit: 30,
@@ -872,9 +872,7 @@ export async function ownerFetchStreamLounge(input: { key?: string }): Promise<{
           custom?: { horn?: boolean; floor?: string };
           created_at?: string;
         }>;
-        const recent = msgs.filter(
-          (m) => new Date(m.created_at ?? 0) > dayAgo
-        );
+        const recent = msgs.filter((m) => new Date(m.created_at ?? 0) > dayAgo);
         count = recent.length;
         latest = msgs
           .slice(-10)

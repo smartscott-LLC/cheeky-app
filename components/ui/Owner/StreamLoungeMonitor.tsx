@@ -28,9 +28,16 @@ interface Room {
  * Supabase mirror. One-click ban is wired to the Stream ban endpoint
  * (and mirrored to Supabase for the fallback path).
  */
-export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) {
+export default function StreamLoungeMonitor({
+  ownerKey
+}: {
+  ownerKey: string;
+}) {
   const [rooms, setRooms] = useState<Room[] | null>(null);
-  const [totals, setTotals] = useState<{ messages_24h: number; horns_24h: number } | null>(null);
+  const [totals, setTotals] = useState<{
+    messages_24h: number;
+    horns_24h: number;
+  } | null>(null);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [banDraft, setBanDraft] = useState<{
@@ -52,8 +59,9 @@ export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) 
     setTotals(res.totals ?? null);
   }, [ownerKey]);
 
+  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    refresh();
+    void refresh();
     const t = setInterval(refresh, 15_000);
     return () => clearInterval(t);
   }, [refresh]);
@@ -78,7 +86,7 @@ export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) 
     });
     setBanDraft(null);
     setBanReason('');
-    refresh();
+    void refresh();
   };
 
   if (rooms === null) {
@@ -94,10 +102,12 @@ export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) 
     <div className="rounded-2xl border border-amber-400/30 bg-zinc-900/50 p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="font-header text-amber-300 text-2xl">📡 Stream Lounge</h2>
+          <h2 className="font-header text-amber-300 text-2xl">
+            📡 Stream Lounge
+          </h2>
           <p className="font-body text-club mt-1 text-sm">
-            Live read from the Stream server SDK — what the members see
-            right now, regardless of blocks.
+            Live read from the Stream server SDK — what the members see right
+            now, regardless of blocks.
           </p>
         </div>
         <button
@@ -152,7 +162,9 @@ export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) 
             </div>
             <div className="mt-2 max-h-44 space-y-1 overflow-y-auto text-xs">
               {r.latest.length === 0 && (
-                <p className="font-body text-club py-2 text-center">No messages yet.</p>
+                <p className="font-body text-club py-2 text-center">
+                  No messages yet.
+                </p>
               )}
               {r.latest.map((m) => (
                 <div
@@ -167,7 +179,9 @@ export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) 
                     {m.horn && '🎺 '}
                     {m.userName}
                   </p>
-                  <p className="font-body text-club line-clamp-1 text-xs">{m.text}</p>
+                  <p className="font-body text-club line-clamp-1 text-xs">
+                    {m.text}
+                  </p>
                   <button
                     onClick={() =>
                       setBanDraft({ userId: m.userId, name: m.userName })
@@ -197,9 +211,9 @@ export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) 
             </h3>
             <p className="font-body text-club mt-1 text-sm">
               Banning{' '}
-              <span className="font-bold text-white">{banDraft.name}</span>{' '}
-              from chat on the live transport. Mirrored to Supabase so the
-              fallback stays consistent.
+              <span className="font-bold text-white">{banDraft.name}</span> from
+              chat on the live transport. Mirrored to Supabase so the fallback
+              stays consistent.
             </p>
             <div className="mt-4 space-y-3">
               <div>
@@ -241,7 +255,9 @@ export default function StreamLoungeMonitor({ ownerKey }: { ownerKey: string }) 
                 disabled={!banReason.trim() || busy}
                 className="flex-1 rounded-lg bg-club px-3 py-2 text-sm font-bold text-white transition hover:opacity-80 disabled:opacity-40"
               >
-                {busy ? 'Banning…' : `Ban for ${banHours === 24 ? '1 day' : '3 days'}`}
+                {busy
+                  ? 'Banning…'
+                  : `Ban for ${banHours === 24 ? '1 day' : '3 days'}`}
               </button>
               <button
                 onClick={() => {

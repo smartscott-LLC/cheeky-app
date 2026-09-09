@@ -4,10 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { ASSETS } from '@/utils/assets';
-import {
-  submitBlindQuestion,
-  selectBlindTally
-} from '@/app/events/actions';
+import { submitBlindQuestion, selectBlindTally } from '@/app/events/actions';
 
 interface Suitor {
   userId: string;
@@ -95,12 +92,14 @@ export default function BlindDateHost({
 
       const rows = (rounds ?? []) as RoundRow[];
       const current =
-        rows.filter((r) => r.phase !== 'done').sort((a, b) => b.round_index - a.round_index)[0] ??
-        null;
+        rows
+          .filter((r) => r.phase !== 'done')
+          .sort((a, b) => b.round_index - a.round_index)[0] ?? null;
       setRound(current);
       setCounts(
         rows.reduce<Record<string, number>>((acc, r) => {
-          if (r.tally_user_id) acc[r.tally_user_id] = (acc[r.tally_user_id] ?? 0) + 1;
+          if (r.tally_user_id)
+            acc[r.tally_user_id] = (acc[r.tally_user_id] ?? 0) + 1;
           return acc;
         }, {})
       );
@@ -109,7 +108,8 @@ export default function BlindDateHost({
           .from('blind_date_answers')
           .select('user_id, body')
           .eq('round_id', current.id);
-        if (alive) setAnswers((ans ?? []) as { user_id: string; body: string }[]);
+        if (alive)
+          setAnswers((ans ?? []) as { user_id: string; body: string }[]);
       }
 
       // New suitors join live — pull their profiles when the roster grows.
@@ -146,7 +146,7 @@ export default function BlindDateHost({
         }
       }
     };
-    tick();
+    void tick();
     const t = setInterval(tick, 4000);
     return () => {
       alive = false;
@@ -170,18 +170,20 @@ export default function BlindDateHost({
         .maybeSingle();
       if (data) setMatchId(data.id);
     };
-    find();
+    void find();
   }, [eventStatus, myUserId, supabase]);
 
   if (eventStatus === 'canceled') {
     return (
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
         <p className="font-body text-club text-4xl">🚪</p>
-        <h2 className="font-header text-cyan mt-3 text-2xl">The room closed.</h2>
+        <h2 className="font-header text-cyan mt-3 text-2xl">
+          The room closed.
+        </h2>
         <p className="mx-auto mt-2 max-w-md text-base font-body text-club">
-          It didn&apos;t fill in time (or the room failed), so everyone&apos;s tokens
-          were returned. The door stays open — you can host again whenever
-          you&apos;re ready.
+          It didn&apos;t fill in time (or the room failed), so everyone&apos;s
+          tokens were returned. The door stays open — you can host again
+          whenever you&apos;re ready.
         </p>
         <Link
           href="/events/blind_date"
@@ -199,13 +201,17 @@ export default function BlindDateHost({
     return (
       <div className="rounded-xl border border-gold/40 bg-zinc-900/50 p-6 text-center">
         <p className="font-body text-club text-4xl">💘</p>
-        <h2 className="font-header text-cyan mt-3 text-3xl">The room is done.</h2>
+        <h2 className="font-header text-cyan mt-3 text-3xl">
+          The room is done.
+        </h2>
         {winner ? (
           <>
             <p className="mx-auto mt-2 max-w-md text-base font-body text-club">
               Your winner, with {top[1]} mark{top[1] === 1 ? '' : 's'} —{' '}
-              <span className="font-bold text-gold">{winner.displayName ?? 'your date'}</span>.
-              The rest of the room paid for the chance, that&apos;s on their
+              <span className="font-bold text-gold">
+                {winner.displayName ?? 'your date'}
+              </span>
+              . The rest of the room paid for the chance, that&apos;s on their
               answers.
             </p>
             {matchId && (
@@ -230,16 +236,25 @@ export default function BlindDateHost({
   const phaseStart = round
     ? new Date(round.phase_started_at).getTime()
     : Date.now();
-  const left = Math.max(0, PHASE_SECONDS - Math.floor((now - phaseStart) / 1000));
+  const left = Math.max(
+    0,
+    PHASE_SECONDS - Math.floor((now - phaseStart) / 1000)
+  );
   const final = round?.round_index === 4;
-  const roundLabel = final ? 'THE FINAL ROUND' : `Round ${(round?.round_index ?? 0) + 1} of 4`;
+  const roundLabel = final
+    ? 'THE FINAL ROUND'
+    : `Round ${(round?.round_index ?? 0) + 1} of 4`;
   const answersByUser = new Map(answers.map((a) => [a.user_id, a.body]));
   const seated = suitors.filter((s) => s.userId !== myUserId);
 
   const ask = async () => {
     if (!question.trim() || !round || busy) return;
     setBusy(true);
-    const res = await submitBlindQuestion(eventId, round.round_index, question.trim());
+    const res = await submitBlindQuestion(
+      eventId,
+      round.round_index,
+      question.trim()
+    );
     setBusy(false);
     if (res.error) setError(res.error);
     else setQuestion('');
@@ -267,7 +282,8 @@ export default function BlindDateHost({
         <p className="mt-1 text-base font-body text-club">
           {phase === 'question' && 'Ask anything — it goes to all of them.'}
           {phase === 'answer' && 'Their answers land under each face.'}
-          {phase === 'selection' && 'Give one mark to the answer you liked best.'}
+          {phase === 'selection' &&
+            'Give one mark to the answer you liked best.'}
           {phase === 'done' && 'Round complete — the next round is coming.'}
         </p>
         <div className="mt-2 font-mono text-xl font-bold text-gold">
@@ -310,7 +326,9 @@ export default function BlindDateHost({
           <p className="font-body text-club text-sm font-bold uppercase tracking-[0.2em]">
             The question
           </p>
-          <p className="mt-1 text-base font-body text-club">“{round.question}”</p>
+          <p className="mt-1 text-base font-body text-club">
+            “{round.question}”
+          </p>
         </div>
       )}
 
@@ -351,7 +369,9 @@ export default function BlindDateHost({
                   disabled={busy || round?.tally_user_id != null}
                   className="mt-2 w-full rounded-md bg-gold px-2 py-1.5 text-xs font-extrabold text-black transition hover:bg-gold-royal disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  {round?.tally_user_id === s.userId ? '✓ Your mark' : 'Give the mark'}
+                  {round?.tally_user_id === s.userId
+                    ? '✓ Your mark'
+                    : 'Give the mark'}
                 </button>
               )}
             </div>

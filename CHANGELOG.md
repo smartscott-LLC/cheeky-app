@@ -40,17 +40,17 @@ points — every push to `main` is production.
     adds `stream_message_id` (unique when present) to
     `club_chat_messages` so the webhook mirror is idempotent.
 - **Stream-backed overlay — `components/ui/ClubChat/StreamChatOverlay.tsx`**
-  + `StreamChatMenu.tsx` + `StreamChatWhisper.tsx` + `HornBurst.tsx`
-  + `PresenceStack.tsx`. Custom UI built on the low-level Stream
-  client (not the stream-chat-react component CSS), with the Cheeky
-  visual system baked in: glassmorphism panel, gold/cyan glow,
-  per-message entry animation (staggered, low-cost), animated tab
-  transitions, animated presence stack with hover tooltips, confetti
-  + 1.5s 🎺 stamp on every Horn, profile peek in the context menu,
-  floor tag chips with the right palette per tier, typing
-  indicators in whispers, slide-in whisper view, a "🎺 HORN" badge
-  on horned messages. Falls back to the existing Supabase chat
-  (`components/ui/ClubChat/ClubChat.tsx`) when Stream is unavailable.
+  - `StreamChatMenu.tsx` + `StreamChatWhisper.tsx` + `HornBurst.tsx`
+  - `PresenceStack.tsx`. Custom UI built on the low-level Stream
+    client (not the stream-chat-react component CSS), with the Cheeky
+    visual system baked in: glassmorphism panel, gold/cyan glow,
+    per-message entry animation (staggered, low-cost), animated tab
+    transitions, animated presence stack with hover tooltips, confetti
+  - 1.5s 🎺 stamp on every Horn, profile peek in the context menu,
+    floor tag chips with the right palette per tier, typing
+    indicators in whispers, slide-in whisper view, a "🎺 HORN" badge
+    on horned messages. Falls back to the existing Supabase chat
+    (`components/ui/ClubChat/ClubChat.tsx`) when Stream is unavailable.
 - **Stream server actions — `app/chat/stream-actions.ts`**. The
   `streamSend` / `streamHorn` / `streamWhisperGet` / `streamWhisperSend`
   actions enforce the floor ladder, debited-token check, and 1/hour
@@ -107,7 +107,7 @@ points — every push to `main` is production.
 
 - `pnpm lint` — clean
 - `pnpm test` — 31 pass / 0 fail (15 prior + 8 stream-webhook pins
-  + 8 lounge-drag pins)
+  - 8 lounge-drag pins)
 - `pnpm build` — green; `/owner` 12.4 kB (was 11.7 kB); the Stream
   overlay ships as part of the shared bundle
 
@@ -164,7 +164,7 @@ points — every push to `main` is production.
      `safeSetUnseen`) so a state update after unmount can't fire.
   3. **Try/catch** around every Stream SDK call — `ch.watch()`,
      the `state.messages` hydration, the `ch.on('message.new',
-     ...)` registration, the presence listeners.
+...)` registration, the presence listeners.
   4. **Belt-and-braces** `.catch(...)` on the IIFE itself, so
      anything that escapes the inner try/catch still doesn't
      become an unhandled rejection.
@@ -191,7 +191,7 @@ points — every push to `main` is production.
   dimmed read-only — the climb, visible from the cheap seats. Real-time
   via Supabase Realtime (the app's first realtime surface, scoped to this
   module), presence via Realtime, no caps / no rate limits to talk (the
-  room *is* the retention play). Branded with the Cheeky type system
+  room _is_ the retention play). Branded with the Cheeky type system
   (Fascinate / Damion / Rancho) and the gold/cyan/club palette tokens.
 - **Take-private = a match behind two-sided consent** (anti-workaround):
   the inviter sees a confirmation dialog first; the acceptor's same
@@ -208,7 +208,7 @@ points — every push to `main` is production.
   and awards the `chat_horn` badge. The Horn button in the composer
   shows the cooldown countdown.
 - **Chat-only collectible family** — `chat_50 / chat_200 / chat_500 /
-  chat_1000` (Chatterbox tiers), `chat_hour` (The Regular), `chat_horn`
+chat_1000` (Chatterbox tiers), `chat_hour` (The Regular), `chat_horn`
   (Horn Blower). Catalog is book-ready (every badge carries `family` and
   `floor` metadata); no badge is shared between families. Surfaces in
   `/coat-check`. `chat_messages_sent` counter lives on the profile and
@@ -220,7 +220,7 @@ points — every push to `main` is production.
   nothing changes until someone opts out.
 - **Moderation surfaces**:
   - **Always-on profanity filter** (`public.club_chat_profanity`): the
-    message is *squished* — every non-alphanumeric stripped — before
+    message is _squished_ — every non-alphanumeric stripped — before
     matching the word list, so letter-spaced and punctuated workarounds
     don't slip through (the squish fix that closed the live-test hole).
   - **Moderator chat bans** (`public.club_chat_ban`, service-role only):
@@ -288,7 +288,7 @@ points — every push to `main` is production.
   first statement. Rewrote with `create table if not exists`, `drop policy if exists`
   before each `create policy`, `create or replace function` for the auth trigger handler,
   and `drop trigger if exists` before recreating the trigger. Also added `drop type if
-  exists` + recreate for the custom enums (PostgreSQL has no `CREATE TYPE IF NOT EXISTS`).
+exists` + recreate for the custom enums (PostgreSQL has no `CREATE TYPE IF NOT EXISTS`).
   Rerunnable without side effects.
 - **Club Chat SECURITY DEFINER functions exposed to anon role**: `club_chat_invite`,
   `club_chat_send`, `club_chat_horn`, and 6 other club_chat RPCs were grantable by anyone
@@ -357,9 +357,9 @@ points — every push to `main` is production.
   to 5 suitors buy a seat (15 tokens — pay for a chance). She types her own questions; the
   minute hand runs the round clock (1 min question → 1 min answers → 1 min selection, 4
   rounds + a tiebreak final); one tally per round, most tallies wins the date (winner matched
-  + conversation, chooser plays free, suitors pay at resolution). Host failure (never a
-  question or never a single tally) cancels + refunds everyone. Fully exercised by the live
-  suite.
+  - conversation, chooser plays free, suitors pay at resolution). Host failure (never a
+    question or never a single tally) cancels + refunds everyone. Fully exercised by the live
+    suite.
 
 ### Added
 
@@ -513,7 +513,7 @@ points — every push to `main` is production.
   - `tests/token-engine.live.test.mjs` — exact swag credits, no double-redeem, **N-way
     concurrent event joins through the production pooler** (`STRESS_N` knob; measured 1000 joins
     in ~13s, all consistent), no over-commit.
-  - `tests/ai-probe.live.test.mjs` — DeepSeek burst probe (8 concurrent: 8/8 ok, ~1s, no 429s).
+  - `tests/ai-probe.live.test.mjs` — AGNES burst probe (8 concurrent: 8/8 ok, ~1s, no 429s).
   - Run live suites with `RUN_LIVE_TESTS=1`; throwaway members, full cleanup.
 - **Rate/abuse limits (audit #9)**: `rate_limits` table + `bump_rate_limit` RPC; `/api/agent`
   capped 60/hr per member + 200/hr per IP; `reportUser` capped 5/hr per member (surfaces the

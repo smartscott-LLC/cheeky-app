@@ -82,12 +82,14 @@ export default function BlindDateSuitor({
 
       const rows = (rounds ?? []) as RoundRow[];
       const current =
-        rows.filter((r) => r.phase !== 'done').sort((a, b) => b.round_index - a.round_index)[0] ??
-        null;
+        rows
+          .filter((r) => r.phase !== 'done')
+          .sort((a, b) => b.round_index - a.round_index)[0] ?? null;
       setRound(current);
       setCounts(
         rows.reduce<Record<string, number>>((acc, r) => {
-          if (r.tally_user_id) acc[r.tally_user_id] = (acc[r.tally_user_id] ?? 0) + 1;
+          if (r.tally_user_id)
+            acc[r.tally_user_id] = (acc[r.tally_user_id] ?? 0) + 1;
           return acc;
         }, {})
       );
@@ -102,7 +104,7 @@ export default function BlindDateSuitor({
         if (alive) setMyAnswer(mine?.body ?? null);
       }
     };
-    tick();
+    void tick();
     const t = setInterval(tick, 4000);
     return () => {
       alive = false;
@@ -125,14 +127,16 @@ export default function BlindDateSuitor({
         .maybeSingle();
       if (data) setMatchId(data.id);
     };
-    find();
+    void find();
   }, [eventStatus, myUserId, supabase]);
 
   if (eventStatus === 'canceled') {
     return (
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
         <p className="font-body text-club text-4xl">🚪</p>
-        <h2 className="font-header text-cyan mt-3 text-2xl">The room closed.</h2>
+        <h2 className="font-header text-cyan mt-3 text-2xl">
+          The room closed.
+        </h2>
         <p className="mx-auto mt-2 max-w-md text-base font-body text-club">
           It didn&apos;t fill in time, or the room failed — either way your 15
           tokens were returned. No harm done.
@@ -170,7 +174,8 @@ export default function BlindDateSuitor({
           </Link>
         )}
         <p className="mt-4 text-sm font-body text-club">
-          Your {tokenCost} tokens were spent on the chance — that&apos;s the deal.
+          Your {tokenCost} tokens were spent on the chance — that&apos;s the
+          deal.
         </p>
       </div>
     );
@@ -180,7 +185,10 @@ export default function BlindDateSuitor({
   const phaseStart = round
     ? new Date(round.phase_started_at).getTime()
     : Date.now();
-  const left = Math.max(0, PHASE_SECONDS - Math.floor((now - phaseStart) / 1000));
+  const left = Math.max(
+    0,
+    PHASE_SECONDS - Math.floor((now - phaseStart) / 1000)
+  );
   const final = round?.round_index === 4;
   const roundLabel = final
     ? 'THE FINAL ROUND'
@@ -193,7 +201,11 @@ export default function BlindDateSuitor({
   const send = async () => {
     if (!answer.trim() || !round || busy) return;
     setBusy(true);
-    const res = await submitBlindAnswer(eventId, round.round_index, answer.trim());
+    const res = await submitBlindAnswer(
+      eventId,
+      round.round_index,
+      answer.trim()
+    );
     setBusy(false);
     if (res.error) setError(res.error);
     else setMyAnswer(answer.trim());
@@ -235,7 +247,9 @@ export default function BlindDateSuitor({
           className="h-24 w-20 rounded-xl object-cover"
         />
         <div>
-          <p className="font-body text-club text-xl font-extrabold">{hostName ?? 'The hostess'}</p>
+          <p className="font-body text-club text-xl font-extrabold">
+            {hostName ?? 'The hostess'}
+          </p>
           <p className="text-sm font-body text-club">
             She can&apos;t see any of you — personality decides tonight.
           </p>
@@ -247,7 +261,9 @@ export default function BlindDateSuitor({
           <p className="font-body text-club text-sm font-bold uppercase tracking-[0.2em]">
             Her question
           </p>
-          <p className="mt-1 text-base font-body text-club">“{round.question}”</p>
+          <p className="mt-1 text-base font-body text-club">
+            “{round.question}”
+          </p>
         </div>
       )}
 
@@ -286,8 +302,13 @@ export default function BlindDateSuitor({
         ) : (
           <ul className="mt-2 space-y-1">
             {leading.map((s) => (
-              <li key={s.userId} className="font-body text-club flex justify-between text-base">
-                <span className="text-white">{s.displayName ?? 'Gentleman'}</span>
+              <li
+                key={s.userId}
+                className="font-body text-club flex justify-between text-base"
+              >
+                <span className="text-white">
+                  {s.displayName ?? 'Gentleman'}
+                </span>
                 <span className="font-mono font-bold text-gold">
                   {s.count} {s.count === 1 ? 'mark' : 'marks'}
                 </span>

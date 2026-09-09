@@ -35,11 +35,12 @@ export default function Matchmaker() {
     if (res.error) setError(res.error);
   }, []);
 
+  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    refresh();
+    void refresh();
     // The alert is time-sensitive: check for new discoveries on a light poll.
     const t = setInterval(() => {
-      matchmakerState().then((res) => setIncoming(res.incoming));
+      void matchmakerState().then((res) => setIncoming(res.incoming));
     }, 15000);
     return () => clearInterval(t);
   }, [refresh]);
@@ -76,14 +77,16 @@ export default function Matchmaker() {
       if (u) await openConversation(u.sender_id);
       return;
     }
-    refresh();
+    void refresh();
   };
 
   const photoBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`;
 
   if (loading) {
     return (
-      <p className="py-10 text-center text-base font-body text-club">Shuffling the deck…</p>
+      <p className="py-10 text-center text-base font-body text-club">
+        Shuffling the deck…
+      </p>
     );
   }
 

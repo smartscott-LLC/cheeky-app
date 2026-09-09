@@ -70,14 +70,18 @@ export default async function CrewPage() {
                     />
                   </div>
                   <div className="min-w-0">
-                    <p className="font-body font-body text-club truncate text-lg font-extrabold">{c.name}</p>
+                    <p className="font-body font-body text-club truncate text-lg font-extrabold">
+                      {c.name}
+                    </p>
                     <p className="font-body font-body text-club truncate text-xs uppercase tracking-wide">
                       {c.role}
                     </p>
                   </div>
                 </div>
 
-                <p className="font-body font-body text-club mt-3 text-sm">{c.tagline}</p>
+                <p className="font-body font-body text-club mt-3 text-sm">
+                  {c.tagline}
+                </p>
                 <p className="font-body font-body text-club mt-2 text-xs font-bold uppercase tracking-wide">
                   {characterFloorName(c.slug)}
                 </p>

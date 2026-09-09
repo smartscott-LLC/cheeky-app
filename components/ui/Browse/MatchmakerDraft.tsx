@@ -40,14 +40,16 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
     setPicked(new Set(res.people.filter((p) => p.picked).map((p) => p.id)));
   }, []);
 
+  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    load();
+    void load();
   }, [load]);
 
   const photoBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`;
 
   const pick = async (person: MatchmakerCandidate) => {
-    if (picked.has(person.id) || picked.size >= 2 || picking || building) return;
+    if (picked.has(person.id) || picked.size >= 2 || picking || building)
+      return;
     setPicking(true);
     setError(null);
     const res = await matchmakerPickDraft(person.id);
@@ -75,7 +77,9 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
 
   if (busy && people.length === 0) {
     return (
-      <p className="py-10 text-center text-base font-body text-club">Scouting your floor…</p>
+      <p className="py-10 text-center text-base font-body text-club">
+        Scouting your floor…
+      </p>
     );
   }
 
@@ -83,9 +87,12 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
     return (
       <div className="rounded-xl border border-gold bg-zinc-900/50 p-10 text-center">
         <p className="text-4xl">🌹</p>
-        <h2 className="font-header text-cyan mt-3 text-2xl">The floor&apos;s empty — for now</h2>
+        <h2 className="font-header text-cyan mt-3 text-2xl">
+          The floor&apos;s empty — for now
+        </h2>
         <p className="font-body text-club mx-auto mt-2 max-w-md text-base">
-          No one new to draft tonight. New faces land after the next event — come back soon.
+          No one new to draft tonight. New faces land after the next event —
+          come back soon.
         </p>
       </div>
     );
@@ -107,8 +114,8 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
         </p>
       </div>
       <p className="mx-auto mt-2 max-w-md text-center text-sm font-body text-club">
-        Tap two faces from your floor (or below). These are drafts — not likes. Nothing matches
-        from here.
+        Tap two faces from your floor (or below). These are drafts — not likes.
+        Nothing matches from here.
       </p>
 
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
@@ -121,7 +128,9 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
               onClick={() => pick(person)}
               disabled={picking || building || (!chosen && picked.size >= 2)}
               className={`group overflow-hidden rounded-xl border bg-zinc-900/60 text-left transition ${
-                chosen ? 'border-gold ring-1 ring-gold' : 'border-zinc-700 hover:border-gold/60'
+                chosen
+                  ? 'border-gold ring-1 ring-gold'
+                  : 'border-zinc-700 hover:border-gold/60'
               }`}
             >
               <div className="aspect-[3/4] w-full overflow-hidden bg-zinc-800">
@@ -143,7 +152,9 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
                   {person.display_name || 'Member'}
                 </h3>
                 {person.one_liner && (
-                  <p className="mt-0.5 truncate text-xs font-body text-club">{person.one_liner}</p>
+                  <p className="mt-0.5 truncate text-xs font-body text-club">
+                    {person.one_liner}
+                  </p>
                 )}
                 <p
                   className={`mt-2 rounded-md px-2 py-1 text-center text-xs font-bold uppercase tracking-wide ${
@@ -169,7 +180,11 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
             disabled={picked.size !== 2 || building}
             className="rounded-lg bg-gold px-8 py-3 text-base font-bold text-black transition hover:bg-gold-royal disabled:opacity-40"
           >
-            {building ? 'Building the board…' : picked.size === 2 ? 'Build the board →' : 'Pick 2 to build'}
+            {building
+              ? 'Building the board…'
+              : picked.size === 2
+                ? 'Build the board →'
+                : 'Pick 2 to build'}
           </button>
         )}
       </div>

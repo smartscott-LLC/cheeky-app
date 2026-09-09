@@ -1,5 +1,5 @@
 import { createClient } from '@/utils/supabase/server';
-import s from './Navbar.module.css';
+import './Navbar.module.css';
 import Navlinks from './Navlinks';
 
 export default async function Navbar() {

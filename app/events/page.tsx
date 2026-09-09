@@ -26,12 +26,13 @@ export default async function EventsPage() {
     tier === 'gold' ? 1 : tier === 'platinum' ? 2 : tier === 'diamond' ? 3 : 0;
 
   const kinds = Object.keys(KIND_META);
+  const cutoff = new Date(Date.now() - 3 * 60 * 1000).toISOString();
   const [{ data: events }, { data: announcements }] = await Promise.all([
     supabase
       .from('events')
       .select('*')
       .in('kind', kinds)
-      .gte('starts_at', new Date(Date.now() - 3 * 60 * 1000).toISOString())
+      .gte('starts_at', cutoff)
       .order('starts_at')
       .limit(8),
     supabase
@@ -62,8 +63,8 @@ export default async function EventsPage() {
         </h1>
         <p className="font-body font-body text-club mx-auto mt-3 max-w-xl text-center">
           The playlist: the Dance Floor, Speed Dating, and the Rooftop, every
-          hour on the quarter — plus Blind Date, whenever the Gold
-          floor&apos;s hostess opens the door.
+          hour on the quarter — plus Blind Date, whenever the Gold floor&apos;s
+          hostess opens the door.
         </p>
 
         {/* The overhead ticker — anonymous, in-app only. */}
@@ -74,7 +75,10 @@ export default async function EventsPage() {
             </p>
             <ul className="divide-y divide-zinc-800">
               {(announcements ?? []).map((a, i) => (
-                <li key={i} className="font-body font-body text-club px-4 py-2 text-base">
+                <li
+                  key={i}
+                  className="font-body font-body text-club px-4 py-2 text-base"
+                >
                   {a.body}{' '}
                   <span className="text-sm text-cyan">
                     {new Date(a.created_at).toLocaleTimeString([], {
@@ -128,7 +132,9 @@ export default async function EventsPage() {
                       ? `${timeLabel(next.starts_at)} · ${next.token_cost} tokens`
                       : 'Between sets'}
                   </p>
-                  <p className="font-body font-body text-club mt-2 text-sm">{meta.tagline}</p>
+                  <p className="font-body font-body text-club mt-2 text-sm">
+                    {meta.tagline}
+                  </p>
                   {locked ? (
                     <p className="font-body font-body text-club mt-4 text-base font-bold">
                       Behind the rope. Come see what&apos;s on these floors with
@@ -154,8 +160,8 @@ export default async function EventsPage() {
             <div>
               <h3 className="font-header text-cyan text-xl">💘 Blind Date</h3>
               <p className="font-body font-body text-club mt-1 text-sm">
-                The Gold floor&apos;s room. One hostess, up to five suitors, four
-                rounds of questions — most marks wins the date. Host when
+                The Gold floor&apos;s room. One hostess, up to five suitors,
+                four rounds of questions — most marks wins the date. Host when
                 you&apos;re ready; the room runs when a lady opens the door.
               </p>
             </div>
@@ -174,10 +180,10 @@ export default async function EventsPage() {
             <div>
               <h3 className="font-header text-cyan text-xl">🧊 Icebreakers</h3>
               <p className="font-body font-body text-club mt-1 text-sm">
-                Not events — things for matched couples to do instead of
-                staring at empty chat. Date Night is the first one: five
-                questions, both of you tap the same answer to lock it. Free,
-                and it starts from any matched chat.
+                Not events — things for matched couples to do instead of staring
+                at empty chat. Date Night is the first one: five questions, both
+                of you tap the same answer to lock it. Free, and it starts from
+                any matched chat.
               </p>
             </div>
             <Link

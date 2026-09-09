@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
-import { redirect } from 'next/navigation';
-import { notFound } from 'next/navigation';
+import { redirect, notFound } from 'next/navigation';
 import { floorBySlug } from '@/utils/floors';
 import FloorPageLayout from '@/components/ui/Club/FloorPageLayout';
 
@@ -108,16 +107,26 @@ export default async function FloorPage({
           floorTagline={floor.tagline}
           floorSlug={slug}
           eventSlug={
-            slug === 'silver' ? 'dance_floor' :
-            slug === 'gold' ? 'blind_date' :
-            slug === 'platinum' ? 'speed' :
-            slug === 'diamond' ? 'rooftop' : undefined
+            slug === 'silver'
+              ? 'dance_floor'
+              : slug === 'gold'
+                ? 'blind_date'
+                : slug === 'platinum'
+                  ? 'speed'
+                  : slug === 'diamond'
+                    ? 'rooftop'
+                    : undefined
           }
           eventLabel={
-            slug === 'silver' ? 'Dance Floor' :
-            slug === 'gold' ? 'Blind Date' :
-            slug === 'platinum' ? 'Speed Dating' :
-            slug === 'diamond' ? 'The Rooftop' : 'Floor Event'
+            slug === 'silver'
+              ? 'Dance Floor'
+              : slug === 'gold'
+                ? 'Blind Date'
+                : slug === 'platinum'
+                  ? 'Speed Dating'
+                  : slug === 'diamond'
+                    ? 'The Rooftop'
+                    : 'Floor Event'
           }
         />
       )}

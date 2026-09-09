@@ -38,11 +38,11 @@ const body = Buffer.from(
 );
 const goodSig = crypto.createHmac('sha256', SECRET).update(body).digest('hex');
 
-test('verify: a fresh signature is accepted', () => {
+void test('verify: a fresh signature is accepted', () => {
   assert.equal(verifySignature(body, goodSig, SECRET), true);
 });
 
-test('verify: a forged signature is rejected', () => {
+void test('verify: a forged signature is rejected', () => {
   const forged = crypto
     .createHmac('sha256', 'not-the-right-secret')
     .update(body)
@@ -50,18 +50,18 @@ test('verify: a forged signature is rejected', () => {
   assert.equal(verifySignature(body, forged, SECRET), false);
 });
 
-test('verify: a missing header is rejected', () => {
+void test('verify: a missing header is rejected', () => {
   assert.equal(verifySignature(body, null, SECRET), false);
   assert.equal(verifySignature(body, '', SECRET), false);
 });
 
-test('verify: a signature of the wrong length is rejected (no crash)', () => {
+void test('verify: a signature of the wrong length is rejected (no crash)', () => {
   // timingSafeEqual throws on length mismatch; the helper must guard.
   assert.equal(verifySignature(body, 'aabbcc', SECRET), false);
   assert.equal(verifySignature(body, 'a'.repeat(128), SECRET), false);
 });
 
-test('verify: the body is hashed exactly as the bytes were sent', () => {
+void test('verify: the body is hashed exactly as the bytes were sent', () => {
   // Re-serialise with different key order and confirm the verify fails
   // — the docs are explicit: hash the raw body, not a re-stringified
   // version. The handler must hand verifyAndParseWebhook the bytes
@@ -69,11 +69,14 @@ test('verify: the body is hashed exactly as the bytes were sent', () => {
   const altBody = Buffer.from(
     JSON.stringify({ hello: 'world', type: 'message.new' })
   );
-  const altSig = crypto.createHmac('sha256', SECRET).update(altBody).digest('hex');
+  const altSig = crypto
+    .createHmac('sha256', SECRET)
+    .update(altBody)
+    .digest('hex');
   assert.equal(verifySignature(body, altSig, SECRET), false);
 });
 
-test('verify: gzipped bodies are decompressed before hashing', () => {
+void test('verify: gzipped bodies are decompressed before hashing', () => {
   const gz = zlib.gzipSync(body);
   // Confirm the helper detects the magic and unzips.
   assert.equal(gunzip(gz).toString('utf8'), body.toString('utf8'));
@@ -85,7 +88,7 @@ test('verify: gzipped bodies are decompressed before hashing', () => {
   assert.equal(verifySignature(gz, goodSig, SECRET), false);
 });
 
-test('verify: the signature is case-sensitive hex (lowercase)', () => {
+void test('verify: the signature is case-sensitive hex (lowercase)', () => {
   // Lowercase matches our HMAC output and the docs.
   assert.equal(goodSig, goodSig.toLowerCase());
   assert.match(goodSig, /^[0-9a-f]{64}$/);

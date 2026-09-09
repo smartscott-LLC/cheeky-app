@@ -98,7 +98,8 @@ export async function uploadProfilePhoto(
     } catch (convErr) {
       console.error('photo conversion failed:', convErr);
       return {
-        error: 'could not read that image — try a JPG or PNG straight from your camera'
+        error:
+          'could not read that image — try a JPG or PNG straight from your camera'
       };
     }
 

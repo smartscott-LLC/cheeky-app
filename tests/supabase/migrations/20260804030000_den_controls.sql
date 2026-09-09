@@ -8,8 +8,8 @@
 
 create table public.model_config (
   id boolean primary key default true check (id),
-  cast_model text not null default 'deepseek-chat',
-  watchdog_model text not null default 'nvidia/nemotron-nano-12b-v2-vl:free',
+  cast_model text not null default 'AGNES-chat',
+  watchdog_model text not null default 'agnes-2.5-flash',
   updated_at timestamptz not null default now()
 );
 alter table public.model_config enable row level security;

@@ -152,7 +152,9 @@ export default function CastChat({ character }: { character: CastCharacter }) {
             </div>
           ))}
           {busy && (
-            <p className="text-base font-body text-club">{TYPING[typingIdx]}…</p>
+            <p className="text-base font-body text-club">
+              {TYPING[typingIdx]}…
+            </p>
           )}
         </div>
 

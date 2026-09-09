@@ -36,7 +36,7 @@ export default function MomentsStrip() {
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
+    void (async () => {
       const {
         data: { user }
       } = await supabase.auth.getUser();
@@ -100,7 +100,9 @@ export default function MomentsStrip() {
                   {new Date(m.created_at).toLocaleString()}
                 </span>
               </p>
-              <p className="mt-0.5 text-base font-body text-club">{m.message}</p>
+              <p className="mt-0.5 text-base font-body text-club">
+                {m.message}
+              </p>
             </div>
           </div>
         ))}

@@ -85,7 +85,7 @@ export default function SpeedDatingFloor({
     maxSlot,
     Math.max(0, Math.floor((Date.now() - startsAt) / (SESSION_SECONDS * 1000)))
   );
-  const inRotation = eventStatus === 'running' && now < rotationEnds;
+
   const selectionPhase =
     (eventStatus === 'closed' || now >= rotationEnds) && !result;
 
@@ -223,8 +223,8 @@ export default function SpeedDatingFloor({
   useEffect(() => {
     const t = setInterval(() => {
       setNow(Date.now());
-      refresh();
-      refreshMessages();
+      void refresh();
+      void refreshMessages();
     }, 2000);
     const clock = setInterval(() => setNow(Date.now()), 500);
     return () => {
@@ -452,7 +452,7 @@ export default function SpeedDatingFloor({
                   <button
                     onClick={() => {
                       setTopPick(p.userId);
-                      handleSelect(p.userId, 1);
+                      void handleSelect(p.userId, 1);
                     }}
                     className={`rounded-md px-3 py-1 text-xs font-bold ${
                       topPick === p.userId
@@ -465,7 +465,7 @@ export default function SpeedDatingFloor({
                   <button
                     onClick={() => {
                       setAltPick(p.userId);
-                      handleSelect(p.userId, 2);
+                      void handleSelect(p.userId, 2);
                     }}
                     className={`rounded-md px-3 py-1 text-xs font-bold ${
                       altPick === p.userId

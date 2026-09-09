@@ -1,7 +1,10 @@
 'use client';
 
 import { useCallback } from 'react';
-import { EmbeddedCheckout, EmbeddedCheckoutProvider } from '@stripe/react-stripe-js';
+import {
+  EmbeddedCheckout,
+  EmbeddedCheckoutProvider
+} from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { startCheckoutSession } from '@/app/actions/stripe';
 

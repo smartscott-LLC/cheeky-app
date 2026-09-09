@@ -31,8 +31,7 @@ const CHAT = {
   emoji: '💬',
   name: 'Cheeky Chats',
   sub: 'Your conversations',
-  color:
-    'font-body text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+  color: 'font-body text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
   pos: 'left-[36%] top-[30%]'
 };
 const SPARK = {
@@ -40,8 +39,7 @@ const SPARK = {
   emoji: '⚡',
   name: 'SPARX',
   sub: 'Who\u2019s out tonight',
-  color:
-    'font-body text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+  color: 'font-body text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
   pos: 'right-[36%] top-[30%]'
 };
 const GIFT = {
@@ -49,8 +47,7 @@ const GIFT = {
   emoji: '🎁',
   name: 'Gift Shop',
   sub: 'Buy something',
-  color:
-    'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+  color: 'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
   pos: 'right-[6%] top-[42%]'
 };
 const ELEVATORS = {
@@ -58,8 +55,7 @@ const ELEVATORS = {
   emoji: '🛗',
   name: 'Elevators',
   sub: 'Up or down',
-  color:
-    'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+  color: 'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
   pos: 'right-[5%] top-[8%]'
 };
 const CENTER = {
@@ -67,8 +63,7 @@ const CENTER = {
   emoji: '📅',
   name: 'Event Center',
   sub: 'The hourly playlist',
-  color:
-    'text-cyan hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
+  color: 'text-cyan hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
   pos: 'left-1/2 top-[58%] -translate-x-1/2'
 };
 
@@ -81,8 +76,7 @@ const DJ = {
   emoji: '🎧',
   name: 'The DJ',
   sub: 'D34D_B34T on the decks',
-  color:
-    'text-cyan hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
+  color: 'text-cyan hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
   pos: 'left-[6%] top-[8%]'
 };
 const ROXY = {
@@ -91,8 +85,7 @@ const ROXY = {
   emoji: '🍸',
   name: 'Roxy',
   sub: 'The mixologist',
-  color:
-    'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+  color: 'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
   pos: 'left-[6%] top-[8%]'
 };
 const TRIXIE = {
@@ -101,8 +94,7 @@ const TRIXIE = {
   emoji: '🛎️',
   name: 'Trixie',
   sub: 'The waitress',
-  color:
-    'font-body text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
+  color: 'font-body text-club hover:shadow-[0_0_24px_rgba(255,45,155,0.25)]',
   pos: 'left-[6%] top-[8%]'
 };
 const VALENTINA = {
@@ -111,8 +103,7 @@ const VALENTINA = {
   emoji: '💎',
   name: 'Valentina',
   sub: 'The hostess',
-  color:
-    'text-diamond hover:shadow-[0_0_24px_rgba(251,3,92,0.25)]',
+  color: 'text-diamond hover:shadow-[0_0_24px_rgba(251,3,92,0.25)]',
   pos: 'left-[6%] top-[8%]'
 };
 
@@ -132,8 +123,7 @@ export const FLOORS: FloorMeta[] = [
         emoji: '🪩',
         name: 'Dance Floor',
         sub: 'The hourly room',
-        color:
-          'text-cyan hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
+        color: 'text-cyan hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
         pos: 'left-[6%] top-[42%]'
       },
       GIFT,
@@ -157,8 +147,7 @@ export const FLOORS: FloorMeta[] = [
         emoji: '💘',
         name: 'Blind Date',
         sub: 'The Gold floor\u2019s signature',
-        color:
-          'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
+        color: 'text-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.25)]',
         pos: 'left-[6%] top-[42%]'
       },
       GIFT,
@@ -182,8 +171,7 @@ export const FLOORS: FloorMeta[] = [
         emoji: '💘',
         name: 'Speed Dating',
         sub: 'The Platinum room',
-        color:
-          'text-cyan hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
+        color: 'text-cyan hover:shadow-[0_0_24px_rgba(0,245,255,0.25)]',
         pos: 'left-[6%] top-[42%]'
       },
       GIFT,
@@ -207,8 +195,7 @@ export const FLOORS: FloorMeta[] = [
         emoji: '🌇',
         name: 'The Rooftop',
         sub: 'Closer, higher, fewer',
-        color:
-          'text-diamond hover:shadow-[0_0_24px_rgba(251,3,92,0.25)]',
+        color: 'text-diamond hover:shadow-[0_0_24px_rgba(251,3,92,0.25)]',
         pos: 'left-[6%] top-[42%]'
       },
       GIFT,

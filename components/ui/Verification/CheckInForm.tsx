@@ -162,7 +162,10 @@ export default function CheckInForm({ error }: { error?: string | null }) {
             <span>
               I understand the club is in-app — meeting up or moving outside the
               app is my choice, on me. Read the{' '}
-              <Link href="/best-practices" className="font-body text-club underline">
+              <Link
+                href="/best-practices"
+                className="font-body text-club underline"
+              >
                 Best Practices
               </Link>{' '}
               (v1).

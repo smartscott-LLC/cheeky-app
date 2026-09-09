@@ -1,6 +1,6 @@
 ## Agentic Code Review
 
-### 🟡 Medium  -  Adding bare /lounge before wildcard may change request handling
+### 🟡 Medium - Adding bare /lounge before wildcard may change request handling
 
 `microfrontends.json:14`
 
@@ -16,7 +16,7 @@ Related categories: regression
 
 ---
 
-### 🟢 Low  -  Removal of www. prefix may break existing callers
+### 🟢 Low - Removal of www. prefix may break existing callers
 
 `microfrontends.json:6`
 

@@ -33,7 +33,11 @@ interface Ended {
  * strike. 2 matches win, 3 strikes lose. The server is the referee — the
  * client only renders what matchmaker_flip reveals.
  */
-export default function MatchmakerBoard({ boardId, flippedCardId, onFinished }: Props) {
+export default function MatchmakerBoard({
+  boardId,
+  flippedCardId,
+  onFinished
+}: Props) {
   const [cards, setCards] = useState<MatchmakerCard[]>([]);
   const [faceUp, setFaceUp] = useState<Record<string, Reveal>>({});
   const [firstFlipId, setFirstFlipId] = useState<string | null>(flippedCardId);
@@ -85,8 +89,9 @@ export default function MatchmakerBoard({ boardId, flippedCardId, onFinished }: 
     setFaceUp(up);
   }, [boardId, flippedCardId]);
 
+  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    load();
+    void load();
     return () => {
       if (strikeTimer.current) clearTimeout(strikeTimer.current);
     };
@@ -122,7 +127,7 @@ export default function MatchmakerBoard({ boardId, flippedCardId, onFinished }: 
       setFaceUp((prev) => {
         const next = { ...prev, [card.id]: reveal };
         if (f.first_card_id && next[f.first_card_id]) {
-          next[f.first_card_id] = next[f.first_card_id];
+          // self-assignment was here — no-op, removed
         }
         return next;
       });
@@ -137,7 +142,11 @@ export default function MatchmakerBoard({ boardId, flippedCardId, onFinished }: 
         )
       );
       if (f.board_status === 'won') {
-        setEnded({ status: 'won', strikes: f.strikes, matches: f.matches_found });
+        setEnded({
+          status: 'won',
+          strikes: f.strikes,
+          matches: f.matches_found
+        });
       } else if (!unlockSentFor.has(f.target_id)) {
         setUnlockTarget({ cardId: card.id, person: reveal });
       }
@@ -149,7 +158,11 @@ export default function MatchmakerBoard({ boardId, flippedCardId, onFinished }: 
     setFirstFlipId(null);
     setStrikes(f.strikes);
     if (f.board_status === 'lost') {
-      setEnded({ status: 'lost', strikes: f.strikes, matches: f.matches_found });
+      setEnded({
+        status: 'lost',
+        strikes: f.strikes,
+        matches: f.matches_found
+      });
     } else {
       strikeTimer.current = setTimeout(() => {
         setFaceUp((prev) => {
@@ -174,7 +187,9 @@ export default function MatchmakerBoard({ boardId, flippedCardId, onFinished }: 
       setError(res.error);
       return;
     }
-    setUnlockSentFor((prev) => new Set(prev).add(unlockTarget.person.target_id));
+    setUnlockSentFor((prev) =>
+      new Set(prev).add(unlockTarget.person.target_id)
+    );
     setUnlockSent(true);
   };
 
@@ -234,9 +249,14 @@ export default function MatchmakerBoard({ boardId, flippedCardId, onFinished }: 
     <div>
       <div className="mx-auto flex max-w-md items-center justify-between">
         <div className="flex items-center gap-1">
-          <span className="mr-1 text-sm font-semibold font-body text-club">Strikes</span>
+          <span className="mr-1 text-sm font-semibold font-body text-club">
+            Strikes
+          </span>
           {[0, 1, 2].map((i) => (
-            <span key={i} className={`text-lg ${i < strikes ? '' : 'opacity-25'}`}>
+            <span
+              key={i}
+              className={`text-lg ${i < strikes ? '' : 'opacity-25'}`}
+            >
               ❤️
             </span>
           ))}

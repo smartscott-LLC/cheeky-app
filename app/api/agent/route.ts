@@ -2,10 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { supabaseAdmin } from '@/utils/supabase/admin';
 import { streamAgent, GatewayMessage } from '@/utils/agent/gateway';
-import {
-  streamDeepseekDirect,
-  DirectMessage
-} from '@/utils/agent/deepseek-direct';
+import { streamAGNESDirect, DirectMessage } from '@/utils/agent/deepseek-direct';
 import {
   hasSwagAccess,
   swagSystemNote,
@@ -41,7 +38,7 @@ ${HOUSE_RULES}`;
 
 /**
  * The cast model comes from the Lions Den (model_config) so a down model
- * can be swapped without a redeploy — env DEEPSEEK_MODEL is the fallback.
+ * can be swapped without a redeploy — env AGNES_MODEL is the fallback.
  */
 async function getCastModel(): Promise<string> {
   const { data } = await supabaseAdmin
@@ -49,22 +46,22 @@ async function getCastModel(): Promise<string> {
     .select('cast_model')
     .eq('id', true)
     .maybeSingle();
-  return data?.cast_model ?? process.env.DEEPSEEK_MODEL ?? 'deepseek-chat';
+  return data?.cast_model ?? process.env.AGNES_MODEL ?? 'AGNES-chat';
 }
 
 function describeError(err: unknown): string {
   const msg = err instanceof Error ? err.message : '';
   const detail = (err as Error & { detail?: string }).detail;
   if (msg.includes('OIDC') || msg.includes('401') || msg.includes('auth'))
-    return "The stage lights aren't on yet (auth). Check DEEPSEEK_API_KEY or VERCEL_OIDC_TOKEN.";
-  if (msg.includes('deepseek_http_401'))
-    return 'The bouncer rejected the key — check DEEPSEEK_API_KEY.';
-  if (msg.includes('deepseek_http_402'))
-    return 'DeepSeek is out of credits — top up and we are back on stage.';
-  if (msg.includes('deepseek_http_404') || msg.includes('model'))
+    return "The stage lights aren't on yet (auth). Check AGNES_API_KEY or VERCEL_OIDC_TOKEN.";
+  if (msg.includes('AGNES_http_401'))
+    return 'The bouncer rejected the key — check AGNES_API_KEY.';
+  if (msg.includes('AGNES_http_402'))
+    return 'AGNES is out of credits — top up and we are back on stage.';
+  if (msg.includes('AGNES_http_404') || msg.includes('model'))
     return 'The script called for a model that does not exist. Check the model id.';
-  if (msg.includes('deepseek_http'))
-    return `DeepSeek said no (${msg.replace('deepseek_http_', '')}${detail ? `: ${detail}` : ''}).`;
+  if (msg.includes('AGNES_http'))
+    return `AGNES said no (${msg.replace('AGNES_http_', '')}${detail ? `: ${detail}` : ''}).`;
   return 'Something fizzled in the sound system. Try again.';
 }
 
@@ -221,11 +218,11 @@ export async function POST(req: Request) {
     // owner) as the reply streams. Applies to both model paths below.
     const swagTransform = swagMarkerTransform(character, user.id);
 
-    // Primary: straight to DeepSeek (cheapest, no middleman). The gateway
-    // is the free fallback when no DEEPSEEK_API_KEY is set.
-    const directKey = process.env.DEEPSEEK_API_KEY;
+    // Primary: straight to AGNES (cheapest, no middleman). The gateway
+    // is the free fallback when no AGNES_API_KEY is set.
+    const directKey = process.env.AGNES_API_KEY;
     if (directKey) {
-      const stream = await streamDeepseekDirect({
+      const stream = await streamAGNESDirect({
         apiKey: directKey,
         model: await getCastModel(),
         system: fullSystem,

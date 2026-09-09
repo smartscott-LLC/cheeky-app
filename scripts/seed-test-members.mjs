@@ -20,9 +20,12 @@ import sharp from 'sharp';
 config({ path: 'env.new' });
 
 const URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_SECRET_KEY;
+const KEY =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_SECRET_KEY;
 if (!URL || !KEY) {
-  console.error('NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY missing from env.new');
+  console.error(
+    'NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY missing from env.new'
+  );
   process.exit(1);
 }
 
@@ -37,9 +40,28 @@ const EMAIL_DOMAIN = 'clubcheeky.test';
 // verified — so they populate any compatibility filter.
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUV'.split('');
 const NAMES = [
-  'Alex', 'Bailey', 'Cameron', 'Drew', 'Elliot', 'Frankie', 'Grey', 'Harper',
-  'Ivy', 'Jules', 'Kai', 'Lennon', 'Marlow', 'Noah', 'Oakley', 'Parker',
-  'Quinn', 'Riley', 'Sage', 'Tatum', 'Vale', 'Winter'
+  'Alex',
+  'Bailey',
+  'Cameron',
+  'Drew',
+  'Elliot',
+  'Frankie',
+  'Grey',
+  'Harper',
+  'Ivy',
+  'Jules',
+  'Kai',
+  'Lennon',
+  'Marlow',
+  'Noah',
+  'Oakley',
+  'Parker',
+  'Quinn',
+  'Riley',
+  'Sage',
+  'Tatum',
+  'Vale',
+  'Winter'
 ];
 const BIOS = [
   'Here for the floor, not the facade.',
@@ -59,7 +81,12 @@ const BIOS = [
 async function toWebP(img) {
   return sharp(img)
     .rotate()
-    .resize({ width: 1200, height: 1200, fit: 'inside', withoutEnlargement: true })
+    .resize({
+      width: 1200,
+      height: 1200,
+      fit: 'inside',
+      withoutEnlargement: true
+    })
     .webp({ quality: 80 })
     .toBuffer();
 }
@@ -69,7 +96,9 @@ async function seed() {
     .filter((f) => /\.(png|jpe?g|webp)$/i.test(f))
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
   if (photos.length < LETTERS.length) {
-    console.error(`Need ${LETTERS.length} images in dummy_images/ (a → v); found ${photos.length}`);
+    console.error(
+      `Need ${LETTERS.length} images in dummy_images/ (a → v); found ${photos.length}`
+    );
     process.exit(1);
   }
 
@@ -135,7 +164,9 @@ async function seed() {
 
     console.log(`  ${letter} ${email} — ${name} (${gender}) ✓`);
   }
-  console.log('Done. Flag your own account with --owner=EMAIL to see the dummies.');
+  console.log(
+    'Done. Flag your own account with --owner=EMAIL to see the dummies.'
+  );
 }
 
 async function remove() {
@@ -185,11 +216,16 @@ async function flagOwner(email) {
     console.error('flag failed:', error.message);
     process.exit(1);
   }
-  const { data: ok } = await sb.from('profiles').select('id').eq('test_member', true);
+  const { data: ok } = await sb
+    .from('profiles')
+    .select('id')
+    .eq('test_member', true);
   console.log('Owner flagged. Test-flagged accounts:', (ok ?? []).length);
 }
 
-const flagOnlyArg = process.argv.slice(2).find((a) => a.startsWith('--flag-only='));
+const flagOnlyArg = process.argv
+  .slice(2)
+  .find((a) => a.startsWith('--flag-only='));
 const ownerArg = process.argv.slice(2).find((a) => a.startsWith('--owner='));
 if (process.argv.includes('--remove')) {
   await remove();

@@ -29,7 +29,7 @@ const FLOOR_CHARACTER: Record<string, string> = {
   silver: ASSETS.personas.djStage,
   gold: ASSETS.personas.bartender,
   platinum: ASSETS.personas.trixie,
-  diamond: ASSETS.personas.hostess,
+  diamond: ASSETS.personas.hostess
 };
 
 export default function FloorPageLayout({
@@ -43,7 +43,7 @@ export default function FloorPageLayout({
   centerActionHref,
   rightBottomHref = '/events',
   rightBottomLabel = 'Events',
-  rightBottomIcon,
+  rightBottomIcon
 }: FloorPageLayoutProps) {
   const eventHref = eventSlug ? `/events/${eventSlug}` : `/events`;
   const centerHref = centerActionHref || eventHref;
@@ -163,7 +163,9 @@ export default function FloorPageLayout({
                     className="h-15 w-15 object-contain"
                   />
                 </div>
-                <span className="font-body text-club text-xs">{eventLabel}</span>
+                <span className="font-body text-club text-xs">
+                  {eventLabel}
+                </span>
               </Link>
             </div>
           </div>
@@ -177,14 +179,18 @@ export default function FloorPageLayout({
                 href="/floors"
                 className="group flex flex-col items-right gap-1"
               >
-                <div className="flex h-14 w-14 items-right justify-center overflow-hidden rounded-full bg-black shadow-[0_0_20px_rgba(246,5,186,0.3)] transition group-hover:scale-105">                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                <div className="flex h-14 w-14 items-right justify-center overflow-hidden rounded-full bg-black shadow-[0_0_20px_rgba(246,5,186,0.3)] transition group-hover:scale-105">
+                  {' '}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={ASSETS.icons.velvetRope}
                     alt="Elevators"
                     className="h-14 w-14 object-cover"
                   />
                 </div>
-                <span className="font-body text-center text-club text-xs">Elevators</span>
+                <span className="font-body text-center text-club text-xs">
+                  Elevators
+                </span>
               </Link>
               {/* AI Chat — floor character portrait */}
               <Link
@@ -199,7 +205,9 @@ export default function FloorPageLayout({
                     className="h-14 w-14 object-cover"
                   />
                 </div>
-                <span className="font-body text-center text-club text-xs">AI Chat</span>
+                <span className="font-body text-center text-club text-xs">
+                  AI Chat
+                </span>
               </Link>
               {/* Gift Store */}
               <Link
@@ -214,7 +222,9 @@ export default function FloorPageLayout({
                     className="h-14 w-14 object-contain"
                   />
                 </div>
-                <span className="font-body text-center text-club text-xs">Gift Store</span>
+                <span className="font-body text-center text-club text-xs">
+                  Gift Store
+                </span>
               </Link>
               {/* Right bottom button — Events (default) or Coat Check (lobby) */}
               <Link
@@ -229,7 +239,9 @@ export default function FloorPageLayout({
                     className="h-14 w-14 object-contain"
                   />
                 </div>
-                <span className="font-body text-center text-club text-xs">{rightBottomLabel}</span>
+                <span className="font-body text-center text-club text-xs">
+                  {rightBottomLabel}
+                </span>
               </Link>
             </div>
           </div>

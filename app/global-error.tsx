@@ -3,7 +3,7 @@
 import NextError from 'next/error';
 
 export default function GlobalError({
-  error
+  error: _error
 }: {
   error: Error & { digest?: string };
 }) {

@@ -64,8 +64,6 @@ const ICEBREAKERS = [
   'Something you are weirdly good at?'
 ];
 
-const SONG_SECONDS = 180;
-
 function describeError(code: string): string {
   switch (code) {
     case 'daily_message_limit':
@@ -101,7 +99,7 @@ export default function MessageThread({
   interestUserId = null,
   giftRoomMode = false,
   giftFloor = null,
-  giftExpiresAt = null,
+  giftExpiresAt: _giftExpiresAt = null,
   photoBase,
   currentUserId
 }: MessageThreadProps) {
@@ -262,7 +260,9 @@ export default function MessageThread({
             )}
           </div>
           <div>
-            <p className="font-body text-club font-bold">{other.display_name}</p>
+            <p className="font-body text-club font-bold">
+              {other.display_name}
+            </p>
             {other.verified_at && (
               <p className="text-sm font-bold uppercase tracking-wide font-body text-club">
                 Verified
@@ -280,7 +280,9 @@ export default function MessageThread({
               </p>
             )}
             {declined && (
-              <p className="text-sm font-body text-club">Song over — chat closed</p>
+              <p className="text-sm font-body text-club">
+                Song over — chat closed
+              </p>
             )}
           </div>
         </div>
@@ -336,7 +338,9 @@ export default function MessageThread({
         <div className="border-b border-gold/20 bg-gradient-to-r from-gold/20 via-zinc-900 to-club/10 px-4 py-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="font-body text-club text-base font-bold">🍾 A Gift Date</p>
+              <p className="font-body text-club text-base font-bold">
+                🍾 A Gift Date
+              </p>
               <p className="text-sm font-body text-club">
                 This room is yours for the next two hours
                 {giftFloor && giftFloor !== 'standard' && giftFloor !== 'silver'
@@ -400,7 +404,9 @@ export default function MessageThread({
       {/* Post-song decision */}
       {songOver && !declined && !blocked && (
         <div className="border-b border-zinc-800 bg-zinc-900 p-4 text-center">
-          <p className="font-body text-club text-base font-bold">The song&apos;s over. What now?</p>
+          <p className="font-body text-club text-base font-bold">
+            The song&apos;s over. What now?
+          </p>
           <div className="mt-3 flex justify-center gap-3">
             <button
               onClick={() => handleResolve(true)}
@@ -429,7 +435,9 @@ export default function MessageThread({
 
       {reportOpen && !blocked && !declined && (
         <div className="border-b border-zinc-800 bg-zinc-900 p-4">
-          <p className="font-body text-club mb-2 text-base font-bold">Report {other.display_name}</p>
+          <p className="font-body text-club mb-2 text-base font-bold">
+            Report {other.display_name}
+          </p>
           <div className="flex flex-wrap gap-2">
             {REPORT_REASONS.map((reason) => (
               <button
@@ -522,7 +530,9 @@ export default function MessageThread({
       <div className="border-t border-zinc-800 p-4">
         {error && <p className="mb-2 text-sm font-body text-club">{error}</p>}
         {blocked ? (
-          <p className="text-base font-body text-club">Blocked. No more messages.</p>
+          <p className="text-base font-body text-club">
+            Blocked. No more messages.
+          </p>
         ) : declined ? (
           <Link
             href="/events"

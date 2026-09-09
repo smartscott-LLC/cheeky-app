@@ -83,9 +83,10 @@ export default async function Account() {
           : '🪪 Your Silver card';
   // Far-future grants (owner comps, giveaways) read as permanent — no
   // misreading a 2126 date as days.
+  const now = Date.now();
   const grantExpiry = (iso: string) => {
     const exp = new Date(iso).getTime();
-    if (exp - Date.now() > 10 * 365 * 86400000) return 'permanent';
+    if (exp - now > 10 * 365 * 86400000) return 'permanent';
     return `expires ${new Date(iso).toLocaleDateString()}`;
   };
   const photoLimit =
@@ -193,7 +194,9 @@ export default async function Account() {
           <h2 className="font-header text-cyan text-xl">Your floor</h2>
           <p className="font-body font-body text-club mt-1">
             Current floor:{' '}
-            <span className="font-bold font-body font-body text-club">{tierLabel}</span>
+            <span className="font-bold font-body font-body text-club">
+              {tierLabel}
+            </span>
             {tier !== 'standard' &&
               (grants?.data?.[0] || passes?.data?.[0]) && (
                 <span className="ml-2 text-sm text-cyan">
@@ -235,9 +238,7 @@ export default async function Account() {
           />
         </div>
         <div className="mb-6 rounded-xl border border-platinum/30 bg-zinc-900/50 p-6">
-          <h2 className="font-header text-cyan text-xl">
-            💎 Certificates
-          </h2>
+          <h2 className="font-header text-cyan text-xl">💎 Certificates</h2>
           <p className="font-body font-body text-club mt-1">
             Speed Dating matches that made it count.
           </p>

@@ -187,7 +187,8 @@ export async function shouldRedirectToStory(): Promise<string | null> {
 
   const progress = await getStoryProgress();
   if (!progress) return '/story'; // verified but never started
-  if (progress.is_complete && !progress.selected_persona) return '/story?persona=1'; // completed but no persona chosen
+  if (progress.is_complete && !progress.selected_persona)
+    return '/story?persona=1'; // completed but no persona chosen
 
   return null;
 }

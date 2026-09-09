@@ -59,9 +59,13 @@ export default function BestPracticesPage() {
               key={p.title}
               className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6"
             >
-              <p className="font-body font-body text-club text-2xl">{p.emoji}</p>
+              <p className="font-body font-body text-club text-2xl">
+                {p.emoji}
+              </p>
               <h2 className="font-header text-cyan mt-2">{p.title}</h2>
-              <p className="font-body font-body text-club mt-2 text-sm">{p.body}</p>
+              <p className="font-body font-body text-club mt-2 text-sm">
+                {p.body}
+              </p>
             </div>
           ))}
         </div>

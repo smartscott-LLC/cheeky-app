@@ -71,19 +71,28 @@ export default function PasswordSignIn({
         </div>
       </form>
       <p className="font-body text-club">
-        <Link href="/signin/forgot_password" className="font-body text-club font-light text-sm">
+        <Link
+          href="/signin/forgot_password"
+          className="font-body text-club font-light text-sm"
+        >
           Forgot your password?
         </Link>
       </p>
       {allowEmail && (
         <p className="font-body text-club">
-          <Link href="/signin/email_signin" className="font-body text-club font-light text-sm">
+          <Link
+            href="/signin/email_signin"
+            className="font-body text-club font-light text-sm"
+          >
             Sign in via magic link
           </Link>
         </p>
       )}
       <p className="font-body text-club">
-        <Link href="/signin/signup" className="font-body text-club font-light text-sm">
+        <Link
+          href="/signin/signup"
+          className="font-body text-club font-light text-sm"
+        >
           Don&apos;t have an account? Sign up
         </Link>
       </p>

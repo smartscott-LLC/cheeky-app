@@ -48,8 +48,12 @@ export default function ContactPage() {
               href={`mailto:${d.email}`}
               className="block rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 transition hover:border-club/50"
             >
-              <p className="font-bold font-body font-body text-club">{d.label}</p>
-              <p className="font-body font-body text-club mt-1 text-sm">{d.body}</p>
+              <p className="font-bold font-body font-body text-club">
+                {d.label}
+              </p>
+              <p className="font-body font-body text-club mt-1 text-sm">
+                {d.body}
+              </p>
               <p className="font-body font-body text-club mt-2 text-sm font-semibold underline decoration-club/50">
                 {d.email}
               </p>

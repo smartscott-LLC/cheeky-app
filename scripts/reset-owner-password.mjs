@@ -15,7 +15,8 @@ if (!url || !key) {
 }
 
 const sb = createClient(url, key);
-const newPassword = process.argv[2] ?? `${randomBytes(12).toString('base64url')}!A7`;
+const newPassword =
+  process.argv[2] ?? `${randomBytes(12).toString('base64url')}!A7`;
 
 async function main() {
   const { data: owners } = await sb.from('owner_accounts').select('user_id');
@@ -23,7 +24,9 @@ async function main() {
     console.error('No owner account found in owner_accounts.');
     process.exit(1);
   }
-  const { data: user, error } = await sb.auth.admin.getUserById(owners[0].user_id);
+  const { data: user, error } = await sb.auth.admin.getUserById(
+    owners[0].user_id
+  );
   if (error || !user?.user) throw new Error('getUserById: ' + error?.message);
   const { error: upErr } = await sb.auth.admin.updateUserById(user.user.id, {
     password: newPassword
@@ -31,7 +34,9 @@ async function main() {
   if (upErr) throw new Error('updateUserById: ' + upErr.message);
   console.log('Owner account:', user.user.email);
   console.log('NEW PASSWORD: ' + newPassword);
-  console.log('(change it after signing in — or run a reset with your own password arg)');
+  console.log(
+    '(change it after signing in — or run a reset with your own password arg)'
+  );
 }
 
 main().catch((e) => {

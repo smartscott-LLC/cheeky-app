@@ -32,9 +32,7 @@ export function membershipGrantRef(
 }
 
 /** The tier rank of a grant reason (for upgrade/downgrade gating). */
-export function membershipTierRank(
-  reason: string | null | undefined
-): number {
+export function membershipTierRank(reason: string | null | undefined): number {
   switch (reason) {
     case 'membership_gold':
       return 1;

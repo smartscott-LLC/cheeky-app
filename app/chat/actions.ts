@@ -125,7 +125,10 @@ export async function loungePrefs(
   if (!user) return { error: 'not signed in' };
   const { error } = await supabase
     .from('profiles')
-    .update({ accepts_private_invites: acceptsPrivateInvites, accepts_gifts: acceptsGifts })
+    .update({
+      accepts_private_invites: acceptsPrivateInvites,
+      accepts_gifts: acceptsGifts
+    })
     .eq('id', user.id);
   if (error) return { error: error.message };
   return {};

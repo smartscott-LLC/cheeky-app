@@ -10,10 +10,7 @@
       "packageName": "chub",
       "routing": [
         {
-          "paths": [
-            "/lounge",
-            "/lounge/:path*"
-          ]
+          "paths": ["/lounge", "/lounge/:path*"]
         }
       ]
     }

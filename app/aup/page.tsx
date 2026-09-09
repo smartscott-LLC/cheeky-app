@@ -76,11 +76,15 @@ export default function AupPage() {
               className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6"
             >
               <h2 className="font-header text-cyan">
-                <span className="mr-2 font-body font-body text-club">{s.num}.</span>
+                <span className="mr-2 font-body font-body text-club">
+                  {s.num}.
+                </span>
                 {s.title}
               </h2>
               {s.intro && (
-                <p className="font-body font-body text-club mt-3 text-sm">{s.intro}</p>
+                <p className="font-body font-body text-club mt-3 text-sm">
+                  {s.intro}
+                </p>
               )}
               <ul className="mt-3 space-y-2">
                 {s.items.map((item) => (

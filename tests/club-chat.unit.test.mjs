@@ -16,9 +16,24 @@ import assert from 'node:assert/strict';
 // live tests will fail too — but the safe suite is what CI runs.
 // ============================================================
 const PROFANITY = [
-  'fuck', 'shit', 'bitch', 'asshole', 'cunt', 'whore', 'slut', 'dick',
-  'cock', 'pussy', 'faggot', 'nigga', 'nigger', 'kike', 'retard',
-  'rape', 'killyourself', 'dieinafire'
+  'fuck',
+  'shit',
+  'bitch',
+  'asshole',
+  'cunt',
+  'whore',
+  'slut',
+  'dick',
+  'cock',
+  'pussy',
+  'faggot',
+  'nigga',
+  'nigger',
+  'kike',
+  'retard',
+  'rape',
+  'killyourself',
+  'dieinafire'
 ];
 
 function profanityBlocked(body) {
@@ -26,13 +41,13 @@ function profanityBlocked(body) {
   return PROFANITY.some((w) => squished.includes(w));
 }
 
-test('profanity: the straight word is caught', () => {
+void test('profanity: the straight word is caught', () => {
   assert.equal(profanityBlocked('this is shit'), true);
   assert.equal(profanityBlocked('FUCK off'), true);
   assert.equal(profanityBlocked('you bitch'), true);
 });
 
-test('profanity: the squish fix — letter-spaced and punctuated forms', () => {
+void test('profanity: the squish fix — letter-spaced and punctuated forms', () => {
   // The very pattern the squish migration was added for: letter-spaced
   // profanity that a space-keeping normalizer would let through.
   assert.equal(profanityBlocked('this is f u c k e d up'), true);
@@ -44,7 +59,7 @@ test('profanity: the squish fix — letter-spaced and punctuated forms', () => {
   assert.equal(profanityBlocked('f🍑u🍑c🍑k'), true);
 });
 
-test('profanity: clean messages are never blocked', () => {
+void test('profanity: clean messages are never blocked', () => {
   assert.equal(profanityBlocked('hello everyone'), false);
   assert.equal(profanityBlocked(''), false);
   assert.equal(profanityBlocked('this is a lovely club'), false);
@@ -75,7 +90,7 @@ function hornAnnouncement(body) {
   return { body: `🎺 ${body}`, kind: 'horn' };
 }
 
-test('horn: announcement prefix and kind', () => {
+void test('horn: announcement prefix and kind', () => {
   const a = hornAnnouncement('the club is OPEN tonight!');
   assert.equal(a.body, '🎺 the club is OPEN tonight!');
   assert.equal(a.kind, 'horn');
@@ -95,14 +110,14 @@ function canTypeIn(myTier, room) {
   return TIER_RANK[myTier] >= TIER_RANK[room];
 }
 
-test('ladder: Global is everyone\'s', () => {
+void test("ladder: Global is everyone's", () => {
   assert.equal(canTypeIn('silver', 'global'), true);
   assert.equal(canTypeIn('gold', 'global'), true);
   assert.equal(canTypeIn('platinum', 'global'), true);
   assert.equal(canTypeIn('diamond', 'global'), true);
 });
 
-test('ladder: your floor and below, the climb is read-only above', () => {
+void test('ladder: your floor and below, the climb is read-only above', () => {
   assert.equal(canTypeIn('silver', 'silver'), true);
   assert.equal(canTypeIn('silver', 'gold'), false);
   assert.equal(canTypeIn('silver', 'platinum'), false);
@@ -119,7 +134,7 @@ test('ladder: your floor and below, the climb is read-only above', () => {
 // The Horn cooldown (mirror of bump_rate_limit('horn:user:...').
 // One blast per hour — the rate limit key and the per-call max.
 // ============================================================
-test('horn: rate limit key shape and 1-per-hour cap', () => {
+void test('horn: rate limit key shape and 1-per-hour cap', () => {
   // The key MUST be namespaced so it doesn't collide with other
   // rate limits (the SQL function rejects unprefixed keys).
   const userId = '11111111-1111-1111-1111-111111111111';
@@ -149,7 +164,7 @@ function badgeForCount(n) {
   return awarded;
 }
 
-test('chatterbox: thresholds land in order, never skip', () => {
+void test('chatterbox: thresholds land in order, never skip', () => {
   assert.equal(badgeForCount(0), null);
   assert.equal(badgeForCount(49), null);
   assert.equal(badgeForCount(50), 'chat_50');

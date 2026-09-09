@@ -15,7 +15,7 @@ if (!url) {
 const sql = postgres(url, { max: 1, ssl: 'require' });
 const KEY = 'test:smoke:audit9';
 
-const bump = (n) => sql`select public.bump_rate_limit(${KEY}, 3600, 3) as ok`;
+const bump = (_n) => sql`select public.bump_rate_limit(${KEY}, 3600, 3) as ok`;
 
 try {
   // 1. Fresh key: first call allowed.

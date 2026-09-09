@@ -25,8 +25,9 @@ export default function MatchmakerHistory() {
     if (res.error) setError(res.error);
   }, []);
 
+  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    load();
+    void load();
   }, [load]);
 
   const photoBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`;
@@ -54,7 +55,9 @@ export default function MatchmakerHistory() {
           >
             <div className="flex items-center justify-between">
               <p className="text-lg">
-                {board.status === 'won' ? '🎉 Won the board' : '🫧 Three strikes'}
+                {board.status === 'won'
+                  ? '🎉 Won the board'
+                  : '🫧 Three strikes'}
                 <span className="ml-2 text-sm text-zinc-400">
                   {dateLabel(board.created_at)}
                 </span>
@@ -119,20 +122,28 @@ export default function MatchmakerHistory() {
                     {unlock.status === 'declined' && (
                       <div className="mt-3 rounded-lg border border-gold/30 bg-gold/5 p-3 text-center">
                         <p className="text-sm font-body text-club">
-                          They declined — <span className="font-semibold text-gold">but you still won the game.</span>
+                          They declined —{' '}
+                          <span className="font-semibold text-gold">
+                            but you still won the game.
+                          </span>
                         </p>
                         <p className="mt-1 text-sm font-body text-club">
                           {unlock.consolation ? (
                             <>
                               Your{' '}
                               <span className="font-semibold text-gold">
-                                {unlock.consolation.emoji} {unlock.consolation.name}
+                                {unlock.consolation.emoji}{' '}
+                                {unlock.consolation.name}
                               </span>{' '}
-                              — a Matchmaker-exclusive, never for sale — is in your
-                              inventory. Regift it, keep it, or collect the rest.
+                              — a Matchmaker-exclusive, never for sale — is in
+                              your inventory. Regift it, keep it, or collect the
+                              rest.
                             </>
                           ) : (
-                            <>A Matchmaker-exclusive collectible is in your inventory.</>
+                            <>
+                              A Matchmaker-exclusive collectible is in your
+                              inventory.
+                            </>
                           )}
                         </p>
                       </div>

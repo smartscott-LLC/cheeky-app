@@ -19,12 +19,12 @@ function isValidEmail(email: string) {
  * into the ID check. After Stripe: verify the email, then the lobby.
  */
 export async function checkInAtTheDoor(formData: FormData) {
-  const honeypot = String(formData.get('company') ?? '').trim();
+  const honeypot = (formData.get('company') || '').toString().trim();
   if (honeypot) {
     await supabaseAdmin.rpc('flag_honeypot_catch', {
       p_field: 'company',
       p_page: 'checkin',
-      p_email: String(formData.get('email') ?? '')
+      p_email: (formData.get('email') || '').toString()
     });
     return redirect('/verify?error=honeypot');
   }
@@ -37,11 +37,11 @@ export async function checkInAtTheDoor(formData: FormData) {
   ].every((name) => formData.get(name) === 'on');
   if (!allConsents) return redirect('/verify?error=consent');
 
-  const email = String(formData.get('email') ?? '').trim();
-  const password = String(formData.get('password') ?? '');
-  const fullName = String(formData.get('full_name') ?? '').trim();
-  const gender = String(formData.get('gender') ?? '').trim();
-  const interestedIn = String(formData.get('interestedIn') ?? '').trim();
+  const email = (formData.get('email') || '').toString().trim();
+  const password = (formData.get('password') || '').toString();
+  const fullName = (formData.get('full_name') || '').toString().trim();
+  const gender = (formData.get('gender') || '').toString().trim();
+  const interestedIn = (formData.get('interestedIn') || '').toString().trim();
   const retention = Number(formData.get('messageRetentionDays') ?? 90);
 
   if (gender !== 'gentleman' && gender !== 'lady')

@@ -30,7 +30,7 @@ const MAX_PICKS = 3;
 export default function RooftopPool({
   eventId,
   eventStatus: initialStatus,
-  startsAt,
+  startsAt: _startsAt,
   tokenCost,
   board: initialBoard,
   round: initialRound,
@@ -81,7 +81,8 @@ export default function RooftopPool({
       const newest = (rounds ?? [])[0] ?? null;
       const active =
         newest &&
-        new Date(newest.started_at).getTime() + ROUND_SECONDS * 1000 > Date.now()
+        new Date(newest.started_at).getTime() + ROUND_SECONDS * 1000 >
+          Date.now()
           ? newest
           : null;
       setRound(
@@ -116,7 +117,7 @@ export default function RooftopPool({
         if (alive && mine?.status === 'released') setRefunded(true);
       }
     };
-    tick();
+    void tick();
     const t = setInterval(tick, 3000);
     return () => {
       alive = false;
@@ -139,7 +140,7 @@ export default function RooftopPool({
         .maybeSingle();
       if (data) setMatchId(data.id);
     };
-    find();
+    void find();
   }, [eventStatus, refunded, myUserId, supabase]);
 
   const pick = async (memberId: string) => {
@@ -156,7 +157,9 @@ export default function RooftopPool({
     return (
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
         <p className="font-body text-club text-4xl">🚪</p>
-        <h2 className="font-header text-cyan mt-3 text-2xl">The pool didn&apos;t fill.</h2>
+        <h2 className="font-header text-cyan mt-3 text-2xl">
+          The pool didn&apos;t fill.
+        </h2>
         <p className="mx-auto mt-2 max-w-md text-base font-body text-club">
           Not enough heads on the rooftop — everyone&apos;s 40 tokens were
           returned.
@@ -251,7 +254,9 @@ export default function RooftopPool({
                 {m.displayName ?? 'Member'}
               </p>
               {picked && (
-                <p className="mt-1 text-sm font-extrabold font-body text-club">✓ picked</p>
+                <p className="mt-1 text-sm font-extrabold font-body text-club">
+                  ✓ picked
+                </p>
               )}
             </button>
           );
@@ -266,8 +271,8 @@ export default function RooftopPool({
 
       <p className="mt-6 text-center text-sm font-body text-club">
         Mutual picks match at the end of the {ROUND_SECONDS}s and the couple
-        leaves the board. When it&apos;s down to two, that&apos;s the date. {tokenCost}{' '}
-        tokens, charged when you match.
+        leaves the board. When it&apos;s down to two, that&apos;s the date.{' '}
+        {tokenCost} tokens, charged when you match.
       </p>
     </div>
   );

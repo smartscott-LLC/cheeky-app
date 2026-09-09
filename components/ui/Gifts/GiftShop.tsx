@@ -128,7 +128,9 @@ export default function GiftShop({
       {/* Incoming */}
       {incoming.length > 0 && (
         <div className="mb-8 rounded-xl border border-gold bg-diamond/5 p-6">
-          <h2 className="font-header text-cyan text-2xl">💝 Someone sent you a gift</h2>
+          <h2 className="font-header text-cyan text-2xl">
+            💝 Someone sent you a gift
+          </h2>
           <ul className="mt-4 space-y-3">
             {incoming.map((g) => (
               <li
@@ -224,8 +226,12 @@ export default function GiftShop({
                             {g.kind === 'featured' ? '✨ Featured' : 'Gesture'}
                           </span>
                         </div>
-                        <p className="font-header text-cyan mt-2 text-lg">{g.name}</p>
-                        <p className="text-base font-body text-club">{giftPitch(g)}</p>
+                        <p className="font-header text-cyan mt-2 text-lg">
+                          {g.name}
+                        </p>
+                        <p className="text-base font-body text-club">
+                          {giftPitch(g)}
+                        </p>
                         <button
                           onClick={() =>
                             run(`buy-${g.slug}`, () => buyGift(g.slug))
@@ -251,13 +257,17 @@ export default function GiftShop({
                             Every floor
                           </span>
                         </div>
-                        <p className="font-header text-cyan mt-2 text-lg">{basket.name}</p>
+                        <p className="font-header text-cyan mt-2 text-lg">
+                          {basket.name}
+                        </p>
                         <p className="text-base font-body text-club">
                           {giftPitch(basket)}
                         </p>
                         <button
                           onClick={() =>
-                            run(`buy-${basket.slug}`, () => buyGift(basket.slug))
+                            run(`buy-${basket.slug}`, () =>
+                              buyGift(basket.slug)
+                            )
                           }
                           disabled={busy === `buy-${basket.slug}`}
                           className="mt-3 w-full rounded-lg bg-gold px-4 py-2 text-sm font-bold text-black transition hover:bg-gold-royal"
@@ -313,7 +323,9 @@ export default function GiftShop({
 
             {sendFor && (
               <div className="mt-4 rounded-lg border border-platinum/30 bg-platinum/5 p-4">
-                <p className="font-header text-cyan text-base">Send {sendFor.name} to…</p>
+                <p className="font-header text-cyan text-base">
+                  Send {sendFor.name} to…
+                </p>
                 {people.length === 0 ? (
                   <p className="mt-2 text-base font-body text-club">
                     No one to send to yet — match or chat with someone first.
@@ -336,7 +348,9 @@ export default function GiftShop({
                   <button
                     onClick={() =>
                       recipient &&
-                      run(`send-${sendFor.giftId}`, () => sendGift(sendFor.giftId, recipient))
+                      run(`send-${sendFor.giftId}`, () =>
+                        sendGift(sendFor.giftId, recipient)
+                      )
                     }
                     disabled={!recipient || busy === `send-${sendFor.giftId}`}
                     className="rounded-lg bg-platinum px-4 py-2 text-sm font-bold text-platinum-navy transition hover:bg-platinum-alice disabled:opacity-40"
@@ -356,7 +370,9 @@ export default function GiftShop({
 
           {sent.length > 0 && (
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-              <h2 className="font-header text-cyan text-2xl">📬 Out the door</h2>
+              <h2 className="font-header text-cyan text-2xl">
+                📬 Out the door
+              </h2>
               <ul className="mt-4 space-y-2">
                 {sent.map((s) => (
                   <li

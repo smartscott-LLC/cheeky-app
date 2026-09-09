@@ -14,8 +14,10 @@ import { ASSETS } from '@/utils/assets';
  */
 export default function InstallPrompt() {
   const [visible, setVisible] = useState(false);
-  const [ios, setIos] = useState(false);
   const deferred = useRef<{ prompt: () => void } | null>(null);
+  const ios =
+    typeof navigator !== 'undefined' &&
+    /iphone|ipad|ipod/i.test(navigator.userAgent);
 
   useEffect(() => {
     const isStandalone =
@@ -25,7 +27,6 @@ export default function InstallPrompt() {
     if (localStorage.getItem('cc-install-prompt') === 'dismissed') return;
 
     const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    setIos(isIos);
 
     const onPrompt = (e: Event) => {
       e.preventDefault();
@@ -65,52 +66,52 @@ export default function InstallPrompt() {
           className="w-full max-w-md rounded-xl border border-gold/40 bg-zinc-900/95 p-4 shadow-[0_0_32px_rgba(255,215,0,0.15)]"
           style={{ animation: 'cc-toast-up 0.28s ease-out' }}
         >
-        <div className="flex items-start gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={ASSETS.brand.entranceLogo}
-            alt=""
-            className="h-10 w-10 rounded-lg"
-          />
-          <div className="flex-1">
-            <p className="font-body text-club text-sm font-extrabold">
-              Take the club with you.
-            </p>
-            {ios ? (
-              <p className="mt-1 text-xs font-body text-club">
-                Tap <span className="font-bold">Share</span> →{' '}
-                <span className="font-bold">Add to Home Screen</span> and the
-                club lives on your home screen like an app.
+          <div className="flex items-start gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={ASSETS.brand.entranceLogo}
+              alt=""
+              className="h-10 w-10 rounded-lg"
+            />
+            <div className="flex-1">
+              <p className="font-body text-club text-sm font-extrabold">
+                Take the club with you.
               </p>
-            ) : (
-              <p className="mt-1 text-xs font-body text-club">
-                Install Club Cheeky — it runs full-screen, works offline, and
-                loads straight from the floor.
-              </p>
-            )}
+              {ios ? (
+                <p className="mt-1 text-xs font-body text-club">
+                  Tap <span className="font-bold">Share</span> →{' '}
+                  <span className="font-bold">Add to Home Screen</span> and the
+                  club lives on your home screen like an app.
+                </p>
+              ) : (
+                <p className="mt-1 text-xs font-body text-club">
+                  Install Club Cheeky — it runs full-screen, works offline, and
+                  loads straight from the floor.
+                </p>
+              )}
+            </div>
+            <button
+              onClick={dismiss}
+              aria-label="Dismiss"
+              className="text-zinc-500 transition hover:text-white"
+            >
+              ✕
+            </button>
           </div>
-          <button
-            onClick={dismiss}
-            aria-label="Dismiss"
-            className="text-zinc-500 transition hover:text-white"
-          >
-            ✕
-          </button>
-        </div>
-        {!ios && (
-          <button
-            onClick={async () => {
-              const p = deferred.current;
-              if (p) {
-                await p.prompt();
-                dismiss();
-              }
-            }}
-            className="mt-3 w-full rounded-lg bg-gold px-4 py-2 text-sm font-extrabold text-black transition hover:bg-gold-royal"
-          >
-            Install the app →
-          </button>
-        )}
+          {!ios && (
+            <button
+              onClick={async () => {
+                const p = deferred.current;
+                if (p) {
+                  p.prompt();
+                  dismiss();
+                }
+              }}
+              className="mt-3 w-full rounded-lg bg-gold px-4 py-2 text-sm font-extrabold text-black transition hover:bg-gold-royal"
+            >
+              Install the app →
+            </button>
+          )}
         </div>
       </div>
     </>

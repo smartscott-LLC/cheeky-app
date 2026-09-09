@@ -28,8 +28,8 @@ export function getStreamServer(): StreamChat {
 export function streamEnabled(): boolean {
   return Boolean(
     process.env.STREAM_API_KEY &&
-      process.env.STREAM_API_SECRET &&
-      process.env.NEXT_PUBLIC_STREAM_API_KEY
+    process.env.STREAM_API_SECRET &&
+    process.env.NEXT_PUBLIC_STREAM_API_KEY
   );
 }
 
@@ -73,7 +73,9 @@ export async function streamSendAsUser(input: {
   horn?: boolean;
 }): Promise<{ id?: string; error?: string }> {
   if (!streamEnabled()) return { error: 'stream_disabled' };
-  if (!['global', 'silver', 'gold', 'platinum', 'diamond'].includes(input.room)) {
+  if (
+    !['global', 'silver', 'gold', 'platinum', 'diamond'].includes(input.room)
+  ) {
     return { error: 'invalid_room' };
   }
   const trimmed = input.text.trim();

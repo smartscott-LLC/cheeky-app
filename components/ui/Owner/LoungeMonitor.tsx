@@ -107,8 +107,9 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
     setTotals(res.totals ?? null);
   }, [ownerKey]);
 
+  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    refresh();
+    void refresh();
     const supabase = createClient();
     // Realtime: new messages anywhere in the Lounge land in the monitor.
     // We use a service-channel created by the Den's own key — the page
@@ -122,7 +123,7 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
           // Light-touch refresh — a full page of latest 60 keeps the
           // ordering deterministic. The Den doesn't need true live insert
           // timing to the millisecond.
-          refresh();
+          void refresh();
         }
       )
       .on(
@@ -137,7 +138,7 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
       )
       .subscribe();
     return () => {
-      supabase.removeChannel(ch);
+      void supabase.removeChannel(ch);
     };
   }, [refresh]);
 
@@ -161,7 +162,7 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
     });
     setBanDraft(null);
     setBanReason('');
-    refresh();
+    void refresh();
   };
 
   const pardon = async (banId: string, name: string | null) => {
@@ -172,8 +173,11 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
       setMsg({ ok: false, text: res.error });
       return;
     }
-    setMsg({ ok: true, text: `Pardoned ${name ?? 'member'} — back in the room.` });
-    refresh();
+    setMsg({
+      ok: true,
+      text: `Pardoned ${name ?? 'member'} — back in the room.`
+    });
+    void refresh();
   };
 
   return (
@@ -210,7 +214,11 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
           {[
             { label: 'Messages · 24h', value: totals.messages_24h, icon: '💬' },
             { label: 'Horns · 24h', value: totals.horn_24h, icon: '🎺' },
-            { label: 'Invites pending', value: totals.invites_pending, icon: '💌' },
+            {
+              label: 'Invites pending',
+              value: totals.invites_pending,
+              icon: '💌'
+            },
             { label: 'Active chat bans', value: totals.active_bans, icon: '🚫' }
           ].map((t) => (
             <div
@@ -232,7 +240,9 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
         {/* Live messages */}
         <div className="lg:col-span-2">
           <h3 className="font-header text-cyan text-lg">Live feed</h3>
-          <p className="font-body text-club text-sm">Latest 60 across every room.</p>
+          <p className="font-body text-club text-sm">
+            Latest 60 across every room.
+          </p>
           <div className="mt-3 max-h-[28rem] space-y-2 overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-950/60 p-3">
             {messages.length === 0 && (
               <p className="font-body text-club py-6 text-center text-sm">
@@ -264,9 +274,13 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
                       · {m.floor_tag}
                     </span>
                   </p>
-                  <p className="font-body text-club text-[10px]">{ago(m.created_at)}</p>
+                  <p className="font-body text-club text-[10px]">
+                    {ago(m.created_at)}
+                  </p>
                 </div>
-                <p className="font-body text-club mt-1 break-words text-sm">{m.body}</p>
+                <p className="font-body text-club mt-1 break-words text-sm">
+                  {m.body}
+                </p>
                 <div className="mt-1.5 flex gap-2">
                   <button
                     onClick={() =>
@@ -285,11 +299,15 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
         {/* Invites + bans */}
         <div className="space-y-6">
           <div>
-            <h3 className="font-header text-cyan text-lg">💌 Take-private invites</h3>
+            <h3 className="font-header text-cyan text-lg">
+              💌 Take-private invites
+            </h3>
             <p className="font-body text-club text-sm">Pending consents.</p>
             <div className="mt-3 max-h-72 space-y-2 overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-950/60 p-3">
               {invites.length === 0 && (
-                <p className="font-body text-club py-4 text-center text-sm">None open.</p>
+                <p className="font-body text-club py-4 text-center text-sm">
+                  None open.
+                </p>
               )}
               {invites.map((i) => (
                 <div
@@ -314,7 +332,9 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
           </div>
 
           <div>
-            <h3 className="font-header text-cyan text-lg">🚫 Active chat bans</h3>
+            <h3 className="font-header text-cyan text-lg">
+              🚫 Active chat bans
+            </h3>
             <p className="font-body text-club text-sm">1d → 3d escalation.</p>
             <div className="mt-3 max-h-72 space-y-2 overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-950/60 p-3">
               {bans.length === 0 && (
@@ -330,7 +350,9 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
                   <p className="font-body text-club text-sm font-bold">
                     {b.user_name ?? 'Member'}
                   </p>
-                  <p className="font-body text-club mt-0.5 text-xs">{b.reason}</p>
+                  <p className="font-body text-club mt-0.5 text-xs">
+                    {b.reason}
+                  </p>
                   <p className="font-body text-club mt-0.5 text-[10px]">
                     until {new Date(b.banned_until).toLocaleString()}
                   </p>
@@ -348,7 +370,9 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
 
           <div>
             <h3 className="font-header text-cyan text-lg">🎺 Horn ticker</h3>
-            <p className="font-body text-club text-sm">Last 15 across the club.</p>
+            <p className="font-body text-club text-sm">
+              Last 15 across the club.
+            </p>
             <div className="mt-3 max-h-44 space-y-1 overflow-y-auto rounded-xl border border-zinc-800 bg-zinc-950/60 p-3 text-sm">
               {announcements.length === 0 && (
                 <p className="font-body text-club py-2 text-center text-xs">
@@ -358,7 +382,9 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
               {announcements.map((a) => (
                 <p key={a.id} className="font-body text-club text-xs">
                   <span className="text-amber-300">{a.body}</span>{' '}
-                  <span className="font-body text-club">· {ago(a.created_at)}</span>
+                  <span className="font-body text-club">
+                    · {ago(a.created_at)}
+                  </span>
                 </p>
               ))}
             </div>
@@ -431,7 +457,9 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
                 disabled={!banReason.trim() || busy}
                 className="flex-1 rounded-lg bg-club px-3 py-2 text-sm font-bold text-white transition hover:opacity-80 disabled:opacity-40"
               >
-                {busy ? 'Banning…' : `Ban for ${banHours === 24 ? '1 day' : '3 days'}`}
+                {busy
+                  ? 'Banning…'
+                  : `Ban for ${banHours === 24 ? '1 day' : '3 days'}`}
               </button>
               <button
                 onClick={() => {

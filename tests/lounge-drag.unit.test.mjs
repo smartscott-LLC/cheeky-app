@@ -50,7 +50,7 @@ function stroke(startX, startY, endX, endY, startPos, viewportW, viewportH) {
   return pos;
 }
 
-test('drag: a single short drag stays within the viewport', () => {
+void test('drag: a single short drag stays within the viewport', () => {
   const start = { x: 0, y: 0 };
   const final = stroke(900, 800, 950, 850, start, 1280, 800);
   assert.ok(final.x >= 0, 'x above the lower bound');
@@ -59,7 +59,7 @@ test('drag: a single short drag stays within the viewport', () => {
   assert.ok(final.y <= 800 - PANEL_H, 'y below the upper bound');
 });
 
-test('drag: a long drag that would push past the right edge is clamped', () => {
+void test('drag: a long drag that would push past the right edge is clamped', () => {
   // Start at default bottom-right (anchored). Drag the pointer 5000px
   // to the right — without the snap, the cumulative delta would push
   // the panel way off-screen. With the snap, the panel just stops at
@@ -70,13 +70,13 @@ test('drag: a long drag that would push past the right edge is clamped', () => {
   assert.equal(final.y, 0, 'y unchanged because dy = 0');
 });
 
-test('drag: a long drag upward is clamped to the top', () => {
+void test('drag: a long drag upward is clamped to the top', () => {
   const start = { x: 0, y: 0 };
   const final = stroke(900, 5000, 900, 100, start, 1280, 800);
   assert.equal(final.y, 0, 'top-clamped to the viewport (natural anchor)');
 });
 
-test('drag: the snap-forward prevents cumulative drift (the off-screen bug)', () => {
+void test('drag: the snap-forward prevents cumulative drift (the off-screen bug)', () => {
   // The bug the founder hit: WITHOUT the snap, every pointermove
   // event added (pointer - dragStart) to the original anchor. On a
   // 10-step stroke of 1000px each, the cumulative delta on the last
@@ -96,7 +96,7 @@ test('drag: the snap-forward prevents cumulative drift (the off-screen bug)', ()
   assert.ok(final.y + PANEL_H <= 800, 'panel bottom edge inside viewport');
 });
 
-test('drag: a small drag lands the panel inside the viewport (the actual invariant)', () => {
+void test('drag: a small drag lands the panel inside the viewport (the actual invariant)', () => {
   // The snap-forward is a safety mechanism, not a position prediction.
   // The right invariant is: regardless of stroke length, the panel
   // never escapes the viewport. The exact final position is a
@@ -109,21 +109,21 @@ test('drag: a small drag lands the panel inside the viewport (the actual invaria
   assert.ok(final.y + PANEL_H <= 800, 'panel bottom edge inside viewport');
 });
 
-test('drag: a no-op stroke (pointer didn\'t move) keeps the panel put', () => {
+void test("drag: a no-op stroke (pointer didn't move) keeps the panel put", () => {
   const start = { x: 0, y: 0 };
   const final = stroke(900, 500, 900, 500, start, 1280, 800);
   assert.equal(final.x, 0, 'no x movement');
   assert.equal(final.y, 0, 'no y movement');
 });
 
-test('drag: a stroke that ends at the anchor (delta = 0) is a no-op', () => {
+void test('drag: a stroke that ends at the anchor (delta = 0) is a no-op', () => {
   const start = { x: 50, y: 50 };
   const final = stroke(900, 500, 900, 500, start, 1280, 800);
   assert.equal(final.x, 50, 'x pinned to start');
   assert.equal(final.y, 50, 'y pinned to start');
 });
 
-test('drag: the panel never escapes the viewport in any direction', () => {
+void test('drag: the panel never escapes the viewport in any direction', () => {
   // Exhaustive sweep — every corner of the visible area, every
   // starting position. None of them should produce an out-of-bounds
   // final position.
@@ -140,7 +140,15 @@ test('drag: the panel never escapes the viewport in any direction', () => {
       { x: 200, y: 100 },
       { x: -100, y: -100 } // intentionally negative — the clamp must hold
     ]) {
-      const final = stroke(t.from[0], t.from[1], t.to[0], t.to[1], startPos, 1280, 800);
+      const final = stroke(
+        t.from[0],
+        t.from[1],
+        t.to[0],
+        t.to[1],
+        startPos,
+        1280,
+        800
+      );
       assert.ok(
         final.x >= 0 && final.x <= 1280 - PANEL_W,
         `x out of bounds: start=${JSON.stringify(startPos)} stroke=${JSON.stringify(t)} -> ${JSON.stringify(final)}`

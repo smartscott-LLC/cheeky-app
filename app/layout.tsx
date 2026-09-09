@@ -1,6 +1,5 @@
 import { Suspense, PropsWithChildren } from 'react';
 import { Metadata } from 'next';
-import localFont from 'next/font/local';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
 import TikiTaskbar from '@/components/ui/Taskbar/TikiTaskbar';
@@ -36,7 +35,6 @@ const body = localFont({
 });
 // The wordmark — gold metallic gradient on the nav/footer. Damion handles
 // the cursive script look from our local font set.
-const script = header;
 
 const title = 'Club Cheeky — The Club for Real Connections';
 const description =
@@ -60,7 +58,10 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en" className={`${hero.variable} ${header.variable} ${body.variable}`}>
+    <html
+      lang="en"
+      className={`${hero.variable} ${header.variable} ${body.variable}`}
+    >
       <body className="bg-black">
         <ServiceWorkerRegister />
         <InstallPrompt />

@@ -16,7 +16,8 @@ import { createClient } from '@supabase/supabase-js';
 config({ path: 'env.new' });
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
+const SERVICE_KEY =
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
 
 if (!SUPABASE_URL || !SERVICE_KEY) {
   console.error('Missing SUPABASE_URL or SERVICE_KEY in env.new');
@@ -25,16 +26,21 @@ if (!SUPABASE_URL || !SERVICE_KEY) {
 
 const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
 const BUCKET = 'cheeky-assets';
-const MANIFEST_PATH = join(import.meta.dirname, '..', 'public', 'asset-manifest.json');
+const MANIFEST_PATH = join(
+  import.meta.dirname,
+  '..',
+  'public',
+  'asset-manifest.json'
+);
 
 const CATEGORY_MAP = {
-  'cheeky_icons_and_things': 'icons',
-  'brand': 'brand',
-  'personas': 'personas',
-  'coat_check': 'coat-check',
-  'floors': 'floors',
-  'audio': 'audio',
-  'icons': 'icons',
+  cheeky_icons_and_things: 'icons',
+  brand: 'brand',
+  personas: 'personas',
+  coat_check: 'coat-check',
+  floors: 'floors',
+  audio: 'audio',
+  icons: 'icons'
 };
 
 function detectCategory(relativePath) {
@@ -53,7 +59,10 @@ async function scanDirectory(dir) {
       const full = join(current, entry.name);
       if (entry.isDirectory()) {
         await walk(full);
-      } else if (entry.isFile() && /\.(webp|png|jpg|jpeg|svg|gif|ico|mp3|wav|ogg)$/i.test(entry.name)) {
+      } else if (
+        entry.isFile() &&
+        /\.(webp|png|jpg|jpeg|svg|gif|ico|mp3|wav|ogg)$/i.test(entry.name)
+      ) {
         const rel = relative(dir, full);
         files.push({ path: rel, fullPath: full });
       }
@@ -93,14 +102,14 @@ function getMimeType(filePath) {
     '.ico': 'image/x-icon',
     '.mp3': 'audio/mpeg',
     '.wav': 'audio/wav',
-    '.ogg': 'audio/ogg',
+    '.ogg': 'audio/ogg'
   };
   return mimes[ext] ?? 'application/octet-stream';
 }
 
 function slugify(filename) {
-  return parse(filename).name
-    .toLowerCase()
+  return parse(filename)
+    .name.toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
     .replace(/--+/g, '-');
@@ -119,7 +128,13 @@ async function main() {
   console.log(`\n\ud83d\udce6 Uploading assets to ${BUCKET} bucket...\n`);
 
   const cheekyDir = join(import.meta.dirname, '..', 'public');
-  const loungeDir = join(import.meta.dirname, '..', '..', 'In-gameChatUI', 'public');
+  const loungeDir = join(
+    import.meta.dirname,
+    '..',
+    '..',
+    'In-gameChatUI',
+    'public'
+  );
 
   const cheekyFiles = await scanDirectory(cheekyDir);
   let loungeFiles = [];
@@ -132,7 +147,7 @@ async function main() {
   // Deduplicate: lounge app has copies of the same icons
   const allFiles = [...cheekyFiles];
   for (const f of loungeFiles) {
-    const cheekyMatch = cheekyFiles.find(cf => cf.path === f.path);
+    const cheekyMatch = cheekyFiles.find((cf) => cf.path === f.path);
     if (!cheekyMatch) {
       allFiles.push(f);
     }
@@ -152,14 +167,21 @@ async function main() {
     // Preserve subdirectory structure within the category
     // e.g. "personas/bartender/fullbody.webp" → "personas/bartender/fullbody.webp"
     // e.g. "cheeky_icons_and_things/chat_bubble.webp" → "icons/chat_bubble.webp"
-    const subpath = file.path.startsWith(category === 'misc' ? '' : Object.entries(CATEGORY_MAP).find(([,v]) => v === category)?.[0] ?? '')
+    const subpath = file.path.startsWith(
+      category === 'misc'
+        ? ''
+        : (Object.entries(CATEGORY_MAP).find(([, v]) => v === category)?.[0] ??
+            '')
+    )
       ? file.path.slice(file.path.indexOf('/') + 1)
       : rawFilename;
 
     const sanitized = sanitizeKey(rawFilename);
     // Use the subdirectory path for the storage key, but sanitize the filename part
     const dir = parse(subpath).dir;
-    const storagePath = dir ? `${category}/${dir}/${sanitized}` : `${category}/${sanitized}`;
+    const storagePath = dir
+      ? `${category}/${dir}/${sanitized}`
+      : `${category}/${sanitized}`;
     const slug = slugify(parse(file.path).name);
     const url = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${storagePath}`;
     const s = await stat(file.fullPath);
@@ -189,7 +211,7 @@ async function main() {
       filename: parse(file.path).base,
       url,
       sizeBytes: s.size,
-      mimeType: getMimeType(file.fullPath),
+      mimeType: getMimeType(file.fullPath)
     });
   }
 
@@ -199,7 +221,7 @@ async function main() {
     bucket: BUCKET,
     baseUrl: `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}`,
     total: manifest.length,
-    assets: manifest,
+    assets: manifest
   };
 
   await writeFile(MANIFEST_PATH, JSON.stringify(manifestData, null, 2));

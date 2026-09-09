@@ -145,73 +145,72 @@ export default function Pricing({
                   (a.prices?.some((p) => p.interval && !p.unit_amount)
                     ? 0
                     : 1) -
-                  (b.prices?.some((p) => p.interval && !p.unit_amount)
-                    ? 0
-                    : 1)
+                  (b.prices?.some((p) => p.interval && !p.unit_amount) ? 0 : 1)
               )
               .map((product) => {
-              const price = product?.prices?.find(
-                (p) => p.interval === billingInterval || !p.interval
-              );
-              if (!price) return null;
-              const priceString = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: price.currency!,
-                minimumFractionDigits: 0
-              }).format((price?.unit_amount || 0) / 100);
-              return (
-                <div
-                  key={product.id}
-                  className={cn(
-                    'flex flex-col border-gold text-gold rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900',
-                    {
-                      'border border-gold': subscription
-                        ? product.name === subscription?.prices?.products?.name
-                        : product.name === 'Standard Membership'
-                    },
-                    'flex-1', // This makes the flex item grow to fill the space
-                    'basis-1/3', // Assuming you want each card to take up roughly a third of the container's width
-                    'max-w-xs' // Sets a maximum width to the cards to prevent them from getting too large
-                  )}
-                >
-                  <div className="p-6">
-                    <h2 className="font-header text-cyan text-2xl leading-6">
-                      {product.name}
-                    </h2>
-                    <p className="mt-4 font-body text-club">{product.description}</p>
-                    <p className="font-body text-club mt-8">
-                      <span className="text-5xl font-extrabold white">
-                        {priceString}
-                      </span>
-                      <span className="text-base font-medium text-cyan">
-                        {price.interval
-                          ? `/${billingInterval}`
-                          : ' one-time'}
-                      </span>
-                    </p>
-                    <Button
-                      variant="slim"
-                      type="button"
-                      color="black"
-                      onClick={() =>
-                        subscription
-                          ? router.push('/account')
-                          : handleSelect(price)
-                      }
-                      className="block w-full py-2 mt-8 text-lg border-gold font-semibold font-body text-center text-gold rounded-md hover:bg-zinc-900"
-                    >
-                      {subscription
-                        ? 'Manage'
-                        : product.name === 'Standard Membership'
-                          ? 'Get Silver Card'
-                          : !price.interval
-                            ? 'Buy'
-                            : 'Join'}
-                    </Button>
+                const price = product?.prices?.find(
+                  (p) => p.interval === billingInterval || !p.interval
+                );
+                if (!price) return null;
+                const priceString = new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: price.currency!,
+                  minimumFractionDigits: 0
+                }).format((price?.unit_amount || 0) / 100);
+                return (
+                  <div
+                    key={product.id}
+                    className={cn(
+                      'flex flex-col border-gold text-gold rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900',
+                      {
+                        'border border-gold': subscription
+                          ? product.name ===
+                            subscription?.prices?.products?.name
+                          : product.name === 'Standard Membership'
+                      },
+                      'flex-1', // This makes the flex item grow to fill the space
+                      'basis-1/3', // Assuming you want each card to take up roughly a third of the container's width
+                      'max-w-xs' // Sets a maximum width to the cards to prevent them from getting too large
+                    )}
+                  >
+                    <div className="p-6">
+                      <h2 className="font-header text-cyan text-2xl leading-6">
+                        {product.name}
+                      </h2>
+                      <p className="mt-4 font-body text-club">
+                        {product.description}
+                      </p>
+                      <p className="font-body text-club mt-8">
+                        <span className="text-5xl font-extrabold white">
+                          {priceString}
+                        </span>
+                        <span className="text-base font-medium text-cyan">
+                          {price.interval ? `/${billingInterval}` : ' one-time'}
+                        </span>
+                      </p>
+                      <Button
+                        variant="slim"
+                        type="button"
+                        color="black"
+                        onClick={() =>
+                          subscription
+                            ? router.push('/account')
+                            : handleSelect(price)
+                        }
+                        className="block w-full py-2 mt-8 text-lg border-gold font-semibold font-body text-center text-gold rounded-md hover:bg-zinc-900"
+                      >
+                        {subscription
+                          ? 'Manage'
+                          : product.name === 'Standard Membership'
+                            ? 'Get Silver Card'
+                            : !price.interval
+                              ? 'Buy'
+                              : 'Join'}
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
 
           {/* Messaging is the room, never a product. */}

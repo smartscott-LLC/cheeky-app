@@ -22,7 +22,7 @@ export default function EmailForm({
       setIsSubmitting(false);
       return;
     }
-    handleRequest(e, updateEmail, router);
+    void handleRequest(e, updateEmail, router);
     setIsSubmitting(false);
   };
 

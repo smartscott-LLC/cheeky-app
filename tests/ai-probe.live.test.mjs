@@ -1,4 +1,4 @@
-// DeepSeek burst probe (audit #7). LIVE: fires a burst of concurrent chat
+// AGNES burst probe (audit #7). LIVE: fires a burst of concurrent chat
 // completions through the same endpoint the cast uses, and reports how the
 // single API key holds up — successes, 429s, failures, latency. A probe, not
 // a gate: the numbers tell us whether one key is enough or we need to split
@@ -6,8 +6,8 @@
 //
 //   RUN_LIVE_TESTS=1 PROBE_CONCURRENCY=16 node --test tests/ai-probe.live.test.mjs
 //
-// Requires DEEPSEEK_API_KEY in .env.local (model: DEEPSEEK_MODEL, default
-// deepseek-chat). Costs a few cents of usage per run — keep it small.
+// Requires AGNES_API_KEY in .env.local (model: AGNES_MODEL, default
+// AGNES-chat). Costs a few cents of usage per run — keep it small.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { config } from 'dotenv';
@@ -15,15 +15,15 @@ import { config } from 'dotenv';
 config({ path: 'env.new' });
 
 const RUN_LIVE = process.env.RUN_LIVE_TESTS === '1';
-const KEY = process.env.DEEPSEEK_API_KEY;
-const MODEL = process.env.DEEPSEEK_MODEL ?? 'deepseek-chat';
+const KEY = process.env.AGNES_API_KEY;
+const MODEL = process.env.AGNES_MODEL ?? 'AGNES-chat';
 const CONCURRENCY = parseInt(process.env.PROBE_CONCURRENCY ?? '8', 10);
 
-test(
-  'deepseek burst probe (live)',
+void test(
+  'AGNES burst probe (live)',
   { skip: !RUN_LIVE && 'set RUN_LIVE_TESTS=1' },
   async (t) => {
-    if (!KEY) return t.skip('DEEPSEEK_API_KEY not in .env.local');
+    if (!KEY) return t.skip('AGNES_API_KEY not in .env.local');
 
     await t.test(`burst of ${CONCURRENCY} concurrent calls`, async () => {
       const start = Date.now();
@@ -32,7 +32,7 @@ test(
           const t0 = Date.now();
           try {
             const res = await fetch(
-              'https://api.deepseek.com/chat/completions',
+              'https://apihub.agnes-ai.com/v1/chat/completions',
               {
                 method: 'POST',
                 headers: {
@@ -75,7 +75,7 @@ test(
         { in: 0, out: 0 }
       );
 
-      console.log(`\n  DeepSeek probe (${MODEL}):`);
+      console.log(`\n  AGNES probe (${MODEL}):`);
       console.log(
         `  ${ok.length}/${results.length} ok · ${limited.length} rate-limited (429) · ${failed.length} failed`
       );
@@ -92,7 +92,7 @@ test(
       }
 
       // The key must at least answer — anything else is a finding to act on.
-      assert.ok(ok.length > 0, 'DeepSeek key should answer at least one call');
+      assert.ok(ok.length > 0, 'AGNES key should answer at least one call');
     });
   }
 );

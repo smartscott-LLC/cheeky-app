@@ -20,7 +20,9 @@ async function out(file, outPath, fn) {
 
 // The navbar/footer round logo (40px display, 2-3x retina).
 await out('public/brand/entrance.webp', 'public/brand/entrance-logo.webp', () =>
-  sharp('public/brand/entrance.webp').resize(96, 96, { fit: 'cover' }).webp({ quality: 80 })
+  sharp('public/brand/entrance.webp')
+    .resize(96, 96, { fit: 'cover' })
+    .webp({ quality: 80 })
 );
 
 // The hero entrance (max display 288x384; 2x = 576x768).
@@ -33,6 +35,9 @@ for (const floor of ['silver', 'gold', 'platinum', 'diamond']) {
   await out(
     `public/floors/${floor}.webp`,
     `public/floors/card-${floor}.webp`,
-    () => sharp(`public/floors/${floor}.webp`).resize(640, 360).webp({ quality: 80 })
+    () =>
+      sharp(`public/floors/${floor}.webp`)
+        .resize(640, 360)
+        .webp({ quality: 80 })
   );
 }

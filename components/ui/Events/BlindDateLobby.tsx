@@ -52,9 +52,9 @@ export default function BlindDateLobby({
             Host a Blind Date
           </h2>
           <p className="mx-auto mt-2 max-w-md text-base font-body text-club">
-            You&apos;re on the other side of the table. Ask the questions,
-            read the answers, hand out the marks — and you leave with a date
-            if they earn it. You host free; they pay for the chance.
+            You&apos;re on the other side of the table. Ask the questions, read
+            the answers, hand out the marks — and you leave with a date if they
+            earn it. You host free; they pay for the chance.
           </p>
           <button
             onClick={host}
@@ -64,8 +64,8 @@ export default function BlindDateLobby({
             Start the room →
           </button>
           <p className="mt-3 text-sm font-body text-club">
-            The room stays open 10 minutes to fill (3–5 suitors), then the
-            clock starts. No bots — real members only.
+            The room stays open 10 minutes to fill (3–5 suitors), then the clock
+            starts. No bots — real members only.
           </p>
         </div>
       )}
@@ -78,8 +78,8 @@ export default function BlindDateLobby({
         </p>
         {rooms.length === 0 ? (
           <p className="mt-4 text-base font-body text-club">
-            No rooms are open right now. Host one yourself, or check back —
-            the ladies decide when the door opens.
+            No rooms are open right now. Host one yourself, or check back — the
+            ladies decide when the door opens.
           </p>
         ) : (
           <ul className="mt-4 space-y-3">
@@ -89,7 +89,9 @@ export default function BlindDateLobby({
                 className="font-body text-club flex flex-wrap items-center justify-between gap-3 rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-3"
               >
                 <div>
-                  <p className="text-base font-bold font-body text-club">💘 Blind Date</p>
+                  <p className="text-base font-bold font-body text-club">
+                    💘 Blind Date
+                  </p>
                   <p className="text-sm font-body text-club">
                     {room.seated}/{room.maxSeats} seated ·{' '}
                     {room.seated >= 3
@@ -115,9 +117,9 @@ export default function BlindDateLobby({
           How it works
         </p>
         <p className="mx-auto mt-2 max-w-lg text-base font-body text-club">
-          4 rounds. She asks, you answer, she gives one mark to the best
-          answer. Most marks wins the date. You never see the other answers —
-          only where you stand.
+          4 rounds. She asks, you answer, she gives one mark to the best answer.
+          Most marks wins the date. You never see the other answers — only where
+          you stand.
         </p>
       </div>
     </div>

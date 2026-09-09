@@ -28,7 +28,10 @@ async function profileMap(
     .select('id, display_name, photos(storage_path, is_primary)')
     .in('id', ids)
     .filter('photos.held_at', 'is', 'null');
-  const map = new Map<string, { display_name: string | null; photo: string | null }>();
+  const map = new Map<
+    string,
+    { display_name: string | null; photo: string | null }
+  >();
   for (const p of data ?? []) {
     map.set(p.id, {
       display_name: p.display_name,
@@ -44,7 +47,8 @@ async function profileMap(
 function tallyCounts(rounds: RoundRow[]): Record<string, number> {
   const counts: Record<string, number> = {};
   for (const r of rounds) {
-    if (r.tally_user_id) counts[r.tally_user_id] = (counts[r.tally_user_id] ?? 0) + 1;
+    if (r.tally_user_id)
+      counts[r.tally_user_id] = (counts[r.tally_user_id] ?? 0) + 1;
   }
   return counts;
 }
@@ -138,8 +142,9 @@ export default async function BlindDatePage() {
       .order('round_index');
     const roundRows = (rounds ?? []) as RoundRow[];
     const current =
-      roundRows.filter((r) => r.phase !== 'done').sort((a, b) => b.round_index - a.round_index)[0] ??
-      null;
+      roundRows
+        .filter((r) => r.phase !== 'done')
+        .sort((a, b) => b.round_index - a.round_index)[0] ?? null;
 
     const { data: entries } = await supabase
       .from('event_entries')
@@ -181,8 +186,8 @@ export default async function BlindDatePage() {
               👑 Blind Date — the host&apos;s table
             </h1>
             <p className="font-body font-body text-club mx-auto mt-3 max-w-xl text-center">
-              You can&apos;t see them yet — that&apos;s the point. Ask, read, and
-              mark the best answer.
+              You can&apos;t see them yet — that&apos;s the point. Ask, read,
+              and mark the best answer.
             </p>
             <div className="mt-8">
               <BlindDateHost
@@ -238,7 +243,9 @@ export default async function BlindDatePage() {
                 eventId={active.id}
                 eventStatus={active.status}
                 tokenCost={active.token_cost}
-                hostName={hostProfile.get(active.host_id ?? '')?.display_name ?? null}
+                hostName={
+                  hostProfile.get(active.host_id ?? '')?.display_name ?? null
+                }
                 hostPhoto={hostProfile.get(active.host_id ?? '')?.photo ?? null}
                 suitors={suitors}
                 round={current}

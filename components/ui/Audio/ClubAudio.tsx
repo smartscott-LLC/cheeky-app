@@ -271,7 +271,7 @@ class ClubBeatEngine {
     }
     this.started = false;
     if (this.ctx && this.ctx.state === 'running') {
-      this.ctx.suspend();
+      void this.ctx.suspend();
     }
   }
 }
@@ -318,7 +318,10 @@ export default function ClubAudio() {
       // Not close enough to end yet — reschedule. Don't set switchingRef
       // here: if we did, the rescheduled call would bail out forever and
       // the deck would get stuck on one track.
-      mixTimerRef.current = setTimeout(mixTo, (timeLeft - FADE_MS / 1000 - 1) * 1000);
+      mixTimerRef.current = setTimeout(
+        mixTo,
+        (timeLeft - FADE_MS / 1000 - 1) * 1000
+      );
       return;
     }
 
@@ -346,9 +349,7 @@ export default function ClubAudio() {
       if (aborted) return;
       const p = Math.min(1, (performance.now() - start) / FADE_MS);
       // Smooth ease-in-out curve for more natural transition
-      const eased = p < 0.5
-        ? 2 * p * p
-        : 1 - Math.pow(-2 * p + 2, 2) / 2;
+      const eased = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
       // Equal-power crossfade: constant perceived loudness
       const out = Math.cos((eased * Math.PI) / 2);
       const inn = Math.sin((eased * Math.PI) / 2);
@@ -373,9 +374,13 @@ export default function ClubAudio() {
     const tracks = tracksRef.current;
     if (!tracks) return;
     const currentTrack = tracks[currentRef.current];
-    const timeUntilEnd = (currentTrack.duration || 180) - currentTrack.currentTime;
+    const timeUntilEnd =
+      (currentTrack.duration || 180) - currentTrack.currentTime;
     // Start planning the next mix ~5 seconds before track ends
-    mixTimerRef.current = setTimeout(mixTo, Math.max(1000, (timeUntilEnd - 5) * 1000));
+    mixTimerRef.current = setTimeout(
+      mixTo,
+      Math.max(1000, (timeUntilEnd - 5) * 1000)
+    );
   };
 
   const startTracks = (): Promise<void> => {

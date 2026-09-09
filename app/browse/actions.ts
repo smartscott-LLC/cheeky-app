@@ -58,7 +58,8 @@ export async function waveAt(userId: string): Promise<{ error?: string }> {
 // L³ (Leave · Like · Love) — PRD docs/PRD-l3.md
 // ============================================================
 
-export type L3Person = Database['public']['Functions']['l3_trio']['Returns'][number];
+export type L3Person =
+  Database['public']['Functions']['l3_trio']['Returns'][number];
 
 export type L3PickResult = {
   matchId?: string | null;
@@ -131,11 +132,16 @@ export async function l3Pick(
 // Matchmaker — the memory-game spark mode (PRD docs/PRD-matchmaker.md)
 // ============================================================
 
-export type MatchmakerCandidate = Database['public']['Functions']['matchmaker_draft_candidates']['Returns'][number];
-export type MatchmakerBoardRow = Database['public']['Functions']['matchmaker_start_board']['Returns'][number];
-export type MatchmakerCard = Database['public']['Functions']['matchmaker_board_cards']['Returns'][number];
-export type MatchmakerFlip = Database['public']['Functions']['matchmaker_flip']['Returns'][number];
-export type MatchmakerIncoming = Database['public']['Functions']['matchmaker_incoming']['Returns'][number];
+export type MatchmakerCandidate =
+  Database['public']['Functions']['matchmaker_draft_candidates']['Returns'][number];
+export type MatchmakerBoardRow =
+  Database['public']['Functions']['matchmaker_start_board']['Returns'][number];
+export type MatchmakerCard =
+  Database['public']['Functions']['matchmaker_board_cards']['Returns'][number];
+export type MatchmakerFlip =
+  Database['public']['Functions']['matchmaker_flip']['Returns'][number];
+export type MatchmakerIncoming =
+  Database['public']['Functions']['matchmaker_incoming']['Returns'][number];
 
 export interface MatchmakerActiveBoard {
   id: string;

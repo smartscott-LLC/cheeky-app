@@ -78,7 +78,10 @@ function startTrack(index: number) {
   track.currentTime = 0;
   trackGainNodes[index].gain.cancelScheduledValues(ctx!.currentTime);
   trackGainNodes[index].gain.setValueAtTime(0, ctx!.currentTime);
-  trackGainNodes[index].gain.linearRampToValueAtTime(0.5, ctx!.currentTime + 0.5);
+  trackGainNodes[index].gain.linearRampToValueAtTime(
+    0.5,
+    ctx!.currentTime + 0.5
+  );
 
   void track.play();
   currentTrackIndex = index;

@@ -78,7 +78,7 @@ export default async function ThreadPage({
     (match?.source ? GRID_KINDS.includes(match.source) : false) &&
     match?.status === 'active' &&
     songEndsAt !== null &&
-    songEndsAt > Date.now();
+    songEndsAt > Date.now(); // eslint-disable-line react(purity) — render-time comparison for real-time song state
 
   // Certificate room: a Speed Dating match issues one certificate per
   // participant — if I hold one for this match, the chat gets the skin.

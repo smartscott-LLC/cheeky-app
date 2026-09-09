@@ -27,7 +27,7 @@ async function getWatchdogModel(): Promise<string> {
   return (
     data?.watchdog_model ??
     process.env.DATESAFE_VISION_MODEL ??
-    'nvidia/nemotron-nano-12b-v2-vl:free'
+    'agnes-2.5-flash'
   );
 }
 

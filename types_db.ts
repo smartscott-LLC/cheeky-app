@@ -315,6 +315,149 @@ export type Database = {
           },
         ]
       }
+      challenge_leaderboard: {
+        Row: {
+          bonus_breakdown: Json | null
+          created_at: string
+          day: string
+          id: number
+          is_bot: boolean
+          match_id: string | null
+          p1_name: string
+          p1_score: number
+          p2_name: string
+          p2_score: number
+          total_score: number
+        }
+        Insert: {
+          bonus_breakdown?: Json | null
+          created_at?: string
+          day: string
+          id?: never
+          is_bot?: boolean
+          match_id?: string | null
+          p1_name: string
+          p1_score?: number
+          p2_name: string
+          p2_score?: number
+          total_score?: number
+        }
+        Update: {
+          bonus_breakdown?: Json | null
+          created_at?: string
+          day?: string
+          id?: never
+          is_bot?: boolean
+          match_id?: string | null
+          p1_name?: string
+          p1_score?: number
+          p2_name?: string
+          p2_score?: number
+          total_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_leaderboard_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "challenge_matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenge_matches: {
+        Row: {
+          bonus_breakdown: Json | null
+          completed_at: string | null
+          created_at: string
+          grand_total: number
+          id: string
+          p1_is_bot: boolean
+          p1_name: string
+          p1_round_scores: Json | null
+          p1_score: number
+          p1_tier: string
+          p2_is_bot: boolean
+          p2_name: string
+          p2_round_scores: Json | null
+          p2_score: number
+          p2_tier: string
+          player1_id: string
+          player2_id: string
+          seed: number
+          status: string
+        }
+        Insert: {
+          bonus_breakdown?: Json | null
+          completed_at?: string | null
+          created_at?: string
+          grand_total?: number
+          id?: string
+          p1_is_bot?: boolean
+          p1_name: string
+          p1_round_scores?: Json | null
+          p1_score?: number
+          p1_tier?: string
+          p2_is_bot?: boolean
+          p2_name: string
+          p2_round_scores?: Json | null
+          p2_score?: number
+          p2_tier?: string
+          player1_id: string
+          player2_id: string
+          seed?: number
+          status?: string
+        }
+        Update: {
+          bonus_breakdown?: Json | null
+          completed_at?: string | null
+          created_at?: string
+          grand_total?: number
+          id?: string
+          p1_is_bot?: boolean
+          p1_name?: string
+          p1_round_scores?: Json | null
+          p1_score?: number
+          p1_tier?: string
+          p2_is_bot?: boolean
+          p2_name?: string
+          p2_round_scores?: Json | null
+          p2_score?: number
+          p2_tier?: string
+          player1_id?: string
+          player2_id?: string
+          seed?: number
+          status?: string
+        }
+        Relationships: []
+      }
+      challenge_queue: {
+        Row: {
+          id: number
+          joined_at: string
+          name: string
+          preference: string
+          tier: string
+          user_id: string
+        }
+        Insert: {
+          id?: never
+          joined_at?: string
+          name: string
+          preference?: string
+          tier?: string
+          user_id: string
+        }
+        Update: {
+          id?: never
+          joined_at?: string
+          name?: string
+          preference?: string
+          tier?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       character_moments: {
         Row: {
           character_id: string
@@ -2141,6 +2284,7 @@ export type Database = {
           metadata: Json | null
           price_id: string | null
           quantity: number | null
+          status: Database["public"]["Enums"]["subscription_status"] | null
           trial_end: string | null
           trial_start: string | null
           user_id: string
@@ -2158,6 +2302,7 @@ export type Database = {
           metadata?: Json | null
           price_id?: string | null
           quantity?: number | null
+          status?: Database["public"]["Enums"]["subscription_status"] | null
           trial_end?: string | null
           trial_start?: string | null
           user_id: string
@@ -2175,6 +2320,7 @@ export type Database = {
           metadata?: Json | null
           price_id?: string | null
           quantity?: number | null
+          status?: Database["public"]["Enums"]["subscription_status"] | null
           trial_end?: string | null
           trial_start?: string | null
           user_id?: string
@@ -2557,593 +2703,364 @@ export type Database = {
     }
     Functions: {
       add_special_interest: {
-        Args: {
-          p_interest_user: string
-        }
+        Args: { p_interest_user: string }
         Returns: string
       }
-      advance_blind_date: {
-        Args: {
-          p_event_id: string
-        }
-        Returns: undefined
-      }
-      auto_match_rooftop: {
-        Args: {
-          p_event_id: string
-        }
-        Returns: undefined
-      }
+      advance_blind_date: { Args: { p_event_id: string }; Returns: undefined }
+      auto_match_rooftop: { Args: { p_event_id: string }; Returns: undefined }
       award_badge: {
-        Args: {
-          p_user: string
-          p_slug: string
-        }
+        Args: { p_slug: string; p_user: string }
         Returns: undefined
       }
       award_gem: {
-        Args: {
-          p_user: string
-          p_slug: string
-        }
+        Args: { p_slug: string; p_user: string }
         Returns: undefined
       }
       bump_rate_limit: {
-        Args: {
-          p_key: string
-          p_window_seconds: number
-          p_max: number
-        }
+        Args: { p_key: string; p_max: number; p_window_seconds: number }
         Returns: boolean
       }
-      buy_gift: {
-        Args: {
-          p_slug: string
-        }
-        Returns: string
-      }
+      buy_gift: { Args: { p_slug: string }; Returns: string }
       club_chat_ban: {
-        Args: {
-          p_user: string
-          p_hours: number
-          p_reason: string
-        }
+        Args: { p_hours: number; p_reason: string; p_user: string }
         Returns: undefined
       }
-      club_chat_bump_badges: {
-        Args: {
-          p_user: string
-        }
-        Returns: undefined
-      }
-      club_chat_heartbeat: {
-        Args: {
-          p_seconds: number
-        }
-        Returns: boolean
-      }
-      club_chat_horn: {
-        Args: {
-          p_body: string
-        }
-        Returns: number
-      }
-      club_chat_invite: {
-        Args: {
-          p_user: string
-        }
-        Returns: string
-      }
-      club_chat_profanity: {
-        Args: {
-          p_body: string
-        }
-        Returns: boolean
-      }
+      club_chat_bump_badges: { Args: { p_user: string }; Returns: undefined }
+      club_chat_heartbeat: { Args: { p_seconds: number }; Returns: boolean }
+      club_chat_horn: { Args: { p_body: string }; Returns: number }
+      club_chat_invite: { Args: { p_user: string }; Returns: string }
+      club_chat_profanity: { Args: { p_body: string }; Returns: boolean }
       club_chat_respond_invite: {
-        Args: {
-          p_invite_id: string
-          p_accept: boolean
-        }
+        Args: { p_accept: boolean; p_invite_id: string }
         Returns: undefined
       }
       club_chat_send: {
-        Args: {
-          p_room: string
-          p_body: string
-        }
+        Args: { p_body: string; p_room: string }
         Returns: number
       }
-      club_chat_whisper_get: {
-        Args: {
-          p_other: string
-        }
-        Returns: string
-      }
+      club_chat_whisper_get: { Args: { p_other: string }; Returns: string }
       club_chat_whisper_send: {
-        Args: {
-          p_whisper_id: string
-          p_body: string
-        }
+        Args: { p_body: string; p_whisper_id: string }
         Returns: number
       }
-      compatible: {
-        Args: {
-          a: string
-          b: string
-        }
-        Returns: boolean
-      }
-      create_blind_date: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      compatible: { Args: { a: string; b: string }; Returns: boolean }
+      create_blind_date: { Args: never; Returns: string }
       create_l3_pick: {
-        Args: {
-          p_target: string
-          p_choice: string
-        }
+        Args: { p_choice: string; p_target: string }
         Returns: {
           match_id: string
           tier: string
         }[]
       }
       create_like: {
-        Args: {
-          p_likee: string
-        }
+        Args: { p_likee: string }
         Returns: {
           match_id: string
         }[]
       }
-      current_streak: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
-      current_tier: {
-        Args: {
-          p_user: string
-        }
-        Returns: string
-      }
+      current_streak: { Args: never; Returns: number }
+      current_tier: { Args: { p_user: string }; Returns: string }
       date_night_leaderboard: {
-        Args: {
-          p_pack: string
-        }
+        Args: { p_pack: string }
         Returns: {
           score: number
         }[]
       }
-      date_night_state: {
-        Args: {
-          p_game: string
-        }
-        Returns: Json
-      }
-      ensure_events: {
-        Args: {
-          p_hours?: number
-        }
-        Returns: undefined
-      }
-      ensure_floor_events: {
-        Args: {
-          p_hours?: number
-        }
-        Returns: undefined
-      }
+      date_night_state: { Args: { p_game: string }; Returns: Json }
+      ensure_events: { Args: { p_hours?: number }; Returns: undefined }
+      ensure_floor_events: { Args: { p_hours?: number }; Returns: undefined }
       ensure_speed_dating_events: {
-        Args: {
-          p_hours?: number
-        }
+        Args: { p_hours?: number }
         Returns: undefined
       }
-      finalize_events: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      finalize_events: { Args: never; Returns: undefined }
       flag_honeypot_catch:
         | {
             Args: {
+              p_email?: string
               p_field: string
               p_page: string
-              p_email?: string
               p_user?: string
             }
             Returns: undefined
           }
         | {
             Args: {
-              p_user: string
+              p_email?: string
               p_field: string
               p_page: string
-              p_email?: string
+              p_user: string
             }
             Returns: undefined
           }
       flag_swag_request: {
         Args: {
-          p_user: string
           p_actor_ref: string
           p_benefit_type: string
           p_benefit_value: string
           p_reason?: string
+          p_user: string
         }
         Returns: undefined
       }
       generate_swag_code: {
         Args: {
+          p_actor_ref?: string
+          p_actor_type: string
           p_benefit_type: string
           p_benefit_value: string
-          p_actor_type: string
-          p_actor_ref?: string
           p_expires_at?: string
           p_max_uses?: number
           p_notes?: string
         }
         Returns: string
       }
-      get_or_create_conversation: {
-        Args: {
-          p_other: string
-        }
-        Returns: string
-      }
-      is_test_member: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      join_blind_date: {
-        Args: {
-          p_event_id: string
-        }
-        Returns: string
-      }
-      join_event: {
-        Args: {
-          p_event_id: string
-        }
-        Returns: string
-      }
-      l3_trio: {
-        Args: Record<PropertyKey, never>
+      get_challenge_leaderboard: {
+        Args: never
         Returns: {
-          id: string
-          display_name: string
+          bonus_breakdown: Json
+          created_at: string
+          is_bot: boolean
+          match_id: string
+          p1_name: string
+          p2_name: string
+          rank: number
+          total_score: number
+        }[]
+      }
+      get_or_create_conversation: { Args: { p_other: string }; Returns: string }
+      insert_challenge_leaderboard: {
+        Args: {
+          p_bonus_breakdown: Json
+          p_is_bot: boolean
+          p_match_id: string
+          p_p1_name: string
+          p_p1_score: number
+          p_p2_name: string
+          p_p2_score: number
+          p_total_score: number
+        }
+        Returns: undefined
+      }
+      is_test_member: { Args: never; Returns: boolean }
+      join_blind_date: { Args: { p_event_id: string }; Returns: string }
+      join_event: { Args: { p_event_id: string }; Returns: string }
+      l3_trio: {
+        Args: never
+        Returns: {
           bio: string
-          one_liner: string
+          display_name: string
           gender: string
+          id: string
           interested_in: string
+          one_liner: string
           photo_path: string
         }[]
       }
-      leave_blind_date: {
-        Args: {
-          p_event_id: string
-        }
-        Returns: undefined
-      }
-      leave_event: {
-        Args: {
-          p_event_id: string
-        }
-        Returns: undefined
-      }
+      leave_blind_date: { Args: { p_event_id: string }; Returns: undefined }
+      leave_event: { Args: { p_event_id: string }; Returns: undefined }
       mark_conversation_read: {
-        Args: {
-          p_conversation_id: string
-        }
+        Args: { p_conversation_id: string }
         Returns: undefined
       }
       mark_webhook_processed: {
-        Args: {
-          p_event_id: string
-          p_event_type: string
-          p_payload: Json
-        }
+        Args: { p_event_id: string; p_event_type: string; p_payload: Json }
         Returns: boolean
       }
       matchmaker_award_gift: {
-        Args: {
-          p_user: string
-          p_floor: string
-        }
+        Args: { p_floor: string; p_user: string }
         Returns: string
       }
       matchmaker_board_cards: {
-        Args: {
-          p_board_id: string
-        }
+        Args: { p_board_id: string }
         Returns: {
-          id: string
           card_position: number
+          display_name: string
+          id: string
           is_stake: boolean
           matched: boolean
-          target_id: string
-          display_name: string
           photo_path: string
+          target_id: string
         }[]
       }
       matchmaker_draft_candidates: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
-          id: string
-          display_name: string
           bio: string
-          one_liner: string
+          display_name: string
           gender: string
+          id: string
           interested_in: string
+          one_liner: string
           photo_path: string
           picked: boolean
         }[]
       }
       matchmaker_flip: {
-        Args: {
-          p_card_id: string
-        }
+        Args: { p_card_id: string }
         Returns: {
+          board_status: string
           card_id: string
           card_position: number
-          is_stake: boolean
-          is_match: boolean
-          first_card_id: string
-          target_id: string
           display_name: string
+          first_card_id: string
+          is_match: boolean
+          is_stake: boolean
+          matches_found: number
           photo_path: string
           strikes: number
-          matches_found: number
-          board_status: string
+          target_id: string
         }[]
       }
       matchmaker_incoming: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
-          unlock_id: string
-          sender_id: string
-          display_name: string
-          photo_path: string
-          message: string
           created_at: string
+          display_name: string
+          message: string
+          photo_path: string
+          sender_id: string
+          unlock_id: string
         }[]
       }
-      matchmaker_pick_draft: {
-        Args: {
-          p_target: string
-        }
-        Returns: undefined
-      }
+      matchmaker_pick_draft: { Args: { p_target: string }; Returns: undefined }
       matchmaker_respond_unlock: {
-        Args: {
-          p_unlock_id: string
-          p_accept: boolean
-        }
+        Args: { p_accept: boolean; p_unlock_id: string }
         Returns: undefined
       }
       matchmaker_send_unlock: {
-        Args: {
-          p_card_id: string
-          p_message: string
-        }
+        Args: { p_card_id: string; p_message: string }
         Returns: string
       }
       matchmaker_start_board: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           board_id: string
-          status: string
-          strikes: number
-          matches_found: number
           card_id: string
           card_position: number
           is_stake: boolean
           matched: boolean
+          matches_found: number
+          status: string
+          strikes: number
         }[]
       }
-      matchmaker_start_draft: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      next_event_minutes: {
-        Args: {
-          p_kind: string
-        }
-        Returns: number
-      }
+      matchmaker_start_draft: { Args: never; Returns: string }
+      next_event_minutes: { Args: { p_kind: string }; Returns: number }
       owner_grant: {
         Args: {
-          p_user: string
           p_benefit_type: string
           p_benefit_value: string
-          p_reason?: string
           p_days?: number
+          p_reason?: string
+          p_user: string
         }
         Returns: undefined
       }
       pick_on_floor: {
-        Args: {
-          p_event_id: string
-          p_pickee: string
-        }
+        Args: { p_event_id: string; p_pickee: string }
         Returns: {
-          matched: boolean
           match_id: string
+          matched: boolean
         }[]
       }
       record_character_moment: {
         Args: {
-          p_user: string
           p_character_slug: string
-          p_milestone: string
           p_message: string
+          p_milestone: string
+          p_user: string
         }
         Returns: undefined
       }
-      record_checkin: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
+      record_checkin: { Args: never; Returns: number }
       record_common_moment: {
-        Args: {
-          p_user: string
-          p_milestone: string
-        }
+        Args: { p_milestone: string; p_user: string }
         Returns: undefined
       }
       record_personal_moment: {
-        Args: {
-          p_user: string
-          p_milestone: string
-        }
+        Args: { p_milestone: string; p_user: string }
         Returns: undefined
       }
       redeem_swag_code: {
-        Args: {
-          p_code: string
-        }
+        Args: { p_code: string }
         Returns: {
           benefit_type: string
           benefit_value: string
         }[]
       }
       resolve_song: {
-        Args: {
-          p_match_id: string
-          p_continue: boolean
-        }
+        Args: { p_continue: boolean; p_match_id: string }
         Returns: undefined
       }
-      resolve_speed_dating: {
-        Args: {
-          p_event_id: string
-        }
-        Returns: undefined
-      }
+      resolve_speed_dating: { Args: { p_event_id: string }; Returns: undefined }
       respond_gift: {
-        Args: {
-          p_send_id: string
-          p_accept: boolean
-        }
+        Args: { p_accept: boolean; p_send_id: string }
         Returns: undefined
       }
       select_blind_tally: {
-        Args: {
-          p_event_id: string
-          p_round: number
-          p_selected: string
-        }
+        Args: { p_event_id: string; p_round: number; p_selected: string }
         Returns: undefined
       }
       select_speed_rank: {
-        Args: {
-          p_event_id: string
-          p_pick_rank: number
-          p_picked: string
-        }
+        Args: { p_event_id: string; p_pick_rank: number; p_picked: string }
         Returns: undefined
       }
       send_event_message: {
-        Args: {
-          p_conversation_id: string
-          p_body: string
-        }
+        Args: { p_body: string; p_conversation_id: string }
         Returns: number
       }
       send_gift: {
-        Args: {
-          p_gift_id: string
-          p_recipient: string
-        }
+        Args: { p_gift_id: string; p_recipient: string }
         Returns: undefined
       }
-      send_guest_pass: {
-        Args: {
-          p_guest: string
-        }
-        Returns: string
-      }
+      send_guest_pass: { Args: { p_guest: string }; Returns: string }
       send_message: {
-        Args: {
-          p_conversation_id: string
-          p_body: string
-        }
+        Args: { p_body: string; p_conversation_id: string }
         Returns: number
       }
       send_speed_message: {
         Args: {
+          p_body: string
           p_event_id: string
           p_group: number
           p_slot: number
-          p_body: string
         }
         Returns: number
       }
-      setup_speed_dating: {
-        Args: {
-          p_event_id: string
-        }
-        Returns: undefined
-      }
-      start_date_night: {
-        Args: {
-          p_other: string
-        }
-        Returns: string
-      }
+      setup_speed_dating: { Args: { p_event_id: string }; Returns: undefined }
+      start_date_night: { Args: { p_other: string }; Returns: string }
       submit_blind_answer: {
-        Args: {
-          p_event_id: string
-          p_round: number
-          p_body: string
-        }
+        Args: { p_body: string; p_event_id: string; p_round: number }
         Returns: undefined
       }
       submit_blind_question: {
-        Args: {
-          p_event_id: string
-          p_round: number
-          p_question: string
-        }
+        Args: { p_event_id: string; p_question: string; p_round: number }
         Returns: undefined
       }
       submit_rooftop_pick: {
-        Args: {
-          p_event_id: string
-          p_round: number
-          p_pickee: string
-        }
+        Args: { p_event_id: string; p_pickee: string; p_round: number }
         Returns: undefined
       }
       tap_date_night: {
-        Args: {
-          p_game: string
-          p_index: number
-          p_pick: number
-        }
+        Args: { p_game: string; p_index: number; p_pick: number }
         Returns: undefined
       }
       taskbar_state: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
-          tier: string
-          messages_sent_today: number
-          new_people_today: number
-          checked_in_today: boolean
-          matchmaker_plays_left: number
           blind_date_joins_today: number
+          checked_in_today: boolean
           gift_ready: boolean
           gift_ready_in_minutes: number
+          matchmaker_plays_left: number
+          messages_sent_today: number
+          new_people_today: number
+          tier: string
         }[]
       }
-      tick_rooftop_events: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      tier_rank: {
-        Args: {
-          p_tier: string
-        }
-        Returns: number
-      }
+      tick_rooftop_events: { Args: never; Returns: undefined }
+      tier_rank: { Args: { p_tier: string }; Returns: number }
     }
     Enums: {
       consent_type: "terms" | "privacy" | "verification" | "best_practices"
@@ -3165,27 +3082,33 @@ export type Database = {
   }
 }
 
-type PublicSchema = Database[Extract<keyof Database, "public">]
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
-  PublicTableNameOrOptions extends
-    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
-    | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-        Database[PublicTableNameOrOptions["schema"]]["Views"])
-    : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
-        PublicSchema["Views"])
-    ? (PublicSchema["Tables"] &
-        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -3193,20 +3116,24 @@ export type Tables<
     : never
 
 export type TablesInsert<
-  PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
-    | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -3214,20 +3141,24 @@ export type TablesInsert<
     : never
 
 export type TablesUpdate<
-  PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
-    | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -3235,30 +3166,56 @@ export type TablesUpdate<
     : never
 
 export type Enums<
-  PublicEnumNameOrOptions extends
-    | keyof PublicSchema["Enums"]
-    | { schema: keyof Database },
-  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
-> = PublicEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
-    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never) = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof PublicSchema["CompositeTypes"]
-    | { schema: keyof Database },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
-    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never) = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      consent_type: ["terms", "privacy", "verification", "best_practices"],
+      pricing_plan_interval: ["day", "week", "month", "year"],
+      pricing_type: ["one_time", "recurring"],
+      subscription_status: [
+        "trialing",
+        "active",
+        "canceled",
+        "incomplete",
+        "incomplete_expired",
+        "past_due",
+        "unpaid",
+        "paused",
+      ],
+    },
+  },
+} as const
 

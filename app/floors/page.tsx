@@ -68,7 +68,9 @@ export default async function FloorsPage() {
                             : '· free'}
                     </span>
                   </p>
-                  <p className="mt-1 text-base font-body text-club">{floor.tagline}</p>
+                  <p className="mt-1 text-base font-body text-club">
+                    {floor.tagline}
+                  </p>
                   {locked ? (
                     <p className="mt-2 text-base font-bold font-body text-club">
                       Come see what&apos;s on these floors with a {floor.name}{' '}

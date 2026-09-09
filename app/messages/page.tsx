@@ -4,7 +4,7 @@ import { getUser } from '@/utils/supabase/queries';
 import { openConversation } from '@/app/messages/actions';
 import { getReturnFloor } from '@/utils/return-floor';
 import { redirect } from 'next/navigation';
-import MomentsStrip from '@/components/ui/Messages/MomentsStrip';
+import MomentsStrip from '../../components/ui/Messages/MomentsStrip';
 
 export default async function MessagesPage() {
   const supabase = await createClient();
@@ -100,7 +100,9 @@ export default async function MessagesPage() {
   return (
     <div className="bg-black">
       <div className="mx-auto max-w-2xl px-6 py-16">
-        <h1 className="font-hero text-gold text-4xl sm:text-5xl">Cheeky Chats</h1>
+        <h1 className="font-hero text-gold text-4xl sm:text-5xl">
+          Cheeky Chats
+        </h1>
         <p className="mt-2 font-body text-club">
           <Link
             href={floorHref}
@@ -149,7 +151,9 @@ export default async function MessagesPage() {
                         <p className="font-bold font-body text-club">
                           {profile?.display_name || 'Member'}
                         </p>
-                        <p className="text-sm font-body text-club">waved at you</p>
+                        <p className="text-sm font-body text-club">
+                          waved at you
+                        </p>
                       </div>
                     </div>
                     <form action={openConversation.bind(null, w.sender_id)}>
@@ -168,7 +172,9 @@ export default async function MessagesPage() {
         )}
         {convs.length === 0 ? (
           <div className="mt-10 rounded-xl border border-zinc-800 bg-zinc-900/50 p-10 text-center">
-            <h2 className="font-header text-cyan text-2xl">No conversations yet.</h2>
+            <h2 className="font-header text-cyan text-2xl">
+              No conversations yet.
+            </h2>
             <p className="mt-2 font-body text-club">
               Hit the floor, pick someone you like — when they pick you back,
               the chatting starts here.

@@ -58,7 +58,7 @@ export const STORY_BEATS: StoryBeat[] = [
           "The kind where you show who you are — not who you're pretending to be. Floors go up from here. Each one shows you a little more. Start on Silver, work your way up. Or don't. Some people never leave the first floor and have the time of their lives."
       }
     ],
-    learningGoal: 'Here\'s what the Club is — a real place with real rules.'
+    learningGoal: "Here's what the Club is — a real place with real rules."
   },
 
   // ── Beat 2: Silver Floor ─────────────────────────────────────────

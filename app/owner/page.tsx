@@ -154,10 +154,8 @@ export default function OwnerPage() {
     }[]
   >([]);
   // Emergency controls — model failover + floor closures.
-  const [castModel, setCastModel] = useState('deepseek-chat');
-  const [watchdogModel, setWatchdogModel] = useState(
-    'nvidia/nemotron-nano-12b-v2-vl:free'
-  );
+  const [castModel, setCastModel] = useState('AGNES-chat');
+  const [watchdogModel, setWatchdogModel] = useState('agnes-2.5-flash');
   const [closures, setClosures] = useState<
     { floor: string; reason: string | null; until: string | null }[]
   >([]);
@@ -211,7 +209,7 @@ export default function OwnerPage() {
   // Auto-unlock: if the signed-in account IS the owner, the Booth opens
   // with no key (the back door). The key input below is the fallback path.
   useEffect(() => {
-    unlock('');
+    void unlock('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -260,10 +258,8 @@ export default function OwnerPage() {
     setEvents((res.events ?? []) as typeof events);
     setLedger((res.ledger ?? []) as typeof ledger);
     setCatalog((res.catalog ?? []) as typeof catalog);
-    setCastModel(res.castModel ?? 'deepseek-chat');
-    setWatchdogModel(
-      res.watchdogModel ?? 'nvidia/nemotron-nano-12b-v2-vl:free'
-    );
+    setCastModel(res.castModel ?? 'AGNES-chat');
+    setWatchdogModel(res.watchdogModel ?? 'agnes-2.5-flash');
     setClosures((res.closures ?? []) as typeof closures);
     setReports((res.reports ?? []) as typeof reports);
     setBanned((res.banned ?? []) as typeof banned);
@@ -308,10 +304,8 @@ export default function OwnerPage() {
       setEvents((res.events ?? []) as typeof events);
       setLedger((res.ledger ?? []) as typeof ledger);
       setCatalog((res.catalog ?? []) as typeof catalog);
-      setCastModel(res.castModel ?? 'deepseek-chat');
-      setWatchdogModel(
-        res.watchdogModel ?? 'nvidia/nemotron-nano-12b-v2-vl:free'
-      );
+      setCastModel(res.castModel ?? 'AGNES-chat');
+      setWatchdogModel(res.watchdogModel ?? 'agnes-2.5-flash');
       setClosures((res.closures ?? []) as typeof closures);
       setReports((res.reports ?? []) as typeof reports);
       setBanned((res.banned ?? []) as typeof banned);
@@ -397,7 +391,7 @@ export default function OwnerPage() {
     if (res.error) return notice(false, res.error);
     setMintFresh(res.codes ?? []);
     notice(true, `${res.codes?.length ?? 0} code(s) printed — hand them out`);
-    refresh();
+    void refresh();
   };
 
   const generate = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -415,7 +409,7 @@ export default function OwnerPage() {
     if (res.error) return notice(false, res.error);
     setFresh(res.codes ?? []);
     notice(true, `${res.codes?.length ?? 0} code(s) generated`);
-    refresh();
+    void refresh();
   };
 
   const grantDirect = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -434,7 +428,7 @@ export default function OwnerPage() {
     if (res.error) return notice(false, res.error);
     notice(true, 'Granted');
     e.currentTarget.reset();
-    refresh();
+    void refresh();
   };
 
   const resolveFlag = async (
@@ -456,7 +450,7 @@ export default function OwnerPage() {
         action === 'grant' ? 'Flag granted — member got it' : 'Flag dismissed'
       );
     }
-    refresh();
+    void refresh();
   };
 
   const toggleEngine = async () => {
@@ -521,7 +515,7 @@ export default function OwnerPage() {
       true,
       closed ? `${floor} is under construction` : `${floor} is open`
     );
-    refresh();
+    void refresh();
   };
 
   const resolveReport = async (
@@ -538,7 +532,7 @@ export default function OwnerPage() {
         ? 'Report upheld — the hold stays'
         : 'Report dismissed — the hold lifted'
     );
-    refresh();
+    void refresh();
   };
 
   const banEmail = async (
@@ -562,7 +556,7 @@ export default function OwnerPage() {
       banned ? 'Email banned — the door will refuse it' : 'Email pardoned'
     );
     e.currentTarget.reset();
-    refresh();
+    void refresh();
   };
 
   const copy = (text: string) => navigator.clipboard?.writeText(text);
@@ -829,7 +823,9 @@ export default function OwnerPage() {
                       · {new Date(r.created_at).toLocaleString()}
                     </span>
                   </p>
-                  <p className="mt-1 text-sm font-body text-club">“{r.reason}”</p>
+                  <p className="mt-1 text-sm font-body text-club">
+                    “{r.reason}”
+                  </p>
                   <p className="mt-1 text-xs font-body text-club">
                     {r.verdict === 'violation'
                       ? '🛑 flagged as violation'
@@ -909,7 +905,9 @@ export default function OwnerPage() {
                   key={b.email}
                   className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-zinc-800 bg-zinc-900/50 px-3 py-2 text-sm"
                 >
-                  <span className="font-mono font-body text-club">{b.email}</span>
+                  <span className="font-mono font-body text-club">
+                    {b.email}
+                  </span>
                   <span className="flex-1 text-xs text-cyan">
                     {b.reason} ·{' '}
                     {b.banned_until
@@ -919,16 +917,18 @@ export default function OwnerPage() {
                   <button
                     onClick={() => {
                       setBusy(true);
-                      ownerSetBan({ key, email: b.email, banned: false }).then(
-                        (res) => {
-                          setBusy(false);
-                          if (res.error) notice(false, res.error);
-                          else {
-                            notice(true, 'Email pardoned');
-                            refresh();
-                          }
+                      void ownerSetBan({
+                        key,
+                        email: b.email,
+                        banned: false
+                      }).then((res) => {
+                        setBusy(false);
+                        if (res.error) notice(false, res.error);
+                        else {
+                          notice(true, 'Email pardoned');
+                          void refresh();
                         }
-                      );
+                      });
                     }}
                     disabled={busy}
                     className="rounded border border-zinc-600 px-3 py-1 text-xs font-bold text-cyan hover:border-zinc-400 disabled:opacity-40"
@@ -1075,7 +1075,7 @@ export default function OwnerPage() {
                 className="mt-1 w-full rounded-lg border border-zinc-700 bg-zinc-900 p-2.5 font-mono text-sm text-white"
               />
               <span className="mt-1.5 flex flex-wrap gap-1.5">
-                {['deepseek-chat', 'deepseek-reasoner'].map((m) => (
+                {['AGNES-chat', 'AGNES-reasoner'].map((m) => (
                   <button
                     key={m}
                     onClick={() => setCastModel(m)}
@@ -1097,7 +1097,7 @@ export default function OwnerPage() {
               />
               <span className="mt-1.5 flex flex-wrap gap-1.5">
                 {[
-                  'nvidia/nemotron-nano-12b-v2-vl:free',
+                  'agnes-2.5-flash',
                   'qwen/qwen2.5-vl-72b-instruct',
                   'meta-llama/llama-3.2-90b-vision-instruct'
                 ].map((m) => (
@@ -1195,7 +1195,7 @@ export default function OwnerPage() {
                               ) as HTMLInputElement | null
                             )?.value ?? 0
                           );
-                          setFloor(f.slug, true, reason ?? '', hours);
+                          void setFloor(f.slug, true, reason ?? '', hours);
                         }}
                         disabled={busy}
                         className="rounded bg-club px-3 py-1 text-xs font-bold text-white hover:bg-club-cotton disabled:opacity-40"
@@ -1212,7 +1212,9 @@ export default function OwnerPage() {
 
         {/* Unpurchased memberships */}
         <div className="mt-8">
-          <h2 className="font-header text-cyan text-lg">🪪 Verified, no card yet</h2>
+          <h2 className="font-header text-cyan text-lg">
+            🪪 Verified, no card yet
+          </h2>
           {unpurchased.length === 0 ? (
             <p className="mt-2 text-sm font-body text-club">
               Everyone verified has a card. Quiet night at the exchange.
@@ -1328,7 +1330,9 @@ export default function OwnerPage() {
 
         {/* Events on the floor — who's in, what's running */}
         <div className="mt-8">
-          <h2 className="font-header text-cyan text-lg">📅 Events on the floor</h2>
+          <h2 className="font-header text-cyan text-lg">
+            📅 Events on the floor
+          </h2>
           <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {events.length === 0 && (
               <p className="text-sm font-body text-club">
@@ -1386,7 +1390,9 @@ export default function OwnerPage() {
 
         {/* Gift shop catalog — quick look */}
         <div className="mt-8">
-          <h2 className="font-header text-cyan text-lg">🎁 Gift shop catalog</h2>
+          <h2 className="font-header text-cyan text-lg">
+            🎁 Gift shop catalog
+          </h2>
           <div className="mt-3 grid gap-2 sm:grid-cols-3 lg:grid-cols-5">
             {catalog.map((g) => (
               <div
@@ -1394,8 +1400,12 @@ export default function OwnerPage() {
                 className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3 text-center"
               >
                 <p className="text-2xl font-body text-club">{g.emoji}</p>
-                <p className="mt-1 text-xs font-bold font-body text-club">{g.name}</p>
-                <p className="text-xs font-body text-club">{g.token_cost} tokens</p>
+                <p className="mt-1 text-xs font-bold font-body text-club">
+                  {g.name}
+                </p>
+                <p className="text-xs font-body text-club">
+                  {g.token_cost} tokens
+                </p>
               </div>
             ))}
           </div>
@@ -1418,7 +1428,9 @@ export default function OwnerPage() {
                   key={c.id}
                   className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-red-500/30 bg-zinc-900/60 px-3 py-2 text-sm"
                 >
-                  <span className="font-mono font-body text-club">{c.code}</span>
+                  <span className="font-mono font-body text-club">
+                    {c.code}
+                  </span>
                   <span className="text-cyan">
                     {label(c.benefit_type, c.benefit_value)} · {c.actor_type}
                     {c.actor_ref ? `/${c.actor_ref}` : ''}

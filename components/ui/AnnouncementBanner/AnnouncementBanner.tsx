@@ -28,7 +28,7 @@ export default function AnnouncementBanner() {
         // The marquee is a fixture, not a feature — silence failures.
       }
     };
-    load();
+    void load();
     // Re-check so a newly posted announcement goes live within a minute.
     const timer = setInterval(load, 60_000);
     return () => {

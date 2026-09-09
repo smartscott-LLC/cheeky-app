@@ -78,11 +78,12 @@ export default async function EventRoomPage({
   // Make sure the playlist for the next couple of hours exists, then find
   // this room's next slot — join it any time, even early.
   await supabase.rpc('ensure_floor_events', { p_hours: 2 });
+  const cutoff = new Date(Date.now() - 3 * 60 * 1000).toISOString();
   const { data: events } = await supabase
     .from('events')
     .select('*')
     .eq('kind', kind)
-    .gte('starts_at', new Date(Date.now() - 3 * 60 * 1000).toISOString())
+    .gte('starts_at', cutoff)
     .order('starts_at')
     .limit(1);
 
@@ -100,7 +101,7 @@ export default async function EventRoomPage({
   let myEntry: { status: string } | null = null;
   let myPicks = 0;
   let spotlightIds: string[] = [];
-  let onCenterStage = false;
+  let _onCenterStage = false;
 
   if (roomEvent) {
     const [{ data: entries }, { data: picks }, { data: spotlights }] =
@@ -121,7 +122,7 @@ export default async function EventRoomPage({
       ]);
 
     spotlightIds = (spotlights ?? []).map((s) => s.user_id);
-    onCenterStage = spotlightIds.includes(user.id);
+    _onCenterStage = spotlightIds.includes(user.id);
 
     const ids = (entries ?? []).map((e) => e.user_id);
     const { data: profiles } =

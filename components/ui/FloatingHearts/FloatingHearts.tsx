@@ -16,16 +16,17 @@ const PINK_SHADES = [
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
 
 export default function FloatingHearts({ count = 16 }: { count?: number }) {
+  // Decorative hearts — randomness is intentional, computed once on mount.
+  // oxlint-disable-next-line react(purity)
   const hearts = Array.from({ length: count }, (_, i) => ({
-    // Round-robin so all four shades appear; geometry is randomized.
     color: PINK_SHADES[i % PINK_SHADES.length],
-    x: rand(2, 98), // horizontal start, %
-    size: Math.pow(Math.random(), 1.4) * 16 + 10, // 10–26px, biased small
-    dur: rand(10, 18), // full float-up duration, s
-    delay: -rand(0, 18), // negative → field is pre-populated on load
-    drift: rand(14, 46), // sway amplitude, px
-    rot: rand(-16, 16), // starting tilt, deg
-    opacity: rand(0.25, 0.65) // embers are soft
+    x: rand(2, 98),
+    size: Math.pow(Math.random(), 1.4) * 16 + 10,
+    dur: rand(10, 18),
+    delay: -rand(0, 18),
+    drift: rand(14, 46),
+    rot: rand(-16, 16),
+    opacity: rand(0.25, 0.65)
   }));
 
   return (

@@ -154,8 +154,8 @@ export default async function RooftopPage() {
         </h1>
         <p className="font-body text-club mx-auto mt-3 max-w-xl text-center">
           The Diamond floor&apos;s pool. Ten-second rounds, three picks each —
-          mutuals leave the board, and when it&apos;s down to two, that&apos;s the
-          date.
+          mutuals leave the board, and when it&apos;s down to two, that&apos;s
+          the date.
         </p>
         <div className="mt-8">
           <RooftopPool

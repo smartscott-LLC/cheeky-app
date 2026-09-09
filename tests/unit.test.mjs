@@ -10,7 +10,7 @@ import {
   membershipTierRank
 } from '../utils/membership-tokens.ts';
 
-test('parseTokenAmount extracts the token count from product names', () => {
+void test('parseTokenAmount extracts the token count from product names', () => {
   // The real product names in the Stripe catalog.
   assert.equal(parseTokenAmount('Cheeky Token Bag - 100 Tokens'), 100);
   assert.equal(parseTokenAmount('Token Bundle 1000 Tokens'), 1000);
@@ -23,12 +23,15 @@ test('parseTokenAmount extracts the token count from product names', () => {
   assert.equal(parseTokenAmount(null), null);
 });
 
-test('membership token grants: every paid tier, every cycle', () => {
+void test('membership token grants: every paid tier, every cycle', () => {
   // The real membership product names in the Stripe catalog.
   assert.equal(membershipTokenGrant('Gold Membership').amount, 100);
   assert.equal(membershipTokenGrant('Platinum Membership').amount, 200);
   assert.equal(membershipTokenGrant('Diamond Membership').amount, 500);
-  assert.equal(membershipTokenGrant('Gold Membership').reason, 'membership_gold');
+  assert.equal(
+    membershipTokenGrant('Gold Membership').reason,
+    'membership_gold'
+  );
   assert.equal(
     membershipTokenGrant('Platinum Membership').reason,
     'membership_platinum'
@@ -49,7 +52,10 @@ test('membership token grants: every paid tier, every cycle', () => {
   const c = membershipGrantRef('sub_1', '2026-08-06T00:00:00Z', 'price_p');
   assert.notEqual(a, b, 'renewal = new period = new ref');
   assert.notEqual(a, c, 'upgrade = new tier = new ref');
-  assert.equal(a, membershipGrantRef('sub_1', '2026-08-06T00:00:00Z', 'price_g'));
+  assert.equal(
+    a,
+    membershipGrantRef('sub_1', '2026-08-06T00:00:00Z', 'price_g')
+  );
 
   // Tier ranks gate upgrades vs downgrades: only a HIGHER tier re-grants
   // within the same period.

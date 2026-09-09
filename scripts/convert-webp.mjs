@@ -40,4 +40,6 @@ for (const file of images) {
 console.log(
   `\nTotal: ${kb(totalBefore)} -> ${kb(totalAfter)} (${Math.round((1 - totalAfter / totalBefore) * 100)}% smaller)`
 );
-console.log(`Skipped: ${all.length - images.length} icon PNG (manifest/Play requirement)`);
+console.log(
+  `Skipped: ${all.length - images.length} icon PNG (manifest/Play requirement)`
+);

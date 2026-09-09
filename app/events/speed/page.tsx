@@ -51,11 +51,12 @@ export default async function SpeedDatingPage() {
 
   await supabase.rpc('ensure_floor_events', { p_hours: 2 });
 
+  const fifteenMinAgo = new Date(Date.now() - 15 * 60 * 1000).toISOString();
   const { data: events } = await supabase
     .from('events')
     .select('*')
     .eq('kind', 'speed_dating')
-    .gte('starts_at', new Date(Date.now() - 15 * 60 * 1000).toISOString())
+    .gte('starts_at', fifteenMinAgo)
     .order('starts_at')
     .limit(1);
 

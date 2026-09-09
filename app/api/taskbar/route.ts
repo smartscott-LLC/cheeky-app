@@ -38,7 +38,15 @@ export async function GET() {
   if (!profile?.verified_at) {
     return NextResponse.json({
       tier: 'guest',
-      tiles: [{ key: 'verify', icon: '🪪', label: 'Get your card', href: '/verify', count: null }]
+      tiles: [
+        {
+          key: 'verify',
+          icon: '🪪',
+          label: 'Get your card',
+          href: '/verify',
+          count: null
+        }
+      ]
     });
   }
 

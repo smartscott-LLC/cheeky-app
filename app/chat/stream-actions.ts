@@ -115,7 +115,7 @@ export async function streamHorn(body: string): Promise<{ error?: string }> {
     .eq('status', 'reserved');
   const holdSum = (holds ?? []).reduce((s, e) => {
     const cost =
-      ((e as { events: { token_cost: number } | null }).events?.token_cost ?? 0);
+      (e as { events: { token_cost: number } | null }).events?.token_cost ?? 0;
     return s + cost;
   }, 0);
   if (balance - holdSum < 10) return { error: 'insufficient_tokens' };
@@ -125,10 +125,12 @@ export async function streamHorn(body: string): Promise<{ error?: string }> {
     delta: -10,
     reason: 'horn'
   });
-  await (supabase.rpc as unknown as (
-    fn: string,
-    args: Record<string, unknown>
-  ) => Promise<unknown>)('award_badge', {
+  await (
+    supabase.rpc as unknown as (
+      fn: string,
+      args: Record<string, unknown>
+    ) => Promise<unknown>
+  )('award_badge', {
     p_user: user.id,
     p_slug: 'chat_horn'
   });
@@ -139,13 +141,11 @@ export async function streamHorn(body: string): Promise<{ error?: string }> {
   } as Record<string, unknown>);
   await ch.create().catch(() => undefined);
   const tier = await getMyTier();
-  await ch.sendMessage(
-    {
-      text: body.trim(),
-      user_id: user.id,
-      custom: { floor: tier, horn: true }
-    } as unknown as Parameters<typeof ch.sendMessage>[0]
-  );
+  await ch.sendMessage({
+    text: body.trim(),
+    user_id: user.id,
+    custom: { floor: tier, horn: true }
+  } as unknown as Parameters<typeof ch.sendMessage>[0]);
   return {};
 }
 
@@ -159,15 +159,17 @@ export async function streamWhisperGet(
   if (!user) return { error: 'not_authenticated' };
   if (user.id === otherId) return { error: 'cannot_whisper_self' };
   const client = getStreamServer();
-  const sorted = [user.id, otherId].sort();
+  const sorted = [user.id, otherId].sort((a, b) => a.localeCompare(b));
   const channelId = `cheeky-whisper-${sorted[0]}-${sorted[1]}`;
-  const ch = (client as unknown as {
-    channel: (
-      type: string,
-      id: string,
-      data?: Record<string, unknown>
-    ) => { create: () => Promise<unknown> };
-  }).channel('messaging', channelId, {
+  const ch = (
+    client as unknown as {
+      channel: (
+        type: string,
+        id: string,
+        data?: Record<string, unknown>
+      ) => { create: () => Promise<unknown> };
+    }
+  ).channel('messaging', channelId, {
     members: sorted,
     is_whisper: true,
     created_by_id: 'system'

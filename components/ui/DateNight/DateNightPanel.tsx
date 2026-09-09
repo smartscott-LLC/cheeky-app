@@ -38,7 +38,7 @@ export default function DateNightPanel({
     prompt: string;
     options: string[];
   } | null>(null);
-  const [now, setNow] = useState(Date.now());
+  const [now, setNow] = useState(() => Date.now());
   const [leaderboard, setLeaderboard] = useState<number[]>([]);
   const [timedOut, setTimedOut] = useState(false);
 
@@ -60,6 +60,7 @@ export default function DateNightPanel({
   }, [gameId, supabase]);
 
   // Fetch the live question whenever it changes.
+  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
     if (!state?.question_id) return;
     supabase
@@ -73,8 +74,9 @@ export default function DateNightPanel({
   }, [state?.question_id, supabase]);
 
   // Poll the game + keep a local clock.
+  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    poll();
+    void poll();
     const t = setInterval(poll, 2000);
     const clock = setInterval(() => setNow(Date.now()), 500);
     return () => {
@@ -84,6 +86,7 @@ export default function DateNightPanel({
   }, [poll]);
 
   // On finish, pull the couples leaderboard for this pack (scores only).
+  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
     if (state?.status === 'finished' && state.pack_id) {
       supabase
@@ -101,15 +104,16 @@ export default function DateNightPanel({
   const left = live ? Math.max(0, Math.floor((endsAt - now) / 1000)) : 0;
 
   // Timeout: nobody locked it — skip the question (server closes it as missed).
+  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
     if (!live || left > 0 || timedOut || !state) return;
     setTimedOut(true);
-    tapDateNight(gameId, state.current_index, null);
+    void tapDateNight(gameId, state.current_index, null);
   }, [live, left, timedOut, gameId, state]);
 
   const handleTap = async (idx: number) => {
     if (!live || !state) return;
-    const result = await tapDateNight(gameId, state.current_index, idx);
+    await tapDateNight(gameId, state.current_index, idx);
     await poll();
   };
 
@@ -122,7 +126,9 @@ export default function DateNightPanel({
     return (
       <div className="rounded-xl border border-club/30 bg-gradient-to-b from-club/10 to-zinc-900 p-5 text-center">
         <p className="font-body text-club text-3xl">💘</p>
-        <h3 className="font-header text-cyan mt-2 text-xl">Date Night complete</h3>
+        <h3 className="font-header text-cyan mt-2 text-xl">
+          Date Night complete
+        </h3>
         <p className="mt-1 font-body text-club">
           {state.score} of {state.total} — you two locked {state.score}{' '}
           {state.score === 1 ? 'answer' : 'answers'} together.
@@ -169,14 +175,18 @@ export default function DateNightPanel({
         </p>
         <span
           className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
-            left <= 10 ? 'bg-club/20 font-body text-club' : 'bg-zinc-800 text-cyan'
+            left <= 10
+              ? 'bg-club/20 font-body text-club'
+              : 'bg-zinc-800 text-cyan'
           }`}
         >
           {mm}:{ss}
         </span>
       </div>
 
-      <p className="font-body text-club mt-3 text-sm font-bold">{question.prompt}</p>
+      <p className="font-body text-club mt-3 text-sm font-bold">
+        {question.prompt}
+      </p>
       <p className="mt-1 text-xs font-body text-club">
         Huddle with {otherName} in the chat — your answer only locks when you
         both pick the same one.
@@ -206,7 +216,9 @@ export default function DateNightPanel({
 
       <div className="mt-3 flex items-center justify-between text-xs">
         {myPick === null ? (
-          <p className="font-body text-club">Pick an answer — then talk it out.</p>
+          <p className="font-body text-club">
+            Pick an answer — then talk it out.
+          </p>
         ) : disagree ? (
           <p className="font-semibold font-body text-club">
             They picked differently — hash it out in the chat, then re-pick.

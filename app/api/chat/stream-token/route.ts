@@ -25,7 +25,9 @@ export async function POST() {
     .eq('id', user.id)
     .maybeSingle();
 
-  const primary = (profile?.photos ?? []).find((p: { is_primary: boolean }) => p.is_primary);
+  const primary = (profile?.photos ?? []).find(
+    (p: { is_primary: boolean }) => p.is_primary
+  );
   const photo = primary?.storage_path as string | undefined;
   const image = photo
     ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/${photo}`

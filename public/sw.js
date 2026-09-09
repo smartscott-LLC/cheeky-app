@@ -30,7 +30,7 @@ self.addEventListener('fetch', (event) => {
       try {
         const fresh = await fetch(request);
         if (fresh.ok) {
-          cache.put(request, fresh.clone());
+          void cache.put(request, fresh.clone());
         }
         return fresh;
       } catch {

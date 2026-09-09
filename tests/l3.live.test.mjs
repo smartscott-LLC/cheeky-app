@@ -86,7 +86,7 @@ async function pick(token, target, choice) {
   return rpc(token, 'create_l3_pick', { p_target: target, p_choice: choice });
 }
 
-test(
+void test(
   'L³ tier engine (live)',
   { skip: !RUN_LIVE && 'set RUN_LIVE_TESTS=1' },
   async (t) => {
@@ -104,7 +104,10 @@ test(
     t.after(async () => {
       const chunkIn = async (table, col, ids) => {
         for (let i = 0; i < ids.length; i += 100) {
-          await admin.from(table).delete().in(col, ids.slice(i, i + 100));
+          await admin
+            .from(table)
+            .delete()
+            .in(col, ids.slice(i, i + 100));
         }
       };
       if (convIds.length) {
@@ -144,7 +147,13 @@ test(
       'l3_trio returns verified candidates with photos, never self, never re-picked',
       async () => {
         const caller = await makeUser(admin, anon, stamp, 'triocaller', 'lady');
-        const target = await makeUser(admin, anon, stamp, 'triotarget', 'gentleman');
+        const target = await makeUser(
+          admin,
+          anon,
+          stamp,
+          'triotarget',
+          'gentleman'
+        );
         userIds.push(caller.id, target.id);
         await addPhoto(admin, caller.id);
         await addPhoto(admin, target.id);

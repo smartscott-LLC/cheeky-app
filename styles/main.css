@@ -1,11 +1,10 @@
-@import "https://github.com/google/fonts/raw/main/ofl/fascinate/Fascinate-Regular.ttf";
-@import "https://github.com/google/fonts/raw/main/ofl/damion/Damion-Regular.ttf";
-@import "https://github.com/google/fonts/raw/main/apache/rancho/Rancho-Regular.ttf";
+@import 'https://github.com/google/fonts/raw/main/ofl/fascinate/Fascinate-Regular.ttf';
+@import 'https://github.com/google/fonts/raw/main/ofl/damion/Damion-Regular.ttf';
+@import 'https://github.com/google/fonts/raw/main/apache/rancho/Rancho-Regular.ttf';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 *:focus:not(ol) {
   @apply outline-none ring-2 ring-club/50;
@@ -21,21 +20,20 @@ html {
 }
 
 .fascinate-regular {
-  font-family: "Fascinate", system-ui;
+  font-family: 'Fascinate', system-ui;
   font-weight: 400;
   font-style: normal;
 }
 .damion-regular {
-  font-family: "Damion", cursive;
+  font-family: 'Damion', cursive;
   font-weight: 400;
   font-style: normal;
 }
 .rancho-regular {
-  font-family: "Rancho", cursive;
+  font-family: 'Rancho', cursive;
   font-weight: 400;
   font-style: normal;
 }
-
 
 /* Single-weight display fonts (Fascinate/Damion/Rancho) — never fake-bold
    them; the type tiers are applied explicitly per element (font-hero/text-gold,
@@ -75,11 +73,7 @@ p a {
     opacity: var(--op, 0.5);
   }
   30% {
-    transform: translate3d(
-        calc(var(--drift, 20px) * -0.6),
-        -30vh,
-        0
-      )
+    transform: translate3d(calc(var(--drift, 20px) * -0.6), -30vh, 0)
       rotate(calc(var(--rot, 0deg) + 10deg));
   }
   60% {
@@ -153,7 +147,7 @@ p a {
   --color-damion: #66ffff;
 
   --font-rancho: 'Rancho', cursive;
-  --color-rancho: #FFB5FF;
+  --color-rancho: #ffb5ff;
 }
 
 /* Utility Classes (Applies Font + Matching Color) */

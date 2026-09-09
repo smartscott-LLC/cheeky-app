@@ -31,7 +31,10 @@ console.log('found', ids.length, 'leftover test members');
 
 const chunkIn = async (table, col, list) => {
   for (let i = 0; i < list.length; i += 100) {
-    await admin.from(table).delete().in(col, list.slice(i, i + 100));
+    await admin
+      .from(table)
+      .delete()
+      .in(col, list.slice(i, i + 100));
   }
 };
 

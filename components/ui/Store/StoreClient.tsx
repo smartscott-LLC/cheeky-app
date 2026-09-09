@@ -90,14 +90,15 @@ export default function StoreClient({
           <h2 className="font-header text-cyan text-xl">💳 Your card</h2>
           <p className="text-sm font-body text-club">
             Your tab:{' '}
-            <span className="font-bold font-body text-club">{tokenBalance} tokens</span>
+            <span className="font-bold font-body text-club">
+              {tokenBalance} tokens
+            </span>
           </p>
         </div>
         <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {memberships.map((product) => {
             const price =
-              product.prices.find((p) => p.interval_count) ??
-              product.prices[0];
+              product.prices.find((p) => p.interval_count) ?? product.prices[0];
             if (!price) return null;
             const isCurrent = subscriptionName === product.name;
             return (
@@ -105,7 +106,9 @@ export default function StoreClient({
                 key={product.id}
                 className="flex flex-col rounded-xl border border-zinc-800 bg-zinc-900/60 p-6"
               >
-                <h3 className="font-header text-cyan text-lg">{product.name}</h3>
+                <h3 className="font-header text-cyan text-lg">
+                  {product.name}
+                </h3>
                 <p className="mt-1 flex-1 text-sm font-body text-club">
                   {product.description}
                 </p>

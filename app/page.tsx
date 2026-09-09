@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Pricing from '@/components/ui/Pricing/Pricing';
 import FloatingHearts from '@/components/ui/FloatingHearts/FloatingHearts';
 import { createClient } from '@/utils/supabase/server';
@@ -106,12 +107,12 @@ export default async function LandingPage() {
             to get your groove on — money buys floors, never entry.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <a
+            <Link
               href="/verify"
               className="rounded-lg bg-gold px-12 py-4 text-lg font-body uppercase tracking-[0.12em] text-black transition hover:bg-club-cotton"
             >
               Join now
-            </a>
+            </Link>
             <a
               href="#membership"
               className="rounded-lg border-2 border-gold px-10 py-4 text-lg font-body uppercase tracking-[0.12em]  text-club transition hover:bg-gold-700"
@@ -150,8 +151,12 @@ export default async function LandingPage() {
                 key={item.step}
                 className="rounded-xl border border-gold-700 bg-zinc-900/50 p-8"
               >
-                <p className="mt-3 text-base font-hero text-gold">{item.step}</p>
-                <h3 className="font-header text-cyan mt-3 text-2xl">{item.title}</h3>
+                <p className="mt-3 text-base font-hero text-gold">
+                  {item.step}
+                </p>
+                <h3 className="font-header text-cyan mt-3 text-2xl">
+                  {item.title}
+                </h3>
                 <p className=" mt-3 text-lg font-body text-club">{item.body}</p>
               </div>
             ))}
@@ -169,9 +174,19 @@ export default async function LandingPage() {
             Events, Icebreakers and Exclusives keep you in the spotlight.
           </h2>
           <p className=" mx-auto mt-5 max-w-xl text-xl font-body text-club">
-            Icebreakers give new matches running starts. Weekly exclusives ensure you never get bored. A generous free tier gives everyone a chance to find their next someone. The swag shop is always looking to equip our guests with the latest swag to give you the edge you need!
-
-            --- A direct quote from Club Cheeky’s very own Chaz Sterling (Club Manager) - “Club Cheeky isn’t just a dating hotspot, it’s a *love laboratory* where my DeepSeek-powered mojo turns ‘meh’ into ‘SHAGADELIC!’ I’ve got algorithms smoother than my chest hair, events hotter than my umbrella drinks, and matches so spot-on, you’d swear I spilled piña colada on the ‘Soulmate’ button. Come for the vibe, stay for the *velvet magic*—because nobody, and I mean *nobody*, leaves without a little extra groove in their heart. Oh, *behave!*” ---
+            Icebreakers give new matches running starts. Weekly exclusives
+            ensure you never get bored. A generous free tier gives everyone a
+            chance to find their next someone. The swag shop is always looking
+            to equip our guests with the latest swag to give you the edge you
+            need! --- A direct quote from Club Cheeky’s very own Chaz Sterling
+            (Club Manager) - “Club Cheeky isn’t just a dating hotspot, it’s a
+            *love laboratory* where my AGNES-powered mojo turns ‘meh’ into
+            ‘SHAGADELIC!’ I’ve got algorithms smoother than my chest hair,
+            events hotter than my umbrella drinks, and matches so spot-on, you’d
+            swear I spilled piña colada on the ‘Soulmate’ button. Come for the
+            vibe, stay for the *velvet magic*—because nobody, and I mean
+            *nobody*, leaves without a little extra groove in their heart. Oh,
+            *behave!*” ---
           </p>
         </div>
       </section>
@@ -214,10 +229,14 @@ export default async function LandingPage() {
                 />
                 <div className="p-6">
                   <div className={`h-3 w-3 rounded-full ${floor.color}`} />
-                  <h3 className="font-hero text-gold mt-4 text-2xl">{floor.name}</h3>
+                  <h3 className="font-hero text-gold mt-4 text-2xl">
+                    {floor.name}
+                  </h3>
                   <ul className="font-header mt-4 space-y-2 text-base text-cyan">
                     {floor.perks.map((perk) => (
-                      <li key={perk} className=" font-body text-club">• {perk}</li>
+                      <li key={perk} className=" font-body text-club">
+                        • {perk}
+                      </li>
                     ))}
                   </ul>
                 </div>

@@ -49,7 +49,7 @@ export default function Concierge() {
   };
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    void supabase.auth.getSession().then(({ data }) => {
       setSignedIn(Boolean(data.session));
     });
   }, [supabase]);
@@ -70,7 +70,7 @@ export default function Concierge() {
   // Unread character-moment badge on the corner button.
   useEffect(() => {
     if (!signedIn) return;
-    (async () => {
+    void (async () => {
       const {
         data: { user }
       } = await supabase.auth.getUser();
@@ -104,7 +104,7 @@ export default function Concierge() {
     setOpen(next);
     if (next) {
       // Opening the club reads the messages — clear the badge.
-      (async () => {
+      void (async () => {
         const {
           data: { user }
         } = await supabase.auth.getUser();
@@ -251,7 +251,9 @@ export default function Concierge() {
               </div>
             ))}
             {busy && (
-              <p className="text-sm font-body text-club">{TYPING[typingIdx]}…</p>
+              <p className="text-sm font-body text-club">
+                {TYPING[typingIdx]}…
+              </p>
             )}
           </div>
 

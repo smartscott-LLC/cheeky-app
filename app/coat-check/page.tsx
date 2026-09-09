@@ -129,8 +129,12 @@ export default async function CoatCheckPage() {
                       : 'border-zinc-800 bg-zinc-900/30 opacity-50 grayscale'
                   }`}
                 >
-                  <p className="font-body font-body text-club text-4xl">{g.emoji}</p>
-                  <p className="font-body font-body text-club mt-2 font-bold">{g.name}</p>
+                  <p className="font-body font-body text-club text-4xl">
+                    {g.emoji}
+                  </p>
+                  <p className="font-body font-body text-club mt-2 font-bold">
+                    {g.name}
+                  </p>
                   <p className="font-body font-body text-club text-[12px] uppercase tracking-[0.25em]">
                     {g.rarity}
                   </p>
@@ -170,8 +174,12 @@ export default async function CoatCheckPage() {
                       : 'border-zinc-800 bg-zinc-900/30 opacity-50 grayscale'
                   }`}
                 >
-                  <p className="font-body font-body text-club text-4xl">{b.emoji}</p>
-                  <p className="font-body font-body text-club mt-2 font-bold">{b.name}</p>
+                  <p className="font-body font-body text-club text-4xl">
+                    {b.emoji}
+                  </p>
+                  <p className="font-body font-body text-club mt-2 font-bold">
+                    {b.name}
+                  </p>
                   <p className="font-body font-body text-club mt-1 text-[13px]">
                     {owned
                       ? badgeDate(b.id)
@@ -189,7 +197,9 @@ export default async function CoatCheckPage() {
           {/* The stash */}
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
             <h2 className="font-header text-cyan">🎁 The stash</h2>
-            <p className="font-body font-body text-club text-base">Gifts waiting to go out.</p>
+            <p className="font-body font-body text-club text-base">
+              Gifts waiting to go out.
+            </p>
             <div className="mt-3 space-y-2">
               {stash.length === 0 && (
                 <p className="font-body font-body text-club text-base">
@@ -197,7 +207,10 @@ export default async function CoatCheckPage() {
                 </p>
               )}
               {stash.map((s) => (
-                <p key={s.id} className="font-body font-body text-club text-base">
+                <p
+                  key={s.id}
+                  className="font-body font-body text-club text-base"
+                >
                   {s.emoji} {s.name}
                 </p>
               ))}
@@ -228,14 +241,20 @@ export default async function CoatCheckPage() {
                     ? c.matches.user_id_b
                     : c.matches.user_id_a;
                 return (
-                  <p key={c.id} className="font-body font-body text-club text-base">
+                  <p
+                    key={c.id}
+                    className="font-body font-body text-club text-base"
+                  >
                     🏅 Certificate — {partnerName(partnerId)} ·{' '}
                     {new Date(c.issued_at).toLocaleDateString()}
                   </p>
                 );
               })}
               {(interestRows ?? []).map((i) => (
-                <p key={i.id} className="font-body font-body text-club text-base">
+                <p
+                  key={i.id}
+                  className="font-body font-body text-club text-base"
+                >
                   ⭐ {partnerName(i.interest_user_id)} — special interest
                 </p>
               ))}
@@ -278,11 +297,17 @@ export default async function CoatCheckPage() {
                       </span>
                     )}
                   </div>
-                  <p className="font-body font-body text-club mt-2 text-base font-bold">{c.name}</p>
-                  <p className="font-body font-body text-club text-[13px]">{c.role}</p>
+                  <p className="font-body font-body text-club mt-2 text-base font-bold">
+                    {c.name}
+                  </p>
+                  <p className="font-body font-body text-club text-[13px]">
+                    {c.role}
+                  </p>
                   <p className="font-body font-body text-club mt-1 text-sm">
                     {level > 0 ? (
-                      <span className="font-body font-body text-club">Bond level {level}</span>
+                      <span className="font-body font-body text-club">
+                        Bond level {level}
+                      </span>
                     ) : (
                       <span className="text-cyan">Not bonded yet</span>
                     )}

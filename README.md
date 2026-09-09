@@ -21,11 +21,11 @@ Club Cheeky is a nightclub, not a menu. Members walk a real building:
 | 🎁 The Gift Shop           | `/gifts`                     | Buy gifts with tokens and send them to members.                                                                                                                                             |
 | 🧥 Coat Check              | `/coat-check`                | Gems, badges, your daily streak, and crew bonds.                                                                                                                                            |
 | 🎟️ Swag Shop               | `/swag`                      | Redeem giveaway codes (SWAG-XXXXXXXX) — always in the nav.                                                                                                                                  |
-| ⚡ The Spark List          | `/browse`                    | The spark hub — Swipes (the 1-for-1), L³ (Leave · Like · Love), and Matchmaker (the memory board that unlocks first impressions). Filtered by mutual dating preference. |
+| ⚡ The Spark List          | `/browse`                    | The spark hub — Swipes (the 1-for-1), L³ (Leave · Like · Love), and Matchmaker (the memory board that unlocks first impressions). Filtered by mutual dating preference.                     |
 | 💬 Cheeky Chats            | `/messages`                  | Conversations, waves, Date Night with matches.                                                                                                                                              |
 | 👤 Account                 | `/account`                   | Your card (grant-aware), avatar name, one-liner, photos, billing.                                                                                                                           |
 | 🔑 Owner's back door       | `/owner`                     | The founder's booth — swag codes, grants, flags (owner account only).                                                                                                                       |
-| 🍸 The Cheeky Lounge       | everywhere                   | The always-available chat overlay — five rooms (Global + the floors), realtime, the Horn, chat badges. The town square.                                                                      |
+| 🍸 The Cheeky Lounge       | everywhere                   | The always-available chat overlay — five rooms (Global + the floors), realtime, the Horn, chat badges. The town square.                                                                     |
 
 ### The three pillars
 
@@ -73,7 +73,7 @@ report/block from any chat, honeypots for bots.
 - **Supabase** — auth, Postgres with **Row Level Security on every table**,
   migrations, generated types.
 - **Stripe** — subscriptions, checkout, and Identity (verification).
-- **DeepSeek** (`/api/agent`) — the crew's brains; persona prompts live in
+- **AGNES** (`/api/agent`) — the crew's brains; persona prompts live in
   the `characters` table.
 - **Vercel** — the only build gate: every push to `main` builds, deploys,
   and fails loud.
@@ -98,7 +98,7 @@ pnpm stripe:listen                 # forward webhooks to localhost:3000/api/webh
 pnpm stripe:fixtures               # bootstrap products/prices from fixtures/
 ```
 
-The crew's chat needs `DEEPSEEK_API_KEY`. Verification needs real Stripe
+The crew's chat needs `AGNES_API_KEY`. Verification needs real Stripe
 keys.
 
 ## Environment variables
@@ -108,18 +108,18 @@ The full set (see `.env.local.example` for the core local-dev values).
 `.env.local` (for `pnpm dev`) is generated from it with
 `node scripts/sync-env.mjs`.
 
-| Variable                                                                             | Used for                                                                                                      |
-| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_SITE_URL`                                                               | Canonical site URL                                                                                            |
-| `NEXT_PUBLIC_SUPABASE_URL` · `NEXT_PUBLIC_SUPABASE_ANON_KEY`                         | Client (anon key only)                                                                                        |
-| `SUPABASE_SERVICE_ROLE_KEY`                                                          | Server-only writes (never in client code)                                                                     |
-| `SUPABASE_ANON_KEY` · `SUPABASE_JWT_SECRET`                                          | Local dev / server auth helpers                                                                               |
-| `POSTGRES_URL` (+ `_NON_POOLING`, `_PRISMA_URL`, `_DATABASE`, `_PASSWORD`, `_HOST`)  | Hosted Postgres                                                                                               |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` · `STRIPE_SECRET_KEY` · `STRIPE_WEBHOOK_SECRET` | Stripe                                                                                                        |
-| `DEEPSEEK_API_KEY`                                                                   | `/api/agent` — the crew's chat engine                                                                         |
-| `OPENROUTER_API_KEY`                                                                 | DateSafe — the image-review watchdog (vision model)                                                           |
-| `RESEND_API_KEY` · `REGISTERED_DOMAIN`                                               | Transactional mail — welcome, apology, ban notices                                                            |
-| `VERCEL_OIDC_TOKEN`                                                                  | Created by `vercel link` for CI builds                                                                        |
+| Variable                                                                             | Used for                                            |
+| ------------------------------------------------------------------------------------ | --------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`                                                               | Canonical site URL                                  |
+| `NEXT_PUBLIC_SUPABASE_URL` · `NEXT_PUBLIC_SUPABASE_ANON_KEY`                         | Client (anon key only)                              |
+| `SUPABASE_SERVICE_ROLE_KEY`                                                          | Server-only writes (never in client code)           |
+| `SUPABASE_ANON_KEY` · `SUPABASE_JWT_SECRET`                                          | Local dev / server auth helpers                     |
+| `POSTGRES_URL` (+ `_NON_POOLING`, `_PRISMA_URL`, `_DATABASE`, `_PASSWORD`, `_HOST`)  | Hosted Postgres                                     |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` · `STRIPE_SECRET_KEY` · `STRIPE_WEBHOOK_SECRET` | Stripe                                              |
+| `AGNES_API_KEY`                                                                      | `/api/agent` — the crew's chat engine               |
+| `OPENROUTER_API_KEY`                                                                 | DateSafe — the image-review watchdog (vision model) |
+| `RESEND_API_KEY` · `REGISTERED_DOMAIN`                                               | Transactional mail — welcome, apology, ban notices  |
+| `VERCEL_OIDC_TOKEN`                                                                  | Created by `vercel link` for CI builds              |
 
 ## Scripts
 

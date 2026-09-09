@@ -7,7 +7,7 @@ on:
 
 # Public-only envs — the build may read these at prerender time. They are
 # public by design (they ship in the client bundle). Real secrets (service
-# role, Stripe, DeepSeek, OpenRouter, Sentry auth) never enter CI.
+# role, Stripe, AGNES, OpenRouter, Sentry auth) never enter CI.
 env:
   NEXT_PUBLIC_SITE_URL: https://smartscott.online
   NEXT_PUBLIC_SUPABASE_URL: https://ioqeddpgdilyyajsygmz.supabase.co

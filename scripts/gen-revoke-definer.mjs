@@ -39,10 +39,14 @@ const rows = await sql`
 const parts = [];
 let count = 0;
 for (const r of rows) {
-  const exposed = /(^|,)PUBLIC(,|$)/.test(r.exec_roles) || /(^|,)anon(,|$)/.test(r.exec_roles);
+  const exposed =
+    /(^|,)PUBLIC(,|$)/.test(r.exec_roles) ||
+    /(^|,)anon(,|$)/.test(r.exec_roles);
   if (!exposed) continue;
   count++;
-  parts.push(`revoke execute on function public.${r.proname}(${r.args}) from anon, public;`);
+  parts.push(
+    `revoke execute on function public.${r.proname}(${r.args}) from anon, public;`
+  );
 }
 
 await sql.end();
@@ -57,7 +61,14 @@ const header = `-- Revoke anon/PUBLIC execute on security-definer RPCs (generate
 `;
 
 await writeFile(
-  join(process.cwd(), 'supabase', 'migrations', '20260808075000_revoke_anon_execute.sql'),
+  join(
+    process.cwd(),
+    'supabase',
+    'migrations',
+    '20260808075000_revoke_anon_execute.sql'
+  ),
   header + parts.join('\n') + '\n'
 );
-console.log(`Wrote 20260808075000_revoke_anon_execute.sql (${count} functions).`);
+console.log(
+  `Wrote 20260808075000_revoke_anon_execute.sql (${count} functions).`
+);

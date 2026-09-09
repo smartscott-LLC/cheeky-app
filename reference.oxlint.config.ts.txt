@@ -1,0 +1,24 @@
+import { defineConfig } from "oxlint";
+
+export default defineConfig({
+  plugins: ["typescript", "import", "unicorn"],
+  rules: {
+    // Catch actual bugs
+    "typescript/no-floating-promises": "error",
+    "typescript/no-unused-vars": "warn",
+    // Soundness — catches things like String(possiblyObject)
+    "typescript/no-base-to-string": "error",
+    "typescript/restrict-template-expressions": "error",
+    // Code quality
+    "no-useless-escape": "warn",
+    // API response types are inherently 'any' — suppress noise
+    "typescript/no-unsafe-assignment": "off",
+    // Import hygiene
+    "import/no-duplicates": "warn",
+    "unicorn/prefer-array-flat": "warn",
+  },
+  options: {
+    typeAware: true,
+    typeCheck: true,
+  },
+});

@@ -76,7 +76,14 @@ for (const r of rows) {
 }
 
 await writeFile(
-  join(process.cwd(), 'supabase', 'migrations', '20260808076000_revoke_member_definer.sql'),
+  join(
+    process.cwd(),
+    'supabase',
+    'migrations',
+    '20260808076000_revoke_member_definer.sql'
+  ),
   body
 );
-console.log(`Wrote 20260808076000_revoke_member_definer.sql (${rows.length} functions).`);
+console.log(
+  `Wrote 20260808076000_revoke_member_definer.sql (${rows.length} functions).`
+);

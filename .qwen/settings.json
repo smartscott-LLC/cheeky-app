@@ -135,7 +135,8 @@
       "Bash(cd *)",
       "Bash(tail *)",
       "Bash(grep *)",
-      "Bash(printf *)"
+      "Bash(printf *)",
+      "Bash(composio *)"
     ]
   },
   "$version": 4

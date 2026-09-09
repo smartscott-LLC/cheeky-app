@@ -43,16 +43,16 @@ export default async function StoryPage({
             night hasn&apos;t started yet.
           </p>
           <p className="font-body text-club mt-4 max-w-lg leading-relaxed">
-            Five floors. Five characters. One question — who will you be
-            when you reach the top?
+            Five floors. Five characters. One question — who will you be when
+            you reach the top?
           </p>
 
           <div className="mt-8 space-y-3 text-left">
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
               <p className="font-header text-cyan text-sm">🎭 Meet the Crew</p>
               <p className="font-body text-club mt-1 text-sm">
-                Brutus at the door, D34D_B34T on the decks, Roxy behind the
-                bar, Trixie working the room, Valentina at the top.
+                Brutus at the door, D34D_B34T on the decks, Roxy behind the bar,
+                Trixie working the room, Valentina at the top.
               </p>
             </div>
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
@@ -63,7 +63,9 @@ export default async function StoryPage({
               </p>
             </div>
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
-              <p className="font-header text-cyan text-sm">🧥 Unlock the Coat Check</p>
+              <p className="font-header text-cyan text-sm">
+                🧥 Unlock the Coat Check
+              </p>
               <p className="font-body text-club mt-1 text-sm">
                 Reach the rooftop and choose your persona — your vault keeper
                 for everything you collect.

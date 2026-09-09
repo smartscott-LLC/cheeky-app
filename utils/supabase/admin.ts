@@ -537,7 +537,9 @@ const grantMembershipTokens = async (
   const grant = membershipTokenGrant(productRow?.name);
   if (!grant) return; // not a membership (token pack, etc.)
 
-  const periodStartIso = toDateTime(subscription.current_period_start).toISOString();
+  const periodStartIso = toDateTime(
+    subscription.current_period_start
+  ).toISOString();
   const ref = membershipGrantRef(subscription.id, periodStartIso, price.id);
   const grantRank = membershipTierRank(grant.reason);
 
@@ -560,8 +562,7 @@ const grantMembershipTokens = async (
     reason: grant.reason,
     ref
   });
-  if (error)
-    console.error(`Membership grant failed: ${error.message}`);
+  if (error) console.error(`Membership grant failed: ${error.message}`);
   else
     console.log(
       `🎟️ Membership grant: +${grant.amount} (${grant.reason}) to ${uuid}`

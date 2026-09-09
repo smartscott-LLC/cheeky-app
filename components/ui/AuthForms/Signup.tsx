@@ -1,12 +1,11 @@
 'use client';
 
 import Button from '@/components/ui/Button';
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { signUp } from '@/utils/auth-helpers/server';
 import { handleRequest } from '@/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 // Define prop type with allowEmail boolean
 interface SignUpProps {
@@ -151,7 +150,10 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               <span>
                 I understand the club is in-app — meeting up or moving outside
                 the app is my choice, on me. Read the{' '}
-                <Link href="/best-practices" className="font-body text-club underline">
+                <Link
+                  href="/best-practices"
+                  className="font-body text-club underline"
+                >
                   Best Practices
                 </Link>{' '}
                 (v1).
@@ -179,13 +181,19 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
       </form>
       <p className="font-body text-club">Already have an account?</p>
       <p className="font-body text-club">
-        <Link href="/signin/password_signin" className="font-body text-club font-light text-sm">
+        <Link
+          href="/signin/password_signin"
+          className="font-body text-club font-light text-sm"
+        >
           Sign in with email and password
         </Link>
       </p>
       {allowEmail && (
         <p className="font-body text-club">
-          <Link href="/signin/email_signin" className="font-body text-club font-light text-sm">
+          <Link
+            href="/signin/email_signin"
+            className="font-body text-club font-light text-sm"
+          >
             Sign in via magic link
           </Link>
         </p>

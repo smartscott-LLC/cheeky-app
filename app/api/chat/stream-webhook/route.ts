@@ -8,9 +8,8 @@
 // Stream is the live transport; Supabase is the moderation log.
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
 import { supabaseAdmin } from '@/utils/supabase/admin';
-import { getStreamServer, streamEnabled } from '@/utils/stream/server';
+import { streamEnabled } from '@/utils/stream/server';
 import crypto from 'node:crypto';
 import zlib from 'node:zlib';
 
@@ -31,7 +30,10 @@ function verifySignature(
   secret: string
 ): boolean {
   if (!signature) return false;
-  const expected = crypto.createHmac('sha256', secret).update(body).digest('hex');
+  const expected = crypto
+    .createHmac('sha256', secret)
+    .update(body)
+    .digest('hex');
   const a = Buffer.from(signature, 'utf8');
   const b = Buffer.from(expected, 'utf8');
   return a.length === b.length && crypto.timingSafeEqual(a, b);
@@ -60,7 +62,9 @@ export async function POST(req: NextRequest) {
   }
 
   // Surfaces in Vercel logs.
-  console.log('[stream-webhook]', event.type, { webhookId: req.headers.get('x-webhook-id') });
+  console.log('[stream-webhook]', event.type, {
+    webhookId: req.headers.get('x-webhook-id')
+  });
 
   try {
     switch (event.type) {
@@ -117,9 +121,14 @@ function parseCid(event: StreamMessageNew): {
   channelId: string;
 } {
   const cid = event.cid ?? event.message?.cid ?? '';
-  const m = cid.match(/^messaging:(cheeky-(global|silver|gold|platinum|diamond))$/);
+  const m = cid.match(
+    /^messaging:(cheeky-(global|silver|gold|platinum|diamond))$/
+  );
   if (m) {
-    return { room: m[2] as 'global' | 'silver' | 'gold' | 'platinum' | 'diamond', channelId: m[1] };
+    return {
+      room: m[2] as 'global' | 'silver' | 'gold' | 'platinum' | 'diamond',
+      channelId: m[1]
+    };
   }
   return { room: null, channelId: event.channel_id ?? '' };
 }
@@ -132,7 +141,6 @@ async function mirrorMessageNew(event: StreamMessageNew) {
   // in their own channel and the existing conversations store covers
   // the moderation view there.
 
-  const supabase = await createClient();
   // Best-effort insert; Supabase enforces RLS so the service role is
   // used for the mirror so the policy is a no-op for us.
   await supabaseAdmin.from('club_chat_messages').insert({
@@ -164,7 +172,9 @@ async function mirrorMessageNew(event: StreamMessageNew) {
   }
 }
 
-async function mirrorMessageUpdate(event: { message?: { id?: string; deleted_at?: string } }) {
+async function mirrorMessageUpdate(event: {
+  message?: { id?: string; deleted_at?: string };
+}) {
   // The Supabase mirror uses an advisory unique on stream_message_id, so
   // we update in place. For now, only deletes are mirrored (soft delete).
   if (!event.message?.id) return;

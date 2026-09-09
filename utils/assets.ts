@@ -17,13 +17,7 @@
 import manifest from '@/utils/asset-manifest.json';
 
 export type AssetCategory =
-  | 'icons'
-  | 'brand'
-  | 'personas'
-  | 'coat-check'
-  | 'floors'
-  | 'audio'
-  | 'misc';
+  'icons' | 'brand' | 'personas' | 'coat-check' | 'floors' | 'audio' | 'misc';
 
 export interface AssetEntry {
   slug: string;
@@ -155,7 +149,7 @@ export const ASSETS = {
     swagShop: iconUrl('swag_shop'),
     velvetRope: iconUrl('velvet_rope'),
     vipLounge: iconUrl('vip_lounge'),
-    wink: iconUrl('wink'),
+    wink: iconUrl('wink')
   },
   brand: {
     entrance: brandUrl('entrance'),
@@ -164,13 +158,13 @@ export const ASSETS = {
     floorFree: brandUrl('floor-free'),
     floorGold: brandUrl('floor-gold'),
     floorPlatinum: brandUrl('floor-platinum'),
-    floorDiamond: brandUrl('floor-diamond'),
+    floorDiamond: brandUrl('floor-diamond')
   },
   floors: {
     silver: floorCardUrl('silver'),
     gold: floorCardUrl('gold'),
     platinum: floorCardUrl('platinum'),
-    diamond: floorCardUrl('diamond'),
+    diamond: floorCardUrl('diamond')
   },
   coatCheck: {
     sashaBlondeThai: coatCheckPersonaUrl('sasha-v2-blonde-thai'),
@@ -178,7 +172,7 @@ export const ASSETS = {
     sashaBlackHairEdgy: coatCheckPersonaUrl('sasha-v3-black-hair-edgy'),
     jaxDefault: coatCheckPersonaUrl('jax2'),
     jaxVaultkeeper: coatCheckPersonaUrl('jax-the-vaultkeeper'),
-    jaxSlickedBack: coatCheckPersonaUrl('jax-v2-slicked-back'),
+    jaxSlickedBack: coatCheckPersonaUrl('jax-v2-slicked-back')
   },
   personas: {
     brutus: personaUrl('brutus'),
@@ -193,13 +187,13 @@ export const ASSETS = {
     hostess: personaUrl('hostess'),
     hostessFullbody: personaUrl('hostess', 'fullbody'),
     chaz: personaUrl('chaz'),
-    chazStrut: personaUrl('chaz', 'strut'),
+    chazStrut: personaUrl('chaz', 'strut')
   },
   audio: {
     clubCheeky: `${ASSETS_BASE_URL}/audio/Club_Cheeky.mp3`,
     pressureGauge: `${ASSETS_BASE_URL}/audio/pressure-gauge.mp3`,
     solarFlareSummit: `${ASSETS_BASE_URL}/audio/solar-flare-summit.mp3`,
     aboveTheClouds: `${ASSETS_BASE_URL}/audio/above-the-clouds.mp3`,
-    finalAscent: `${ASSETS_BASE_URL}/audio/final-ascent.mp3`,
-  },
+    finalAscent: `${ASSETS_BASE_URL}/audio/final-ascent.mp3`
+  }
 } as const;

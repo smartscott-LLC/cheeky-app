@@ -10,7 +10,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { isTaskbarHidden } from '@/utils/taskbar';
+import { isTaskbarHidden } from '../../../utils/taskbar';
 
 interface Tile {
   key: string;
@@ -35,7 +35,11 @@ interface Prefs {
 const PREFS_KEY = 'tiki:prefs';
 const REFRESH_MS = 60_000;
 
-const DEFAULT_PREFS: Prefs = { hidden: false, collapsed: false, position: 'bottom' };
+const DEFAULT_PREFS: Prefs = {
+  hidden: false,
+  collapsed: false,
+  position: 'bottom'
+};
 
 function loadPrefs(): Prefs {
   if (typeof window === 'undefined') return DEFAULT_PREFS;
@@ -78,14 +82,15 @@ export default function TikiTaskbar() {
 
   // Refetch on mount and every navigation (the bar lives in the layout,
   // so it doesn't re-render with the page — this is how it stays current).
+  // oxlint-disable-next-line react(set-state-in-effect)
   useEffect(() => {
-    fetchState();
+    void fetchState();
   }, [fetchState, pathname]);
 
   // Light poll + refocus refresh; pause while the tab is hidden.
   useEffect(() => {
     const timer = setInterval(() => {
-      if (document.visibilityState === 'visible') fetchState();
+      if (document.visibilityState === 'visible') void fetchState();
     }, REFRESH_MS);
     const onFocus = () => fetchState();
     window.addEventListener('focus', onFocus);
@@ -133,7 +138,7 @@ export default function TikiTaskbar() {
           {/* Label — centered over the bar, small. Controls hug the corner. */}
           <div className="relative pr-20">
             <h2 className="font-hero text-gold text-sm tracking-wide sm:text-base">
-             Tiki Taskbar
+              Tiki Taskbar
             </h2>
             <div className="absolute right-0 top-0 flex items-center gap-1 text-zinc-500">
               <button
@@ -144,7 +149,11 @@ export default function TikiTaskbar() {
                   })
                 }
                 className="rounded px-1 py-0.5 text-[10px] transition hover:text-cyan"
-                title={prefs.position === 'top' ? 'Move to the bottom' : 'Move to the top'}
+                title={
+                  prefs.position === 'top'
+                    ? 'Move to the bottom'
+                    : 'Move to the top'
+                }
               >
                 ⇅
               </button>

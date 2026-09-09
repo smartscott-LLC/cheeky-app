@@ -36,13 +36,13 @@ export default function SparkLab({ spark }: { spark: ReactNode }) {
       </p>
     ) : mode === 'l3' ? (
       <p className="mx-auto mt-4 max-w-xl text-center text-base font-body text-club">
-        Three faces at once. Rank them — Leave, Like, Love — then the next trio. Mutual Love is
-        a super match.
+        Three faces at once. Rank them — Leave, Like, Love — then the next trio.
+        Mutual Love is a super match.
       </p>
     ) : (
       <p className="mx-auto mt-4 max-w-xl text-center text-base font-body text-club">
-        16 cards, 8 faces. Match a pair — unlock a first impression to that person, even if they
-        never liked you back.
+        16 cards, 8 faces. Match a pair — unlock a first impression to that
+        person, even if they never liked you back.
       </p>
     );
 
@@ -51,32 +51,39 @@ export default function SparkLab({ spark }: { spark: ReactNode }) {
       <div className="mx-auto mt-3 max-w-xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 text-sm font-body text-club">
         <p>
           <span className="font-bold text-cyan">Like + Like</span> or{' '}
-          <span className="font-bold text-cyan">Like + Love</span> — a match with{' '}
-          <span className="font-bold">5 free messages each</span>.
+          <span className="font-bold text-cyan">Like + Love</span> — a match
+          with <span className="font-bold">5 free messages each</span>.
         </p>
         <p className="mt-2">
-          <span className="font-bold text-gold">Love + Love</span> — the super match:{' '}
-          <span className="font-bold">5 free messages each + a gift</span> from the club.
+          <span className="font-bold text-gold">Love + Love</span> — the super
+          match:{' '}
+          <span className="font-bold">5 free messages each + a gift</span> from
+          the club.
         </p>
         <p className="mt-2">
-          Anyone in a trio can be from any floor — and a mutual Love crosses floors. Leave
-          is silent, always.
+          Anyone in a trio can be from any floor — and a mutual Love crosses
+          floors. Leave is silent, always.
         </p>
       </div>
     ) : mode === 'matchmaker' ? (
       <div className="mx-auto mt-3 max-w-xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 text-sm font-body text-club">
         <p>
-          <span className="font-bold text-gold">2 matches win</span>, 3 strikes lose. Matching a
-          pair earns one first impression — it never touches your message limits.
+          <span className="font-bold text-gold">2 matches win</span>, 3 strikes
+          lose. Matching a pair earns one first impression — it never touches
+          your message limits.
         </p>
         <p className="mt-2">
-          Accepting opens the chat. A decline stays silent — but you still won the game:{' '}
-          <span className="font-bold text-gold">a Matchmaker-exclusive gift</span>, one per
-          floor, never for sale, lands in your inventory.
+          Accepting opens the chat. A decline stays silent — but you still won
+          the game:{' '}
+          <span className="font-bold text-gold">
+            a Matchmaker-exclusive gift
+          </span>
+          , one per floor, never for sale, lands in your inventory.
         </p>
         <p className="mt-2">
-          Plays per day by floor: <span className="font-bold">2 / 3 / 4 / 5</span>. No tokens —
-          the intro is earned by play.
+          Plays per day by floor:{' '}
+          <span className="font-bold">2 / 3 / 4 / 5</span>. No tokens — the
+          intro is earned by play.
         </p>
       </div>
     ) : null;

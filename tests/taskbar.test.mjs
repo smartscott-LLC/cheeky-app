@@ -10,7 +10,7 @@ import {
   tilesForRank
 } from '../utils/taskbar.ts';
 
-test('the bar carries every hard-capped allowance — no hourly/token-only items', () => {
+void test('the bar carries every hard-capped allowance — no hourly/token-only items', () => {
   const keys = Object.keys(TASKBAR_TILES).sort();
   assert.deepEqual(keys, [
     'blind',
@@ -30,9 +30,16 @@ test('the bar carries every hard-capped allowance — no hourly/token-only items
   );
 });
 
-test('tile expansion: silver sees the spark hub + gifts; gold adds Blind Date', () => {
+void test('tile expansion: silver sees the spark hub + gifts; gold adds Blind Date', () => {
   const silver = tilesForRank(0).map((t) => t.key);
-  assert.deepEqual(silver, ['chats', 'swipes', 'l3', 'matchmaker', 'gifts', 'coat']);
+  assert.deepEqual(silver, [
+    'chats',
+    'swipes',
+    'l3',
+    'matchmaker',
+    'gifts',
+    'coat'
+  ]);
   const gold = tilesForRank(1).map((t) => t.key);
   assert.deepEqual(gold, [
     'chats',
@@ -44,14 +51,17 @@ test('tile expansion: silver sees the spark hub + gifts; gold adds Blind Date', 
     'coat'
   ]);
   // Every tier from gold up sees the same full set (numbers vary by cap).
-  assert.deepEqual(tilesForRank(3).map((t) => t.key), gold);
+  assert.deepEqual(
+    tilesForRank(3).map((t) => t.key),
+    gold
+  );
 });
 
-test('Matchmaker is live (un-gated) now that the dial is locked', () => {
+void test('Matchmaker is live (un-gated) now that the dial is locked', () => {
   assert.equal(TASKBAR_TILES.matchmaker.shipped, undefined);
 });
 
-test('tier caps mirror the enforcement ladder + the plays dial + blind-date cap', () => {
+void test('tier caps mirror the enforcement ladder + the plays dial + blind-date cap', () => {
   assert.deepEqual(TIER_CAPS.silver, {
     messages: 30,
     people: 5,
@@ -82,7 +92,7 @@ test('tier caps mirror the enforcement ladder + the plays dial + blind-date cap'
   });
 });
 
-test('rank + caps mapping is forgiving', () => {
+void test('rank + caps mapping is forgiving', () => {
   assert.equal(rankForTier('silver'), 0);
   assert.equal(rankForTier('diamond'), 3);
   assert.equal(rankForTier(null), 0);
@@ -91,7 +101,7 @@ test('rank + caps mapping is forgiving', () => {
   assert.equal(capsForTier('bogus').messages, 30);
 });
 
-test('route gating hides only the street/door/office/auth — never the club', () => {
+void test('route gating hides only the street/door/office/auth — never the club', () => {
   // The regression: startsWith('/') matched every route and hid the bar
   // everywhere. '/' is exact; everything else is prefix-matched.
   assert.equal(isTaskbarHidden('/'), true, 'landing hidden');
