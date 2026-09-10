@@ -203,6 +203,7 @@ export default function FloorPageLayout({
                   <img
                     src={ASSETS.icons.star}
                     alt={aiChatImage}
+                    alt-2={FLOOR_CHARACTER}
                     className="h-14 w-14 object-cover"
                   />
                 </div>
