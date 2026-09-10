@@ -17,7 +17,7 @@ const config: Config = {
     colors: {
       gold: { DEFAULT: '#FFD800' },
       cyan: { DEFAULT: '#66FFFF' },
-      club: { DEFAULT: '#FFB5FF' }
+      club: { DEFAULT: '#FF97FF' }
     },
     keyframes: {
       'accordion-down': {
