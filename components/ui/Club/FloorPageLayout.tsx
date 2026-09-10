@@ -38,7 +38,7 @@ export default function FloorPageLayout({
   floorTagline,
   floorSlug,
   eventSlug,
-  eventLabel = 'Floor Event',
+  eventLabel,
   centerActionIcon,
   centerActionHref,
   rightBottomHref = '/events',
@@ -47,12 +47,12 @@ export default function FloorPageLayout({
 }: FloorPageLayoutProps) {
   const eventHref = eventSlug ? `/events/${eventSlug}` : `/events`;
   const centerHref = centerActionHref || eventHref;
-  const aiChatImage = FLOOR_CHARACTER[floorSlug] || ASSETS.personas.brutus;
-  const centerIcon = centerActionIcon || ASSETS.icons.danceFloor;
+  const aiChatImage = floorSlug || ASSETS.icons.star;
+  const centerIcon = centerActionIcon || ASSETS.icons.neonHeartSign;
   const bottomRightIcon = rightBottomIcon || ASSETS.icons.wink;
 
   return (
-    <div className="relative flex flex-1 flex-col bg-black">
+    <div className="relative flex flex-1 flex-col inset-0 bg-black">
       {/* Background image — fills entire page */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -62,20 +62,20 @@ export default function FloorPageLayout({
       />
       <div className="fixed inset-0 bg-black/55" />
 
-      {/* Content layer */}
-      <div className="relative z-6 flex flex-1 flex-col">
+      {/* Content layer — pb-32 pushes past the fixed overlay so the footer is visible */}
+      <div className="relative z-6 flex flex-1 flex-col inset-0">
         {/* Top Box — 10% height, 100% width */}
-        <div className="flex top flex-col px-3">
+        <div className="flex justify-items-start flex-col px-3 inset-0">
           {/* Ticker — centered */}
           <div className="mb-1">
             <AnnouncementBanner />
           </div>
           {/* Floor name — Damion font */}
-          <p className="font-header text-cyan text-center text-lg uppercase tracking-[0.3em] md:text-xl">
+          <p className="font-header text-cyan text-center text-2xl uppercase tracking-[0.3em]">
             The {floorName} floor
           </p>
           {/* Brief description — Rancho font */}
-          <p className="font-body text-club mx-auto mt-1 max-w-xl text-center text-base">
+          <p className="font-body text-club mx-auto mt-1 max-w-xl text-xl text-center">
             {floorTagline}
           </p>
         </div>
@@ -123,29 +123,29 @@ export default function FloorPageLayout({
                 href="/messages"
                 className="group flex flex-col items-center gap-1"
               >
-                <div className="flex h-15 w-15 items-center justify-center overflow-hidden rounded-full bg-black/20 transition group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(255,215,0,0.3)]">
+                <div className="flex h-15 w-40 items-center justify-center overflow-x-visible rounded-full bg-black/20 transition group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(255,215,0,0.3)]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={ASSETS.icons.cheekyChats}
                     alt="Chats"
-                    className="h-15 w-15 object-contain"
+                    className="h-15 w-40 object-fit"
                   />
                 </div>
-                <span className="font-body text-club text-xs">Chats</span>
+                <span className="font-body text-club text-lg">CHATS</span>
               </Link>
               <Link
                 href="/browse"
                 className="group flex flex-col items-center gap-1"
               >
-                <div className="flex h-15 w-15 items-center justify-center overflow-hidden rounded-full bg-black/20 transition group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(255,215,0,0.3)]">
+                <div className="flex h-15 w-40 items-center justify-center overflow-x-visible rounded-full bg-black/20 transition group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(255,215,0,0.3)]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={ASSETS.icons.sparkList}
                     alt="SPARX"
-                    className="h-15 w-15 object-contain"
+                    className="h-15 w-40 object-fit"
                   />
                 </div>
-                <span className="font-body text-club text-xs">SPARX</span>
+                <span className="font-body text-club text-lg">SPARX</span>
               </Link>
             </div>
 
@@ -155,15 +155,15 @@ export default function FloorPageLayout({
                 href={centerHref}
                 className="group flex flex-col items-center gap-1"
               >
-                <div className="flex h-15 w-15 items-center justify-center overflow-hidden rounded-full bg-black/20 transition group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(255,215,0,0.3)]">
+                <div className="flex h-30 w-40 items-center justify-center overflow-x-visible rounded-full bg-black/20 transition group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(255,215,0,0.3)]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={centerIcon}
+                    src={ASSETS.icons.neonHeartSign}
                     alt={eventLabel}
-                    className="h-15 w-15 object-contain"
+                    className="h-30 w-40 object-fit"
                   />
                 </div>
-                <span className="font-body text-club text-xs">
+                <span className="font-body text-club text-lg">
                   {eventLabel}
                 </span>
               </Link>
@@ -173,7 +173,7 @@ export default function FloorPageLayout({
           {/* ─── Column 3 — 1/3 width: Right ─── */}
           <div className="relative hidden w-1/3 md:block">
             {/* 4 circular buttons — stick to right, hit top */}
-            <div className="absolute right-4 flex flex-col items-end gap-4">
+            <div className="absolute right-4 flex flex-col items-end gap-2">
               {/* Elevators — velvet rope icon */}
               <Link
                 href="/floors"
@@ -188,7 +188,7 @@ export default function FloorPageLayout({
                     className="h-14 w-14 object-cover"
                   />
                 </div>
-                <span className="font-body text-center text-club text-xs">
+                <span className="font-body text-center text-club text-md">
                   Elevators
                 </span>
               </Link>
@@ -200,12 +200,12 @@ export default function FloorPageLayout({
                 <div className="flex h-14 w-14 items-right justify-center overflow-hidden rounded-full bg-black transition group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(255,215,0,0.3)]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={aiChatImage}
+                    src={ASSETS.icons.star}
                     alt="AI Chat"
                     className="h-14 w-14 object-cover"
                   />
                 </div>
-                <span className="font-body text-center text-club text-xs">
+                <span className="font-body text-center text-club text-md">
                   AI Chat
                 </span>
               </Link>
@@ -222,7 +222,7 @@ export default function FloorPageLayout({
                     className="h-14 w-14 object-contain"
                   />
                 </div>
-                <span className="font-body text-center text-club text-xs">
+                <span className="font-body text-center text-club text-md">
                   Gift Store
                 </span>
               </Link>
@@ -234,12 +234,12 @@ export default function FloorPageLayout({
                 <div className="flex h-14 w-14 items-right justify-center overflow-hidden rounded-full bg-black/70 backdrop-blur-sm transition group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(255,215,0,0.3)]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={bottomRightIcon}
+                    src={ASSETS.icons.wink}
                     alt={rightBottomLabel}
                     className="h-14 w-14 object-contain"
                   />
                 </div>
-                <span className="font-body text-center text-club text-xs">
+                <span className="font-body text-center text-club text-md">
                   {rightBottomLabel}
                 </span>
               </Link>

@@ -64,15 +64,11 @@ export default function Navlinks({ user }: NavlinksProps) {
       {/* Meet the crew — centered between the logo and the right group */}
       <Link
         href="/crew"
-        className="mx-auto hidden rounded-full border border-gold/50 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-gold transition hover:border-gold hover:bg-gold/10 md:inline-flex"
+        className="mx-auto hidden rounded-full border border-gold/50 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-gold transition hover:border-gold hover:bg-gold/10 sm:inline-flex"
       >
         Meet the Crew
       </Link>
       <nav className="ml-auto flex items-center gap-1 lg:gap-2">
-        {/* Mobile: the crew link rides with the rest of the links */}
-        <Link href="/crew" className={`${s.link} md:hidden`}>
-          Meet the Crew
-        </Link>
         {user ? (
           <>
             {/* The Exchange — cards and tokens, on every floor */}

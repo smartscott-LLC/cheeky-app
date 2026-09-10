@@ -38,7 +38,7 @@ export default function FloorLayout({
   children
 }: FloorLayoutProps) {
   return (
-    <div className="relative mx-auto aspect-[16/9] w-full max-w-6xl overflow-hidden">
+    <div className="relative mx-auto aspect-ratio 16/9 w-full max-w-6xl overflow-hidden">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={background}
@@ -53,7 +53,7 @@ export default function FloorLayout({
           <Link
             key={spot.name}
             href={spot.href}
-            className={`absolute ${spot.pos} group rounded-xl border border-gold bg-black/70 px-5 py-4 backdrop-blur-sm transition hover:bg-black/85 ${spot.color}`}
+            className={`absolute ${spot.pos} group rounded-xl border border-gold bg-black/70 px-2 py-2 backdrop-blur-sm transition hover:bg-black/85 ${spot.color}`}
           >
             <p className="font-body text-club text-2xl">
               {spot.image ? (
