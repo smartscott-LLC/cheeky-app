@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { stripe } from '@/utils/stripe/config';
+import { getStripe } from '@/utils/stripe/config';
 import {
   upsertProductRecord,
   upsertPriceRecord,
@@ -37,7 +37,7 @@ export async function POST(req: Request) {
   try {
     if (!sig || !webhookSecret)
       return new Response('Webhook secret not found.', { status: 400 });
-    event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
+    event = getStripe().webhooks.constructEvent(body, sig, webhookSecret);
     console.log(`🔔  Webhook received: ${event.type}`);
 
     // Idempotency guard: mark the event processed atomically in the DB.

@@ -1,6 +1,6 @@
 import 'server-only';
 import { toDateTime } from '@/utils/helpers';
-import { stripe } from '@/utils/stripe/config';
+import { getStripe } from '@/utils/stripe/config';
 import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 import type { Database, Tables, TablesInsert } from '@/types_db';
@@ -187,7 +187,7 @@ Head to the club when you're ready — the DJ spins every hour, and the crew is 
  */
 async function verifiedDob(sessionId: string): Promise<{ birthday?: string }> {
   try {
-    const vs = await stripe.identity.verificationSessions.retrieve(sessionId, {
+    const vs = await getStripe().identity.verificationSessions.retrieve(sessionId, {
       expand: ['last_verification_report']
     });
     const report = vs.last_verification_report;
@@ -260,7 +260,7 @@ const upsertCustomerToSupabase = async (uuid: string, customerId: string) => {
 
 const createCustomerInStripe = async (uuid: string, email: string) => {
   const customerData = { metadata: { supabaseUUID: uuid }, email: email };
-  const newCustomer = await stripe.customers.create(customerData);
+  const newCustomer = await getStripe().customers.create(customerData);
   if (!newCustomer) throw new Error('Stripe customer creation failed.');
 
   return newCustomer.id;
@@ -288,13 +288,13 @@ const createOrRetrieveCustomer = async ({
   // Retrieve the Stripe customer ID using the Supabase customer ID, with email fallback
   let stripeCustomerId: string | undefined;
   if (existingSupabaseCustomer?.stripe_customer_id) {
-    const existingStripeCustomer = await stripe.customers.retrieve(
+    const existingStripeCustomer = await getStripe().customers.retrieve(
       existingSupabaseCustomer.stripe_customer_id
     );
     stripeCustomerId = existingStripeCustomer.id;
   } else {
     // If Stripe ID is missing from Supabase, try to retrieve Stripe customer ID by email
-    const stripeCustomers = await stripe.customers.list({ email: email });
+    const stripeCustomers = await getStripe().customers.list({ email: email });
     stripeCustomerId =
       stripeCustomers.data.length > 0 ? stripeCustomers.data[0].id : undefined;
   }
@@ -352,7 +352,7 @@ const copyBillingDetailsToCustomer = async (
   const { name, phone, address } = payment_method.billing_details;
   if (!name || !phone || !address) return;
   //@ts-ignore
-  await stripe.customers.update(customer, { name, phone, address });
+  await getStripe().customers.update(customer, { name, phone, address });
   const { error: updateError } = await supabaseAdmin
     .from('users')
     .update({
@@ -381,7 +381,7 @@ const manageSubscriptionStatusChange = async (
 
   const { id: uuid } = customerData!;
 
-  const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+  const subscription = await getStripe().subscriptions.retrieve(subscriptionId, {
     expand: ['default_payment_method']
   });
   // Upsert the latest status of the subscription object.
@@ -465,7 +465,7 @@ const manageSubscriptionStatusChange = async (
  * price ids, so re-created products still credit.
  */
 const creditTokenPurchase = async (session: Stripe.Checkout.Session) => {
-  const full = await stripe.checkout.sessions.retrieve(session.id, {
+  const full = await getStripe().checkout.sessions.retrieve(session.id, {
     expand: ['line_items.data.price.product']
   });
   const item = full.line_items?.data?.[0];

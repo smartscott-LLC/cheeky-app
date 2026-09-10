@@ -137,7 +137,8 @@
       "Bash(grep *)",
       "Bash(printf *)",
       "Bash(composio *)",
-      "mcp__next-devtools__nextjs_docs"
+      "mcp__next-devtools__nextjs_docs",
+      "Bash(git show *)"
     ]
   },
   "$version": 4

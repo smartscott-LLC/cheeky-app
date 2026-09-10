@@ -1,4 +1,4 @@
-import { stripe } from '@/utils/stripe/config';
+import { getStripe } from '@/utils/stripe/config';
 import { getURL } from '@/utils/helpers';
 import { supabaseAdmin } from '@/utils/supabase/admin';
 import Stripe from 'stripe';
@@ -21,7 +21,7 @@ export const createVerificationSession = async (userId: string) => {
     {};
   if (authUser?.user?.email) provided.email = authUser.user.email;
 
-  const session = await stripe.identity.verificationSessions.create({
+  const session = await getStripe().identity.verificationSessions.create({
     type: 'id_number',
     metadata: { supabaseUUID: userId },
     provided_details: provided,

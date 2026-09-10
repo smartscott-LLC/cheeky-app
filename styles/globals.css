@@ -20,6 +20,19 @@
   --font-rancho: 'Rancho', cursive;
 }
 
+/* next/font/local sets --font-hero / --font-header / --font-body on <html>
+   via CSS variables. We alias them so Tailwind's font-hero / font-header /
+   font-body utilities resolve through the theme. */
+@utility font-hero {
+  font-family: var(--font-hero);
+}
+@utility font-header {
+  font-family: var(--font-header);
+}
+@utility font-body {
+  font-family: var(--font-body);
+}
+
 /* ── Reset ────────────────────────────────────────────────────── */
 *,
 *::before,
@@ -30,8 +43,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  height: 100%;
-  overflow: hidden;
+  min-height: 100%;
   background: #080808;
 }
 h1,
