@@ -141,7 +141,8 @@ export default function FloorPageLayout({
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={ASSETS.icons.sparkList}
-                    alt="SPARX"
+                    alt={centerIcon}
+                    alt-2={centerActionIcon}
                     className="h-15 w-40 object-fit"
                   />
                 </div>
@@ -201,7 +202,7 @@ export default function FloorPageLayout({
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={ASSETS.icons.star}
-                    alt="AI Chat"
+                    alt={aiChatImage}
                     className="h-14 w-14 object-cover"
                   />
                 </div>
@@ -235,7 +236,8 @@ export default function FloorPageLayout({
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={ASSETS.icons.wink}
-                    alt={rightBottomLabel}
+                    alt={bottomRightIcon}
+                    alt-2={rightBottomIcon}
                     className="h-14 w-14 object-contain"
                   />
                 </div>
