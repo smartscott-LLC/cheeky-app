@@ -63,7 +63,7 @@ export default function FloorPageLayout({
       <div className="fixed inset-0 bg-black/55" />
 
       {/* Content layer — pb-32 pushes past the fixed overlay so the footer is visible */}
-      <div className="relative z-6 flex flex-1 flex-col inset-0">
+      <div className="relative z-6 flex flex-1 flex-col inset-0 pb-70">
         {/* Top Box — 10% height, 100% width */}
         <div className="flex justify-items-start flex-col px-3 inset-0">
           {/* Ticker — centered */}

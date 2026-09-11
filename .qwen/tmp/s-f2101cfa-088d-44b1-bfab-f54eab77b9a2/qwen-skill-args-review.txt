@@ -1,0 +1,2 @@
+--effort high I want a full breakdown of the code front to back and to know whats working whats not, whats demo code and whats not ready for launch. Create a reiew document to be analyzed afterwards by me.
+ SUCCESS CRITERIA - Complete, exhaustive, executive review.
