@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { CONTACT } from '@/utils/contact';
 
 const SECTIONS = [
   {
@@ -85,12 +84,14 @@ export default function PrivacyPage() {
         </p>
 
         <p className="mt-4 text-sm font-body text-club">
-          Questions about your data or your rights? Email{' '}
+          Questions about your data or your rights?{' '}
           <a
-            href={`mailto:${CONTACT.info}`}
+            href="https://forms.smartscott.online/forms/cheeky"
+            target="_blank"
+            rel="noopener noreferrer"
             className="font-body text-club underline hover:font-body text-club-cotton"
           >
-            {CONTACT.info}
+            Reach us through our contact form
           </a>
           .
         </p>

@@ -167,8 +167,7 @@ export default function L3Trio() {
               No sparks this time
             </h2>
             <p className="font-body text-club mt-2 text-base">
-              Nothing came back — quietly. Nobody knows. The next trio might be
-              the one.
+              Would you like to view the next 3?
             </p>
           </div>
         )}

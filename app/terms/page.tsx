@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { CONTACT } from '@/utils/contact';
 
 const SECTIONS = [
   {
@@ -115,12 +114,14 @@ export default function TermsPage() {
         </p>
 
         <p className="mt-4 text-sm font-body text-club">
-          Questions about the rules? Write the club at{' '}
+          Questions about the rules?{' '}
           <a
-            href={`mailto:${CONTACT.clubCheeky}`}
+            href="https://forms.smartscott.online/forms/cheeky"
+            target="_blank"
+            rel="noopener noreferrer"
             className="font-body text-club underline hover:font-body text-club-cotton"
           >
-            {CONTACT.clubCheeky}
+            Write the club through our contact form
           </a>
           .
         </p>

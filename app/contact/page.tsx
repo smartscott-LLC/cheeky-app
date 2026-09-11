@@ -1,33 +1,5 @@
 import Link from 'next/link';
-import { CONTACT } from '@/utils/contact';
-
-const DESKS = [
-  {
-    email: CONTACT.info,
-    label: 'General inquiries',
-    body: 'The front desk. Questions about the club, partnerships, press — start here.'
-  },
-  {
-    email: CONTACT.helpdesk,
-    label: 'Help & support',
-    body: 'Billing, access, membership issues, or anything broken. Fastest path to a human.'
-  },
-  {
-    email: CONTACT.clubCheeky,
-    label: 'The club desk',
-    body: 'Events, floors, the VIP experience — the things that make the club the club.'
-  },
-  {
-    email: CONTACT.dateSafely,
-    label: 'Safety & reporting',
-    body: 'Report a concern, a safety issue, or anything that made you uncomfortable. Handled with care and confidentiality.'
-  },
-  {
-    email: CONTACT.reportAnonymous,
-    label: 'Anonymous reporting',
-    body: 'Report without leaving your name. No trace, no follow-up to you — it still lands at the safety desk, read by a human.'
-  }
-];
+import '@/styles/globals.css';
 
 export default function ContactPage() {
   return (
@@ -36,42 +8,36 @@ export default function ContactPage() {
         <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           📞 Talk to the Club
         </h1>
-        <p className="font-body font-body text-club mx-auto mt-3 max-w-xl text-center">
-          A real human reads every desk. Pick the one that fits and we&apos;ll
+        <p className="font-body text-club mx-auto mt-3 max-w-xl text-center">
+          A real human reads every message. Pick a desk that fits and we&apos;ll
           route it right — usually a same-day reply.
         </p>
 
-        <div className="mt-10 space-y-4">
-          {DESKS.map((d) => (
-            <a
-              key={d.email}
-              href={`mailto:${d.email}`}
-              className="block rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 transition hover:border-club/50"
-            >
-              <p className="font-bold font-body font-body text-club">
-                {d.label}
-              </p>
-              <p className="font-body font-body text-club mt-1 text-sm">
-                {d.body}
-              </p>
-              <p className="font-body font-body text-club mt-2 text-sm font-semibold underline decoration-club/50">
-                {d.email}
-              </p>
-            </a>
-          ))}
+        <div className="mt-10 text-center">
+          <a
+            href="https://forms.smartscott.online/forms/cheeky"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block rounded-xl border border-gold/50 bg-zinc-900/70 p-8 transition hover:border-gold hover:bg-zinc-900"
+          >
+            <p className="font-hero text-gold text-2xl">📋 Open Contact Form</p>
+            <p className="font-body text-club mt-3 max-w-md">
+              General inquiries, help &amp; support, the club desk, safety
+              reporting, or anonymous reporting — pick the right desk on the
+              form and it lands where it needs to go.
+            </p>
+          </a>
         </div>
 
-        <p className="font-body font-body text-club mt-8 text-xs">
-          Emails are fielded through our parent mailbox (smartscott.com) and
-          routed to the right desk. If it&apos;s an emergency involving someone
-          &apos;s immediate safety, contact local emergency services first —
-          then report it in-app.
+        <p className="font-body text-club mt-8 text-xs text-center">
+          If it&apos;s an emergency involving someone&apos;s immediate safety,
+          contact local emergency services first — then report it in-app.
         </p>
 
         <div className="mt-8 text-center">
           <Link
             href="/"
-            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold font-body font-body text-club transition hover:bg-club/10"
+            className="inline-block rounded-lg border border-club/40 px-6 py-2.5 font-semibold font-body text-club transition hover:bg-club/10"
           >
             ← Back to the club
           </Link>

@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { CONTACT } from '@/utils/contact';
 
 const SECTIONS = [
   {
@@ -79,12 +78,14 @@ export default function LawEnforcementPage() {
         <p className="mt-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 text-sm font-body text-club">
           <span className="font-bold text-white">Legal contact:</span>{' '}
           <a
-            href={`mailto:${CONTACT.info}`}
+            href="https://forms.smartscott.online/forms/cheeky"
+            target="_blank"
+            rel="noopener noreferrer"
             className="font-body text-club underline hover:font-body text-club-cotton"
           >
-            {CONTACT.info}
-          </a>{' '}
-          — with a copy to the helpdesk ({CONTACT.helpdesk}) for tracking.
+            Submit through our secure contact form
+          </a>
+          .
         </p>
 
         <div className="mt-8 flex flex-wrap justify-center gap-3">

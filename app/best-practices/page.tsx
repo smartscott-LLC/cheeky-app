@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { CONTACT } from '@/utils/contact';
 
 const PRACTICES = [
   {
@@ -109,12 +108,14 @@ export default function BestPracticesPage() {
           <h2 className="font-header text-cyan">📮 Something feel off?</h2>
           <p className="font-body font-body text-club mt-2">
             If something happened that made you feel unsafe — on the app or on a
-            date — write the front desk at{' '}
+            date —{' '}
             <a
-              href={`mailto:${CONTACT.dateSafely}`}
+              href="https://forms.smartscott.online/forms/cheeky"
+              target="_blank"
+              rel="noopener noreferrer"
               className="font-body font-body text-club underline hover:font-body font-body text-club-cotton"
             >
-              {CONTACT.dateSafely}
+              submit a report through our contact form
             </a>
             . It goes straight to the club and we take it from there.
           </p>

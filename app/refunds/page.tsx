@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { CONTACT } from '@/utils/contact';
 
 const SECTIONS = [
   {
@@ -87,12 +86,14 @@ export default function RefundsPage() {
         </div>
 
         <p className="mt-8 text-sm font-body text-club">
-          Questions? Write{' '}
+          Questions?{' '}
           <a
-            href={`mailto:${CONTACT.helpdesk}`}
+            href="https://forms.smartscott.online/forms/cheeky"
+            target="_blank"
+            rel="noopener noreferrer"
             className="font-body text-club underline hover:font-body text-club-cotton"
           >
-            {CONTACT.helpdesk}
+            Reach out through our contact form
           </a>
           .
         </p>

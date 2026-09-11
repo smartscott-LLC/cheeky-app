@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { ASSETS } from '@/utils/assets';
-import { CONTACT } from '@/utils/contact';
 
 export default function Footer() {
   return (
@@ -162,18 +161,12 @@ export default function Footer() {
             </li>
             <li className="font-body text-club py-3 md:py-0 md:pb-4">
               <a
-                href={`mailto:${CONTACT.info}`}
+                href="https://forms.smartscott.online/forms/cheeky"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="font-body text-club transition duration-150 ease-in-out hover:text-cyan"
               >
-                {CONTACT.info}
-              </a>
-            </li>
-            <li className="font-body text-club py-3 md:py-0 md:pb-4">
-              <a
-                href={`mailto:${CONTACT.helpdesk}`}
-                className="font-body text-club transition duration-150 ease-in-out hover:text-cyan"
-              >
-                {CONTACT.helpdesk}
+                Contact form
               </a>
             </li>
           </ul>

@@ -3,7 +3,6 @@
 import { startVerification } from '@/app/verify/actions';
 import Link from 'next/link';
 import type { Tables } from '@/types_db';
-import { CONTACT } from '@/utils/contact';
 
 type Profile = Tables<'profiles'>;
 
@@ -64,12 +63,14 @@ export default function VerificationPanel({
           more loops.
         </p>
         <p className="mt-4 text-sm font-body text-club">
-          Email the help desk at{' '}
+          Still stuck?{' '}
           <a
-            href={`mailto:${CONTACT.helpdesk}`}
+            href="https://forms.smartscott.online/forms/cheeky"
+            target="_blank"
+            rel="noopener noreferrer"
             className="font-body text-club underline hover:font-body text-club-cotton"
           >
-            {CONTACT.helpdesk}
+            Reach the help desk through our contact form
           </a>{' '}
           and we&apos;ll get you through.
         </p>
