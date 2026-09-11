@@ -7,7 +7,7 @@
 // Usage: node scripts/sync-env.mjs
 import { readFileSync, writeFileSync } from 'node:fs';
 
-const src = 'env.new';
+const src = '.env.new';
 const dst = '.env.local';
 
 try {

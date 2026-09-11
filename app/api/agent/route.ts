@@ -41,7 +41,7 @@ ${HOUSE_RULES}`;
 
 /**
  * The cast model comes from the Lions Den (model_config) so a down model
- * can be swapped without a redeploy — env AGNES_MODEL is the fallback.
+ * can be swapped without a redeploy — env AI_MODEL is the fallback.
  */
 async function getCastModel(): Promise<string> {
   const { data } = await supabaseAdmin
@@ -49,16 +49,16 @@ async function getCastModel(): Promise<string> {
     .select('cast_model')
     .eq('id', true)
     .maybeSingle();
-  return data?.cast_model ?? process.env.AGNES_MODEL ?? 'AGNES-chat';
+  return data?.cast_model ?? process.env.AI_MODEL ?? 'AGNES-chat';
 }
 
 function describeError(err: unknown): string {
   const msg = err instanceof Error ? err.message : '';
   const detail = (err as Error & { detail?: string }).detail;
   if (msg.includes('OIDC') || msg.includes('401') || msg.includes('auth'))
-    return "The stage lights aren't on yet (auth). Check AGNES_API_KEY or VERCEL_OIDC_TOKEN.";
+    return "The stage lights aren't on yet (auth). Check MODEL_API_KEY or VERCEL_OIDC_TOKEN.";
   if (msg.includes('AGNES_http_401'))
-    return 'The bouncer rejected the key — check AGNES_API_KEY.';
+    return 'The bouncer rejected the key — check MODEL_API_KEY.';
   if (msg.includes('AGNES_http_402'))
     return 'AGNES is out of credits — top up and we are back on stage.';
   if (msg.includes('AGNES_http_404') || msg.includes('model'))
@@ -222,8 +222,8 @@ export async function POST(req: Request) {
     const swagTransform = swagMarkerTransform(character, user.id);
 
     // Primary: straight to AGNES (cheapest, no middleman). The gateway
-    // is the free fallback when no AGNES_API_KEY is set.
-    const directKey = process.env.AGNES_API_KEY;
+    // is the free fallback when no MODEL_API_KEY is set.
+    const directKey = process.env.MODEL_API_KEY;
     if (directKey) {
       const stream = await streamAGNESDirect({
         apiKey: directKey,

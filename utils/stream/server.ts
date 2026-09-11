@@ -1,6 +1,6 @@
 // Stream Chat — server-side client + user-token issuance.
 //
-// The server SDK uses STREAM_API_KEY + STREAM_API_SECRET. The secret never
+// The server SDK uses STREAMCHAT_API_KEY + STREAMCHAT_SECRET_KEY. The secret never
 // touches the browser; the client only ever sees a short-lived signed
 // token created here.
 //
@@ -15,8 +15,8 @@ let cached: StreamChat | null = null;
 /** Returns the singleton server client. Throws if the secret is missing. */
 export function getStreamServer(): StreamChat {
   if (cached) return cached;
-  const apiKey = process.env.STREAM_API_KEY;
-  const apiSecret = process.env.STREAM_API_SECRET;
+  const apiKey = process.env.STREAMCHAT_API_KEY;
+  const apiSecret = process.env.STREAMCHAT_SECRET_KEY;
   if (!apiKey || !apiSecret) {
     throw new Error('stream_not_configured');
   }
@@ -27,9 +27,9 @@ export function getStreamServer(): StreamChat {
 /** Is the Stream integration live on this deployment? */
 export function streamEnabled(): boolean {
   return Boolean(
-    process.env.STREAM_API_KEY &&
-    process.env.STREAM_API_SECRET &&
-    process.env.NEXT_PUBLIC_STREAM_API_KEY
+    process.env.STREAMCHAT_API_KEY &&
+    process.env.STREAMCHAT_SECRET_KEY &&
+    process.env.STREAMCHAT_API_KEY
   );
 }
 
@@ -41,7 +41,7 @@ export async function issueStreamToken(input: {
   image?: string | null;
 }): Promise<{ token: string; apiKey: string; userId: string; name: string }> {
   const client = getStreamServer();
-  const apiKey = process.env.STREAM_API_KEY as string;
+  const apiKey = process.env.STREAMCHAT_API_KEY as string;
   // Mirror the Supabase profile into Stream so member lookups and
   // @mentions work consistently.
   await client.upsertUsers([
@@ -90,7 +90,7 @@ export async function streamSendAsUser(input: {
   // attributes the message correctly.
   const userToken = client.createToken(input.userId);
   const userClient = StreamChat.getInstance(
-    process.env.STREAM_API_KEY as string,
+    process.env.STREAMCHAT_API_KEY as string,
     userToken
   );
   const channelId = `cheeky-${input.room}`;

@@ -6,7 +6,7 @@
 //
 //   RUN_LIVE_TESTS=1 PROBE_CONCURRENCY=16 node --test tests/ai-probe.live.test.mjs
 //
-// Requires AGNES_API_KEY in .env.local (model: AGNES_MODEL, default
+// Requires MODEL_API_KEY in .env.local (model: AI_MODEL, default
 // AGNES-chat). Costs a few cents of usage per run — keep it small.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -15,15 +15,15 @@ import { config } from 'dotenv';
 config({ path: 'env.new' });
 
 const RUN_LIVE = process.env.RUN_LIVE_TESTS === '1';
-const KEY = process.env.AGNES_API_KEY;
-const MODEL = process.env.AGNES_MODEL ?? 'AGNES-chat';
+const KEY = process.env.MODEL_API_KEY;
+const MODEL = process.env.AI_MODEL ?? 'AGNES-chat';
 const CONCURRENCY = parseInt(process.env.PROBE_CONCURRENCY ?? '8', 10);
 
 void test(
   'AGNES burst probe (live)',
   { skip: !RUN_LIVE && 'set RUN_LIVE_TESTS=1' },
   async (t) => {
-    if (!KEY) return t.skip('AGNES_API_KEY not in .env.local');
+    if (!KEY) return t.skip('MODEL_API_KEY not in .env.local');
 
     await t.test(`burst of ${CONCURRENCY} concurrent calls`, async () => {
       const start = Date.now();

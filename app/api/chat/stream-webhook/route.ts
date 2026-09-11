@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
   if (!streamEnabled()) {
     return NextResponse.json({ error: 'stream_disabled' }, { status: 503 });
   }
-  const secret = process.env.STREAM_API_SECRET as string;
+  const secret = process.env.STREAMCHAT_SECRET_KEY as string;
 
   const raw = Buffer.from(await req.arrayBuffer());
   const body = gunzip(raw);

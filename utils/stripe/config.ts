@@ -18,12 +18,9 @@ const stripeConfig: Stripe.StripeConfig = {
 
 export function getStripe(): Stripe {
   if (!stripeInstance) {
-    const key =
-      process.env.STRIPE_SECRET_KEY_LIVE ??
-      process.env.STRIPE_SECRET_KEY ??
-      '';
+    const key = process.env.STRIPE_SECRET_KEY ?? '';
     if (!key) {
-      throw new Error('Neither apiKey nor config.authenticator provided');
+      throw new Error('Missing STRIPE_SECRET_KEY env var');
     }
     stripeInstance = new Stripe(key, stripeConfig);
   }

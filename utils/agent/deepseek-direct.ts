@@ -4,8 +4,7 @@
 // removed during the dep migration; this is the zero-dep path.
 
 const AGNES_BASE =
-  process.env.AGNES_URL ||
-  process.env.DEEPSEEK_URL ||
+  process.env.MODEL_BASE_URL ||
   'https://apihub.agnes-ai.com/v1';
 
 export interface DirectMessage {
