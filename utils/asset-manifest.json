@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-12T19:48:29.993Z",
+  "generatedAt": "2026-09-12T19:49:45.294Z",
   "bucket": "cheeky-assets",
   "baseUrl": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets",
-  "total": 157,
+  "total": 159,
   "assets": [
     {
       "slug": "above-the-clouds",
@@ -210,6 +210,14 @@
       "filename": "silver.webp",
       "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/floors/silver.webp",
       "sizeBytes": 183122,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "?firstdate?",
+      "category": "icons",
+      "filename": "?firstdate?.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/?firstdate?.webp",
+      "sizeBytes": 30906,
       "mimeType": "image/webp"
     },
     {
@@ -658,6 +666,14 @@
       "filename": "first_date2.webp",
       "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/first_date2.webp",
       "sizeBytes": 32736,
+      "mimeType": "image/webp"
+    },
+    {
+      "slug": "first-date-question",
+      "category": "icons",
+      "filename": "first-date-question.webp",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/icons/first-date-question.webp",
+      "sizeBytes": 30906,
       "mimeType": "image/webp"
     },
     {
