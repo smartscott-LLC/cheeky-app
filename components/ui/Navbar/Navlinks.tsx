@@ -56,8 +56,13 @@ export default function Navlinks({ user }: NavlinksProps) {
               className="h-full w-full object-cover"
             />
           </span>
-          <span className="font-script ml-2.5 bg-gradient-to-r from-gold via-gold-royal to-gold bg-clip-text px-1 py-1 text-2xl leading-[1.4] text-transparent">
-            Club Cheeky
+          <span className="ml-2.5 block h-7 w-auto">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={ASSETS.icons.cursive1}
+              alt="Club Cheeky"
+              className="h-full w-auto object-contain"
+            />
           </span>
         </Link>
       </div>
