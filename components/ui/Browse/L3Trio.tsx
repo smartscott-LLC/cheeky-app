@@ -188,7 +188,7 @@ export default function L3Trio() {
           {error}
         </p>
       )}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
         {people.map((person) => (
           <div
             key={person.id}
@@ -203,21 +203,21 @@ export default function L3Trio() {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-5xl">
+                <div className="flex h-full w-full items-center justify-center text-3xl">
                   {person.display_name?.charAt(0)?.toUpperCase() ?? '?'}
                 </div>
               )}
             </div>
-            <div className="p-4">
-              <h3 className="font-header text-cyan text-xl">
+            <div className="p-2 sm:p-3">
+              <h3 className="font-header text-cyan text-base sm:text-lg">
                 {person.display_name || 'Member'}
               </h3>
               {person.one_liner && (
-                <p className="mt-1 text-sm font-body text-club">
+                <p className="mt-0.5 text-xs font-body text-club">
                   {person.one_liner}
                 </p>
               )}
-              <div className="mt-3 grid grid-cols-3 gap-2">
+              <div className="mt-2 grid grid-cols-3 gap-1.5 sm:gap-2">
                 {SLOTS.map((slot) => {
                   const selected = assigned[person.id] === slot.choice;
                   return (
@@ -231,7 +231,7 @@ export default function L3Trio() {
                           [person.id]: slot.choice
                         }))
                       }
-                      className={`rounded-md border px-2 py-1.5 text-xs font-bold uppercase tracking-wide transition ${
+                      className={`rounded-md border px-1 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-wide transition ${
                         selected ? slot.active : slot.cls
                       }`}
                     >
