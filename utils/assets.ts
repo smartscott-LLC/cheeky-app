@@ -118,6 +118,8 @@ export const ASSETS = {
   icons: {
     chatBubble: iconUrl('chat_bubble'),
     cheekyChats: iconUrl('cheeky_chats'),
+    collectibleCardBack1: iconUrl('collectible_card_back1'),
+    collectibleCardBack2: iconUrl('collectible_card_back2'),
     coatCheck: iconUrl('coat_check'),
     cursive1: iconUrl('cursive1'),
     danceFloor: iconUrl('dance_floor'),

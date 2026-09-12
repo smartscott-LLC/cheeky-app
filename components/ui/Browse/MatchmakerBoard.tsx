@@ -8,6 +8,7 @@ import {
   matchmakerSendUnlock,
   type MatchmakerCard
 } from '@/app/browse/actions';
+import { ASSETS } from '@/utils/assets';
 
 interface Props {
   boardId: string;
@@ -283,11 +284,12 @@ export default function MatchmakerBoard({
               type="button"
               onClick={() => flip(card)}
               disabled={!!busyId || !!up}
-              className={`relative aspect-square overflow-hidden rounded-md border transition ${
+              className={`relative overflow-hidden rounded-lg border transition ${
                 up
-                  ? 'border-gold'
-                  : 'border-gold/40 bg-gradient-to-br from-zinc-800 to-zinc-900 hover:border-gold'
+                  ? 'border-gold shadow-[0_0_12px_rgba(255,215,0,0.4)]'
+                  : 'border-gold/40 hover:border-gold hover:shadow-[0_0_8px_rgba(255,215,0,0.2)]'
               } ${busyId ? 'cursor-wait' : ''}`}
+              style={{ aspectRatio: '2/3' }}
             >
               {up ? (
                 <>
@@ -308,14 +310,17 @@ export default function MatchmakerBoard({
                   </span>
                 </>
               ) : (
-                <span
-                  className={`flex h-full w-full items-center justify-center text-xl ${
-                    awaiting ? '' : ''
-                  }`}
-                >
-                  🎯
-                </span>
-              )}
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={
+                    card.id.charCodeAt(2) % 2 === 0
+                      ? ASSETS.icons.collectibleCardBack1
+                      : ASSETS.icons.collectibleCardBack2
+                  }
+                  alt="Card back"
+                  className="h-full w-full object-cover"
+                />
+              }
             </button>
           );
         })}
