@@ -56,7 +56,9 @@
       "Bash(echo *)",
       "Bash(git *)",
       "Bash(find *)",
-      "Bash(ln *)"
+      "Bash(ln *)",
+      "Bash(async *)",
+      "Bash(script)"
     ]
   },
   "$version": 4
