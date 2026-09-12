@@ -3,7 +3,7 @@
  *
  * Usage: node scripts/upload-assets.mjs
  *
- * Scans public/ directories from both apps (cheeky-app + In-gameChatUI),
+ * Scans public/ directories from both apps (cheeky-app + chub),
  * uploads each file to the cheeky-assets bucket under category folders,
  * and writes an asset manifest JSON file.
  */
@@ -132,7 +132,7 @@ async function main() {
     import.meta.dirname,
     '..',
     '..',
-    'In-gameChatUI',
+    'chub',
     'public'
   );
 
@@ -141,7 +141,7 @@ async function main() {
   try {
     loungeFiles = await scanDirectory(loungeDir);
   } catch {
-    console.log('  (In-gameChatUI/public not found, skipping)');
+    console.log('  (chub/public not found, skipping)');
   }
 
   // Deduplicate: lounge app has copies of the same icons

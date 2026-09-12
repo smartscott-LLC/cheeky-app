@@ -146,7 +146,7 @@ The app uses Vercel microfrontends to serve the lounge chat (chub) as a separate
         "fallback": "www.smartscott.online"
       }
     },
-    "in-gamechatui": {
+    "chub": {
       "routing": [
         {
           "paths": ["/lounge/:path*"]
@@ -160,7 +160,7 @@ The app uses Vercel microfrontends to serve the lounge chat (chub) as a separate
 ### How Vercel microfrontend routing works
 
 1. Vercel reads `microfrontends.json` from the live deployment of the **default application** (cheeky-app).
-2. Requests to paths matching `/lounge/:path*` are routed to the `in-gamechatui` project's production deployment — no additional network hop, it happens within the same request.
+2. Requests to paths matching `/lounge/:path*` are routed to the `chub` project's production deployment — no additional network hop, it happens within the same request.
 3. All other paths are handled by `cheeky-app` (the default).
 4. The `lounge.smartscott.online` subdomain routes through the same microfrontend group — Vercel resolves it to the same routing table.
 
@@ -175,11 +175,11 @@ The app uses Vercel microfrontends to serve the lounge chat (chub) as a separate
 
 1. Add `lounge.smartscott.online` as a custom domain in the Vercel project settings for the microfrontend group (under the `cheeky-app` project's Domains settings).
 2. Vercel will handle DNS — add the CNAME record it provides to your DNS provider.
-3. The subdomain routes through the same `microfrontends.json` routing table — paths under `/lounge/` go to `in-gamechatui`, everything else falls back to `cheeky-app`.
+3. The subdomain routes through the same `microfrontends.json` routing table — paths under `/lounge/` go to `chub`, everything else falls back to `cheeky-app`.
 
 ### Lounge app build configuration
 
-The lounge app (In-gameChatUI) uses Vite with a dynamic `base` path:
+The lounge app (chub) uses Vite with a dynamic `base` path:
 
 ```ts
 // vite.config.ts
@@ -206,7 +206,7 @@ Each microfrontend gets an auto-generated asset prefix (`vc-ap-<hash>`) to preve
 
 When changing `microfrontends.json` routing:
 
-1. Deploy the **child app** (`in-gamechatui`) first — make sure it can handle `/lounge/` paths.
+1. Deploy the **child app** (`chub`) first — make sure it can handle `/lounge/` paths.
 2. Then deploy the **default app** (`cheeky-app`) with the updated `microfrontends.json` — this activates the routing.
 3. If you need to revert, use Vercel Instant Rollback on the default app to restore the old routing rules.
 
@@ -271,7 +271,7 @@ The entire app follows one consistent pattern — no grey, no alternate colors:
 
 - **`env.new`** is the master vault (gitignored). Every script reads it directly.
 - **`.env.local`** is a generated copy for `pnpm dev` — refresh via `node scripts/sync-env.mjs`. Never hand-edit it.
-- Both apps (cheeky-app + In-gameChatUI) have their own `.env.local` files with their own secrets.
+- Both apps (cheeky-app + chub) have their own `.env.local` files with their own secrets.
 - Only `NEXT_PUBLIC_*` keys may appear in tracked files or CI.
 - **Never read or surface secret values** from `.env*` files in tool output or chat. Read file structure only (keys, not values).
 - **No keys are pushed to git** — all vars and secrets are set directly in Vercel and the databases. Changes happen on the fly as needed.

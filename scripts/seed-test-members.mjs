@@ -17,7 +17,7 @@ import { join } from 'node:path';
 import { createClient } from '@supabase/supabase-js';
 import sharp from 'sharp';
 
-config({ path: 'env.new' });
+config({ path: '.env.new' });
 
 const URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const KEY =
