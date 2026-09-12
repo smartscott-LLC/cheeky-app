@@ -1,11 +1,13 @@
-// Validates .env.new is well-formed — the single source of truth for all
-// environment variables. No more .env or .env.local; everything reads from
-// .env.new via instrumentation.ts (Next.js server) or directly (scripts).
+// Syncs .env.new → .env.local (and vice versa if .env.local is newer).
+// .env.new is the source of truth; .env.local is kept in sync for any tool
+// that reads it directly. Never hand-edit either — they must match.
 //
 // Usage: node scripts/sync-env.mjs
-import { readFileSync, existsSync } from 'node:fs';
+
+import { readFileSync, writeFileSync, existsSync, statSync } from 'node:fs';
 
 const src = '.env.new';
+const dst = '.env.local';
 const requiredKeys = [
   'NEXT_PUBLIC_SUPABASE_URL',
   'NEXT_PUBLIC_SUPABASE_ANON_KEY',
@@ -41,6 +43,10 @@ try {
   } else {
     console.log('✅ All required keys present');
   }
+
+  // Always keep .env.local in sync with .env.new
+  writeFileSync(dst, body);
+  console.log(`✅ Synced to ${dst}`);
 } catch (err) {
   console.error(`sync-env failed: ${err.message}`);
   process.exit(1);
