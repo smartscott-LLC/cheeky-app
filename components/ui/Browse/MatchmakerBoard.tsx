@@ -320,7 +320,7 @@ export default function MatchmakerBoard({
                   alt="Card back"
                   className="h-full w-full object-cover"
                 />
-              }
+              )}
             </button>
           );
         })}
