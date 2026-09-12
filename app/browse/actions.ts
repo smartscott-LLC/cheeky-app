@@ -217,6 +217,18 @@ export async function matchmakerPickDraft(
   return {};
 }
 
+/** Remove a draft pick — allows re-selecting a different face. */
+export async function matchmakerUnpickDraft(
+  targetId: string
+): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc('matchmaker_unpick_draft', {
+    p_target: targetId
+  });
+  if (error) return { error: error.message };
+  return {};
+}
+
 /** Lock in the 2 drafts, consume a play, and build the 16-card board. */
 export async function matchmakerStartBoard(): Promise<{
   rows?: MatchmakerBoardRow[];

@@ -2924,6 +2924,7 @@ export type Database = {
         }[]
       }
       matchmaker_pick_draft: { Args: { p_target: string }; Returns: undefined }
+      matchmaker_unpick_draft: { Args: { p_target: string }; Returns: undefined }
       matchmaker_respond_unlock: {
         Args: { p_accept: boolean; p_unlock_id: string }
         Returns: undefined

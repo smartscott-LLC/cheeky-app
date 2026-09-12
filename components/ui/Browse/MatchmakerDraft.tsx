@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import {
   matchmakerDraftCandidates,
   matchmakerPickDraft,
+  matchmakerUnpickDraft,
   matchmakerStartBoard,
   type MatchmakerCandidate
 } from '@/app/browse/actions';
@@ -53,7 +54,7 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
 
   /**
    * Toggle a draft pick — click once to pick, click again to un-pick.
-   * Server-call only for the initial pick; unpicks are optimistic.
+   * Both directions hit the server so the draft state stays in sync.
    */
   const pick = async (person: MatchmakerCandidate) => {
     if (picking || building) return;
@@ -61,7 +62,14 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
     const alreadyPicked = picked.has(person.id);
 
     if (alreadyPicked) {
-      // Un-pick: remove from local state immediately
+      // Un-pick: remove from server and local state
+      setPicking(true);
+      const res = await matchmakerUnpickDraft(person.id);
+      setPicking(false);
+      if (res.error) {
+        setError(res.error);
+        return;
+      }
       setPicked((prev) => {
         const next = new Set(prev);
         next.delete(person.id);

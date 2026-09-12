@@ -104,5 +104,6 @@ insert into public.supabase_migrations (version, name) values
   ('20260902000001_cheeky_assets_bucket', 'cheeky_assets_bucket'),
   ('20260903000001_lounge_challenge', 'lounge_challenge'),
   ('20260904000001_add_subscription_status', 'add_subscription_status'),
-  ('20260911000000_fix_handle_new_profile', 'fix_handle_new_profile')
+  ('20260911000000_fix_handle_new_profile', 'fix_handle_new_profile'),
+  ('20260911000001_matchmaker_unpick_draft', 'matchmaker_unpick_draft')
 on conflict (version) do nothing;
