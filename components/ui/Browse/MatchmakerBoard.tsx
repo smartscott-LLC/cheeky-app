@@ -273,7 +273,7 @@ export default function MatchmakerBoard({
         </p>
       )}
 
-      <div className="mx-auto mt-5 grid max-w-md grid-cols-4 gap-2">
+      <div className="mx-auto mt-5 grid max-w-xs grid-cols-4 gap-1.5">
         {cards.map((card) => {
           const up = faceUp[card.id];
           const awaiting = firstFlipId === card.id;
@@ -283,7 +283,7 @@ export default function MatchmakerBoard({
               type="button"
               onClick={() => flip(card)}
               disabled={!!busyId || !!up}
-              className={`relative aspect-square overflow-hidden rounded-lg border transition ${
+              className={`relative aspect-square overflow-hidden rounded-md border transition ${
                 up
                   ? 'border-gold'
                   : 'border-gold/40 bg-gradient-to-br from-zinc-800 to-zinc-900 hover:border-gold'
@@ -299,17 +299,17 @@ export default function MatchmakerBoard({
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-zinc-800 text-2xl">
+                    <div className="flex h-full w-full items-center justify-center bg-zinc-800 text-lg">
                       {up.display_name?.charAt(0)?.toUpperCase() ?? '?'}
                     </div>
                   )}
-                  <span className="absolute inset-x-0 bottom-0 bg-black/70 px-1 py-0.5 text-center text-[10px] font-bold text-white">
+                  <span className="absolute inset-x-0 bottom-0 bg-black/70 px-0.5 py-0.5 text-center text-[8px] font-bold text-white leading-tight">
                     {up.display_name}
                   </span>
                 </>
               ) : (
                 <span
-                  className={`flex h-full w-full items-center justify-center text-2xl ${
+                  className={`flex h-full w-full items-center justify-center text-xl ${
                     awaiting ? '' : ''
                   }`}
                 >

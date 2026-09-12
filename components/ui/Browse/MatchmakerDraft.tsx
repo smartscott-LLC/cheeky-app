@@ -16,8 +16,9 @@ interface Props {
 /**
  * Phase 1 — the draft strip. Your floor or beneath, compatible faces only
  * (server-filtered). Two draft picks build the board; the picks are NOT real
- * likes — nothing matches from this screen. If a draft already liked you, the
- * board builder surfaces it as a normal match and it leaves the board.
+ * likes — nothing matches from this screen. Click a face to pick it; click
+ * again to un-pick. Already-picked faces from a previous session render
+ * pre-selected.
  */
 export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
   const [people, setPeople] = useState<MatchmakerCandidate[]>([]);
@@ -50,9 +51,27 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
 
   const photoBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`;
 
+  /**
+   * Toggle a draft pick — click once to pick, click again to un-pick.
+   * Server-call only for the initial pick; unpicks are optimistic.
+   */
   const pick = async (person: MatchmakerCandidate) => {
-    if (picked.has(person.id) || picked.size >= 2 || picking || building)
+    if (picking || building) return;
+
+    const alreadyPicked = picked.has(person.id);
+
+    if (alreadyPicked) {
+      // Un-pick: remove from local state immediately
+      setPicked((prev) => {
+        const next = new Set(prev);
+        next.delete(person.id);
+        return next;
+      });
       return;
+    }
+
+    if (picked.size >= 2) return;
+
     setPicking(true);
     setError(null);
     const res = await matchmakerPickDraft(person.id);
@@ -117,11 +136,11 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
         </p>
       </div>
       <p className="mx-auto mt-2 max-w-md text-center text-sm font-body text-club">
-        Tap two faces from your floor (or below). These are drafts — not likes.
-        Nothing matches from here.
+        Tap two faces from your floor (or below). Tap again to un-tap. These
+        are drafts — not likes. Nothing matches from here.
       </p>
 
-      <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+      <div className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
         {people.map((person) => {
           const chosen = picked.has(person.id);
           return (
@@ -129,11 +148,15 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
               key={person.id}
               type="button"
               onClick={() => pick(person)}
-              disabled={picking || building || (!chosen && picked.size >= 2)}
-              className={`group overflow-hidden rounded-xl border bg-zinc-900/60 text-left transition ${
+              disabled={
+                picking ||
+                building ||
+                (!chosen && picked.size >= 2)
+              }
+              className={`group overflow-hidden rounded-xl border bg-zinc-900/60 text-left transition-all duration-200 ${
                 chosen
-                  ? 'border-gold ring-1 ring-gold'
-                  : 'border-zinc-700 hover:border-gold/60'
+                  ? 'border-gold ring-2 ring-gold scale-[1.02]'
+                  : 'border-zinc-700 hover:border-gold/60 hover:scale-[1.01]'
               }`}
             >
               <div className="aspect-[3/4] w-full overflow-hidden bg-zinc-800">
@@ -142,26 +165,28 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
                   <img
                     src={`${photoBase}${person.photo_path}`}
                     alt={person.display_name || 'Member'}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center text-5xl">
+                  <div className="flex h-full w-full items-center justify-center text-3xl">
                     {person.display_name?.charAt(0)?.toUpperCase() ?? '?'}
                   </div>
                 )}
               </div>
-              <div className="p-3">
-                <h3 className="font-header text-cyan text-lg">
+              <div className="p-2">
+                <h3 className="font-header text-cyan text-sm truncate">
                   {person.display_name || 'Member'}
                 </h3>
                 {person.one_liner && (
-                  <p className="mt-0.5 truncate text-xs font-body text-club">
+                  <p className="mt-0.5 truncate text-[10px] font-body text-club">
                     {person.one_liner}
                   </p>
                 )}
                 <p
-                  className={`mt-2 rounded-md px-2 py-1 text-center text-xs font-bold uppercase tracking-wide ${
-                    chosen ? 'bg-gold text-black' : 'bg-zinc-800 text-gold'
+                  className={`mt-1 rounded-md px-1.5 py-0.5 text-center text-[10px] font-bold uppercase tracking-wide transition-colors duration-200 ${
+                    chosen
+                      ? 'bg-gold text-black'
+                      : 'bg-zinc-800 text-gold'
                   }`}
                 >
                   {chosen ? 'Chosen' : 'Draft'}
@@ -181,13 +206,13 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
           <button
             onClick={build}
             disabled={picked.size !== 2 || building}
-            className="rounded-lg bg-gold px-8 py-3 text-base font-bold text-black transition hover:bg-gold-royal disabled:opacity-40"
+            className="rounded-lg bg-gold px-8 py-3 text-base font-bold text-black transition-all duration-200 hover:bg-gold-royal disabled:opacity-40"
           >
             {building
               ? 'Building the board…'
               : picked.size === 2
                 ? 'Build the board →'
-                : 'Pick 2 to build'}
+                : `Pick ${2 - picked.size} more to build`}
           </button>
         )}
       </div>

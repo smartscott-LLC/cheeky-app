@@ -9,9 +9,11 @@ create table if not exists public.supabase_migrations (
   success boolean not null default true
 );
 
--- Seed all versions already on the hosted DB (from previous successful pushes)
+-- Seed all versions already on the hosted DB (from previous successful pushes).
+-- Auto-synced from hosted DB — always run this after applying new migrations.
 insert into public.supabase_migrations (version, name) values
   ('20230530034630', 'init'),
+  ('20260303200000', 'date_safe'),
   ('20260801033036', 'phase1_club_floor'),
   ('20260801152125', 'fix_token_ledger_ref_text'),
   ('20260801153414', 'signup_metadata_consents'),
@@ -51,7 +53,6 @@ insert into public.supabase_migrations (version, name) values
   ('20260803010000', 'identity_gender'),
   ('20260803020000', 'honeypot_bot_guard'),
   ('20260803021000', 'honeypot_fix'),
-  ('20260303200000', 'date_safe'),
   ('20260804010000', 'announcements'),
   ('20260804020000', 'swag_bundle'),
   ('20260804030000', 'den_controls'),
@@ -97,5 +98,11 @@ insert into public.supabase_migrations (version, name) values
   ('20260808160000', 'club_chat'),
   ('20260808161000', 'club_chat_ban_grant'),
   ('20260808162000', 'club_chat_profanity_squish'),
-  ('20260808163000', 'lounge_prefs')
+  ('20260808163000', 'lounge_prefs'),
+  ('20260901000000_story_mode', 'story_mode'),
+  ('20260901000001_add_price_interval', 'add_price_interval'),
+  ('20260902000001_cheeky_assets_bucket', 'cheeky_assets_bucket'),
+  ('20260903000001_lounge_challenge', 'lounge_challenge'),
+  ('20260904000001_add_subscription_status', 'add_subscription_status'),
+  ('20260911000000_fix_handle_new_profile', 'fix_handle_new_profile')
 on conflict (version) do nothing;
