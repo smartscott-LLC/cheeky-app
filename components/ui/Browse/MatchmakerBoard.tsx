@@ -41,7 +41,6 @@ export default function MatchmakerBoard({
 }: Props) {
   const [cards, setCards] = useState<MatchmakerCard[]>([]);
   const [faceUp, setFaceUp] = useState<Record<string, Reveal>>({});
-  const [firstFlipId, setFirstFlipId] = useState<string | null>(flippedCardId);
   const [strikes, setStrikes] = useState(0);
   const [matches, setMatches] = useState(0);
   const [unlockSentFor, setUnlockSentFor] = useState<Set<string>>(new Set());
@@ -120,7 +119,6 @@ export default function MatchmakerBoard({
     if (f.is_match === null) {
       // First flip of the attempt — hold the face up, awaiting its mate.
       setFaceUp((prev) => ({ ...prev, [card.id]: reveal }));
-      setFirstFlipId(card.id);
       return;
     }
 
@@ -133,7 +131,6 @@ export default function MatchmakerBoard({
         }
         return next;
       });
-      setFirstFlipId(null);
       setStrikes(f.strikes);
       setMatches(f.matches_found);
       setCards((prev) =>
@@ -157,7 +154,6 @@ export default function MatchmakerBoard({
 
     // STRIKE — show both briefly, then flip back down.
     setFaceUp((prev) => ({ ...prev, [card.id]: reveal }));
-    setFirstFlipId(null);
     setStrikes(f.strikes);
     if (f.board_status === 'lost') {
       setEnded({
