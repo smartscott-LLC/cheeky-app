@@ -277,7 +277,6 @@ export default function MatchmakerBoard({
       <div className="mx-auto mt-5 grid max-w-xs grid-cols-4 gap-1.5">
         {cards.map((card) => {
           const up = faceUp[card.id];
-          const awaiting = firstFlipId === card.id;
           return (
             <button
               key={card.id}
