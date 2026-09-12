@@ -119,6 +119,7 @@ export const ASSETS = {
     chatBubble: iconUrl('chat_bubble'),
     cheekyChats: iconUrl('cheeky_chats'),
     coatCheck: iconUrl('coat_check'),
+    cursive1: iconUrl('cursive1'),
     danceFloor: iconUrl('dance_floor'),
     diamond: iconUrl('diamond'),
     diamondBadge: iconUrl('diamond_badge'),
