@@ -1,5 +1,6 @@
 'use server';
 
+import { isRateLimitError } from '@/utils/rate-limit';
 import { createClient } from '@/utils/supabase/server';
 import { getProfile } from '@/utils/supabase/queries';
 import { isCompatible } from '@/utils/helpers';
@@ -75,6 +76,7 @@ export type L3PickResult = {
 export async function l3NextTrio(): Promise<{
   people: L3Person[];
   done: boolean;
+  rateLimited?: boolean;
   error?: string;
 }> {
   const supabase = await createClient();
@@ -94,7 +96,10 @@ export async function l3NextTrio(): Promise<{
       .or(`user_id_a.eq.${user.id},user_id_b.eq.${user.id}`)
   ]);
 
-  if (trio.error) return { people: [], done: true, error: trio.error.message };
+  if (trio.error) {
+    if (isRateLimitError(trio.error)) return { people: [], done: false, rateLimited: true };
+    return { people: [], done: true, error: trio.error.message };
+  }
 
   const exclude = new Set<string>([user.id]);
   (liked.data ?? []).forEach((l) => exclude.add(l.likee_id));
@@ -232,11 +237,15 @@ export async function matchmakerUnpickDraft(
 /** Lock in the 2 drafts, consume a play, and build the 16-card board. */
 export async function matchmakerStartBoard(): Promise<{
   rows?: MatchmakerBoardRow[];
+  rateLimited?: boolean;
   error?: string;
 }> {
   const supabase = await createClient();
   const { data, error } = await supabase.rpc('matchmaker_start_board');
-  if (error) return { error: error.message };
+  if (error) {
+    if (isRateLimitError(error)) return { rateLimited: true };
+    return { error: error.message };
+  }
   return { rows: data ?? [] };
 }
 

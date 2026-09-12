@@ -27,6 +27,7 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
   const [busy, setBusy] = useState(true);
   const [picking, setPicking] = useState(false);
   const [building, setBuilding] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -94,9 +95,14 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
   const build = async () => {
     if (picked.size !== 2 || building || playsLeft === 0) return;
     setBuilding(true);
+    setRateLimited(false);
     setError(null);
     const res = await matchmakerStartBoard();
     setBuilding(false);
+    if (res.rateLimited) {
+      setRateLimited(true);
+      return;
+    }
     if (res.error) {
       setError(res.error);
       return;
@@ -206,14 +212,31 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
       </div>
 
       <div className="mt-6 text-center">
-        {playsLeft === 0 ? (
-          <p className="text-base font-body text-club">
-            You&apos;ve used today&apos;s plays — the dial resets in 24 hours.
-          </p>
+        {rateLimited ? (
+          <div className="rounded-xl border border-gold/30 bg-zinc-900/40 py-8 px-6">
+            <p className="text-3xl mb-2">⏳</p>
+            <p className="font-header text-cyan text-xl">
+              Waiting on refresh…
+            </p>
+            <p className="font-body text-club mt-2 text-sm">
+              You&apos;ve hit today&apos;s plays limit. The dial resets in 24
+              hours — come back fresh.
+            </p>
+          </div>
+        ) : playsLeft === 0 ? (
+          <div className="rounded-xl border border-gold/30 bg-zinc-900/40 py-8 px-6">
+            <p className="text-3xl mb-2">🎯</p>
+            <p className="font-header text-cyan text-xl">
+              Plays emptied
+            </p>
+            <p className="font-body text-club mt-2 text-sm">
+              No plays left today — the dial resets in 24 hours.
+            </p>
+          </div>
         ) : (
           <button
             onClick={build}
-            disabled={picked.size !== 2 || building}
+            disabled={picked.size !== 2 || building || rateLimited}
             className="rounded-lg bg-gold px-8 py-3 text-base font-bold text-black transition-all duration-200 hover:bg-gold-royal disabled:opacity-40"
           >
             {building

@@ -45,15 +45,21 @@ export default function L3Trio() {
   const [submitting, setSubmitting] = useState(false);
   const [outcomes, setOutcomes] = useState<Outcome[] | null>(null);
   const [done, setDone] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const loadTrio = useCallback(async () => {
     setBusy(true);
     setError(null);
+    setRateLimited(false);
     setAssigned({});
     setOutcomes(null);
     const res = await l3NextTrio();
     setBusy(false);
+    if (res.rateLimited) {
+      setRateLimited(true);
+      return;
+    }
     if (res.error) {
       setError(res.error);
       return;
@@ -67,11 +73,16 @@ export default function L3Trio() {
     const run = async () => {
       setBusy(true);
       setError(null);
+      setRateLimited(false);
       setAssigned({});
       setOutcomes(null);
       const res = await l3NextTrio();
       if (cancelled) return;
       setBusy(false);
+      if (res.rateLimited) {
+        setRateLimited(true);
+        return;
+      }
       if (res.error) {
         setError(res.error);
         return;
@@ -104,6 +115,21 @@ export default function L3Trio() {
   const sayHi = async (personId: string) => {
     await openConversation(personId);
   };
+
+  if (rateLimited) {
+    return (
+      <div className="rounded-xl border border-gold/30 bg-zinc-900/40 py-10 px-6 text-center">
+        <p className="text-4xl mb-3">⏳</p>
+        <h2 className="font-header text-cyan text-2xl">
+          Waiting on refresh…
+        </h2>
+        <p className="font-body text-club mt-3 text-base max-w-md mx-auto">
+          You&apos;ve hit today&apos;s trio limit. The dial resets in 24 hours
+          — come back fresh.
+        </p>
+      </div>
+    );
+  }
 
   if (busy && people.length === 0) {
     return (
