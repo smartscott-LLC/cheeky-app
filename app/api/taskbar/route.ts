@@ -64,8 +64,8 @@ export async function GET() {
         unlimited = caps.messages === null;
         break;
       case 'swipes':
-        // The sparks hub's shared allowance: new people reachable today.
-        count = left(caps.people, row.new_people_today);
+        // Swipes are unlimited — no daily cap. Show nothing (null = no badge).
+        count = null;
         break;
       case 'l3':
         // L³ rides the same new-people allowance (no separate daily limit).
