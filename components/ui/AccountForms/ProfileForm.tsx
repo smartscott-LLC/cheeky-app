@@ -216,109 +216,10 @@ export default function ProfileForm({
 
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-      <div className="flex items-center justify-between">
-        <h2 className="font-header text-cyan text-xl">Your profile</h2>
-        <button
-          onClick={() => setDraftMode(!draftMode)}
-          className="rounded-lg border border-gold/40 px-3 py-1.5 text-sm font-bold text-gold transition hover:bg-gold/10"
-        >
-          {draftMode ? '✎ Write it yourself' : '✨ AI Bio Draft'}
-        </button>
-      </div>
+      <h2 className="font-header text-cyan text-xl">Your profile</h2>
       <p className="mt-1 text-sm font-body text-club">
         Up to {photoLimit} photos on this floor. This is what the club sees.
       </p>
-
-      {draftMode && (
-        <div className="mt-4 rounded-lg border border-gold/30 bg-gold/5 p-4">
-          <h3 className="font-header text-gold text-base">
-            Pick a crew member to write it for you
-          </h3>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {AI_CHARACTERS.map((ch) => (
-              <button
-                key={ch.key}
-                onClick={() => setSelectedChar(ch.key)}
-                className={`rounded-lg border px-3 py-2 text-left transition ${
-                  selectedChar === ch.key
-                    ? 'border-gold bg-gold/20'
-                    : 'border-zinc-700 hover:border-zinc-500'
-                }`}
-              >
-                <span className="font-header text-gold text-sm">{ch.name}</span>
-                <span className="ml-2 text-[11px] font-body text-club/70">
-                  ({ch.floor}) — {ch.desc}
-                </span>
-              </button>
-            ))}
-          </div>
-          <div className="mt-3 grid gap-2 sm:grid-cols-2">
-            <div>
-              <label className="text-xs font-semibold text-cyan">Vices / habits</label>
-              <select
-                value={draftInput.vices}
-                onChange={(e) => setDraftInput({ ...draftInput, vices: e.target.value })}
-                className="mt-1 w-full rounded-lg bg-zinc-800 p-2.5 text-sm text-white outline-none ring-club/50 focus:ring-2"
-              >
-                <option value="">None of your business</option>
-                <option value="non-drinker">Non-drinker</option>
-                <option value="social drinker">Social drinker</option>
-                <option value="party person">Party person</option>
-                <option value="smoker">Smoker</option>
-                <option value="non-smoker">Never smoked</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-xs font-semibold text-cyan">Living situation</label>
-              <select
-                value={draftInput.home}
-                onChange={(e) => setDraftInput({ ...draftInput, home: e.target.value })}
-                className="mt-1 w-full rounded-lg bg-zinc-800 p-2.5 text-sm text-white outline-none ring-club/50 focus:ring-2"
-              >
-                {HOME_OPTIONS.map((h) => (
-                  <option key={h} value={h}>{h}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className="mt-2">
-            <label className="text-xs font-semibold text-cyan">Anything else to add?</label>
-            <input
-              value={draftInput.extra}
-              onChange={(e) => setDraftInput({ ...draftInput, extra: e.target.value })}
-              placeholder="Hobbies, quirks, deal-breakers..."
-              maxLength={200}
-              className="mt-1 w-full rounded-lg bg-zinc-800 p-2.5 text-sm text-white outline-none ring-club/50 focus:ring-2"
-            />
-          </div>
-          {aiDraft && (
-            <div className="mt-3 rounded-lg border border-club/40 bg-club/10 p-3">
-              <span className="font-body text-club text-sm">{aiDraft}</span>
-              <div className="mt-2 flex gap-2">
-                <button
-                  onClick={acceptDraft}
-                  className="rounded-lg bg-club px-3 py-1.5 text-xs font-bold text-white transition hover:bg-club-cotton"
-                >
-                  Use this
-                </button>
-                <button
-                  onClick={() => setAiDraft(null)}
-                  className="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-cyan hover:border-zinc-500"
-                >
-                  Try again
-                </button>
-              </div>
-            </div>
-          )}
-          <button
-            onClick={handleAiDraft}
-            disabled={aiBusy}
-            className="mt-3 rounded-lg bg-gold px-4 py-2 text-sm font-bold text-black transition hover:bg-gold-royal disabled:opacity-50"
-          >
-            {aiBusy ? 'Thinking…' : '✨ Generate draft'}
-          </button>
-        </div>
-      )}
 
       <div className="mt-5 grid grid-cols-4 gap-2.5 sm:grid-cols-5">
         {photos.map((photo) => (
@@ -374,6 +275,106 @@ export default function ProfileForm({
             if (file) void handleUpload(file);
           }}
         />
+      </div>
+
+      {/* AI Bio Draft — sits between photos and bio fields */}
+      <div className="mt-6">
+        <button
+          onClick={() => setDraftMode(!draftMode)}
+          className="rounded-lg border border-gold/40 bg-gold/10 px-4 py-2.5 text-sm font-bold text-gold transition hover:bg-gold/20"
+        >
+          {draftMode ? '✎ Write it yourself' : '✨ AI Bio Draft'}
+        </button>
+        {draftMode && (
+          <div className="mt-3 rounded-lg border border-gold/30 bg-gold/5 p-4">
+            <h3 className="font-header text-gold text-base">
+              Pick a crew member to write it for you
+            </h3>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {AI_CHARACTERS.map((ch) => (
+                <button
+                  key={ch.key}
+                  onClick={() => setSelectedChar(ch.key)}
+                  className={`rounded-lg border px-3 py-2 text-left transition ${
+                    selectedChar === ch.key
+                      ? 'border-gold bg-gold/20'
+                      : 'border-zinc-700 hover:border-zinc-500'
+                  }`}
+                >
+                  <span className="font-header text-gold text-sm">{ch.name}</span>
+                  <span className="ml-2 text-[11px] font-body text-club/70">
+                    ({ch.floor}) — {ch.desc}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <div className="mt-3 grid gap-2 sm:grid-cols-2">
+              <div>
+                <label className="text-xs font-semibold text-cyan">Vices / habits</label>
+                <select
+                  value={draftInput.vices}
+                  onChange={(e) => setDraftInput({ ...draftInput, vices: e.target.value })}
+                  className="mt-1 w-full rounded-lg bg-zinc-800 p-2.5 text-sm text-white outline-none ring-club/50 focus:ring-2"
+                >
+                  <option value="">None of your business</option>
+                  <option value="non-drinker">Non-drinker</option>
+                  <option value="social drinker">Social drinker</option>
+                  <option value="party person">Party person</option>
+                  <option value="smoker">Smoker</option>
+                  <option value="non-smoker">Never smoked</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-cyan">Living situation</label>
+                <select
+                  value={draftInput.home}
+                  onChange={(e) => setDraftInput({ ...draftInput, home: e.target.value })}
+                  className="mt-1 w-full rounded-lg bg-zinc-800 p-2.5 text-sm text-white outline-none ring-club/50 focus:ring-2"
+                >
+                  {HOME_OPTIONS.map((h) => (
+                    <option key={h} value={h}>{h}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="mt-2">
+              <label className="text-xs font-semibold text-cyan">Anything else to add?</label>
+              <input
+                value={draftInput.extra}
+                onChange={(e) => setDraftInput({ ...draftInput, extra: e.target.value })}
+                placeholder="Hobbies, quirks, deal-breakers..."
+                maxLength={200}
+                className="mt-1 w-full rounded-lg bg-zinc-800 p-2.5 text-sm text-white outline-none ring-club/50 focus:ring-2"
+              />
+            </div>
+            {aiDraft && (
+              <div className="mt-3 rounded-lg border border-club/40 bg-club/10 p-3">
+                <span className="font-body text-club text-sm">{aiDraft}</span>
+                <div className="mt-2 flex gap-2">
+                  <button
+                    onClick={acceptDraft}
+                    className="rounded-lg bg-club px-3 py-1.5 text-xs font-bold text-white transition hover:bg-club-cotton"
+                  >
+                    Use this
+                  </button>
+                  <button
+                    onClick={() => setAiDraft(null)}
+                    className="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-cyan hover:border-zinc-500"
+                  >
+                    Try again
+                  </button>
+                </div>
+              </div>
+            )}
+            <button
+              onClick={handleAiDraft}
+              disabled={aiBusy}
+              className="mt-3 rounded-lg bg-gold px-4 py-2 text-sm font-bold text-black transition hover:bg-gold-royal disabled:opacity-50"
+            >
+              {aiBusy ? 'Thinking…' : '✨ Generate draft'}
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="mt-6 grid gap-4">
