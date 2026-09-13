@@ -21,7 +21,7 @@ begin
   -- Keys are app-owned namespaces ("agent:user:...", "report:user:...",
   -- "matchmaker:..."). Anything else is a caller trying to poke shared
   -- state — refuse it loudly.
-  if p_key !~ '^(agent|report|matchmaker):' then
+  if p_key !~ '^(agent|report|matchmaker|l3|swipes):' then
     raise exception 'invalid_rate_limit_key';
   end if;
 

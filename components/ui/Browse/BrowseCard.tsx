@@ -29,6 +29,7 @@ export default function BrowseCard({
   const [busy, setBusy] = useState(false);
   const [waved, setWaved] = useState<Set<string>>(new Set(wavedIds));
   const [waveBusy, setWaveBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const person = people[index];
 
@@ -96,6 +97,9 @@ export default function BrowseCard({
 
   return (
     <div className="mx-auto max-w-xl overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50">
+      {error && (
+        <p className="px-6 pt-4 text-sm font-body text-red-400">{error}</p>
+      )}
       <div className="flex aspect-[4/3] items-center justify-center bg-zinc-800">
         {photo?.storage_path ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -157,6 +161,10 @@ export default function BrowseCard({
             const result = await likeUser(person.id);
             setBusy(false);
             if (result.error) return;
+            if (result.rateLimited) {
+              setError('You have hit your daily swipe limit. Come back tomorrow.');
+              return;
+            }
             if (result.matched) {
               setMatched(person);
             } else {

@@ -16,6 +16,7 @@ interface TaskbarStateRow {
   blind_date_joins_today: number | null;
   gift_ready: boolean | null;
   gift_ready_in_minutes: number | null;
+  swipes_today: number | null;
 }
 
 const left = (cap: number | null, used: number | null): number | null => {
@@ -64,8 +65,8 @@ export async function GET() {
         unlimited = caps.messages === null;
         break;
       case 'swipes':
-        // Swipes are unlimited — no daily cap. Show nothing (null = no badge).
-        count = null;
+        // Swipes per day: silver=15, gold=30, platinum=50, diamond=100
+        count = row.swipes_today;
         break;
       case 'l3':
         // L³ rides the same new-people allowance (no separate daily limit).

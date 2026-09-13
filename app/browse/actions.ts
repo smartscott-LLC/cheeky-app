@@ -16,8 +16,24 @@ import type { Database } from '@/types_db';
  */
 export async function likeUser(
   userId: string
-): Promise<{ matched: boolean; matchId?: string | null; error?: string }> {
+): Promise<{ matched: boolean; matchId?: string | null; rateLimited?: boolean; error?: string }> {
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { matched: false, error: 'not_signed_in' };
+
+  // Check swipe budget before allowing the like
+  const { data: tierData } = await supabase.rpc('current_tier', { p_user: user.id });
+  const tier = (tierData as string) ?? 'silver';
+  const maxSwipes = tier === 'gold' ? 30 : tier === 'platinum' ? 50 : tier === 'diamond' ? 100 : 15;
+  const { data: allowed } = await supabase.rpc('bump_rate_limit', {
+    p_key: `swipes:${user.id}`,
+    p_window_seconds: 86400,
+    p_max: maxSwipes
+  });
+  if (allowed === false) {
+    return { matched: false, rateLimited: true };
+  }
+
   const { data, error } = await supabase.rpc('create_like', {
     p_likee: userId
   });
