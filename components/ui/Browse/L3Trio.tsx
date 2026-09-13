@@ -214,7 +214,7 @@ export default function L3Trio() {
           {error}
         </p>
       )}
-      <div className="grid grid-cols-3 gap-1.5">
+      <div className="mx-auto grid max-w-sm grid-cols-3 gap-2">
         {people.map((person) => (
           <div
             key={person.id}
@@ -229,13 +229,13 @@ export default function L3Trio() {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-2xl">
+                <div className="flex h-full w-full items-center justify-center text-xl">
                   {person.display_name?.charAt(0)?.toUpperCase() ?? '?'}
                 </div>
               )}
             </div>
             <div className="p-1.5">
-              <h3 className="font-header text-cyan text-xs">
+              <h3 className="font-header text-cyan text-xs leading-tight">
                 {person.display_name || 'Member'}
               </h3>
               {person.one_liner && (
@@ -257,7 +257,7 @@ export default function L3Trio() {
                           [person.id]: slot.choice
                         }))
                       }
-                      className={`rounded px-1 py-0.5 text-[9px] font-bold uppercase tracking-wide transition ${
+                      className={`rounded px-1 py-1 text-[10px] font-bold uppercase tracking-wide transition ${
                         selected ? slot.active : slot.cls
                       }`}
                     >
