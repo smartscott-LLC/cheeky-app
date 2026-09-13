@@ -447,6 +447,7 @@ export async function matchmakerHistory(): Promise<{
   for (const u of rows) {
     const entry = {
       id: u.id,
+      board_id: u.board_id,
       recipient_id: u.recipient_id,
       display_name: profileMap.get(u.recipient_id)?.display_name ?? 'Member',
       photo_path: profileMap.get(u.recipient_id)?.photo_path ?? null,
@@ -458,7 +459,8 @@ export async function matchmakerHistory(): Promise<{
         ? (giftByInv.get(u.gift_inventory_id) ?? null)
         : null
     };
-    byBoard.set(u.board_id, [...(byBoard.get(u.board_id) ?? []), entry]);
+    const existing = byBoard.get(u.board_id) ?? [];
+    byBoard.set(u.board_id, [...existing, entry]);
   }
 
   return {
