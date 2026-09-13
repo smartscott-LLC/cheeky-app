@@ -31,10 +31,6 @@ export default async function BrowsePage() {
     exclude.add(m.user_id_b);
   });
 
-  // Identity + preference drive the Spark List: only mutually compatible
-  // people show up (each must be in the other's dating preference).
-  const myProfile = await getProfile(supabase, user.id);
-
   // Fetch profiles and photos separately — photos.user_id references auth.users,
   // not profiles, so the typed client can't resolve the relationship.
   const { data: profileRows } = await supabase
