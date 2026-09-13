@@ -50,7 +50,7 @@ export default async function ClubPage() {
     <div className="relative min-h-screen bg-black">
       {/* Story mode nudge for verified members */}
       {!storyProgress?.is_complete && (
-        <div className="pointer-events-none fixed inset-0 z-30 flex items-start justify-center pt-20">
+        <div className="pointer-events-none fixed bottom-32 left-4 z-30 max-w-sm">
           <div className="pointer-events-auto">
             <StoryNudge
               hasProgress={!!storyProgress}

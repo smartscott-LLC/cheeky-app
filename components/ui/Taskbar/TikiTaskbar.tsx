@@ -36,6 +36,8 @@ interface Prefs {
 const PREFS_KEY = 'tiki:prefs';
 const REFRESH_MS = 60_000;
 const DEFAULT_OFFSET = { x: 12, y: 12 };
+const BAR_W = 280;
+const BAR_H = 90;
 
 const DEFAULT_PREFS: Prefs = {
   hidden: false,
@@ -142,19 +144,13 @@ export default function TikiTaskbar() {
 
   // Drag handlers
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    // Only the left side of the bar (not tiles or controls) can initiate a drag.
-    // Allow dragging from anywhere on the container to keep it simple.
     if ((e.target as HTMLElement).closest('a, button')) return;
     e.preventDefault();
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
     const rect = barRef.current?.getBoundingClientRect();
     if (!rect) return;
-    dragStart.current = {
-      x: e.clientX,
-      y: e.clientY,
-      ox: rect.left,
-      oy: rect.top
-    };
+    // Store absolute screen coords — independent of anchor logic.
+    dragStart.current = { x: e.clientX, y: e.clientY, ox: rect.left, oy: rect.top };
     setDragging(true);
   };
 
@@ -162,13 +158,10 @@ export default function TikiTaskbar() {
     if (!dragging) return;
     const dx = e.clientX - dragStart.current.x;
     const dy = e.clientY - dragStart.current.y;
-    const nx = Math.max(0, Math.min(window.innerWidth - 80, dragStart.current.ox + dx));
-    const ny = Math.max(0, Math.min(window.innerHeight - 40, dragStart.current.oy + dy));
-    // Determine new anchor based on position
-    const newAnchor: Prefs['anchor'] =
-      nx < window.innerWidth / 2 ? 'topleft' : 'topright';
-    const newOffset: Prefs['offset'] = { x: nx, y: ny };
-    savePrefs({ ...prefs, anchor: newAnchor, offset: newOffset });
+    const nx = Math.max(0, Math.min(window.innerWidth - BAR_W, dragStart.current.ox + dx));
+    const ny = Math.max(0, Math.min(window.innerHeight - BAR_H, dragStart.current.oy + dy));
+    // Always store as top-left; the renderer flips to bottom/right as needed.
+    savePrefs({ ...prefs, anchor: 'topleft', offset: { x: nx, y: ny } });
   };
 
   const onPointerUp = () => {
@@ -221,10 +214,15 @@ export default function TikiTaskbar() {
             <div className="absolute right-0 top-0 flex items-center gap-1 text-zinc-500">
               <button
                 onClick={() => {
-                  // Toggle between top and bottom anchors
-                  const nextAnchor: Prefs['anchor'] =
-                    isTop ? 'bottomleft' : 'topleft';
-                  savePrefs({ ...prefs, anchor: nextAnchor });
+                  // Flip top↔bottom; preserve absolute screen position.
+                  const isCurrentlyTop = prefs.anchor.startsWith('top');
+                  const nextAnchor: Prefs['anchor'] = isCurrentlyTop
+                    ? 'bottomleft'
+                    : 'topleft';
+                  const newY = isCurrentlyTop
+                    ? window.innerHeight - prefs.offset.y - BAR_H
+                    : prefs.offset.y;
+                  savePrefs({ ...prefs, anchor: nextAnchor, offset: { ...prefs.offset, y: newY } });
                 }}
                 className="rounded px-1 py-0.5 text-[10px] transition hover:text-cyan"
                 title="Toggle top/bottom position"
