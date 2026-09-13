@@ -490,26 +490,68 @@ export async function ownerGrantDirect(input: {
   benefitValue: string;
   reason?: string;
   days?: number;
-}): Promise<{ error?: string }> {
+}): Promise<{ error?: string; created?: boolean; emailSent?: boolean }> {
   if (!(await authorized(input.key))) return { error: 'forbidden' };
+  const emailLower = input.email.trim().toLowerCase();
+
+  // Look up existing user
   const { data: users } = await supabaseAdmin.auth.admin.listUsers({
     page: 1,
     perPage: 1000
   });
-  const target = users?.users.find(
-    (u) => u.email?.toLowerCase() === input.email.trim().toLowerCase()
+  let target = users?.users.find(
+    (u) => u.email?.toLowerCase() === emailLower
   );
-  if (!target) return { error: 'user not found' };
+  let created = false;
+  let emailSent = false;
 
-  const { error } = await supabaseAdmin.rpc('owner_grant', {
-    p_user: target.id,
+  if (!target) {
+    // Create the user with a random temp password
+    const tempPassword = crypto.randomUUID().slice(0, 10);
+    const { data: newUser, error: createErr } =
+      await supabaseAdmin.auth.admin.createUser({
+        email: emailLower,
+        password: tempPassword,
+        email_confirm: true
+      });
+    if (createErr) {
+      console.error('ownerGrantDirect createUser failed:', createErr.message);
+      return { error: createErr.message };
+    }
+    target = newUser.user;
+    created = true;
+
+    // Send welcome email with temp password
+    const subject = 'Your Club Cheeky account';
+    const text = `Hey — you've been granted access to Club Cheeky.\n\nEmail: ${emailLower}\nTemporary password: ${tempPassword}\n\nLog in at https://smartscott.online/signin and change your password right away.\n\nEnjoy the club.\n— Club Cheeky`;
+    const mailRes = await sendClubMail({ to: emailLower, subject, text });
+    emailSent = mailRes.ok;
+    if (!mailRes.ok) console.warn('ownerGrantDirect: email send failed');
+  }
+
+  // Ensure the user has a profile row (owner_grant RPC may reference it)
+  const profileId = target?.id;
+  if (!profileId) return { error: 'could not resolve user ID' };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error: profileErr } = await (supabaseAdmin.from('profiles') as any)
+    .upsert(
+      { id: profileId, email: emailLower, updated_at: new Date().toISOString() },
+      { onConflict: 'id' }
+    );
+  if (profileErr) {
+    console.error('ownerGrantDirect upsert profile failed:', profileErr.message);
+  }
+
+  const { error: grantErr } = await supabaseAdmin.rpc('owner_grant', {
+    p_user: profileId,
     p_benefit_type: input.benefitType,
     p_benefit_value: input.benefitValue.trim(),
     p_reason: input.reason?.trim() || 'owner',
     p_days: input.days ?? 30
   });
-  if (error) return { error: error.message };
-  return {};
+  if (grantErr) return { error: grantErr.message, created, emailSent };
+
+  return { created, emailSent };
 }
 
 /** Resolves a flag: grant directly, hand the cast a code to deliver, or dismiss. */
