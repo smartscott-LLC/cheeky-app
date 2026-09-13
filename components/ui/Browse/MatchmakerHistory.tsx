@@ -25,11 +25,7 @@ export default function MatchmakerHistory() {
   };
 
   useEffect(() => {
-    let cancelled = false;
-    load().then(() => {
-      if (!cancelled) setLoaded(true);
-    });
-    return () => { cancelled = true; };
+    load();
   }, []);
 
   const photoBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`;
