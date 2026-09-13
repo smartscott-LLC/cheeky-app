@@ -105,6 +105,17 @@ export default function BlindDateLobby({
           )}
         </div>
       )}
+
+      <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 text-center">
+        <p className="font-body text-club text-sm font-bold uppercase tracking-[0.3em]">
+          How it works
+        </p>
+        <p className="mx-auto mt-2 max-w-lg text-base font-body text-club">
+          4 rounds. She asks, you answer, she gives one mark to the best answer.
+          Most marks wins the date. You never see the other answers — only where
+          you stand.
+        </p>
+      </div>
     </div>
   );
 }
