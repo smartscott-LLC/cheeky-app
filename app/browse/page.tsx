@@ -50,7 +50,7 @@ export default async function BrowsePage() {
         .from('photos')
         .select('user_id, storage_path, position, is_primary')
         .in('user_id', profileIds)
-        .is('held_at', 'null')
+        .is('held_at', null)
     : { data: [] };
 
   // Group photos by user_id
