@@ -17,15 +17,13 @@ export default function MatchmakerHistory() {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const load = async () => {
-    const res = await matchmakerHistory();
-    setBoards(res.boards);
-    setLoaded(true);
-    if (res.error) setError(res.error);
-  };
-
   useEffect(() => {
-    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    matchmakerHistory().then((res) => {
+      setBoards(res.boards);
+      setLoaded(true);
+      if (res.error) setError(res.error);
+    });
   }, []);
 
   const photoBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`;
