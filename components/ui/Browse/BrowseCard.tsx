@@ -29,7 +29,6 @@ export default function BrowseCard({
   const [busy, setBusy] = useState(false);
   const [waved, setWaved] = useState<Set<string>>(new Set(wavedIds));
   const [waveBusy, setWaveBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [rateLimited, setRateLimited] = useState(false);
 
   const person = people[index];
