@@ -230,6 +230,12 @@ export default async function Account() {
             }
             gender={(profile?.gender as 'gentleman' | 'lady' | null) ?? null}
             oneLiner={profile?.one_liner ?? null}
+            smoking={profile?.smoking ?? null}
+            drinking={profile?.drinking ?? null}
+            religion={profile?.religion ?? null}
+            hasKids={profile?.has_kids ?? false}
+            livesAtHome={profile?.lives_at_home ?? false}
+            hobbies={(profile?.hobbies as string[] | null) ?? null}
             photos={(photos?.data ?? []).map((p) => ({
               id: p.id,
               storage_path: p.storage_path,
