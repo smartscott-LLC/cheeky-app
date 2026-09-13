@@ -11,7 +11,13 @@ export async function updateProfile(
   interestedIn?: 'women' | 'men' | 'everyone',
   gender?: 'gentleman' | 'lady' | null,
   oneLiner?: string,
-  honeypot?: string
+  honeypot?: string,
+  smoking?: 'never' | 'socially' | 'quit',
+  drinking?: 'never' | 'socially' | 'regularly',
+  religion?: string,
+  hasKids?: boolean,
+  livesAtHome?: boolean,
+  hobbies?: string
 ): Promise<{ error?: string }> {
   const supabase = await createClient();
   const {
@@ -42,6 +48,22 @@ export async function updateProfile(
       gender: gender ?? null
     })
     .eq('id', user.id);
+
+  // Additional extended fields (may not exist in generated types yet)
+  if (smoking || drinking || religion || hasKids !== undefined || livesAtHome !== undefined || hobbies !== undefined) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase.rpc as any)('update_profile_extended', {
+      p_user: user.id,
+      p_smoking: smoking ?? null,
+      p_drinking: drinking ?? null,
+      p_religion: religion?.trim() || null,
+      p_has_kids: hasKids ?? false,
+      p_lives_at_home: livesAtHome ?? false,
+      p_hobbies: hobbies
+        ? hobbies.split(',').map((h) => h.trim()).filter(Boolean)
+        : null
+    });
+  }
 
   if (error) {
     console.error('updateProfile failed:', error.message);

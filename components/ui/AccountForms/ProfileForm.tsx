@@ -22,12 +22,26 @@ interface ProfileFormProps {
   interestedIn?: 'women' | 'men' | 'everyone';
   gender?: 'gentleman' | 'lady' | null;
   oneLiner?: string | null;
+  smoking?: string | null;
+  drinking?: string | null;
+  religion?: string | null;
+  hasKids?: boolean | null;
+  livesAtHome?: boolean | null;
+  hobbies?: string[] | null;
   photos: ProfilePhoto[];
   photoBase: string;
   photoLimit?: number;
 }
 
 const MAX_PHOTOS = 3;
+
+const AI_CHARACTERS = [
+  { key: 'trixie', name: 'Trixie', floor: 'Platinum', desc: 'Sharp, confident' },
+  { key: 'bartender', name: 'Roxy', floor: 'Gold', desc: 'Playful, dangerous' },
+  { key: 'hostess', name: 'Valentina', floor: 'Diamond', desc: 'High standards' }
+] as const;
+
+const HOME_OPTIONS = ['own place', 'rents', 'with roommates', "it's complicated"];
 
 export default function ProfileForm({
   userId: _userId,
@@ -36,6 +50,12 @@ export default function ProfileForm({
   interestedIn = 'everyone',
   gender = null,
   oneLiner = null,
+  smoking = null,
+  drinking = null,
+  religion = null,
+  hasKids = false,
+  livesAtHome = false,
+  hobbies: initialHobbies,
   photos: initialPhotos,
   photoBase,
   photoLimit = MAX_PHOTOS
@@ -47,11 +67,26 @@ export default function ProfileForm({
   const [identity, setIdentity] = useState<'gentleman' | 'lady' | null>(gender);
   const [honeypot, setHoneypot] = useState('');
   const [photos, setPhotos] = useState<ProfilePhoto[]>(initialPhotos);
+  const [smokingSel, setSmokingSel] = useState(smoking ?? '');
+  const [drinkingSel, setDrinkingSel] = useState(drinking ?? '');
+  const [religionSel, setReligionSel] = useState(religion ?? '');
+  const [hasKidsSel, setHasKidsSel] = useState(Boolean(hasKids));
+  const [livesAtHomeSel, setLivesAtHomeSel] = useState(Boolean(livesAtHome));
+  const [hobbiesSel, setHobbiesSel] = useState((initialHobbies ?? []).join(', '));
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const [draftMode, setDraftMode] = useState(false);
+  const [selectedChar, setSelectedChar] = useState('trixie');
+  const [draftInput, setDraftInput] = useState<{
+    vices: string;
+    home: string;
+    extra: string;
+  }>({ vices: '', home: '', extra: '' });
+  const [aiDraft, setAiDraft] = useState<string | null>(null);
+  const [aiBusy, setAiBusy] = useState(false);
 
   const handleUpload = async (file: File) => {
     if (photos.length >= photoLimit) {
@@ -135,7 +170,13 @@ export default function ProfileForm({
       pref,
       identity,
       oneLinerText,
-      honeypot
+      honeypot,
+      smokingSel as 'never' | 'socially' | 'quit' | undefined,
+      drinkingSel as 'never' | 'socially' | 'regularly' | undefined,
+      religionSel || undefined,
+      hasKidsSel,
+      livesAtHomeSel,
+      hobbiesSel
     );
     setSaving(false);
     if (res.error) {
@@ -146,12 +187,138 @@ export default function ProfileForm({
     setTimeout(() => setSaved(false), 2000);
   };
 
+  const handleAiDraft = async () => {
+    setAiBusy(true);
+    setError(null);
+    const res = await (await import('@/app/api/bio-draft/route')).getBioDraft({
+      personality: selectedChar,
+      vices: draftInput.vices,
+      home: draftInput.home,
+      hobbies: draftInput.extra
+    }, bioText);
+    setAiBusy(false);
+    if (res.error) {
+      setError(res.error === 'ai_unavailable' ? 'The cast is on break — fill it in yourself.' : res.error);
+      return;
+    }
+    if (res.draft) {
+      setAiDraft(res.draft);
+      setError(null);
+    }
+  };
+
+  const acceptDraft = () => {
+    if (aiDraft) {
+      setBioText(aiDraft);
+      setDraftMode(false);
+    }
+  };
+
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-      <h2 className="font-header text-cyan text-xl">Your profile</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="font-header text-cyan text-xl">Your profile</h2>
+        <button
+          onClick={() => setDraftMode(!draftMode)}
+          className="rounded-lg border border-gold/40 px-3 py-1.5 text-sm font-bold text-gold transition hover:bg-gold/10"
+        >
+          {draftMode ? '✎ Write it yourself' : '✨ AI Bio Draft'}
+        </button>
+      </div>
       <p className="mt-1 text-sm font-body text-club">
         Up to {photoLimit} photos on this floor. This is what the club sees.
       </p>
+
+      {draftMode && (
+        <div className="mt-4 rounded-lg border border-gold/30 bg-gold/5 p-4">
+          <h3 className="font-header text-gold text-base">
+            Pick a crew member to write it for you
+          </h3>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {AI_CHARACTERS.map((ch) => (
+              <button
+                key={ch.key}
+                onClick={() => setSelectedChar(ch.key)}
+                className={`rounded-lg border px-3 py-2 text-left transition ${
+                  selectedChar === ch.key
+                    ? 'border-gold bg-gold/20'
+                    : 'border-zinc-700 hover:border-zinc-500'
+                }`}
+              >
+                <span className="font-header text-gold text-sm">{ch.name}</span>
+                <span className="ml-2 text-[11px] font-body text-club/70">
+                  ({ch.floor}) — {ch.desc}
+                </span>
+              </button>
+            ))}
+          </div>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            <div>
+              <label className="text-xs font-semibold text-cyan">Vices / habits</label>
+              <select
+                value={draftInput.vices}
+                onChange={(e) => setDraftInput({ ...draftInput, vices: e.target.value })}
+                className="mt-1 w-full rounded-lg bg-zinc-800 p-2.5 text-sm text-white outline-none ring-club/50 focus:ring-2"
+              >
+                <option value="">None of your business</option>
+                <option value="non-drinker">Non-drinker</option>
+                <option value="social drinker">Social drinker</option>
+                <option value="party person">Party person</option>
+                <option value="smoker">Smoker</option>
+                <option value="non-smoker">Never smoked</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-cyan">Living situation</label>
+              <select
+                value={draftInput.home}
+                onChange={(e) => setDraftInput({ ...draftInput, home: e.target.value })}
+                className="mt-1 w-full rounded-lg bg-zinc-800 p-2.5 text-sm text-white outline-none ring-club/50 focus:ring-2"
+              >
+                {HOME_OPTIONS.map((h) => (
+                  <option key={h} value={h}>{h}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="mt-2">
+            <label className="text-xs font-semibold text-cyan">Anything else to add?</label>
+            <input
+              value={draftInput.extra}
+              onChange={(e) => setDraftInput({ ...draftInput, extra: e.target.value })}
+              placeholder="Hobbies, quirks, deal-breakers..."
+              maxLength={200}
+              className="mt-1 w-full rounded-lg bg-zinc-800 p-2.5 text-sm text-white outline-none ring-club/50 focus:ring-2"
+            />
+          </div>
+          {aiDraft && (
+            <div className="mt-3 rounded-lg border border-club/40 bg-club/10 p-3">
+              <span className="font-body text-club text-sm">{aiDraft}</span>
+              <div className="mt-2 flex gap-2">
+                <button
+                  onClick={acceptDraft}
+                  className="rounded-lg bg-club px-3 py-1.5 text-xs font-bold text-white transition hover:bg-club-cotton"
+                >
+                  Use this
+                </button>
+                <button
+                  onClick={() => setAiDraft(null)}
+                  className="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-cyan hover:border-zinc-500"
+                >
+                  Try again
+                </button>
+              </div>
+            </div>
+          )}
+          <button
+            onClick={handleAiDraft}
+            disabled={aiBusy}
+            className="mt-3 rounded-lg bg-gold px-4 py-2 text-sm font-bold text-black transition hover:bg-gold-royal disabled:opacity-50"
+          >
+            {aiBusy ? 'Thinking…' : '✨ Generate draft'}
+          </button>
+        </div>
+      )}
 
       <div className="mt-5 grid grid-cols-4 gap-2.5 sm:grid-cols-5">
         {photos.map((photo) => (
@@ -288,8 +455,109 @@ export default function ProfileForm({
           </p>
         </div>
         <div className="grid gap-1">
-          <label htmlFor="bio" className="text-sm font-semibold">
+          <label htmlFor="smoking" className="text-sm font-semibold">
+            Smoking
+          </label>
+          <select
+            id="smoking"
+            value={smokingSel}
+            onChange={(e) => setSmokingSel(e.target.value)}
+            className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
+          >
+            <option value="">Prefer not to say</option>
+            <option value="never">Never</option>
+            <option value="socially">Socially</option>
+            <option value="quit">Quit</option>
+          </select>
+        </div>
+        <div className="grid gap-1">
+          <label htmlFor="drinking" className="text-sm font-semibold">
+            Drinking
+          </label>
+          <select
+            id="drinking"
+            value={drinkingSel}
+            onChange={(e) => setDrinkingSel(e.target.value)}
+            className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
+          >
+            <option value="">Prefer not to say</option>
+            <option value="never">Never</option>
+            <option value="socially">Socially</option>
+            <option value="regularly">Regularly</option>
+          </select>
+        </div>
+        <div className="grid gap-1">
+          <label htmlFor="religion" className="text-sm font-semibold">
+            Religion
+          </label>
+          <input
+            id="religion"
+            value={religionSel}
+            onChange={(e) => setReligionSel(e.target.value)}
+            placeholder="Optional"
+            maxLength={100}
+            className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
+          />
+        </div>
+        <div className="grid gap-1">
+          <label className="text-sm font-semibold">Kids?</label>
+          <div className="flex gap-4 mt-1">
+            <label className="flex items-center gap-1 cursor-pointer">
+              <input
+                type="radio"
+                checked={!hasKidsSel}
+                onChange={() => setHasKidsSel(false)}
+                className="accent-club"
+              />
+              No kids
+            </label>
+            <label className="flex items-center gap-1 cursor-pointer">
+              <input
+                type="radio"
+                checked={!!hasKidsSel}
+                onChange={() => setHasKidsSel(true)}
+                className="accent-club"
+              />
+              Has kids
+            </label>
+          </div>
+        </div>
+        <div className="grid gap-1">
+          <label className="text-sm font-semibold">Living situation</label>
+          <select
+            value={livesAtHomeSel ? 'at home' : 'own place'}
+            onChange={(e) => setLivesAtHomeSel(e.target.value === 'at home')}
+            className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
+          >
+            <option value="own place">Own / rent place</option>
+            <option value="at home">Lives at home</option>
+          </select>
+        </div>
+        <div className="grid gap-1 sm:col-span-2">
+          <label htmlFor="hobbies" className="text-sm font-semibold">
+            Hobbies (comma-separated)
+          </label>
+          <input
+            id="hobbies"
+            value={hobbiesSel}
+            onChange={(e) => setHobbiesSel(e.target.value)}
+            placeholder="hiking, cooking, vinyl, etc."
+            maxLength={300}
+            className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
+          />
+        </div>
+        <div className="grid gap-1 sm:col-span-2">
+          <label htmlFor="bio" className="text-sm font-semibold flex items-center gap-2">
             Bio
+            {aiDraft && (
+              <button
+                onClick={() => setAiDraft(null)}
+                className="text-xs text-club/60 hover:text-club"
+                title="Clear AI draft"
+              >
+                ✕ clear
+              </button>
+            )}
           </label>
           <textarea
             id="bio"
@@ -297,8 +565,14 @@ export default function ProfileForm({
             onChange={(e) => setBioText(e.target.value)}
             maxLength={500}
             rows={4}
+            placeholder={aiDraft ? aiDraft : 'Say something that makes them want to match...'}
             className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
           />
+          {bioText.length > 400 && (
+            <span className="text-xs font-body text-club/60">
+              {bioText.length}/500
+            </span>
+          )}
         </div>
       </div>
 
