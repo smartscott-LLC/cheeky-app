@@ -2,6 +2,11 @@ import type { Tables } from '../types_db';
 
 type Price = Tables<'prices'>;
 
+export const getFormString = (fd: FormData, key: string): string => {
+  const val = fd.get(key);
+  return typeof val === 'string' ? val : '';
+};
+
 export const getURL = (path: string = '') => {
   // Check if NEXT_PUBLIC_SITE_URL is set and non-empty. Set this to your site URL in production env.
   let url =

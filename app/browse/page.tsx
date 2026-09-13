@@ -41,7 +41,9 @@ export default async function BrowsePage() {
   // not profiles, so the typed client can't resolve the relationship.
   const { data: profileRows } = await supabase
     .from('profiles')
-    .select('id, display_name, bio, one_liner, verified_at, gender, interested_in')
+    .select(
+      'id, display_name, bio, one_liner, verified_at, gender, interested_in'
+    )
     .is('bot_flagged_at', null)
     .limit(50);
 

@@ -3,7 +3,7 @@
 import { createClient } from '@/utils/supabase/server';
 import { supabaseAdmin } from '@/utils/supabase/admin';
 import { createVerificationSession } from '@/utils/stripe/verification';
-import { getURL } from '@/utils/helpers';
+import { getURL, getFormString } from '@/utils/helpers';
 import { redirect } from 'next/navigation';
 
 const CONSENT_VERSION = 'v1';
@@ -19,12 +19,12 @@ function isValidEmail(email: string) {
  * into the ID check. After Stripe: verify the email, then the lobby.
  */
 export async function checkInAtTheDoor(formData: FormData) {
-  const honeypot = (formData.get('company') || '').toString().trim();
+  const honeypot = getFormString(formData, 'company').trim();
   if (honeypot) {
     await supabaseAdmin.rpc('flag_honeypot_catch', {
       p_field: 'company',
       p_page: 'checkin',
-      p_email: (formData.get('email') || '').toString()
+      p_email: getFormString(formData, 'email')
     });
     return redirect('/verify?error=honeypot');
   }
@@ -37,11 +37,11 @@ export async function checkInAtTheDoor(formData: FormData) {
   ].every((name) => formData.get(name) === 'on');
   if (!allConsents) return redirect('/verify?error=consent');
 
-  const email = (formData.get('email') || '').toString().trim();
-  const password = (formData.get('password') || '').toString();
-  const fullName = (formData.get('full_name') || '').toString().trim();
-  const gender = (formData.get('gender') || '').toString().trim();
-  const interestedIn = (formData.get('interestedIn') || '').toString().trim();
+  const email = getFormString(formData, 'email').trim();
+  const password = getFormString(formData, 'password');
+  const fullName = getFormString(formData, 'full_name').trim();
+  const gender = getFormString(formData, 'gender').trim();
+  const interestedIn = getFormString(formData, 'interestedIn').trim();
   const retention = Number(formData.get('messageRetentionDays') ?? 90);
 
   if (gender !== 'gentleman' && gender !== 'lady')

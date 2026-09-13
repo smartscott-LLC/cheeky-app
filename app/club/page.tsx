@@ -4,6 +4,8 @@ import { getProfile, getUser } from '@/utils/supabase/queries';
 import { redirect } from 'next/navigation';
 import FloorPageLayout from '@/components/ui/Club/FloorPageLayout';
 import { ASSETS } from '@/utils/assets';
+import StoryNudge from '@/components/ui/Club/StoryNudge';
+import { getStoryProgress } from '@/utils/story/server';
 
 export default async function ClubPage() {
   const supabase = await createClient();
@@ -14,6 +16,9 @@ export default async function ClubPage() {
 
   const profile = await getProfile(supabase, user.id);
   const verified = Boolean(profile?.verified_at);
+
+  // Check story progress for the nudge
+  const storyProgress = await getStoryProgress();
 
   // The velvet rope: you don't walk the floor until Brutus clears you.
   if (!verified) {
@@ -42,18 +47,32 @@ export default async function ClubPage() {
   }
 
   return (
-    <FloorPageLayout
-      background={ASSETS.brand.clubInterior}
-      floorName="Lobby"
-      floorTagline="The Dance Floor at :00, Speed Dating at :30, the Rooftop at :45 — and Blind Date when the Gold floor's hostess opens the door."
-      floorSlug="lobby"
-      eventSlug="dance_floor"
-      eventLabel="VIP"
-      centerActionIcon={ASSETS.icons.vipLounge}
-      centerActionHref="/floor/silver"
-      rightBottomHref="/coat-check"
-      rightBottomLabel="Coat Check"
-      rightBottomIcon={ASSETS.icons.coatCheck}
-    />
+    <div className="relative min-h-screen bg-black">
+      {/* Story mode nudge for verified members */}
+      {!storyProgress?.is_complete && (
+        <div className="pointer-events-none fixed inset-0 z-30 flex items-start justify-center pt-20">
+          <div className="pointer-events-auto">
+            <StoryNudge
+              hasProgress={!!storyProgress}
+              isComplete={storyProgress?.is_complete ?? false}
+            />
+          </div>
+        </div>
+      )}
+
+      <FloorPageLayout
+        background={ASSETS.brand.clubInterior}
+        floorName="Lobby"
+        floorTagline="The Dance Floor at :00, Speed Dating at :30, the Rooftop at :45 — and Blind Date when the Gold floor's hostess opens the door."
+        floorSlug="lobby"
+        eventSlug="dance_floor"
+        eventLabel="VIP"
+        centerActionIcon={ASSETS.icons.vipLounge}
+        centerActionHref="/floor/silver"
+        rightBottomHref="/coat-check"
+        rightBottomLabel="Coat Check"
+        rightBottomIcon={ASSETS.icons.coatCheck}
+      />
+    </div>
   );
 }

@@ -10,5 +10,13 @@
   },
   "env": {
     "builtin": true
-  }
+  },
+  "overrides": [
+    {
+      "files": ["types_db.ts"],
+      "rules": {
+        "typescript/no-redundant-type-constituents": "off"
+      }
+    }
+  ]
 }

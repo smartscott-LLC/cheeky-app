@@ -100,9 +100,7 @@ export default function BrowseCard({
     return (
       <div className="mx-auto max-w-xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-10 text-center">
         <p className="text-4xl mb-3">⏳</p>
-        <h2 className="font-header text-cyan text-2xl">
-          Waiting on refresh…
-        </h2>
+        <h2 className="font-header text-cyan text-2xl">Waiting on refresh…</h2>
         <p className="font-body text-club mt-3 text-base max-w-md">
           You&apos;ve hit today&apos;s swipe limit. The dial resets in 24 hours
           — come back fresh.

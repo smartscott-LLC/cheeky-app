@@ -32,12 +32,13 @@ try {
   console.log(`${src}: ${lines} lines, well-formed`);
 
   const presentKeys = new Set(
-    body.split('\n')
-      .map(l => l.split('=')[0]?.trim())
-      .filter(k => k && !k.startsWith('#'))
+    body
+      .split('\n')
+      .map((l) => l.split('=')[0]?.trim())
+      .filter((k) => k && !k.startsWith('#'))
   );
 
-  const missing = requiredKeys.filter(k => !presentKeys.has(k));
+  const missing = requiredKeys.filter((k) => !presentKeys.has(k));
   if (missing.length) {
     console.warn(`⚠️  Missing required keys: ${missing.join(', ')}`);
   } else {

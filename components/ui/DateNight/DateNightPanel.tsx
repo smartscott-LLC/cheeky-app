@@ -89,9 +89,9 @@ export default function DateNightPanel({
         setPartnerPicked(Boolean(d.partner_picked));
       }
     };
-    run();
+    void run();
     const t = setInterval(() => {
-      if (!cancelled) run();
+      if (!cancelled) void run();
     }, 2000);
     const clock = setInterval(() => setNow(Date.now()), 500);
     return () => {

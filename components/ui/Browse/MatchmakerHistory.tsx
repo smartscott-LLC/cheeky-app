@@ -19,7 +19,7 @@ export default function MatchmakerHistory() {
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    matchmakerHistory().then((res) => {
+    void matchmakerHistory().then((res) => {
       setBoards(res.boards);
       setLoaded(true);
       if (res.error) setError(res.error);
@@ -37,9 +37,15 @@ export default function MatchmakerHistory() {
     });
 
   const totalUnlocks = boards.reduce((sum, b) => sum + b.unlocks.length, 0);
-  const sentUnlocks = boards.flatMap(b => b.unlocks).filter(u => u.status === 'sent');
-  const acceptedUnlocks = boards.flatMap(b => b.unlocks).filter(u => u.status === 'accepted');
-  const declinedUnlocks = boards.flatMap(b => b.unlocks).filter(u => u.status === 'declined');
+  const sentUnlocks = boards
+    .flatMap((b) => b.unlocks)
+    .filter((u) => u.status === 'sent');
+  const acceptedUnlocks = boards
+    .flatMap((b) => b.unlocks)
+    .filter((u) => u.status === 'accepted');
+  const declinedUnlocks = boards
+    .flatMap((b) => b.unlocks)
+    .filter((u) => u.status === 'declined');
 
   if (!loaded) return null;
   if (boards.length === 0 && sentUnlocks.length === 0) return null;
@@ -47,10 +53,15 @@ export default function MatchmakerHistory() {
   return (
     <div className="mt-12">
       <div className="flex items-center justify-between px-6">
-        <h2 className="font-header text-cyan text-2xl">Your Matchmaker Activity</h2>
+        <h2 className="font-header text-cyan text-2xl">
+          Your Matchmaker Activity
+        </h2>
         {boards.length > 0 && (
           <button
-            onClick={() => { setBoards([]); setLoaded(true); }}
+            onClick={() => {
+              setBoards([]);
+              setLoaded(true);
+            }}
             className="rounded-lg border border-zinc-700 px-3 py-1 text-sm font-body text-zinc-400 transition hover:border-zinc-500 hover:text-white"
           >
             Clear
@@ -80,7 +91,9 @@ export default function MatchmakerHistory() {
       )}
 
       {error && (
-        <p className="mx-6 mt-3 text-center text-sm font-body text-club">{error}</p>
+        <p className="mx-6 mt-3 text-center text-sm font-body text-club">
+          {error}
+        </p>
       )}
 
       {/* All unlocks grouped by status, then by board */}
@@ -93,7 +106,7 @@ export default function MatchmakerHistory() {
             </p>
             <div className="space-y-3">
               {sentUnlocks.map((unlock) => {
-                const board = boards.find(b => b.id === unlock.board_id);
+                const board = boards.find((b) => b.id === unlock.board_id);
                 return (
                   <div
                     key={unlock.id}
@@ -122,7 +135,8 @@ export default function MatchmakerHistory() {
                           "{unlock.message}"
                         </p>
                         <p className="mt-1 text-xs text-zinc-500">
-                          Sent {board ? dateLabel(board.created_at) : 'recently'}
+                          Sent{' '}
+                          {board ? dateLabel(board.created_at) : 'recently'}
                         </p>
                       </div>
                       <span className="shrink-0 rounded-full bg-yellow-500/20 px-2 py-1 text-xs font-bold text-yellow-400">
@@ -188,111 +202,120 @@ export default function MatchmakerHistory() {
         )}
 
         {/* Old boards with declines/no replies */}
-        {boards.filter(b => b.unlocks.length > 0).length > 0 && (
+        {boards.filter((b) => b.unlocks.length > 0).length > 0 && (
           <div>
             <p className="mb-3 text-sm font-bold uppercase tracking-wider text-zinc-500">
               Past boards
             </p>
             <div className="space-y-4">
-              {boards.filter(b => b.unlocks.length > 0).map((board) => (
-                <div
-                  key={board.id}
-                  className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-5"
-                >
-                  <div className="flex items-center justify-between">
-                    <p className="text-lg">
-                      {board.status === 'won' ? '🎉 Won the board' : '🫧 Three strikes'}
-                      <span className="ml-2 text-sm text-zinc-400">
-                        {dateLabel(board.created_at)}
-                      </span>
-                    </p>
-                    <p className="text-sm font-body text-club">
-                      {board.matches_found}/2 found · {board.strikes} strikes
-                    </p>
-                  </div>
-
-                  {board.unlocks.length === 0 ? (
-                    <p className="mt-3 text-sm font-body text-club">
-                      No unlocks this board.
-                    </p>
-                  ) : (
-                    <div className="mt-4 space-y-3">
-                      {board.unlocks.map((unlock) => (
-                        <div
-                          key={unlock.id}
-                          className="rounded-lg border border-zinc-800 bg-black/40 p-3"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-zinc-800">
-                              {unlock.photo_path ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img
-                                  src={`${photoBase}${unlock.photo_path}`}
-                                  alt={unlock.display_name}
-                                  className="h-full w-full object-cover"
-                                />
-                              ) : (
-                                <div className="flex h-full w-full items-center justify-center text-lg">
-                                  {unlock.display_name.charAt(0).toUpperCase()}
-                                </div>
-                              )}
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <p className="font-semibold text-white">
-                                {unlock.display_name}
-                                <span className="ml-2 text-xs font-normal text-zinc-400">
-                                  {unlock.status === 'accepted'
-                                    ? 'Accepted'
-                                    : unlock.status === 'declined'
-                                      ? 'Declined'
-                                      : 'Sent'}
-                                </span>
-                              </p>
-                              <p className="truncate text-sm font-body text-club italic">
-                                "{unlock.message}"
-                              </p>
-                            </div>
-                          </div>
-
-                          {unlock.status === 'accepted' && (
-                            <button
-                              onClick={() => openConversation(unlock.recipient_id)}
-                              className="mt-3 w-full rounded-lg bg-club px-4 py-2 text-sm font-bold text-white transition hover:bg-club-cotton"
-                            >
-                              You&apos;re talking — open the chat →
-                            </button>
-                          )}
-
-                          {unlock.status === 'declined' && (
-                            <div className="mt-3 rounded-lg border border-gold/30 bg-gold/5 p-3 text-center">
-                              <p className="text-sm font-body text-club">
-                                They declined —{' '}
-                                <span className="font-semibold text-gold">
-                                  but you still won the game.
-                                </span>
-                              </p>
-                              <p className="mt-1 text-sm font-body text-club">
-                                {unlock.consolation ? (
-                                  <>
-                                    Your{' '}
-                                    <span className="font-semibold text-gold">
-                                      {unlock.consolation.emoji}{' '}
-                                      {unlock.consolation.name}
-                                    </span>{' '}
-                                    — a Matchmaker-exclusive is in your inventory.
-                                  </>
-                                ) : (
-                                  'A Matchmaker-exclusive collectible is in your inventory.'
-                                )}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      ))}
+              {boards
+                .filter((b) => b.unlocks.length > 0)
+                .map((board) => (
+                  <div
+                    key={board.id}
+                    className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-5"
+                  >
+                    <div className="flex items-center justify-between">
+                      <p className="text-lg">
+                        {board.status === 'won'
+                          ? '🎉 Won the board'
+                          : '🫧 Three strikes'}
+                        <span className="ml-2 text-sm text-zinc-400">
+                          {dateLabel(board.created_at)}
+                        </span>
+                      </p>
+                      <p className="text-sm font-body text-club">
+                        {board.matches_found}/2 found · {board.strikes} strikes
+                      </p>
                     </div>
-                  )}
-                </div>
-              ))}
+
+                    {board.unlocks.length === 0 ? (
+                      <p className="mt-3 text-sm font-body text-club">
+                        No unlocks this board.
+                      </p>
+                    ) : (
+                      <div className="mt-4 space-y-3">
+                        {board.unlocks.map((unlock) => (
+                          <div
+                            key={unlock.id}
+                            className="rounded-lg border border-zinc-800 bg-black/40 p-3"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-zinc-800">
+                                {unlock.photo_path ? (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <img
+                                    src={`${photoBase}${unlock.photo_path}`}
+                                    alt={unlock.display_name}
+                                    className="h-full w-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="flex h-full w-full items-center justify-center text-lg">
+                                    {unlock.display_name
+                                      .charAt(0)
+                                      .toUpperCase()}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="font-semibold text-white">
+                                  {unlock.display_name}
+                                  <span className="ml-2 text-xs font-normal text-zinc-400">
+                                    {unlock.status === 'accepted'
+                                      ? 'Accepted'
+                                      : unlock.status === 'declined'
+                                        ? 'Declined'
+                                        : 'Sent'}
+                                  </span>
+                                </p>
+                                <p className="truncate text-sm font-body text-club italic">
+                                  "{unlock.message}"
+                                </p>
+                              </div>
+                            </div>
+
+                            {unlock.status === 'accepted' && (
+                              <button
+                                onClick={() =>
+                                  openConversation(unlock.recipient_id)
+                                }
+                                className="mt-3 w-full rounded-lg bg-club px-4 py-2 text-sm font-bold text-white transition hover:bg-club-cotton"
+                              >
+                                You&apos;re talking — open the chat →
+                              </button>
+                            )}
+
+                            {unlock.status === 'declined' && (
+                              <div className="mt-3 rounded-lg border border-gold/30 bg-gold/5 p-3 text-center">
+                                <p className="text-sm font-body text-club">
+                                  They declined —{' '}
+                                  <span className="font-semibold text-gold">
+                                    but you still won the game.
+                                  </span>
+                                </p>
+                                <p className="mt-1 text-sm font-body text-club">
+                                  {unlock.consolation ? (
+                                    <>
+                                      Your{' '}
+                                      <span className="font-semibold text-gold">
+                                        {unlock.consolation.emoji}{' '}
+                                        {unlock.consolation.name}
+                                      </span>{' '}
+                                      — a Matchmaker-exclusive is in your
+                                      inventory.
+                                    </>
+                                  ) : (
+                                    'A Matchmaker-exclusive collectible is in your inventory.'
+                                  )}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
             </div>
           </div>
         )}

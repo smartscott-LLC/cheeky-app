@@ -187,9 +187,12 @@ Head to the club when you're ready — the DJ spins every hour, and the crew is 
  */
 async function verifiedDob(sessionId: string): Promise<{ birthday?: string }> {
   try {
-    const vs = await getStripe().identity.verificationSessions.retrieve(sessionId, {
-      expand: ['last_verification_report']
-    });
+    const vs = await getStripe().identity.verificationSessions.retrieve(
+      sessionId,
+      {
+        expand: ['last_verification_report']
+      }
+    );
     const report = vs.last_verification_report;
     if (report && typeof report !== 'string') {
       const dob = report.id_number?.dob;
@@ -381,9 +384,12 @@ const manageSubscriptionStatusChange = async (
 
   const { id: uuid } = customerData!;
 
-  const subscription = await getStripe().subscriptions.retrieve(subscriptionId, {
-    expand: ['default_payment_method']
-  });
+  const subscription = await getStripe().subscriptions.retrieve(
+    subscriptionId,
+    {
+      expand: ['default_payment_method']
+    }
+  );
   // Upsert the latest status of the subscription object.
   const subscriptionData: TablesInsert<'subscriptions'> = {
     id: subscription.id,

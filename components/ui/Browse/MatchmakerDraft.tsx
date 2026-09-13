@@ -45,7 +45,7 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
       setPeople(res.people);
       setPicked(new Set(res.people.filter((p) => p.picked).map((p) => p.id)));
     };
-    run();
+    void run();
     return () => {
       cancelled = true;
     };
@@ -150,8 +150,8 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
         </p>
       </div>
       <p className="mx-auto mt-2 max-w-md text-center text-sm font-body text-club">
-        Tap two faces from your floor (or below). Tap again to un-tap. These
-        are drafts — not likes. Nothing matches from here.
+        Tap two faces from your floor (or below). Tap again to un-tap. These are
+        drafts — not likes. Nothing matches from here.
       </p>
 
       <div className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
@@ -162,11 +162,7 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
               key={person.id}
               type="button"
               onClick={() => pick(person)}
-              disabled={
-                picking ||
-                building ||
-                (!chosen && picked.size >= 2)
-              }
+              disabled={picking || building || (!chosen && picked.size >= 2)}
               className={`group overflow-hidden rounded-xl border bg-zinc-900/60 text-left transition-all duration-200 ${
                 chosen
                   ? 'border-gold ring-2 ring-gold scale-[1.02]'
@@ -198,9 +194,7 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
                 )}
                 <p
                   className={`mt-1 rounded-md px-1.5 py-0.5 text-center text-[10px] font-bold uppercase tracking-wide transition-colors duration-200 ${
-                    chosen
-                      ? 'bg-gold text-black'
-                      : 'bg-zinc-800 text-gold'
+                    chosen ? 'bg-gold text-black' : 'bg-zinc-800 text-gold'
                   }`}
                 >
                   {chosen ? 'Chosen' : 'Draft'}
@@ -215,9 +209,7 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
         {rateLimited ? (
           <div className="rounded-xl border border-gold/30 bg-zinc-900/40 py-8 px-6">
             <p className="text-3xl mb-2">⏳</p>
-            <p className="font-header text-cyan text-xl">
-              Waiting on refresh…
-            </p>
+            <p className="font-header text-cyan text-xl">Waiting on refresh…</p>
             <p className="font-body text-club mt-2 text-sm">
               You&apos;ve hit today&apos;s plays limit. The dial resets in 24
               hours — come back fresh.
@@ -226,9 +218,7 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
         ) : playsLeft === 0 ? (
           <div className="rounded-xl border border-gold/30 bg-zinc-900/40 py-8 px-6">
             <p className="text-3xl mb-2">🎯</p>
-            <p className="font-header text-cyan text-xl">
-              Plays emptied
-            </p>
+            <p className="font-header text-cyan text-xl">Plays emptied</p>
             <p className="font-body text-club mt-2 text-sm">
               No plays left today — the dial resets in 24 hours.
             </p>

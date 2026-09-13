@@ -124,7 +124,7 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
       setAnnouncements(res.announcements ?? []);
       setTotals(res.totals ?? null);
     };
-    run();
+    void run();
     const supabase = createClient();
     // Realtime: new messages anywhere in the Lounge land in the monitor.
     // We use a service-channel created by the Den's own key — the page
@@ -138,21 +138,21 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
           // Light-touch refresh — a full page of latest 60 keeps the
           // ordering deterministic. The Den doesn't need true live insert
           // timing to the millisecond.
-          if (!cancelled) run();
+          if (!cancelled) void run();
         }
       )
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'club_chat_invites' },
         () => {
-          if (!cancelled) run();
+          if (!cancelled) void run();
         }
       )
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'club_chat_bans' },
         () => {
-          if (!cancelled) run();
+          if (!cancelled) void run();
         }
       )
       .subscribe();

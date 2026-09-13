@@ -7,7 +7,8 @@ import { redirect } from 'next/navigation';
 import {
   getURL,
   getErrorRedirect,
-  getStatusRedirect
+  getStatusRedirect,
+  getFormString
 } from '../../utils/helpers';
 import { getAuthTypes } from '../../utils/auth-helpers/settings';
 
@@ -45,7 +46,7 @@ export async function redirectToPath(path: string) {
 }
 
 export async function SignOut(formData: FormData) {
-  const pathName = String(formData.get('pathName')).trim();
+  const pathName = getFormString(formData, 'pathName').trim();
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signOut();
@@ -65,7 +66,7 @@ export async function signInWithEmail(formData: FormData) {
   const cookieStore = await cookies();
   const callbackURL = getURL('/auth/callback');
 
-  const email = String(formData.get('email')).trim();
+  const email = getFormString(formData, 'email').trim();
   let redirectPath: string;
 
   if (await bannedCheck(email)) return BANNED_REDIRECT();
@@ -121,7 +122,7 @@ export async function requestPasswordUpdate(formData: FormData) {
   const callbackURL = getURL('/auth/reset_password');
 
   // Get form data
-  const email = String(formData.get('email')).trim();
+  const email = getFormString(formData, 'email').trim();
   let redirectPath: string;
 
   if (!isValidEmail(email)) {
@@ -164,8 +165,8 @@ export async function requestPasswordUpdate(formData: FormData) {
 
 export async function signInWithPassword(formData: FormData) {
   const cookieStore = await cookies();
-  const email = String(formData.get('email')).trim();
-  const password = String(formData.get('password')).trim();
+  const email = String(formData.get('email') ?? '').trim();
+  const password = String(formData.get('password') ?? '').trim();
   let redirectPath: string;
 
   if (await bannedCheck(email)) return BANNED_REDIRECT();
@@ -203,14 +204,14 @@ export async function signInWithPassword(formData: FormData) {
 export async function signUp(formData: FormData) {
   const callbackURL = getURL('/auth/callback');
 
-  const email = String(formData.get('email')).trim();
-  const password = String(formData.get('password')).trim();
-  const fullName = String(formData.get('full_name') ?? '').trim();
-  const birthday = String(formData.get('birthday') ?? '').trim();
+  const email = getFormString(formData, 'email').trim();
+  const password = getFormString(formData, 'password').trim();
+  const fullName = getFormString(formData, 'full_name').trim();
+  const birthday = getFormString(formData, 'birthday').trim();
   const retention = Number(formData.get('messageRetentionDays') ?? 90);
-  const gender = String(formData.get('gender') ?? '').trim();
-  const interestedIn = String(formData.get('interestedIn') ?? '').trim();
-  const honeypot = String(formData.get('company') ?? '').trim();
+  const gender = getFormString(formData, 'gender').trim();
+  const interestedIn = getFormString(formData, 'interestedIn').trim();
+  const honeypot = getFormString(formData, 'company').trim();
   const termsConsent = formData.get('termsConsent') === 'on';
   const privacyConsent = formData.get('privacyConsent') === 'on';
   const bestPracticesConsent = formData.get('bestPracticesConsent') === 'on';
@@ -342,8 +343,8 @@ export async function signUp(formData: FormData) {
 }
 
 export async function updatePassword(formData: FormData) {
-  const password = String(formData.get('password')).trim();
-  const passwordConfirm = String(formData.get('passwordConfirm')).trim();
+  const password = getFormString(formData, 'password').trim();
+  const passwordConfirm = getFormString(formData, 'passwordConfirm').trim();
   let redirectPath: string;
 
   // Check that the password and confirmation match
@@ -385,7 +386,7 @@ export async function updatePassword(formData: FormData) {
 
 export async function updateEmail(formData: FormData) {
   // Get form data
-  const newEmail = String(formData.get('newEmail')).trim();
+  const newEmail = getFormString(formData, 'newEmail').trim();
 
   // Check that the email is valid
   if (!isValidEmail(newEmail)) {
@@ -426,7 +427,7 @@ export async function updateEmail(formData: FormData) {
 
 export async function updateName(formData: FormData) {
   // Get form data
-  const fullName = String(formData.get('fullName')).trim();
+  const fullName = getFormString(formData, 'fullName').trim();
 
   const supabase = await createClient();
   const { error, data } = await supabase.auth.updateUser({

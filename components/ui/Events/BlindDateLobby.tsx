@@ -89,7 +89,9 @@ export default function BlindDateLobby({
                     </p>
                     <p className="text-sm font-body text-club">
                       {room.seated}/{room.maxSeats} seated ·{' '}
-                      {room.seated >= 3 ? 'ready to run' : `${3 - room.seated} more to run`}
+                      {room.seated >= 3
+                        ? 'ready to run'
+                        : `${3 - room.seated} more to run`}
                     </p>
                   </div>
                   <button

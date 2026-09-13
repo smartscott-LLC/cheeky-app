@@ -46,11 +46,11 @@ export default function Matchmaker() {
       setLoading(false);
       if (res.error) setError(res.error);
     };
-    run();
+    void run();
     // The alert is time-sensitive: check for new discoveries on a light poll.
     const t = setInterval(() => {
       if (!cancelled) {
-        matchmakerState().then((res) => {
+        void matchmakerState().then((res) => {
           if (!cancelled) setIncoming(res.incoming);
         });
       }

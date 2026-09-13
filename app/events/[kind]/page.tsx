@@ -14,7 +14,7 @@ export default async function EventRoomPage({
 }: {
   params: Promise<{ kind: string }>;
 }) {
-  await connection()
+  await connection();
   const { kind } = await params;
   const meta = KIND_META[kind];
   if (!meta) {

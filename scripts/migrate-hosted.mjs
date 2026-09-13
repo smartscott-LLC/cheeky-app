@@ -24,7 +24,7 @@ const sql = postgres(url, { max: 1, ssl: 'require' });
 try {
   // Load already-applied versions from tracking table
   const applied = await sql`select version from public.supabase_migrations`;
-  const appliedSet = new Set(applied.map(r => r.version));
+  const appliedSet = new Set(applied.map((r) => r.version));
 
   const dir = join(process.cwd(), 'supabase', 'migrations');
   const filter = process.argv[2] ?? '';
@@ -37,11 +37,14 @@ try {
     process.exit(1);
   }
 
-  const pending = allFiles.filter(f => !appliedSet.has(f.split('.')[0]));
-  const skipped = allFiles.filter(f => appliedSet.has(f.split('.')[0]));
+  const pending = allFiles.filter((f) => !appliedSet.has(f.split('.')[0]));
+  const skipped = allFiles.filter((f) => appliedSet.has(f.split('.')[0]));
 
   if (skipped.length > 0) {
-    console.log(`Skipping ${skipped.length} already-applied:`, skipped.map(f => f.split('.')[0]).join(', '));
+    console.log(
+      `Skipping ${skipped.length} already-applied:`,
+      skipped.map((f) => f.split('.')[0]).join(', ')
+    );
   }
 
   if (pending.length === 0) {

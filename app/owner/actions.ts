@@ -7,6 +7,7 @@ import { sendClubMail } from '@/utils/email';
 import { CONTACT } from '@/utils/contact';
 import { authorized } from './actions-helpers';
 import { getStreamServer, streamEnabled } from '@/utils/stream/server';
+import { getFormString } from '@/utils/helpers';
 
 /**
  * The Owner's Back Door: authorized if the signed-in user IS the owner
@@ -345,11 +346,11 @@ export async function ownerResolveReport(input: {
 export async function ownerLeaveMessage(
   formData: FormData
 ): Promise<{ error?: string }> {
-  if ((formData.get('company') || '').toString().trim()) {
+  if (getFormString(formData, 'company').trim()) {
     return { error: 'nice try, robot' };
   }
-  const email = (formData.get('email') || '').toString().trim();
-  const message = (formData.get('message') || '').toString().trim();
+  const email = getFormString(formData, 'email').trim();
+  const message = getFormString(formData, 'message').trim();
   if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email)) {
     return {
       error: 'A real email, please — so the owner can get back to you.'

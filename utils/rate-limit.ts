@@ -4,10 +4,10 @@ import { createClient } from '@/utils/supabase/server';
 // When these appear, the UI should show a graceful "waiting on refresh"
 // state instead of an error toast — the user just needs to come back later.
 export const RATE_LIMIT_ERRORS = new Set([
-  'daily_plays_limit',   // matchmaker plays dial
-  'daily_trios_limit',   // L³ trio dial
-  'daily_swipes_limit',  // swipes daily cap
-  'horn_cooldown'        // lounge horn (1/hour)
+  'daily_plays_limit', // matchmaker plays dial
+  'daily_trios_limit', // L³ trio dial
+  'daily_swipes_limit', // swipes daily cap
+  'horn_cooldown' // lounge horn (1/hour)
 ]);
 
 /**
@@ -44,4 +44,3 @@ export async function withinBudget(
   }
   return data === true;
 }
-

@@ -292,6 +292,7 @@ The entire app follows one consistent pattern — no grey, no alternate colors:
 ## Form Server (SmartForms Engine)
 
 All Contact links/buttons should point to:
+
 ```
 https://forms.smartscott.online/forms/cheeky
 ```
@@ -299,20 +300,24 @@ https://forms.smartscott.online/forms/cheeky
 This replaces the old `mailto:` links on the Contact page with a centralized multi-desk form (General Inquiries, Help & Support, The Club Desk, Safety & Reporting, Anonymous Reporting). Users see all 5 options and pick the one they need.
 
 ### Server details
+
 - **Repo**: `/home/server/Documents/smartforms_server/`
 - **Form file**: `form-backend/cheeky.html`
 - **Stack**: Express (port 5000) behind Traefik (port 3030), PostgreSQL, Docker Compose
 - **Tunnel**: Cloudflare → cloudflared → Traefik → form-app
 
 ### Email flow
+
 - **Admin**: `formdata@smartscott.online` — all submissions land here
 - **Customer receipt**: auto-sent to the submitter's email (not sent for Anonymous desk)
 - Scott routes `smartscott.online` emails through Zoho for desk-based filtering
 
 ### Critical technical detail
+
 When submitting forms programmatically, use `URLSearchParams` with `Content-Type: application/x-www-form-urlencoded`. NEVER use `FormData` — the Express server doesn't parse multipart and returns a 500 error.
 
 ### Migration
+
 The whole setup is portable: copy `smartforms_server/` + `~/.cloudflared/` to any Docker host, run containers, done. No DNS or tunnel re-config needed.
 
 ### Domain vocabulary

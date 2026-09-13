@@ -91,7 +91,7 @@ export default function MatchmakerBoard({
       }
       setFaceUp(up);
     };
-    run();
+    void run();
     return () => {
       cancelled = true;
       if (strikeTimer.current) clearTimeout(strikeTimer.current);

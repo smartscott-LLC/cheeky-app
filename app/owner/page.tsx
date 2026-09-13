@@ -16,6 +16,7 @@ import {
 } from '@/app/owner/actions';
 import LoungeMonitor from '@/components/ui/Owner/LoungeMonitor';
 import StreamLoungeMonitor from '@/components/ui/Owner/StreamLoungeMonitor';
+import { getFormString } from '@/utils/helpers';
 
 type BenefitType = 'membership' | 'tokens' | 'gift';
 
@@ -223,6 +224,7 @@ export default function OwnerPage() {
       if (attemptKey !== '') notice(false, res.error);
       return;
     }
+    setKey(attemptKey);
     setEngine(res.engineEnabled ?? true);
     setRules((res.rules ?? []) as Rule[]);
     setCodes((res.codes ?? []) as CodeRow[]);
@@ -400,10 +402,10 @@ export default function OwnerPage() {
     setBusy(true);
     const res = await ownerGenerateCodes({
       key,
-      benefitType: String(fd.get('type')) as BenefitType,
-      benefitValue: String(fd.get('value') ?? ''),
+      benefitType: getFormString(fd, 'type') as BenefitType,
+      benefitValue: getFormString(fd, 'value'),
       count: Number(fd.get('count') ?? 1),
-      notes: String(fd.get('notes') ?? '')
+      notes: getFormString(fd, 'notes')
     });
     setBusy(false);
     if (res.error) return notice(false, res.error);
@@ -418,10 +420,10 @@ export default function OwnerPage() {
     setBusy(true);
     const res = await ownerGrantDirect({
       key,
-      email: String(fd.get('email') ?? ''),
-      benefitType: String(fd.get('type')) as BenefitType,
-      benefitValue: String(fd.get('value') ?? ''),
-      reason: String(fd.get('reason') ?? ''),
+      email: getFormString(fd, 'email'),
+      benefitType: getFormString(fd, 'type') as BenefitType,
+      benefitValue: getFormString(fd, 'value'),
+      reason: getFormString(fd, 'reason'),
       days: Number(fd.get('days') ?? 30)
     });
     setBusy(false);
@@ -468,8 +470,8 @@ export default function OwnerPage() {
     setBusy(true);
     const res = await ownerPostAnnouncement({
       key,
-      message: String(fd.get('message') ?? ''),
-      displayStyle: String(fd.get('style') ?? 'scroll') as
+      message: getFormString(fd, 'message'),
+      displayStyle: getFormString(fd, 'style') as
         'scroll' | 'roll' | 'fade',
       hours: Number(fd.get('hours') ?? 0)
     });
@@ -544,9 +546,9 @@ export default function OwnerPage() {
     setBusy(true);
     const res = await ownerSetBan({
       key,
-      email: String(fd.get('email') ?? ''),
+      email: getFormString(fd, 'email'),
       banned,
-      reason: String(fd.get('reason') ?? ''),
+      reason: getFormString(fd, 'reason'),
       years: Number(fd.get('years') ?? 0)
     });
     setBusy(false);

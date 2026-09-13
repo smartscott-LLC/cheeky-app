@@ -128,13 +128,7 @@ async function main() {
   console.log(`\n\ud83d\udce6 Uploading assets to ${BUCKET} bucket...\n`);
 
   const cheekyDir = join(import.meta.dirname, '..', 'public');
-  const loungeDir = join(
-    import.meta.dirname,
-    '..',
-    '..',
-    'chub',
-    'public'
-  );
+  const loungeDir = join(import.meta.dirname, '..', '..', 'chub', 'public');
 
   const cheekyFiles = await scanDirectory(cheekyDir);
   let loungeFiles = [];

@@ -90,7 +90,7 @@ export default function L3Trio() {
       setPeople(res.people);
       setDone(res.done);
     };
-    run();
+    void run();
     return () => {
       cancelled = true;
     };

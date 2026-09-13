@@ -73,10 +73,10 @@ export default function StreamLoungeMonitor({
       setRooms(res.rooms ?? []);
       setTotals(res.totals ?? null);
     };
-    run();
+    void run();
     const t = setInterval(() => {
       if (!cancelled) {
-        run();
+        void run();
       }
     }, 15_000);
     return () => {

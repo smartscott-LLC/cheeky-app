@@ -1,10 +1,9 @@
 // The Tiki Taskbar — the club's to-do list (PRD: docs/PRD-tiki-taskbar.md).
-// Hard-capped daily allowances only. Tucked bottom-left at 1/3 width (out of
-// the way of everything you scroll), compact tiles: icons in their natural
+// Hard-capped daily allowances only. Compact tiles: icons in their natural
 // colors, counts in teal Damion (∞ where unlimited), label centered above in
 // gold Fascinate, tiny pink caption. Fetches live counts from /api/taskbar
 // on mount, on navigation, on focus, and every 60s. Per-device prefs
-// (localStorage): collapse, move top/bottom, hide.
+// (localStorage): collapsed, hidden, and the draggable position.
 'use client';
 
 import Link from 'next/link';
@@ -25,20 +24,24 @@ interface BarState {
   tiles: Tile[];
 }
 
-type Position = 'top' | 'bottom' | 'center' | 'left' | 'right';
 interface Prefs {
   hidden: boolean;
   collapsed: boolean;
-  position: Position;
+  /** 'topleft' | 'topright' | 'bottomleft' | 'bottomright' */
+  anchor: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
+  /** offset px from the chosen corner */
+  offset: { x: number; y: number };
 }
 
 const PREFS_KEY = 'tiki:prefs';
 const REFRESH_MS = 60_000;
+const DEFAULT_OFFSET = { x: 12, y: 12 };
 
 const DEFAULT_PREFS: Prefs = {
   hidden: false,
   collapsed: false,
-  position: 'bottom'
+  anchor: 'bottomleft',
+  offset: DEFAULT_OFFSET
 };
 
 function loadPrefs(): Prefs {
@@ -57,18 +60,18 @@ function formatCount(count: number | null): string {
   return count > 999 ? `${Math.round(count / 1000)}k` : String(count);
 }
 
-/** Event/floor rooms get the bar pinned top-left for quick access. */
-function isInEventRoom(pathname: string): boolean {
-  return (
-    pathname.startsWith('/events/') ||
-    pathname.startsWith('/floor/')
-  );
-}
-
 export default function TikiTaskbar() {
   const pathname = usePathname();
   const [state, setState] = useState<BarState | null>(null);
   const [prefs, setPrefs] = useState<Prefs>(loadPrefs);
+  const [dragging, setDragging] = useState(false);
+  const dragStart = useRef<{ x: number; y: number; ox: number; oy: number }>({
+    x: 0,
+    y: 0,
+    ox: 0,
+    oy: 0
+  });
+  const barRef = useRef<HTMLDivElement>(null);
   const inFlight = useRef(false);
 
   const fetchState = useCallback(async () => {
@@ -109,7 +112,7 @@ export default function TikiTaskbar() {
         inFlight.current = false;
       }
     };
-    run();
+    void run();
   }, [pathname]);
 
   // Light poll + refocus refresh; pause while the tab is hidden.
@@ -136,22 +139,68 @@ export default function TikiTaskbar() {
 
   const hiddenByRoute = isTaskbarHidden(pathname);
   const nothingToShow = !state || state.tiles.length === 0;
-  const inEvent = isInEventRoom(pathname);
-  // In event rooms, force top-left so the bar is always in view without
-  // scrolling. On normal pages respect the user's saved position.
-  const effectivePosition = inEvent ? 'top' : prefs.position;
+
+  // Drag handlers
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    // Only the left side of the bar (not tiles or controls) can initiate a drag.
+    // Allow dragging from anywhere on the container to keep it simple.
+    if ((e.target as HTMLElement).closest('a, button')) return;
+    e.preventDefault();
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    const rect = barRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    dragStart.current = {
+      x: e.clientX,
+      y: e.clientY,
+      ox: rect.left,
+      oy: rect.top
+    };
+    setDragging(true);
+  };
+
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragging) return;
+    const dx = e.clientX - dragStart.current.x;
+    const dy = e.clientY - dragStart.current.y;
+    const nx = Math.max(0, Math.min(window.innerWidth - 80, dragStart.current.ox + dx));
+    const ny = Math.max(0, Math.min(window.innerHeight - 40, dragStart.current.oy + dy));
+    // Determine new anchor based on position
+    const newAnchor: Prefs['anchor'] =
+      nx < window.innerWidth / 2 ? 'topleft' : 'topright';
+    const newOffset: Prefs['offset'] = { x: nx, y: ny };
+    savePrefs({ ...prefs, anchor: newAnchor, offset: newOffset });
+  };
+
+  const onPointerUp = () => {
+    setDragging(false);
+  };
 
   if (hiddenByRoute || nothingToShow) return null;
 
   const { tiles, tier } = state;
 
+  // Render the bar at the saved position
+  const anchor = prefs.anchor;
+  const { x: offX, y: offY } = prefs.offset;
+  const isTop = anchor.startsWith('top');
+  const isLeft = anchor.startsWith('left');
+
   return (
     <div
-      className={`${
-        effectivePosition === 'top'
-          ? 'fixed top-3 left-3 z-40 w-64'
-          : 'fixed bottom-3 left-1/2 z-40 -translate-x-1/2 w-auto min-w-[240px]'
-      }`}
+      ref={barRef}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerLeave={onPointerUp}
+      style={{
+        position: 'fixed',
+        zIndex: 40,
+        left: isLeft ? offX : undefined,
+        right: isLeft ? undefined : offX,
+        top: isTop ? offY : undefined,
+        bottom: isTop ? undefined : offY,
+        cursor: dragging ? 'grabbing' : 'grab'
+      }}
     >
       {prefs.collapsed ? (
         <button
@@ -171,18 +220,14 @@ export default function TikiTaskbar() {
             </h2>
             <div className="absolute right-0 top-0 flex items-center gap-1 text-zinc-500">
               <button
-                onClick={() =>
-                  savePrefs({
-                    ...prefs,
-                    position: prefs.position === 'top' ? 'bottom' : 'top'
-                  })
-                }
+                onClick={() => {
+                  // Toggle between top and bottom anchors
+                  const nextAnchor: Prefs['anchor'] =
+                    isTop ? 'bottomleft' : 'topleft';
+                  savePrefs({ ...prefs, anchor: nextAnchor });
+                }}
                 className="rounded px-1 py-0.5 text-[10px] transition hover:text-cyan"
-                title={
-                  prefs.position === 'top'
-                    ? 'Move to the bottom'
-                    : 'Move to the top'
-                }
+                title="Toggle top/bottom position"
               >
                 ⇅
               </button>
