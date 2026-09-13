@@ -61,8 +61,7 @@ function formatCount(count: number | null): string {
 function isInEventRoom(pathname: string): boolean {
   return (
     pathname.startsWith('/events/') ||
-    pathname.startsWith('/floor/') ||
-    pathname === '/club'
+    pathname.startsWith('/floor/')
   );
 }
 
