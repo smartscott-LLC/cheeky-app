@@ -140,7 +140,8 @@
       "Bash(f.name.includes)",
       "Bash(icons.foreach)",
       "Bash('icons/%3ffirstdate%3f.webp', *)",
-      "Bash('icons/first-date-question.webp', *)"
+      "Bash('icons/first-date-question.webp', *)",
+      "Bash('')"
     ]
   },
   "$version": 4
