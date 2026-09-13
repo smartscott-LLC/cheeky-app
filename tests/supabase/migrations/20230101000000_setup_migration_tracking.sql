@@ -107,5 +107,7 @@ insert into public.supabase_migrations (version, name) values
   ('20260911000000_fix_handle_new_profile', 'fix_handle_new_profile'),
   ('20260911000001_matchmaker_unpick_draft', 'matchmaker_unpick_draft'),
   ('20260912000000_l3_daily_limits', 'l3_daily_limits'),
-  ('20260913000000_blind_date_female_host', 'blind_date_female_host')
+  ('20260913000000_blind_date_female_host', 'blind_date_female_host'),
+  ('20260913000001_swipe_daily_limit', 'swipe_daily_limit'),
+  ('20260913000002_taskbar_state_cst', 'taskbar_state_cst')
 on conflict (version) do nothing;
