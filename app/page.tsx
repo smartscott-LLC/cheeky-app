@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Pricing from '@/components/ui/Pricing/Pricing';
 import FloatingHearts from '@/components/ui/FloatingHearts/FloatingHearts';
+import JoinCTA from '@/components/ui/JoinCTA/JoinCTA';
 import { createClient } from '@/utils/supabase/server';
 import {
   getProducts,
@@ -66,6 +67,8 @@ export default async function LandingPage() {
 
   return (
     <div className="bg-black text-white">
+      {/* Floating Join for Free CTA */}
+      <JoinCTA verified={Boolean(profile?.verified_at)} />
       {/* Hero */}
       <section className="relative overflow-hidden">
         {/* Pink + gold glow behind the entrance */}

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Pricing from '@/components/ui/Pricing/Pricing';
+import JoinCTA from '@/components/ui/JoinCTA/JoinCTA';
 import { createClient } from '@/utils/supabase/server';
 import {
   getProducts,
@@ -19,6 +20,8 @@ export default async function PricingPage() {
 
   return (
     <div className="bg-black">
+      {/* Floating Join for Free CTA */}
+      <JoinCTA verified={Boolean(profile?.verified_at)} />
       <div className="mx-auto max-w-6xl px-6 py-16">
         <h1 className="font-hero text-gold text-center text-3xl sm:text-4xl">
           💎 Membership & Pricing

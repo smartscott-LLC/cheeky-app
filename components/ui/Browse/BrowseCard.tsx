@@ -85,6 +85,15 @@ export default function BrowseCard({
   }
 
   const photo = person.photos.find((p) => p.is_primary) ?? person.photos[0];
+  const [expanded, setExpanded] = useState(false);
+
+  const handleCardClick = () => {
+    if (expanded) {
+      setExpanded(false);
+    } else {
+      setExpanded(true);
+    }
+  };
 
   const handleWave = async () => {
     if (waved.has(person.id) || waveBusy) return;
@@ -110,7 +119,13 @@ export default function BrowseCard({
   }
 
   return (
-    <div className="mx-auto max-w-xl overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50">
+    <div
+      className="mx-auto max-w-xl overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50"
+      onClick={handleCardClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && handleCardClick()}
+    >
       <div className="flex aspect-[4/3] items-center justify-center bg-zinc-800">
         {photo?.storage_path ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -137,18 +152,30 @@ export default function BrowseCard({
           )}
         </div>
         <p className="mt-2 font-body text-club">
-          {person.one_liner || person.bio || 'Just got through the door.'}
+          {expanded && person.bio ? person.bio : person.one_liner || person.bio || 'Just got through the door.'}
         </p>
+        {!expanded && person.bio && (
+          <p className="mt-1 text-xs font-body text-club/60">Tap card to read more</p>
+        )}
+        {expanded && person.bio && person.bio !== person.one_liner && (
+          <p className="mt-1 text-xs font-body text-club/60">Tap to collapse</p>
+        )}
       </div>
       <div className="flex gap-3 p-6 pt-0">
         <button
-          onClick={() => openConversation(person.id)}
+          onClick={(e) => {
+            e.stopPropagation();
+            openConversation(person.id);
+          }}
           className="rounded-lg border border-zinc-700 px-3 py-3 text-sm font-semibold text-cyan transition hover:border-zinc-500 hover:text-white"
         >
           Message
         </button>
         <button
-          onClick={handleWave}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleWave();
+          }}
           disabled={waved.has(person.id) || waveBusy}
           title={waved.has(person.id) ? 'You waved at them' : 'Send a wave'}
           className={`rounded-lg px-3 py-3 text-sm font-bold transition ${
@@ -160,14 +187,18 @@ export default function BrowseCard({
           {waved.has(person.id) ? 'Waved ✓' : '👋'}
         </button>
         <button
-          onClick={() => setIndex((i) => i + 1)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIndex((i) => i + 1);
+          }}
           disabled={busy}
           className="flex-1 rounded-lg border border-zinc-700 px-4 py-3 font-semibold text-cyan transition hover:border-zinc-500 hover:text-white"
         >
           Pass
         </button>
         <button
-          onClick={async () => {
+          onClick={async (e) => {
+            e.stopPropagation();
             setBusy(true);
             const result = await likeUser(person.id);
             setBusy(false);

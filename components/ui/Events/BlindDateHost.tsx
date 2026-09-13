@@ -344,7 +344,7 @@ export default function BlindDateHost({
           return (
             <div
               key={s.userId}
-              className={`rounded-xl border p-3 text-center ${
+              className={`relative rounded-xl border p-3 text-center ${
                 round?.tally_user_id === s.userId
                   ? 'border-gold bg-gold/10'
                   : 'border-zinc-800 bg-zinc-950/50'
@@ -354,8 +354,12 @@ export default function BlindDateHost({
               <img
                 src={s.photo ? `${photoBase}${s.photo}` : ASSETS.brand.entrance}
                 alt=""
-                className="mx-auto h-20 w-16 rounded-lg object-cover blur-[3px]"
+                className="mx-auto h-20 w-16 rounded-lg object-cover blur-[6px] opacity-70"
               />
+              {/* Card back overlay — keeps the profile hidden */}
+              <div className="absolute inset-0 mx-auto flex h-20 w-16 items-center justify-center rounded-lg bg-zinc-900/90">
+                <span className="text-2xl">🎴</span>
+              </div>
               <p className="mt-2 text-sm font-bold font-body text-club">
                 {s.displayName ?? 'Gentleman'}
               </p>
