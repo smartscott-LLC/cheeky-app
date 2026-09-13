@@ -1,5 +1,6 @@
 -- Add swipes_today to taskbar_state for swipe daily caps.
 -- Caps: silver=15, gold=30, platinum=50, diamond=100.
+-- All daily counters reset at midnight CST (America/Chicago), not rolling 24h.
 
 create or replace function public.taskbar_state()
 returns table (
@@ -19,17 +20,20 @@ as $$
 declare
   v_user uuid := auth.uid();
   v_last_gift timestamptz;
+  v_cst_midnight timestamptz;
 begin
   if v_user is null then
     return;
   end if;
+  -- Calculate midnight CST (America/Chicago timezone)
+  v_cst_midnight := (now() AT TIME ZONE 'America/Chicago')::date::timestamptz AT TIME ZONE 'UTC';
   return query
   select
     public.current_tier(v_user) as tier,
     (
       select count(*) from public.messages m
       where m.sender_id = v_user
-        and m.created_at >= date_trunc('day', now())
+        and m.created_at >= v_cst_midnight
     ) as messages_sent_today,
     (
       select count(distinct
@@ -37,7 +41,7 @@ begin
       from public.messages m
       join public.conversations c on c.id = m.conversation_id
       where m.sender_id = v_user
-        and m.created_at >= date_trunc('day', now())
+        and m.created_at >= v_cst_midnight
         and not exists (
           select 1 from public.matches mt
           where mt.user_id_a = least(v_user, case when c.user_id_a = v_user then c.user_id_b else c.user_id_a end)
@@ -61,7 +65,7 @@ begin
         select r.calls
         from public.rate_limits r
         where r.key = 'matchmaker:plays:' || v_user
-          and r.bucket_start > now() - interval '24 hours'
+          and r.bucket_start >= v_cst_midnight
       ), 0)
     ))::int as matchmaker_plays_left,
     (
@@ -69,7 +73,7 @@ begin
       join public.events e on e.id = ee.event_id
       where ee.user_id = v_user
         and e.kind = 'blind_date'
-        and ee.created_at >= date_trunc('day', now())
+        and ee.created_at >= v_cst_midnight
     ) as blind_date_joins_today,
     not exists (
       select 1 from public.gift_sends
@@ -85,12 +89,12 @@ begin
         ) + interval '1 hour' - now())) / 60)::int)
       else 0
     end as gift_ready_in_minutes,
-    -- Swipes today: count of likes made in the last 24 hours
+    -- Swipes today: count of likes made since midnight CST
     (
       select count(*)
       from public.likes l
       where l.liker_id = v_user
-        and l.created_at >= date_trunc('day', now())
+        and l.created_at >= v_cst_midnight
     ) as swipes_today;
 end;
 $$;

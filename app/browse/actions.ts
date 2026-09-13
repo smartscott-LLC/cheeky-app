@@ -26,7 +26,7 @@ export async function likeUser(
   const tier = (tierData as string) ?? 'silver';
   const maxSwipes = tier === 'gold' ? 30 : tier === 'platinum' ? 50 : tier === 'diamond' ? 100 : 15;
   const { data: allowed } = await supabase.rpc('bump_rate_limit', {
-    p_key: `swipes:${user.id}`,
+    p_key: `swipes:${user.id}:cst`,
     p_window_seconds: 86400,
     p_max: maxSwipes
   });
