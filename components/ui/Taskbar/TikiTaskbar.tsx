@@ -57,6 +57,15 @@ function formatCount(count: number | null): string {
   return count > 999 ? `${Math.round(count / 1000)}k` : String(count);
 }
 
+/** Event/floor rooms get the bar pinned top-left for quick access. */
+function isInEventRoom(pathname: string): boolean {
+  return (
+    pathname.startsWith('/events/') ||
+    pathname.startsWith('/floor/') ||
+    pathname === '/club'
+  );
+}
+
 export default function TikiTaskbar() {
   const pathname = usePathname();
   const [state, setState] = useState<BarState | null>(null);
@@ -128,6 +137,10 @@ export default function TikiTaskbar() {
 
   const hiddenByRoute = isTaskbarHidden(pathname);
   const nothingToShow = !state || state.tiles.length === 0;
+  const inEvent = isInEventRoom(pathname);
+  // In event rooms, force top-left so the bar is always in view without
+  // scrolling. On normal pages respect the user's saved position.
+  const effectivePosition = inEvent ? 'top' : prefs.position;
 
   if (hiddenByRoute || nothingToShow) return null;
 
@@ -136,8 +149,8 @@ export default function TikiTaskbar() {
   return (
     <div
       className={`${
-        prefs.position === 'top'
-          ? 'sticky top-[4rem] z-40 w-1/3 min-w-[240px] md:top-[5rem]'
+        effectivePosition === 'top'
+          ? 'fixed top-3 left-3 z-40 w-64'
           : 'fixed bottom-3 left-1/2 z-40 -translate-x-1/2 w-auto min-w-[240px]'
       }`}
     >
