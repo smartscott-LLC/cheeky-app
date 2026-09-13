@@ -234,7 +234,7 @@ export default async function Account() {
             drinking={profile?.drinking ?? null}
             religion={profile?.religion ?? null}
             hasKids={profile?.has_kids ?? false}
-            livesAtHome={profile?.lives_at_home ?? false}
+            livingArrangement={(profile?.living_arrangement as 'own' | 'rent' | 'parents' | 'roommates' | 'other' | null) ?? null}
             hobbies={(profile?.hobbies as string[] | null) ?? null}
             photos={(photos?.data ?? []).map((p) => ({
               id: p.id,

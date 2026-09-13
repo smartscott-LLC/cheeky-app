@@ -27,6 +27,7 @@ interface ProfileFormProps {
   religion?: string | null;
   hasKids?: boolean | null;
   livesAtHome?: boolean | null;
+  livingArrangement?: 'own' | 'rent' | 'parents' | 'roommates' | 'other' | null;
   hobbies?: string[] | null;
   photos: ProfilePhoto[];
   photoBase: string;
@@ -54,7 +55,7 @@ export default function ProfileForm({
   drinking = null,
   religion = null,
   hasKids = false,
-  livesAtHome = false,
+  livingArrangement = null,
   hobbies: initialHobbies,
   photos: initialPhotos,
   photoBase,
@@ -71,7 +72,9 @@ export default function ProfileForm({
   const [drinkingSel, setDrinkingSel] = useState(drinking ?? '');
   const [religionSel, setReligionSel] = useState(religion ?? '');
   const [hasKidsSel, setHasKidsSel] = useState(Boolean(hasKids));
-  const [livesAtHomeSel, setLivesAtHomeSel] = useState(Boolean(livesAtHome));
+  const [livingSel, setLivingSel] = useState<'own' | 'rent' | 'parents' | 'roommates' | 'other'>(
+    (livingArrangement as 'own' | 'rent' | 'parents' | 'roommates' | 'other') ?? 'own'
+  );
   const [hobbiesSel, setHobbiesSel] = useState((initialHobbies ?? []).join(', '));
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -175,7 +178,7 @@ export default function ProfileForm({
       drinkingSel as 'never' | 'socially' | 'regularly' | undefined,
       religionSel || undefined,
       hasKidsSel,
-      livesAtHomeSel,
+      livingSel,
       hobbiesSel
     );
     setSaving(false);
@@ -538,12 +541,15 @@ export default function ProfileForm({
         <div className="grid gap-1">
           <label className="font-header text-cyan text-base">Living situation</label>
           <select
-            value={livesAtHomeSel ? 'at home' : 'own place'}
-            onChange={(e) => setLivesAtHomeSel(e.target.value === 'at home')}
+            value={livingSel}
+            onChange={(e) => setLivingSel(e.target.value as 'own' | 'rent' | 'parents' | 'roommates' | 'other')}
             className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
           >
-            <option value="own place">Own / rent place</option>
-            <option value="at home">Lives at home</option>
+            <option value="own">Own a place</option>
+            <option value="rent">Rent</option>
+            <option value="parents">Living with parents</option>
+            <option value="roommates">Living with roommates</option>
+            <option value="other">Other</option>
           </select>
           <p className="text-xs font-body text-club">
             Optional — helps matches understand your situation.
