@@ -30,6 +30,7 @@ export default function BrowseCard({
   const [waved, setWaved] = useState<Set<string>>(new Set(wavedIds));
   const [waveBusy, setWaveBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [rateLimited, setRateLimited] = useState(false);
 
   const person = people[index];
 
@@ -95,11 +96,24 @@ export default function BrowseCard({
     setWaved((s) => new Set(s).add(person.id));
   };
 
+  // Show "waiting on refresh" when swipe limit hit
+  if (rateLimited) {
+    return (
+      <div className="mx-auto max-w-xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-10 text-center">
+        <p className="text-4xl mb-3">⏳</p>
+        <h2 className="font-header text-cyan text-2xl">
+          Waiting on refresh…
+        </h2>
+        <p className="font-body text-club mt-3 text-base max-w-md">
+          You&apos;ve hit today&apos;s swipe limit. The dial resets in 24 hours
+          — come back fresh.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-xl overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50">
-      {error && (
-        <p className="px-6 pt-4 text-sm font-body text-red-400">{error}</p>
-      )}
       <div className="flex aspect-[4/3] items-center justify-center bg-zinc-800">
         {photo?.storage_path ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -162,7 +176,7 @@ export default function BrowseCard({
             setBusy(false);
             if (result.error) return;
             if (result.rateLimited) {
-              setError('You have hit your daily swipe limit. Come back tomorrow.');
+              setRateLimited(true);
               return;
             }
             if (result.matched) {
