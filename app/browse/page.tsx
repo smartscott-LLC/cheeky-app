@@ -84,8 +84,11 @@ export default async function BrowsePage() {
           ? 10
           : 3;
 
+  // No compatibility filter on swipes — everyone verified with a photo
+  // shows up regardless of gender/preferences. Compatibility only matters
+  // for whether a match is created, not who appears in the deck.
   const people: BrowsePerson[] = (candidates ?? [])
-    .filter((p) => !exclude.has(p.id) && isCompatible(myProfile, p))
+    .filter((p) => !exclude.has(p.id))
     .slice(0, 30)
     .map((p) => ({
       id: p.id,
