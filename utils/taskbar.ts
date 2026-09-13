@@ -110,6 +110,13 @@ export const TASKBAR_TILES: Record<string, TaskbarTileDef> = {
     href: '/gifts',
     minRank: 0
   },
+  dateNight: {
+    key: 'dateNight',
+    icon: '💘',
+    label: 'Date Night',
+    href: '/messages',
+    minRank: 0
+  },
   coat: {
     key: 'coat',
     icon: '🔥',
@@ -127,6 +134,7 @@ export const TILE_ORDER = [
   'matchmaker',
   'blind',
   'gifts',
+  'dateNight',
   'coat'
 ];
 

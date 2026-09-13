@@ -51,7 +51,14 @@ export async function GET() {
     });
   }
 
-  const { data: state } = await supabase.rpc('taskbar_state');
+  const [{ data: state }, { count: activeDateNights }] = await Promise.all([
+    supabase.rpc('taskbar_state'),
+    supabase
+      .from('date_nights')
+      .select('*', { count: 'exact', head: true })
+      .or(`user_a.eq.${user.id},user_b.eq.${user.id}`)
+      .eq('status', 'active')
+  ]);
   const row = (state?.[0] ?? {}) as TaskbarStateRow;
   const tier = row.tier ?? 'silver';
   const caps = capsForTier(tier);
@@ -86,6 +93,11 @@ export async function GET() {
       case 'coat':
         // One a day: 1 to do until it's done, 0 after.
         count = row.checked_in_today ? 0 : 1;
+        break;
+      case 'dateNight':
+        // Active date night games — show only if there's one running.
+        count = activeDateNights ?? 0;
+        if (count === 0) return null;
         break;
       default:
         count = null;
