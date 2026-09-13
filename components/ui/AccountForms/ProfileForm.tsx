@@ -379,8 +379,8 @@ export default function ProfileForm({
 
       <div className="mt-6 grid gap-4">
         <div className="grid gap-1">
-          <label htmlFor="displayName" className="text-sm font-semibold">
-            Choose your avatar name
+          <label htmlFor="displayName" className="font-header text-cyan text-base">
+            Name
           </label>
           <p className="text-xs font-body text-club">
             This is the name the club calls you. Your real name stays private
@@ -395,8 +395,8 @@ export default function ProfileForm({
           />
         </div>
         <div className="grid gap-1">
-          <label htmlFor="oneLiner" className="text-sm font-semibold">
-            Your one-liner
+          <label htmlFor="oneLiner" className="font-header text-cyan text-base">
+            One-liner
           </label>
           <input
             id="oneLiner"
@@ -411,7 +411,7 @@ export default function ProfileForm({
           </p>
         </div>
         <div className="grid gap-1">
-          <label htmlFor="gender" className="text-sm font-semibold">
+          <label htmlFor="gender" className="font-header text-cyan text-base">
             What are you?
           </label>
           <select
@@ -434,7 +434,7 @@ export default function ProfileForm({
           </p>
         </div>
         <div className="grid gap-1">
-          <label htmlFor="interestedIn" className="text-sm font-semibold">
+          <label htmlFor="interestedIn" className="font-header text-cyan text-base">
             Dating preference
           </label>
           <select
@@ -456,7 +456,7 @@ export default function ProfileForm({
           </p>
         </div>
         <div className="grid gap-1">
-          <label htmlFor="smoking" className="text-sm font-semibold">
+          <label htmlFor="smoking" className="font-header text-cyan text-base">
             Smoking
           </label>
           <select
@@ -475,7 +475,7 @@ export default function ProfileForm({
           </p>
         </div>
         <div className="grid gap-1">
-          <label htmlFor="drinking" className="text-sm font-semibold">
+          <label htmlFor="drinking" className="font-header text-cyan text-base">
             Drinking
           </label>
           <select
@@ -494,7 +494,7 @@ export default function ProfileForm({
           </p>
         </div>
         <div className="grid gap-1">
-          <label htmlFor="religion" className="text-sm font-semibold">
+          <label htmlFor="religion" className="font-header text-cyan text-base">
             Religion
           </label>
           <input
@@ -510,7 +510,7 @@ export default function ProfileForm({
           </p>
         </div>
         <div className="grid gap-1">
-          <label className="text-sm font-semibold">Kids?</label>
+          <label className="font-header text-cyan text-base">Kids?</label>
           <div className="flex gap-4 mt-1">
             <label className="flex items-center gap-1 cursor-pointer">
               <input
@@ -536,7 +536,7 @@ export default function ProfileForm({
           </p>
         </div>
         <div className="grid gap-1">
-          <label className="text-sm font-semibold">Living situation</label>
+          <label className="font-header text-cyan text-base">Living situation</label>
           <select
             value={livesAtHomeSel ? 'at home' : 'own place'}
             onChange={(e) => setLivesAtHomeSel(e.target.value === 'at home')}
@@ -550,8 +550,8 @@ export default function ProfileForm({
           </p>
         </div>
         <div className="grid gap-1 sm:col-span-2">
-          <label htmlFor="hobbies" className="text-sm font-semibold">
-            Hobbies (comma-separated)
+          <label htmlFor="hobbies" className="font-header text-cyan text-base">
+            Hobbies
           </label>
           <input
             id="hobbies"
@@ -566,7 +566,7 @@ export default function ProfileForm({
           </p>
         </div>
         <div className="grid gap-1 sm:col-span-2">
-          <label htmlFor="bio" className="text-sm font-semibold flex items-center gap-2">
+          <label htmlFor="bio" className="font-header text-cyan text-base flex items-center gap-2">
             Bio
             {aiDraft && (
               <button
