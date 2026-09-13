@@ -11,6 +11,7 @@ interface EventCardProps {
     name: string;
     floor: string;
     rank: number;
+    icon: string;
     emoji: string;
     tagline: string;
     accent: string;
@@ -78,10 +79,16 @@ export default function EventCard({
         className={`h-1 w-full bg-gradient-to-r ${meta.gradient}`}
       />
       <div className="p-5">
-        <div className="flex items-center justify-between">
-          <h3 className="font-header text-cyan text-xl">
-            {meta.emoji} {meta.name}
-          </h3>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={meta.icon}
+              alt={meta.name}
+              className="h-8 w-8 object-contain"
+            />
+            <h3 className="font-header text-cyan text-xl">{meta.name}</h3>
+          </div>
           <span
             className={`text-sm font-bold uppercase tracking-wide ${
               meta.accent.split(' ')[0]

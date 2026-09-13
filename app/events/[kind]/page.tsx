@@ -209,7 +209,11 @@ export default async function EventRoomPage({
           <div className="relative p-6">
             <div className="mb-6 text-center">
               <h2 className="font-header text-cyan text-3xl">
-                {meta.emoji} {meta.name}
+                <span className="mr-2 inline-block align-middle">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={meta.icon} alt="" className="h-8 w-8 inline" />
+                </span>
+                {meta.name}
               </h2>
               <p className="font-body font-body text-club mt-1 text-base">
                 Next slot {timeLabel(roomEvent.starts_at)} · {meta.tagline}
@@ -236,7 +240,12 @@ export default async function EventRoomPage({
         </div>
       ) : (
         <div className="mx-auto max-w-xl px-6 py-24 text-center">
-          <p className="font-body font-body text-club text-5xl">{meta.emoji}</p>
+          <p className="font-body font-body text-club text-5xl">
+            <span className="inline-block">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={meta.icon} alt="" className="h-12 w-12" />
+            </span>
+          </p>
           <h2 className="font-header text-cyan mt-6 text-3xl">
             The room&apos;s between sets.
           </h2>
