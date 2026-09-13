@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { ASSETS } from '@/utils/assets';
 import { submitRooftopPick } from '@/app/events/actions';
+import { blockUser, unblockUser, getMyBlocks } from '@/app/actions/blocks';
 
 interface BoardMember {
   userId: string;
@@ -48,6 +49,20 @@ export default function RooftopPool({
   const [busy, setBusy] = useState(false);
   const [matchId, setMatchId] = useState<string | null>(null);
   const [refunded, setRefunded] = useState(false);
+  const [blockedIds, setBlockedIds] = useState<Set<string>>(new Set());
+  const [blockingUserId, setBlockingUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    const loadBlocks = async () => {
+      const blocks = await getMyBlocks();
+      if (alive) setBlockedIds(new Set(blocks.map((b) => b.id)));
+    };
+    void loadBlocks();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 1000);
@@ -151,6 +166,26 @@ export default function RooftopPool({
     setBusy(false);
     if (res.error) setError(res.error);
     else setMyPicks((prev) => [...prev, memberId]);
+  };
+
+  const handleBlock = async (userId: string) => {
+    setBlockingUserId(userId);
+    const res = await blockUser(userId);
+    setBlockingUserId(null);
+    if (!res.error) {
+      setBlockedIds((prev) => new Set(prev).add(userId));
+    }
+  };
+
+  const handleUnblock = async (userId: string) => {
+    const res = await unblockUser(userId);
+    if (!res.error) {
+      setBlockedIds((prev) => {
+        const next = new Set(prev);
+        next.delete(userId);
+        return next;
+      });
+    }
   };
 
   if (eventStatus === 'canceled') {
@@ -257,6 +292,25 @@ export default function RooftopPool({
                 <p className="mt-1 text-sm font-extrabold font-body text-club">
                   ✓ picked
                 </p>
+              )}
+              {!busy && myPicks.length < MAX_PICKS && !blockedIds.has(m.userId) && (
+                <div className="mt-1 flex justify-center gap-1">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleBlock(m.userId); }}
+                    disabled={blockingUserId === m.userId}
+                    className="text-[12px] font-body text-zinc-500 hover:text-red-400 transition"
+                  >
+                    🚫
+                  </button>
+                  {blockedIds.has(m.userId) && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); handleUnblock(m.userId); }}
+                      className="text-[12px] font-body text-zinc-500 hover:text-club transition"
+                    >
+                      ✓
+                    </button>
+                  )}
+                </div>
               )}
             </button>
           );

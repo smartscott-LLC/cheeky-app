@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { joinEvent, leaveEvent, pickOnFloor } from '@/app/events/actions';
+import { blockUser, unblockUser, getMyBlocks } from '@/app/actions/blocks';
 import MatchedOverlay from '@/components/ui/Events/MatchedOverlay';
 
 interface Participant {
@@ -110,6 +111,20 @@ export default function EventFloor({
   const [busy, setBusy] = useState(false);
   const [match, setMatch] = useState<{ convId: string | null } | null>(null);
   const [spotlightIds, setSpotlightIds] = useState(initialSpotlightIds);
+  const [blockedIds, setBlockedIds] = useState<Set<string>>(new Set());
+  const [blockingUserId, setBlockingUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    const loadBlocks = async () => {
+      const blocks = await getMyBlocks();
+      if (alive) setBlockedIds(new Set(blocks.map((b) => b.id)));
+    };
+    void loadBlocks();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const refresh = async () => {
     const [
@@ -248,6 +263,31 @@ export default function EventFloor({
       return;
     }
     await refresh();
+  };
+
+  const handleBlock = async (userId: string) => {
+    setBlockingUserId(userId);
+    const res = await blockUser(userId);
+    setBlockingUserId(null);
+    if (!res.error) {
+      setBlockedIds((prev) => new Set(prev).add(userId));
+      await refresh();
+    }
+  };
+
+  const handleUnblock = async (userId: string) => {
+    const res = await unblockUser(userId);
+    if (!res.error) {
+      setBlockedIds((prev) => {
+        const next = new Set(prev);
+        next.delete(userId);
+        return next;
+      });
+    }
+  };
+
+  const handleReport = (_userId: string) => {
+    // Report routed to the contact form — no UI state needed.
   };
 
   // ---- Status banner ----
@@ -428,6 +468,36 @@ export default function EventFloor({
                         💃
                       </span>
                     ) : null}
+                  </div>
+                  <div className="mt-1 flex gap-1">
+                    {blockedIds.has(p.userId) ? (
+                      <button
+                        onClick={() => handleUnblock(p.userId)}
+                        disabled={blockingUserId === p.userId}
+                        className="text-[12px] font-body text-zinc-500 hover:text-club transition"
+                        title="Unblock"
+                      >
+                        ✓ Unblocked
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => handleBlock(p.userId)}
+                          disabled={blockingUserId === p.userId}
+                          className="text-[12px] font-body text-zinc-500 hover:text-red-400 transition"
+                          title="Block"
+                        >
+                          {blockingUserId === p.userId ? '…' : '🚫 Block'}
+                        </button>
+                        <button
+                          onClick={() => handleReport(p.userId)}
+                          className="text-[12px] font-body text-zinc-500 hover:text-gold transition"
+                          title="Report"
+                        >
+                          ⚑ Report
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

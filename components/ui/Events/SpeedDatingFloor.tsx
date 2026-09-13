@@ -8,6 +8,7 @@ import {
   selectSpeedRank,
   sendSpeedMessage
 } from '@/app/events/actions';
+import { blockUser, unblockUser, getMyBlocks } from '@/app/actions/blocks';
 
 interface Participant {
   userId: string;
@@ -75,6 +76,8 @@ export default function SpeedDatingFloor({
     conversationId: string | null;
   } | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [blockedIds, setBlockedIds] = useState<Set<string>>(new Set());
+  const [blockingUserId, setBlockingUserId] = useState<string | null>(null);
 
   const startsAt = new Date(event.startsAt).getTime();
   const maxSlot =
@@ -103,6 +106,18 @@ export default function SpeedDatingFloor({
   const joined = Boolean(
     myEntry && myEntry.status !== 'released' && myEntry.status !== 'canceled'
   );
+
+  useEffect(() => {
+    let alive = true;
+    const loadBlocks = async () => {
+      const blocks = await getMyBlocks();
+      if (alive) setBlockedIds(new Set(blocks.map((b) => b.id)));
+    };
+    void loadBlocks();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const refresh = async () => {
     const [{ data: ev }, { data: entries }, { data: sess }, { data: certs }] =
@@ -278,6 +293,26 @@ export default function SpeedDatingFloor({
     await refreshMessages();
   };
 
+  const handleBlock = async (userId: string) => {
+    setBlockingUserId(userId);
+    const res = await blockUser(userId);
+    setBlockingUserId(null);
+    if (!res.error) {
+      setBlockedIds((prev) => new Set(prev).add(userId));
+    }
+  };
+
+  const handleUnblock = async (userId: string) => {
+    const res = await unblockUser(userId);
+    if (!res.error) {
+      setBlockedIds((prev) => {
+        const next = new Set(prev);
+        next.delete(userId);
+        return next;
+      });
+    }
+  };
+
   const handleSelect = async (picked: string, rank: 1 | 2) => {
     setError(null);
     const res = await selectSpeedRank(event.id, rank, picked);
@@ -449,9 +484,28 @@ export default function SpeedDatingFloor({
                 key={p.userId}
                 className="flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900 p-3"
               >
-                <span className="font-bold">
-                  {p.profile?.display_name || 'Member'}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold">
+                    {p.profile?.display_name || 'Member'}
+                  </span>
+                  {blockedIds.has(p.userId) ? (
+                    <button
+                      onClick={() => handleUnblock(p.userId)}
+                      disabled={blockingUserId === p.userId}
+                      className="text-[12px] font-body text-zinc-500 hover:text-club transition"
+                    >
+                      ✓ Unblocked
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleBlock(p.userId)}
+                      disabled={blockingUserId === p.userId}
+                      className="text-[12px] font-body text-zinc-500 hover:text-red-400 transition"
+                    >
+                      🚫 Block
+                    </button>
+                  )}
+                </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => {
