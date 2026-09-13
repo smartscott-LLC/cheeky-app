@@ -469,6 +469,9 @@ export default function ProfileForm({
             <option value="socially">Socially</option>
             <option value="quit">Quit</option>
           </select>
+          <p className="text-xs font-body text-club">
+            Optional — helps matches know the vibe. 50 char limit.
+          </p>
         </div>
         <div className="grid gap-1">
           <label htmlFor="drinking" className="text-sm font-semibold">
@@ -485,6 +488,9 @@ export default function ProfileForm({
             <option value="socially">Socially</option>
             <option value="regularly">Regularly</option>
           </select>
+          <p className="text-xs font-body text-club">
+            Optional — helps matches know what to order. 50 char limit.
+          </p>
         </div>
         <div className="grid gap-1">
           <label htmlFor="religion" className="text-sm font-semibold">
@@ -494,10 +500,13 @@ export default function ProfileForm({
             id="religion"
             value={religionSel}
             onChange={(e) => setReligionSel(e.target.value)}
-            placeholder="Optional"
+            placeholder="e.g. Christianity, Buddhism, none"
             maxLength={100}
             className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
           />
+          <p className="text-xs font-body text-club">
+            Optional — share only if it matters to you. Max 100 characters.
+          </p>
         </div>
         <div className="grid gap-1">
           <label className="text-sm font-semibold">Kids?</label>
@@ -521,6 +530,9 @@ export default function ProfileForm({
               Has kids
             </label>
           </div>
+          <p className="text-xs font-body text-club">
+            Optional — important for compatibility.
+          </p>
         </div>
         <div className="grid gap-1">
           <label className="text-sm font-semibold">Living situation</label>
@@ -532,6 +544,9 @@ export default function ProfileForm({
             <option value="own place">Own / rent place</option>
             <option value="at home">Lives at home</option>
           </select>
+          <p className="text-xs font-body text-club">
+            Optional — helps matches understand your situation.
+          </p>
         </div>
         <div className="grid gap-1 sm:col-span-2">
           <label htmlFor="hobbies" className="text-sm font-semibold">
@@ -545,6 +560,9 @@ export default function ProfileForm({
             maxLength={300}
             className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
           />
+          <p className="text-xs font-body text-club">
+            List your interests — they show on your profile card. Max 300 characters.
+          </p>
         </div>
         <div className="grid gap-1 sm:col-span-2">
           <label htmlFor="bio" className="text-sm font-semibold flex items-center gap-2">
@@ -573,6 +591,17 @@ export default function ProfileForm({
               {bioText.length}/500
             </span>
           )}
+          <p className="text-xs font-body text-club">
+            Your bio is public — make it count. Max 500 characters. No explicit content allowed; all images are AI-reviewed.
+          </p>
+        </div>
+
+        {/* Content warning */}
+        <div className="mt-4 rounded-lg border border-club/30 bg-club/5 px-4 py-3">
+          <p className="font-header text-cyan text-sm">Note</p>
+          <p className="text-xs font-body text-club mt-1">
+            Explicit or pornographic content is not allowed on Club Cheeky. All photos undergo AI review before appearing on profiles. Violations result in immediate removal.
+          </p>
         </div>
       </div>
 

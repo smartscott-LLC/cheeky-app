@@ -40,6 +40,53 @@ export default async function PricingPage() {
           />
         </div>
 
+        {/* Rate limits + token grants breakdown */}
+        <div className="mx-auto mt-14 max-w-3xl rounded-xl border border-zinc-800 bg-zinc-900/50 p-8">
+          <h2 className="font-header text-cyan text-xl text-center">
+            What each tier gets you
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm font-body text-club text-center">
+            All memberships include verified access, lounge chat, and AI crew members. Higher tiers unlock more daily actions and bonus tokens.
+          </p>
+          <div className="mt-6 grid grid-cols-1 gap-4 text-left sm:grid-cols-2 lg:grid-cols-4">
+            <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
+              <p className="font-body text-club text-xs font-bold uppercase tracking-wide">
+                Silver — free
+              </p>
+              <p className="mt-2 text-sm font-body text-club">
+                30 msgs · 5 new people · 15 swipes · 2 matchmaker · 0 blind date · <strong className="text-cyan">No tokens</strong>
+              </p>
+            </div>
+            <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
+              <p className="font-body text-club text-xs font-bold uppercase tracking-wide">
+                Gold — $9.99/mo
+              </p>
+              <p className="mt-2 text-sm font-body text-club">
+                75 msgs · 15 new people · 30 swipes · 3 matchmaker · 2 blind date · <strong className="text-cyan">+50 tokens</strong>
+              </p>
+            </div>
+            <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
+              <p className="font-body text-club text-xs font-bold uppercase tracking-wide">
+                Platinum — $19.99/mo
+              </p>
+              <p className="mt-2 text-sm font-body text-club">
+                ∞ msgs · 40 new people · 50 swipes · 4 matchmaker · 2 blind date · <strong className="text-cyan">+150 tokens</strong>
+              </p>
+            </div>
+            <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
+              <p className="font-body text-club text-xs font-bold uppercase tracking-wide">
+                Diamond — $29.99/mo
+              </p>
+              <p className="mt-2 text-sm font-body text-club">
+                ∞ msgs · 100 new people · 100 swipes · 5 matchmaker · 2 blind date · <strong className="text-cyan">+500 tokens</strong>
+              </p>
+            </div>
+          </div>
+          <p className="mt-5 text-xs font-body text-club text-center">
+            All daily limits reset at midnight CST. Tokens never expire while your subscription is active. Tokens power events and gifts only — never messaging.
+          </p>
+        </div>
+
         <p className=" mx-auto mt-8 max-w-xl text-center text-xs font-body text-club">
           Cancel anytime in one click from your Account page — no phone calls,
           no retention scripts, no surprise charges. Tokens are never spent on
