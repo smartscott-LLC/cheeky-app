@@ -100,6 +100,15 @@ export default async function BlindDatePage() {
     );
   }
 
+  // Check host gender — only females may host blind date
+  const { data: profileData } = await supabase
+    .from('profiles')
+    .select('gender')
+    .eq('id', user.id)
+    .single();
+  const userGender = (profileData as { gender: string | null } | null)?.gender;
+  const canHost = rank >= 1 && userGender === 'female';
+
   // Am I hosting? (open or running room)
   const { data: myRooms } = await supabase
     .from('events')
@@ -298,7 +307,7 @@ export default async function BlindDatePage() {
           rounds of questions — personality decides, the marks decide more.
         </p>
         <div className="mt-8">
-          <BlindDateLobby rooms={rooms} canHost={rank >= 1} />
+          <BlindDateLobby rooms={rooms} canHost={canHost} />
         </div>
       </div>
     </div>

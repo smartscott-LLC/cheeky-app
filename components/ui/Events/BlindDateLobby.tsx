@@ -25,8 +25,15 @@ export default function BlindDateLobby({
     setBusy(true);
     const res = await createBlindDate();
     setBusy(false);
-    if (res.error) setError(res.error);
-    else router.refresh();
+    if (res.error) {
+      if (res.error === 'host_gender_required') {
+        setError('Only ladies can host Blind Date. Join a room as a suitor instead.');
+      } else {
+        setError(res.error);
+      }
+    } else {
+      router.refresh();
+    }
   };
 
   const join = async (id: string) => {
