@@ -165,9 +165,20 @@ export default async function SpeedDatingPage() {
               photoBase={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/`}
             />
           ) : (
-            <p className="font-body text-club text-center">
-              No Speed Dating slots scheduled — check back later.
-            </p>
+            <div className="text-center">
+              <p className="font-body text-club text-center">
+                No Speed Dating slots scheduled — check back later.
+              </p>
+              <p className="mt-3 text-sm font-body text-club/70">
+                Or start one yourself and invite members to join.
+              </p>
+              <Link
+                href={`/events/speed?action=start`}
+                className="mt-4 inline-block rounded-lg bg-club px-6 py-2.5 font-bold text-white transition hover:bg-club-cotton"
+              >
+                Start a Speed Dating session
+              </Link>
+            </div>
           )}
         </div>
       </div>
