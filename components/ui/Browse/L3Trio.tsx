@@ -120,12 +120,10 @@ export default function L3Trio() {
     return (
       <div className="rounded-xl border border-gold/30 bg-zinc-900/40 py-10 px-6 text-center">
         <p className="text-4xl mb-3">⏳</p>
-        <h2 className="font-header text-cyan text-2xl">
-          Waiting on refresh…
-        </h2>
+        <h2 className="font-header text-cyan text-2xl">Waiting on refresh…</h2>
         <p className="font-body text-club mt-3 text-base max-w-md mx-auto">
-          You&apos;ve hit today&apos;s trio limit. The dial resets in 24 hours
-          — come back fresh.
+          You&apos;ve hit today&apos;s trio limit. The dial resets in 24 hours —
+          come back fresh.
         </p>
       </div>
     );
@@ -214,7 +212,7 @@ export default function L3Trio() {
           {error}
         </p>
       )}
-      <div className="mx-auto grid max-w-sm grid-cols-3 gap-2">
+      <div className="mx-auto grid max-w-lg grid-cols-3 gap-2">
         {people.map((person) => (
           <div
             key={person.id}
