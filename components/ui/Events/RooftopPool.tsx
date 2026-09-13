@@ -319,7 +319,9 @@ export default function RooftopPool({
 
       {others.length === 0 && (
         <p className="mt-6 text-center text-base font-body text-club">
-          You&apos;re the last one on the board — the final pair is coming.
+          {board.length <= 1
+            ? 'No one else is on the board — drop a pick or two and see who takes the bait.'
+            : 'You got the board all to yourself — pick someone before someone else does.'}
         </p>
       )}
 
