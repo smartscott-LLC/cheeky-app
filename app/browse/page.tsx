@@ -36,14 +36,35 @@ export default async function BrowsePage() {
   // people show up (each must be in the other's dating preference).
   const myProfile = await getProfile(supabase, user.id);
 
-  const { data: candidates } = await supabase
+  // Fetch profiles and photos separately — photos.user_id references auth.users,
+  // not profiles, so the typed client can't resolve the relationship.
+  const { data: profileRows } = await supabase
     .from('profiles')
-    .select(
-      'id, display_name, bio, one_liner, verified_at, gender, interested_in, photos(id, storage_path, position, is_primary)'
-    )
+    .select('id, display_name, bio, one_liner, verified_at, gender, interested_in')
     .is('bot_flagged_at', null)
-    .filter('photos.held_at', 'is', 'null')
     .limit(50);
+
+  const profileIds = (profileRows ?? []).map((p) => p.id);
+  const { data: photoRows } = profileIds.length
+    ? await supabase
+        .from('photos')
+        .select('user_id, storage_path, position, is_primary')
+        .in('user_id', profileIds)
+        .is('held_at', 'null')
+    : { data: [] };
+
+  // Group photos by user_id
+  const photosByUser = new Map<string, typeof photoRows>();
+  for (const photo of photoRows ?? []) {
+    const list = photosByUser.get(photo.user_id) ?? [];
+    list.push(photo);
+    photosByUser.set(photo.user_id, list);
+  }
+
+  const candidates = (profileRows ?? []).map((p) => ({
+    ...p,
+    photos: photosByUser.get(p.id) ?? []
+  }));
 
   const { data: myWaves } = await supabase
     .from('waves')
