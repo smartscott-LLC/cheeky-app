@@ -31,6 +31,11 @@ export default async function BrowsePage() {
     exclude.add(m.user_id_b);
   });
 
+  // Identity + preference drive the Spark List: show everyone on your floor
+  // or below who matches your gender preference (gentlemen see ladies, ladies
+  // see gentlemen, everyone sees everyone).
+  const myProfile = await getProfile(supabase, user.id);
+
   // Fetch profiles and photos separately — photos.user_id references auth.users,
   // not profiles, so the typed client can't resolve the relationship.
   const { data: profileRows } = await supabase
@@ -79,11 +84,10 @@ export default async function BrowsePage() {
           ? 10
           : 3;
 
-  // No compatibility filter on swipes — everyone verified with a photo
-  // shows up regardless of gender/preferences. Compatibility only matters
-  // for whether a match is created, not who appears in the deck.
+  // Only show people who match your gender preference.
+  // (Gentlemen see ladies, ladies see gentlemen, everyone sees everyone.)
   const people: BrowsePerson[] = (candidates ?? [])
-    .filter((p) => !exclude.has(p.id))
+    .filter((p) => !exclude.has(p.id) && isCompatible(myProfile, p))
     .slice(0, 30)
     .map((p) => ({
       id: p.id,
