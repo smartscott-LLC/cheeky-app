@@ -2,6 +2,7 @@ import BrowseCard, { BrowsePerson } from '@/components/ui/Browse/BrowseCard';
 import SparkLab from '@/components/ui/Browse/SparkLab';
 import { createClient } from '@/utils/supabase/server';
 import { getSubscription, getUser } from '@/utils/supabase/queries';
+import { isCompatible } from '@/utils/helpers';
 import { getReturnFloor } from '@/utils/return-floor';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
