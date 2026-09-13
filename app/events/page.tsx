@@ -3,9 +3,10 @@ import { getUser } from '@/utils/supabase/queries';
 import { getReturnFloor } from '@/utils/return-floor';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { KIND_META, eventUrl, timeLabel } from '@/utils/events';
+import { KIND_META } from '@/utils/events';
 import { pastDateCutoff } from '@/utils/date-now';
 import { connection } from 'next/server';
+import EventCard from '@/components/ui/Events/EventCard';
 
 export default async function EventsPage() {
   await connection();
@@ -102,57 +103,14 @@ export default async function EventsPage() {
             const locked = rank < meta.rank;
             const next = nextByKind.get(kind) ?? null;
             return (
-              <div
+              <EventCard
                 key={kind}
-                className={`relative overflow-hidden rounded-2xl border bg-zinc-900/50 ${
-                  locked ? 'border-zinc-800' : 'border-zinc-700'
-                }`}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={meta.image}
-                  alt={meta.name}
-                  className="h-28 w-full object-cover"
-                />
-                <div
-                  className={`h-1 w-full bg-gradient-to-r ${meta.gradient}`}
-                />
-                <div className="p-5">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-header text-cyan text-xl">
-                      {meta.emoji} {meta.name}
-                    </h3>
-                    <span
-                      className={`text-sm font-bold uppercase tracking-wide ${
-                        meta.accent.split(' ')[0]
-                      }`}
-                    >
-                      {meta.floor}
-                    </span>
-                  </div>
-                  <p className="font-body font-body text-club mt-1 text-sm">
-                    {next
-                      ? `${timeLabel(next.starts_at)} · ${next.token_cost} tokens`
-                      : 'Between sets'}
-                  </p>
-                  <p className="font-body font-body text-club mt-2 text-sm">
-                    {meta.tagline}
-                  </p>
-                  {locked ? (
-                    <p className="font-body font-body text-club mt-4 text-base font-bold">
-                      Behind the rope. Come see what&apos;s on these floors with
-                      a {meta.floor} card today.
-                    </p>
-                  ) : (
-                    <Link
-                      href={eventUrl(kind)}
-                      className={`mt-4 inline-block w-full rounded-lg px-4 py-2 text-center text-base font-bold transition ${meta.cta}`}
-                    >
-                      {next ? 'Enter the room →' : 'The room'}
-                    </Link>
-                  )}
-                </div>
-              </div>
+                kind={kind}
+                meta={meta}
+                locked={locked}
+                nextEvent={next}
+                eventId={next?.id}
+              />
             );
           })}
         </div>
