@@ -63,54 +63,50 @@ export async function GET() {
   const tier = row.tier ?? 'silver';
   const caps = capsForTier(tier);
 
-  const tiles = tilesForRank(rankForTier(tier)).map((def) => {
-    let count: number | null = null;
-    let unlimited = false;
-    switch (def.key) {
-      case 'chats':
-        count = left(caps.messages, row.messages_sent_today);
-        unlimited = caps.messages === null;
-        break;
-      case 'swipes':
-        // Swipes per day: silver=15, gold=30, platinum=50, diamond=100
-        count = row.swipes_today;
-        break;
-      case 'l3':
-        // L³ rides the same new-people allowance (no separate daily limit).
-        count = left(caps.people, row.new_people_today);
-        break;
-      case 'matchmaker':
-        // Plays left from the 2/3/4/5 dial — the RPC returns the remainder.
-        count = row.matchmaker_plays_left;
-        break;
-      case 'blind':
-        count = left(caps.blindDate, row.blind_date_joins_today);
-        break;
-      case 'gifts':
-        // One send/hour: 1 when ready, minutes-to-ready when cooling.
-        count = row.gift_ready ? 1 : (row.gift_ready_in_minutes ?? 0);
-        break;
-      case 'coat':
-        // One a day: 1 to do until it's done, 0 after.
-        count = row.checked_in_today ? 0 : 1;
-        break;
-      case 'dateNight':
-        // Active date night games — show only if there's one running.
-        count = activeDateNights ?? 0;
-        if (count === 0) return null;
-        break;
-      default:
-        count = null;
-    }
-    return {
-      key: def.key,
-      icon: def.icon,
-      label: def.label,
-      href: def.href,
-      count,
-      unlimited
-    };
-  });
+  const tiles = tilesForRank(rankForTier(tier))
+    .map((def) => {
+      let count: number | null = null;
+      let unlimited = false;
+      switch (def.key) {
+        case 'chats':
+          count = left(caps.messages, row.messages_sent_today);
+          unlimited = caps.messages === null;
+          break;
+        case 'swipes':
+          count = row.swipes_today;
+          break;
+        case 'l3':
+          count = left(caps.people, row.new_people_today);
+          break;
+        case 'matchmaker':
+          count = row.matchmaker_plays_left;
+          break;
+        case 'blind':
+          count = left(caps.blindDate, row.blind_date_joins_today);
+          break;
+        case 'gifts':
+          count = row.gift_ready ? 1 : (row.gift_ready_in_minutes ?? 0);
+          break;
+        case 'coat':
+          count = row.checked_in_today ? 0 : 1;
+          break;
+        case 'dateNight':
+          count = activeDateNights ?? 0;
+          if (count === 0) return null as null;
+          break;
+        default:
+          count = null;
+      }
+      return {
+        key: def.key,
+        icon: def.icon,
+        label: def.label,
+        href: def.href,
+        count,
+        unlimited
+      } as const;
+    })
+    .filter((t): t is NonNullable<typeof t> => t !== null);
 
   return NextResponse.json({ tier, tiles });
 }
