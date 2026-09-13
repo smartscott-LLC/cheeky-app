@@ -339,6 +339,7 @@ export interface MatchmakerHistoryBoard {
   completed_at: string | null;
   unlocks: {
     id: string;
+    board_id: string;
     recipient_id: string;
     display_name: string;
     photo_path: string | null;
