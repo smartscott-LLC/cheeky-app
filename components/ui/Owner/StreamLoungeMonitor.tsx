@@ -226,12 +226,7 @@ export default function StreamLoungeMonitor({
           className="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 p-4"
           onClick={() => setBanDraft(null)}
         >
-          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events */}
-          <div
-            onClick={(e) => e.stopPropagation()}
-            role="document"
-            className="w-full max-w-md rounded-2xl border border-amber-400/50 bg-zinc-950 p-6 shadow-[0_0_30px_rgba(255,215,0,0.2)]"
-          >
+          <div className="w-full max-w-md rounded-2xl border border-amber-400/50 bg-zinc-950 p-6 shadow-[0_0_30px_rgba(255,215,0,0.2)]">
             <h3 className="font-header text-amber-300 text-xl">
               Stream + Supabase ban
             </h3>

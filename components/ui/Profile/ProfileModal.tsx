@@ -48,10 +48,8 @@ export default function ProfileModal({
   const photo = person.photo ? `${photoBase}${person.photo}` : null;
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/prefer-tag-over-role
     <div
       ref={overlayRef}
-      onClick={handleClickOutside}
       onKeyDown={handleKeyDown}
       role="dialog"
       aria-modal="true"
@@ -59,7 +57,12 @@ export default function ProfileModal({
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
     >
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-      <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gold/30 bg-zinc-950 shadow-[0_0_60px_rgba(255,215,0,0.15)]">
+      <div
+        onClick={handleClickOutside}
+        className="absolute inset-0 z-0"
+        aria-hidden="true"
+      />
+      <div className="relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-gold/30 bg-zinc-950 shadow-[0_0_60px_rgba(255,215,0,0.15)]">
         {/* Photo */}
         {photo ? (
           // eslint-disable-next-line @next/next/no-img-element

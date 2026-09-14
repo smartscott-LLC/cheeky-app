@@ -1560,12 +1560,7 @@ export default function OwnerPage() {
             className="fixed inset-0 z-50 bg-black/60"
             onClick={() => setMintOpen(false)}
           >
-            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events */}
-            <div
-              onClick={(e) => e.stopPropagation()}
-              role="document"
-              className="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto border-l border-zinc-800 bg-zinc-950 p-6"
-            >
+            <div className="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto border-l border-zinc-800 bg-zinc-950 p-6">
               <div className="flex items-center justify-between">
                 <h2 className="font-header text-cyan text-xl">⚒️ The Mint</h2>
                 <button
