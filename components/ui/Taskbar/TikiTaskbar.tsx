@@ -158,6 +158,11 @@ export default function TikiTaskbar() {
     };
   }, [fetchState]);
 
+  // Manual refresh button — forces immediate re-fetch
+  const handleRefresh = () => {
+    void fetchState();
+  };
+
   const savePrefs = (next: Prefs) => {
     setPrefs(next);
     try {
@@ -274,6 +279,13 @@ export default function TikiTaskbar() {
                 title="Hide the Tiki Taskbar"
               >
                 ✕
+              </button>
+              <button
+                onClick={handleRefresh}
+                className="rounded px-1 py-0.5 text-[10px] transition hover:text-cyan"
+                title="Refresh taskbar data"
+              >
+                ↻
               </button>
             </div>
           </div>
