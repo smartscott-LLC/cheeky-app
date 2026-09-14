@@ -100,7 +100,7 @@ function describe(code: string): string {
     case 'gift_not_available':
       return 'That gift is already out of your hands.';
     case 'horn_cooldown':
-      return "You just blew the horn — it's on cooldown for a minute. Try again soon.";
+      return "You just blew the horn — it's on cooldown for 15 minutes. Try again soon.";
     case 'not_signed_in':
       return 'Sign in to blow the horn.';
     default:
@@ -302,7 +302,7 @@ export default function GiftShop({
               </h3>
               <p className="mt-1 text-sm font-body text-club">
                 Announce yourself to the entire club — appears on the ticker.
-                One per hour, 5 tokens.
+                One per 15 minutes, 5 tokens.
               </p>
               <div className="mt-3">
                 <button

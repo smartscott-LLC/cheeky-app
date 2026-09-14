@@ -63,7 +63,7 @@ export async function respondGift(
 }
 
 /**
- * Blow the Horn from the gift shop — 5 tokens, one per hour,
+ * Blow the Horn from the gift shop — 5 tokens, one per 15 minutes,
  * writes a club_announcements row that feeds the ticker.
  * Available to all verified members regardless of floor.
  */
