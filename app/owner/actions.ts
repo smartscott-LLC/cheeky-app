@@ -152,8 +152,7 @@ export async function ownerFetchState(input: { key?: string }): Promise<{
       .select('*')
       .eq('active', true)
       .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle(),
+      .limit(5),
     supabaseAdmin
       .from('profiles')
       .select('id, display_name, verified_at, created_at')
@@ -250,7 +249,12 @@ export async function ownerFetchState(input: { key?: string }): Promise<{
     grants: grants.data ?? [],
     flags: flags.data ?? [],
     staleCodes: staleCodes.data ?? [],
-    announcement: announcement.data ?? null,
+    announcement: (announcement.data ?? []) as {
+      id: number;
+      message: string;
+      display_style: string;
+      ends_at: string | null;
+    }[],
     unpurchased: unpurchased.map((p) => ({
       id: p.id,
       display_name: p.display_name,
@@ -794,7 +798,12 @@ export async function ownerFetchLounge(input: { key?: string }): Promise<{
     messages: msgRows,
     invites: inviteRows,
     bans: banRows,
-    announcements: announcements.data ?? [],
+    announcements: (announcements.data ?? []) as {
+      id: number;
+      body: string;
+      kind: string;
+      created_at: string;
+    }[],
     totals: {
       messages_24h: countMessages.count ?? 0,
       horn_24h: countHorn.count ?? 0,
@@ -973,22 +982,33 @@ export async function ownerStreamBanAction(input: {
   return {};
 }
 
-/** Posts the floor announcement (or clears it) — the marquee goes live
- * on the floors within a minute. One live announcement at a time. */
+/** Posts a floor announcement — multiple can run simultaneously. */
 export async function ownerPostAnnouncement(input: {
   key?: string;
   message?: string;
   displayStyle?: 'scroll' | 'roll' | 'fade';
   hours?: number;
   clear?: boolean;
+  /** Set a specific announcement inactive (single-expire, not bulk clear). */
+  expireId?: number;
 }): Promise<{ error?: string }> {
   if (!(await authorized(input.key))) return { error: 'forbidden' };
 
+  // Bulk clear all active announcements
   if (input.clear) {
     const { error } = await supabaseAdmin
       .from('announcements')
       .update({ active: false })
       .eq('active', true);
+    return error ? { error: error.message } : {};
+  }
+
+  // Expire a single announcement by ID
+  if (input.expireId != null) {
+    const { error } = await supabaseAdmin
+      .from('announcements')
+      .update({ active: false })
+      .eq('id', input.expireId);
     return error ? { error: error.message } : {};
   }
 
@@ -998,12 +1018,6 @@ export async function ownerPostAnnouncement(input: {
     input.displayStyle === 'roll' || input.displayStyle === 'fade'
       ? input.displayStyle
       : 'scroll';
-
-  // One marquee at a time — the new announcement is THE announcement.
-  await supabaseAdmin
-    .from('announcements')
-    .update({ active: false })
-    .eq('active', true);
 
   const supabase = await createClient();
   const {

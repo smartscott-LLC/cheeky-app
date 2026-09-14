@@ -107,11 +107,9 @@ export default function OwnerPage() {
   const [grants, setGrants] = useState<GrantRow[]>([]);
   const [flags, setFlags] = useState<FlagRow[]>([]);
   const [staleCodes, setStaleCodes] = useState<StaleCodeRow[]>([]);
-  const [announcement, setAnnouncement] = useState<{
-    message: string;
-    display_style: string;
-    ends_at: string | null;
-  } | null>(null);
+  const [announcements, setAnnouncements] = useState<
+    { id: number; message: string; display_style: string; ends_at: string | null }[]
+  >([]);
   const [unpurchased, setUnpurchased] = useState<
     { id: string; display_name: string | null; verified_at: string | null }[]
   >([]);
@@ -231,12 +229,13 @@ export default function OwnerPage() {
     setGrants((res.grants ?? []) as GrantRow[]);
     setFlags((res.flags ?? []) as FlagRow[]);
     setStaleCodes((res.staleCodes ?? []) as StaleCodeRow[]);
-    setAnnouncement(
-      (res.announcement as {
+    setAnnouncements(
+      ((res.announcement ?? []) as {
+        id: number;
         message: string;
         display_style: string;
         ends_at: string | null;
-      } | null) ?? null
+      }[])
     );
     setUnpurchased(
       (res.unpurchased ?? []) as {
@@ -277,12 +276,13 @@ export default function OwnerPage() {
       setGrants((res.grants ?? []) as GrantRow[]);
       setFlags((res.flags ?? []) as FlagRow[]);
       setStaleCodes((res.staleCodes ?? []) as StaleCodeRow[]);
-      setAnnouncement(
-        (res.announcement as {
+      setAnnouncements(
+        (res.announcement ?? []) as {
+          id: number;
           message: string;
           display_style: string;
           ends_at: string | null;
-        } | null) ?? null
+        }[]
       );
       setUnpurchased(
         (res.unpurchased ?? []) as {
@@ -487,6 +487,15 @@ export default function OwnerPage() {
     setBusy(false);
     if (res.error) return notice(false, res.error);
     notice(true, 'Announcement cleared');
+  };
+
+  const expireAnnounce = async (id: number) => {
+    setBusy(true);
+    const res = await ownerPostAnnouncement({ key, expireId: id });
+    setBusy(false);
+    if (res.error) return notice(false, res.error);
+    setAnnouncements((prev) => prev.filter((a) => a.id !== id));
+    notice(true, 'Announcement expired');
   };
 
   const saveModels = async () => {
@@ -1005,23 +1014,43 @@ export default function OwnerPage() {
         {/* Announcement — the floor marquee */}
         <div className="mt-6 rounded-xl border border-gold/30 bg-zinc-900/50 p-6">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="font-header text-cyan">📢 Floor announcement</h2>
+            <h2 className="font-header text-cyan">📢 Floor announcements</h2>
             <button
               onClick={clearAnnounce}
               disabled={busy}
               className="rounded-lg border border-zinc-600 px-3 py-1.5 text-xs font-bold text-cyan hover:border-zinc-400 disabled:opacity-40"
             >
-              Clear it
+              Clear all
             </button>
           </div>
-          {announcement && (
-            <p className="mt-3 rounded-lg border border-gold/30 bg-gold/5 px-4 py-2 text-sm font-body text-club">
-              Live now: “{announcement.message}” ·{' '}
-              <span className="uppercase">{announcement.display_style}</span> ·{' '}
-              {announcement.ends_at
-                ? `until ${new Date(announcement.ends_at).toLocaleString()}`
-                : 'until cleared'}
-            </p>
+          {announcements.length > 0 && (
+            <div className="mt-3 space-y-2">
+              {announcements.map((a) => (
+                <div
+                  key={a.id}
+                  className="flex items-start justify-between gap-3 rounded-lg border border-gold/20 bg-gold/5 px-4 py-3"
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-body text-club text-sm">
+                      “{a.message}”
+                    </p>
+                    <p className="mt-1 text-xs font-body text-club/70">
+                      <span className="uppercase">{a.display_style}</span>
+                      {a.ends_at
+                        ? ` · until ${new Date(a.ends_at).toLocaleString()}`
+                        : ' · until cleared'}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => expireAnnounce(a.id)}
+                    disabled={busy}
+                    className="shrink-0 rounded border border-zinc-700 px-2.5 py-1 text-xs font-bold text-club hover:border-zinc-500 hover:text-white disabled:opacity-40"
+                  >
+                    Expire
+                  </button>
+                </div>
+              ))}
+            </div>
           )}
           <form
             onSubmit={postAnnounce}
