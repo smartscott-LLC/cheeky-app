@@ -9,6 +9,7 @@ import {
   sendSpeedMessage
 } from '@/app/events/actions';
 import { blockUser, unblockUser, getMyBlocks } from '@/app/actions/blocks';
+import ProfileModal from '@/components/ui/Profile/ProfileModal';
 
 interface Participant {
   userId: string;
@@ -18,6 +19,8 @@ interface Participant {
     display_name: string | null;
     verified_at: string | null;
     photo: string | null;
+    bio: string | null;
+    one_liner: string | null;
   } | null;
 }
 
@@ -78,6 +81,14 @@ export default function SpeedDatingFloor({
   const bottomRef = useRef<HTMLDivElement>(null);
   const [blockedIds, setBlockedIds] = useState<Set<string>>(new Set());
   const [blockingUserId, setBlockingUserId] = useState<string | null>(null);
+  const [showingProfile, setShowingProfile] = useState<{
+    id: string;
+    display_name: string | null;
+    photo: string | null;
+    verified_at: string | null;
+    bio: string | null;
+    one_liner: string | null;
+  } | null>(null);
 
   const startsAt = new Date(event.startsAt).getTime();
   const maxSlot =
@@ -153,7 +164,7 @@ export default function SpeedDatingFloor({
         ? await supabase
             .from('profiles')
             .select(
-              'id, display_name, verified_at, photos(storage_path, is_primary)'
+              'id, display_name, verified_at, bio, one_liner, photos(storage_path, is_primary)'
             )
             .in('id', ids)
         : { data: [] };
@@ -169,7 +180,9 @@ export default function SpeedDatingFloor({
             photo:
               photos?.find((ph) => ph.is_primary)?.storage_path ??
               photos?.[0]?.storage_path ??
-              null
+              null,
+            bio: p.bio ?? null,
+            one_liner: p.one_liner ?? null
           }
         ];
       })
@@ -422,6 +435,23 @@ export default function SpeedDatingFloor({
                   Verified
                 </p>
               )}
+              {partner.profile?.bio && (
+                <button
+                  onClick={() =>
+                    setShowingProfile({
+                      id: partner.userId,
+                      display_name: partner.profile.display_name,
+                      photo: partner.profile.photo,
+                      verified_at: partner.profile.verified_at,
+                      bio: partner.profile.bio,
+                      one_liner: partner.profile.one_liner
+                    })
+                  }
+                  className="mt-1 text-xs font-body text-club hover:text-cyan transition"
+                >
+                  👀 View Profile
+                </button>
+              )}
             </div>
             <p className="ml-auto text-base font-bold font-body text-club">
               {ICEBREAKERS[slotIndex % ICEBREAKERS.length]}
@@ -548,6 +578,14 @@ export default function SpeedDatingFloor({
         <p className="mt-10 text-center font-body text-club">
           Finding your next seat…
         </p>
+      )}
+
+      {showingProfile && (
+        <ProfileModal
+          person={showingProfile}
+          photoBase={photoBase}
+          onClose={() => setShowingProfile(null)}
+        />
       )}
     </div>
   );

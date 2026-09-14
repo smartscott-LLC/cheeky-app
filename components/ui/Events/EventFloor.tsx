@@ -6,6 +6,7 @@ import { createClient } from '@/utils/supabase/client';
 import { joinEvent, leaveEvent, pickOnFloor } from '@/app/events/actions';
 import { blockUser, unblockUser, getMyBlocks } from '@/app/actions/blocks';
 import MatchedOverlay from '@/components/ui/Events/MatchedOverlay';
+import ProfileModal from '@/components/ui/Profile/ProfileModal';
 
 interface Participant {
   userId: string;
@@ -14,6 +15,8 @@ interface Participant {
     display_name: string | null;
     verified_at: string | null;
     photo: string | null;
+    bio: string | null;
+    one_liner: string | null;
   } | null;
 }
 
@@ -105,6 +108,13 @@ export default function EventFloor({
   const [participants, setParticipants] = useState(initialParticipants);
   const [myEntry, setMyEntry] = useState(initialEntry);
   const [myPicks, setMyPicks] = useState(initialPicks);
+  const [showingProfile, setShowingProfile] = useState<Participant['profile'] & { id: string } | null>(null);
+
+  const handleViewProfile = (p: Participant) => {
+    if (p.profile && p.profile.bio) {
+      setShowingProfile({ ...p.profile, id: p.userId });
+    }
+  };
   const [eventStatus, setEventStatus] = useState(event.status);
   const [now, setNow] = useState(Date.now());
   const [error, setError] = useState<string | null>(null);
@@ -158,7 +168,7 @@ export default function EventFloor({
         ? await supabase
             .from('profiles')
             .select(
-              'id, display_name, verified_at, photos(storage_path, is_primary)'
+              'id, display_name, verified_at, bio, one_liner, photos(storage_path, is_primary)'
             )
             .in('id', ids)
         : { data: [] };
@@ -175,7 +185,9 @@ export default function EventFloor({
             photo:
               photos?.find((ph) => ph.is_primary)?.storage_path ??
               photos?.[0]?.storage_path ??
-              null
+              null,
+            bio: p.bio ?? null,
+            one_liner: p.one_liner ?? null
           }
         ];
       })
@@ -469,6 +481,14 @@ export default function EventFloor({
                       </span>
                     ) : null}
                   </div>
+                  {p.profile?.bio && (
+                    <button
+                      onClick={() => handleViewProfile(p)}
+                      className="mt-2 w-full rounded border border-zinc-700 py-1 text-xs font-body text-club hover:border-cyan hover:text-cyan transition"
+                    >
+                      👀 View Profile
+                    </button>
+                  )}
                   <div className="mt-1 flex gap-1">
                     {blockedIds.has(p.userId) ? (
                       <button
@@ -509,6 +529,21 @@ export default function EventFloor({
         <p className="mt-10 text-center font-body text-club">
           No one on the floor yet. Be the first through the door.
         </p>
+      )}
+
+      {showingProfile && (
+        <ProfileModal
+          person={{
+            id: showingProfile.id,
+            display_name: showingProfile.display_name,
+            photo: showingProfile.photo,
+            verified_at: showingProfile.verified_at,
+            bio: showingProfile.bio,
+            one_liner: showingProfile.one_liner
+          }}
+          photoBase={photoBase}
+          onClose={() => setShowingProfile(null)}
+        />
       )}
     </div>
   );
