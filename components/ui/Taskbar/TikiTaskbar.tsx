@@ -110,11 +110,15 @@ export default function TikiTaskbar() {
     try {
       const res = await fetch('/api/taskbar', { cache: 'no-store' });
       if (!res.ok) {
+        console.error('[Taskbar] API error:', res.status, res.statusText);
         setState(null);
         return;
       }
-      setState((await res.json()) as BarState);
-    } catch {
+      const data = await res.json();
+      console.log('[Taskbar] API response:', data);
+      setState(data);
+    } catch (e) {
+      console.error('[Taskbar] Fetch error:', e);
       // Keep the last good state — the bar must never flicker on a blip.
     } finally {
       inFlight.current = false;
@@ -160,6 +164,7 @@ export default function TikiTaskbar() {
 
   // Manual refresh button — forces immediate re-fetch
   const handleRefresh = () => {
+    console.log('[Taskbar] Manual refresh triggered');
     void fetchState();
   };
 
