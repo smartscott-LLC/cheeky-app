@@ -12,69 +12,132 @@ interface Announcement {
   created_at: string;
 }
 
+const ANIM_DURATION: Record<string, number> = {
+  scroll: 18_000,
+  roll: 14_000,
+  fade: 12_000
+};
+
 /**
  * The marquee beneath each floor's name — cycles through up to 5 active
- * announcements. Each one plays its full animation (scroll/roll/fade) before
- * moving to the next. Posted from the Lions Den.
+ * announcements. Each one plays its full animation before moving to the next.
  */
 export default function AnnouncementBanner() {
-  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [announcements, setAnnouncements] =
+    useState<Announcement[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const announceRef = useRef(announcements);
+  const indexRef = useRef(currentIndex);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Duration for each animation style (ms) — long enough to read the full message.
-  const ANIM_DURATION: Record<string, number> = {
-    scroll: 18_000,
-    roll: 14_000,
-    fade: 12_000
-  };
-
-  const load = async () => {
-    try {
-      const res = await fetch('/api/announcement', { cache: 'no-store' });
-      const data = await res.json();
-      if (data?.all && Array.isArray(data.all)) {
-        setAnnouncements(data.all);
-        setCurrentIndex(0);
-      } else if (data?.message) {
-        // Backwards compat: single-announce response
-        setAnnouncements([
-          {
-            id: 0,
-            message: data.message,
-            display_style: data.display_style as Announcement['display_style'],
-            link: data.link,
-            ends_at: null,
-            created_at: new Date().toISOString()
-          }
-        ]);
-        setCurrentIndex(0);
-      } else {
-        setAnnouncements([]);
-      }
-    } catch {
-      // Silence failures — the marquee is a fixture, not a feature.
-    }
-  };
-
+  // Keep refs in sync so the rotation timer always reads current values.
   useEffect(() => {
-    void load();
-    // Re-check so newly posted or expired announcements go live within a minute.
-    const interval = setInterval(load, 60_000);
+    announceRef.current = announcements;
+  }, [announcements]);
+  useEffect(() => {
+    indexRef.current = currentIndex;
+  }, [currentIndex]);
 
-    const rotate = () => {
-      timerRef.current = setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % Math.max(announcements.length, 1));
-        rotate();
-      }, ANIM_DURATION[announcements[currentIndex]?.display_style ?? 'scroll']);
+  // Load announcements from the API
+  useEffect(() => {
+    let alive = true;
+    const load = async () => {
+      try {
+        const res = await fetch('/api/announcement', { cache: 'no-store' });
+        const data: {
+          all?: Announcement[];
+          message?: string | null;
+          display_style?: Announcement['display_style'];
+          link?: string | null;
+        } = await res.json();
+        if (!alive) return;
+        if (data?.all && Array.isArray(data.all) && data.all.length > 0) {
+          setAnnouncements(data.all);
+          setCurrentIndex(0);
+        } else if (data?.message) {
+          // Backwards compat: single-announce response
+          setAnnouncements([
+            {
+              id: 0,
+              message: data.message,
+              display_style:
+                data.display_style ?? ('scroll' as Announcement['display_style']),
+              link: data.link ?? null,
+              ends_at: null,
+              created_at: new Date().toISOString()
+            }
+          ]);
+          setCurrentIndex(0);
+        } else {
+          setAnnouncements([]);
+          setCurrentIndex(0);
+        }
+      } catch {
+        // Silence failures — the marquee is a fixture, not a feature.
+      }
     };
-    rotate();
-
+    void load();
     return () => {
-      clearInterval(interval);
+      alive = false;
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [announcements]); // re-start timer when the list changes
+  }, []);
+
+  // Refresh the list every 60s
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Re-fetch without touching state if already loading
+      fetch('/api/announcement', { cache: 'no-store' })
+        .then((r) => r.json())
+        .then((data) => {
+          if (
+            data?.all &&
+            Array.isArray(data.all) &&
+            data.all.length > 0
+          ) {
+            setAnnouncements(data.all);
+            setCurrentIndex(0);
+          } else if (data?.message) {
+            setAnnouncements([
+              {
+                id: 0,
+                message: data.message,
+                display_style:
+                  data.display_style ?? ('scroll' as Announcement['display_style']),
+                link: data.link ?? null,
+                ends_at: null,
+                created_at: new Date().toISOString()
+              }
+            ]);
+            setCurrentIndex(0);
+          } else {
+            setAnnouncements([]);
+            setCurrentIndex(0);
+          }
+        })
+        .catch(() => {
+          /* ignore */
+        });
+    }, 60_000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Rotate through announcements using refs to avoid stale closures
+  useEffect(() => {
+    function rotate() {
+      const list = announceRef.current;
+      if (list.length === 0) return;
+      const style = list[indexRef.current]?.display_style ?? 'scroll';
+      timerRef.current = setTimeout(() => {
+        setCurrentIndex((prev: number) => (prev + 1) % list.length);
+        rotate();
+      }, ANIM_DURATION[style]);
+    }
+    rotate();
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const current = announcements[currentIndex];
 
