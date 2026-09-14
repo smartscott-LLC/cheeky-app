@@ -12,6 +12,8 @@
 //
 // PURE module — no server imports, safe for both the API route and tests.
 
+import { ASSETS } from './assets';
+
 export interface TaskbarTileDef {
   key: string;
   icon: string;
@@ -125,7 +127,7 @@ export const TASKBAR_TILES: Record<string, TaskbarTileDef> = {
   },
   swipes: {
     key: 'swipes',
-    icon: '😎',
+    icon: ASSETS.icons.happy,
     label: 'Swipes',
     href: '/browse',
     minRank: 0
@@ -139,7 +141,7 @@ export const TASKBAR_TILES: Record<string, TaskbarTileDef> = {
   },
   matchmaker: {
     key: 'matchmaker',
-    icon: '🎯',
+    icon: ASSETS.icons.heartAndKey,
     label: 'Matchmaker',
     href: '/browse',
     minRank: 0
@@ -153,7 +155,7 @@ export const TASKBAR_TILES: Record<string, TaskbarTileDef> = {
   },
   dance: {
     key: 'dance',
-    icon: '💃',
+    icon: ASSETS.icons.danceFloor,
     label: 'Dance Floor',
     href: '/events/dance_floor',
     minRank: 0

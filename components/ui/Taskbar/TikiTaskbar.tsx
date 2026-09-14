@@ -286,7 +286,12 @@ export default function TikiTaskbar() {
                 title={t.label}
                 className="group flex flex-col items-center gap-0.5 rounded-lg px-1 py-0.5 transition hover:scale-105"
               >
-                <span className="text-xl leading-none">{t.icon}</span>
+                {t.icon.startsWith('http') ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={t.icon} alt={t.label} className="h-6 w-6 object-contain" />
+                ) : (
+                  <span className="text-xl leading-none">{t.icon}</span>
+                )}
                 <span className="font-header text-cyan text-sm leading-none">
                   {t.unlimited ? '∞' : formatCount(t.count)}
                 </span>
