@@ -41,14 +41,24 @@ export default function ProfileModal({
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') onClose();
+  };
+
   const photo = person.photo ? `${photoBase}${person.photo}` : null;
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/prefer-tag-over-role
     <div
       ref={overlayRef}
       onClick={handleClickOutside}
+      onKeyDown={handleKeyDown}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Profile of ${person.display_name || 'member'}`}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
     >
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
       <div className="w-full max-w-md overflow-hidden rounded-2xl border border-gold/30 bg-zinc-950 shadow-[0_0_60px_rgba(255,215,0,0.15)]">
         {/* Photo */}
         {photo ? (

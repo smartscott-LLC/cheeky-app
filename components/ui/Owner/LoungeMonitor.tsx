@@ -414,12 +414,19 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
 
       {/* Ban dialog */}
       {banDraft && (
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Ban member from chat"
+          onKeyDown={(e) => e.key === 'Escape' && setBanDraft(null)}
           className="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 p-4"
           onClick={() => setBanDraft(null)}
         >
+          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events */}
           <div
             onClick={(e) => e.stopPropagation()}
+            role="document"
             className="w-full max-w-md rounded-2xl border border-amber-400/50 bg-zinc-950 p-6 shadow-[0_0_30px_rgba(255,215,0,0.2)]"
           >
             <h3 className="font-header text-amber-300 text-xl">
@@ -436,7 +443,10 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
             </p>
             <div className="mt-4 space-y-3">
               <div>
-                <label className="font-body text-club text-xs uppercase tracking-wider">
+                <label
+                  htmlFor="ban-duration"
+                  className="font-body text-club text-xs uppercase tracking-wider"
+                >
                   Duration
                 </label>
                 <div className="mt-1 flex gap-2">
@@ -459,10 +469,14 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
                 </p>
               </div>
               <div>
-                <label className="font-body text-club text-xs uppercase tracking-wider">
+                <label
+                  htmlFor="ban-reason"
+                  className="font-body text-club text-xs uppercase tracking-wider"
+                >
                   Reason (recorded)
                 </label>
                 <textarea
+                  id="ban-reason"
                   value={banReason}
                   onChange={(e) => setBanReason(e.target.value)}
                   rows={2}

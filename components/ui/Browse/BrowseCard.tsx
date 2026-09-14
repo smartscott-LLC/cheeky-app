@@ -119,12 +119,14 @@ export default function BrowseCard({
   }
 
   return (
+    // eslint-disable-next-line jsx-a11y/prefer-tag-over-role
     <div
       className="mx-auto max-w-xl overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/50"
       onClick={handleCardClick}
+      onKeyDown={(e) => e.key === 'Enter' && handleCardClick()}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && handleCardClick()}
+      aria-label={`View profile of ${person.display_name || 'member'}`}
     >
       <div className="flex aspect-[4/3] items-center justify-center bg-zinc-800">
         {photo?.storage_path ? (

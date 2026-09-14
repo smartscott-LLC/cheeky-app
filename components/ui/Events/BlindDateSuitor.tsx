@@ -269,10 +269,14 @@ export default function BlindDateSuitor({
 
       {phase === 'answer' && (
         <div className="mt-6">
-          <label className="text-sm font-bold uppercase tracking-[0.2em] text-cyan">
+          <label
+            htmlFor="blind-answer"
+            className="text-sm font-bold uppercase tracking-[0.2em] text-cyan"
+          >
             Your answer — she sees yours alone
           </label>
           <textarea
+            id="blind-answer"
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
             maxLength={500}

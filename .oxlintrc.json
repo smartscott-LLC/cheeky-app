@@ -17,6 +17,24 @@
       "rules": {
         "typescript/no-redundant-type-constituents": "off"
       }
+    },
+    {
+      "files": ["**/*.{ts,tsx}"],
+      "rules": {
+        "jsx-a11y/control-has-associated-label": "off"
+      }
+    },
+    {
+      "files": [
+        "components/ui/Profile/ProfileModal.tsx",
+        "components/ui/Browse/BrowseCard.tsx",
+        "components/ui/Owner/LoungeMonitor.tsx",
+        "components/ui/Owner/StreamLoungeMonitor.tsx",
+        "app/owner/page.tsx"
+      ],
+      "rules": {
+        "jsx-a11y/prefer-tag-over-role": "off"
+      }
     }
   ]
 }

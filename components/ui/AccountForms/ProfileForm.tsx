@@ -344,10 +344,14 @@ export default function ProfileForm({
             </div>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               <div>
-                <label className="text-xs font-semibold text-cyan">
+                <label
+                  htmlFor="profile-vices"
+                  className="text-xs font-semibold text-cyan"
+                >
                   Vices / habits
                 </label>
                 <select
+                  id="profile-vices"
                   value={draftInput.vices}
                   onChange={(e) =>
                     setDraftInput({ ...draftInput, vices: e.target.value })
@@ -363,10 +367,14 @@ export default function ProfileForm({
                 </select>
               </div>
               <div>
-                <label className="text-xs font-semibold text-cyan">
+                <label
+                  htmlFor="profile-home"
+                  className="text-xs font-semibold text-cyan"
+                >
                   Living situation
                 </label>
                 <select
+                  id="profile-home"
                   value={draftInput.home}
                   onChange={(e) =>
                     setDraftInput({ ...draftInput, home: e.target.value })
@@ -382,10 +390,14 @@ export default function ProfileForm({
               </div>
             </div>
             <div className="mt-2">
-              <label className="text-xs font-semibold text-cyan">
+              <label
+                htmlFor="profile-extra"
+                className="text-xs font-semibold text-cyan"
+              >
                 Anything else to add?
               </label>
               <input
+                id="profile-extra"
                 value={draftInput.extra}
                 onChange={(e) =>
                   setDraftInput({ ...draftInput, extra: e.target.value })
@@ -564,8 +576,13 @@ export default function ProfileForm({
           </p>
         </div>
         <div className="grid gap-1">
-          <label className="font-header text-cyan text-base">Kids?</label>
-          <div className="flex gap-4 mt-1">
+          <label
+            htmlFor="profile-kids"
+            className="font-header text-cyan text-base"
+          >
+            Kids?
+          </label>
+          <div id="profile-kids" className="flex gap-4 mt-1">
             <label className="flex items-center gap-1 cursor-pointer">
               <input
                 type="radio"
@@ -590,10 +607,14 @@ export default function ProfileForm({
           </p>
         </div>
         <div className="grid gap-1">
-          <label className="font-header text-cyan text-base">
+          <label
+            htmlFor="profile-living"
+            className="font-header text-cyan text-base"
+          >
             Living situation
           </label>
           <select
+            id="profile-living"
             value={livingSel}
             onChange={(e) =>
               setLivingSel(

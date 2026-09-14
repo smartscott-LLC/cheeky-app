@@ -32,6 +32,7 @@ function Row({
         onClick={() => onToggle(!on)}
         disabled={busy}
         aria-pressed={on}
+        aria-label={label}
         className={`relative h-6 w-11 shrink-0 rounded-full transition disabled:opacity-40 ${
           on ? 'bg-gold' : 'bg-zinc-700'
         }`}
