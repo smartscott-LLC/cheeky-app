@@ -40,7 +40,7 @@ interface Prefs {
 const PREFS_KEY = 'tiki:prefs';
 const REFRESH_MS = 60_000;
 const DEFAULT_OFFSET = { x: 0, y: 0 };
-const BAR_W = 280;
+const BAR_W = 350;
 const BAR_H = 90;
 
 const DEFAULT_PREFS: Prefs = {
@@ -72,16 +72,16 @@ function loadPrefs(): Prefs {
     // First-time default: bottom-right, 16px from right edge, 4px from bottom.
     return {
       ...DEFAULT_PREFS,
-      absX: window.innerWidth - BAR_W - 16,
-      absY: window.innerHeight - BAR_H - 4
+      absX: window.innerWidth - BAR_W - 20,
+      absY: window.innerHeight - BAR_H - 2
     };
   } catch {
     /* corrupted pref — fall back */
   }
   return {
     ...DEFAULT_PREFS,
-    absX: window.innerWidth - BAR_W - 16,
-    absY: window.innerHeight - BAR_H - 4
+    absX: window.innerWidth - BAR_W - 20,
+    absY: window.innerHeight - BAR_H - 2
   };
 }
 
@@ -300,7 +300,11 @@ export default function TikiTaskbar() {
               >
                 {t.icon.startsWith('http') ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={t.icon} alt={t.label} className="h-6 w-6 object-contain" />
+                  <img
+                    src={t.icon}
+                    alt={t.label}
+                    className="h-6 w-6 object-contain"
+                  />
                 ) : (
                   <span className="text-xl leading-none">{t.icon}</span>
                 )}
