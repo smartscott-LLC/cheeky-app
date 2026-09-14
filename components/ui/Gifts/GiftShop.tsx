@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { buyGift, respondGift, sendGift } from '@/app/gifts/actions';
+import { buyGift, respondGift, sendGift, blowHorn } from '@/app/gifts/actions';
 
 export interface GiftPerson {
   id: string;
@@ -93,6 +93,10 @@ function describe(code: string): string {
       return 'This person blocked you, or you blocked them.';
     case 'gift_not_available':
       return 'That gift is already out of your hands.';
+    case 'horn_cooldown':
+      return 'You just blew the horn — it\'s on cooldown for a minute. Try again soon.';
+    case 'not_signed_in':
+      return 'Sign in to blow the horn.';
     default:
       return 'Could not do that. Try again.';
   }
@@ -284,6 +288,31 @@ export default function GiftShop({
                 </div>
               );
             })()}
+
+            {/* ── Blow the Horn — standalone, no recipient needed ─── */}
+            <div>
+              <h3 className="font-header text-gold text-base uppercase tracking-[0.3em]">
+                🎺 Blow the Horn
+              </h3>
+              <p className="mt-1 text-sm font-body text-club">
+                Announce yourself to the entire club — appears on the ticker.
+                One per hour, 5 tokens.
+              </p>
+              <div className="mt-3">
+                <button
+                  onClick={() => run('horn', blowHorn)}
+                  disabled={busy === 'horn'}
+                  className="w-full rounded-lg border-2 border-gold bg-gold/10 px-4 py-3 text-center transition hover:bg-gold/20 disabled:opacity-40"
+                >
+                  <span className="font-header text-gold text-lg">
+                    {busy === 'horn' ? 'Announcing…' : '🎺 Blow the Horn'}
+                  </span>
+                  <span className="ml-2 font-body text-club text-sm">
+                    — 5 tokens
+                  </span>
+                </button>
+              </div>
+            </div>
 
             {/* ── Regular floor gifts ─────────────────────────────── */}
             {FLOOR_ORDER.map((floor) => {

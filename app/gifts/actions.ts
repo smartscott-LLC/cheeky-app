@@ -1,7 +1,9 @@
 'use server';
 
 import { createClient } from '@/utils/supabase/server';
+import { supabaseAdmin } from '@/utils/supabase/admin';
 import { recordMoment } from '@/utils/character-moments';
+import { getUser } from '@/utils/supabase/queries';
 
 /** Buys a gift from the catalog — floor-gated, ledger debit, to inventory. */
 export async function buyGift(slug: string): Promise<{ error?: string }> {
@@ -57,5 +59,49 @@ export async function respondGift(
   if (accept) {
     await recordMoment(user.id, 'gift_accepted');
   }
+  return {};
+}
+
+/**
+ * Blow the Horn from the gift shop — 5 tokens, one per hour,
+ * writes a club_announcements row that feeds the ticker.
+ * Available to all verified members regardless of floor.
+ */
+export async function blowHorn(): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const user = await getUser(supabase);
+  if (!user) return { error: 'not_signed_in' };
+
+  // 1-per-hour cooldown
+  const { data: ok } = await supabase.rpc('bump_rate_limit', {
+    p_key: `horn:shop:${user.id}`,
+    p_window_seconds: 3600,
+    p_max: 1
+  });
+  if (!ok) return { error: 'horn_cooldown' };
+
+  // Check balance
+  const { data: ledger } = await supabase
+    .from('token_ledger')
+    .select('delta')
+    .eq('user_id', user.id);
+  const balance = (ledger ?? []).reduce((s: number, r: { delta: number }) => s + (r.delta ?? 0), 0);
+  if (balance < 5) return { error: 'insufficient_tokens' };
+
+  // Debit 5 tokens
+  const { error: debitError } = await supabaseAdmin
+    .from('token_ledger')
+    .insert({ user_id: user.id, delta: -5, reason: 'horn_shop' });
+  if (debitError) return { error: debitError.message };
+
+  // Write ticker announcement
+  await supabaseAdmin.from('club_announcements').insert({
+    body: '🎺 Someone just blew the Horn!',
+    kind: 'horn'
+  });
+
+  // Award badge
+  await supabaseAdmin.rpc('award_badge', { p_user: user.id, p_slug: 'chat_horn' });
+
   return {};
 }
