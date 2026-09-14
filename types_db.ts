@@ -3054,12 +3054,15 @@ export type Database = {
           checked_in_today: boolean
           gift_ready: boolean
           gift_ready_in_minutes: number
+          icebreakers_used_today: number
           matchmaker_plays_left: number
           messages_sent_today: number
           new_people_today: number
           tier: string
+          swipes_today: number
         }[]
       }
+      use_icebreaker: { Args: never; Returns: undefined }
       tick_rooftop_events: { Args: never; Returns: undefined }
       tier_rank: { Args: { p_tier: string }; Returns: number }
     }

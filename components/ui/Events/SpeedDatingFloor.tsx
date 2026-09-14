@@ -437,7 +437,8 @@ export default function SpeedDatingFloor({
               )}
               {partner.profile?.bio && (
                 <button
-                  onClick={() =>
+                  onClick={() => {
+                    if (!partner.profile) return;
                     setShowingProfile({
                       id: partner.userId,
                       display_name: partner.profile.display_name,
@@ -445,8 +446,8 @@ export default function SpeedDatingFloor({
                       verified_at: partner.profile.verified_at,
                       bio: partner.profile.bio,
                       one_liner: partner.profile.one_liner
-                    })
-                  }
+                    });
+                  }}
                   className="mt-1 text-xs font-body text-club hover:text-cyan transition"
                 >
                   👀 View Profile

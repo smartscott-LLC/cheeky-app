@@ -73,6 +73,8 @@ export default async function SpeedDatingPage() {
       display_name: string | null;
       verified_at: string | null;
       photo: string | null;
+      bio: string | null;
+      one_liner: string | null;
     } | null;
   }[] = [];
   let myEntry: { status: string; groupNumber: number | null } | null = null;
@@ -90,7 +92,7 @@ export default async function SpeedDatingPage() {
         ? await supabase
             .from('profiles')
             .select(
-              'id, display_name, verified_at, photos(storage_path, is_primary)'
+              'id, display_name, verified_at, bio, one_liner, photos(storage_path, is_primary)'
             )
             .in('id', ids)
             .filter('photos.held_at', 'is', 'null')
@@ -108,7 +110,9 @@ export default async function SpeedDatingPage() {
             photo:
               sph?.find((pp) => pp.is_primary)?.storage_path ??
               sph?.[0]?.storage_path ??
-              null
+              null,
+            bio: p.bio ?? null,
+            one_liner: p.one_liner ?? null
           }
         ];
       })
