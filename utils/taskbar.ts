@@ -155,7 +155,7 @@ export const TASKBAR_TILES: Record<string, TaskbarTileDef> = {
   },
   dance: {
     key: 'dance',
-    icon: ASSETS.icons.danceFloor,
+    icon: '💃',
     label: 'Dance Floor',
     href: '/events/dance_floor',
     minRank: 0
