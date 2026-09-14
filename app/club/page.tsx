@@ -50,7 +50,7 @@ export default async function ClubPage() {
     <div className="relative min-h-screen bg-black">
       {/* Story mode nudge for verified members — left-bottom, above the speaker */}
       {!storyProgress?.is_complete && (
-        <div className="pointer-events-none fixed bottom-16 left-4 z-50 max-w-xs">
+        <div className="pointer-events-none fixed bottom-2 left-22 z-50 max-w-xs">
           <div className="pointer-events-auto">
             <StoryNudge
               hasProgress={!!storyProgress}
@@ -59,7 +59,7 @@ export default async function ClubPage() {
           </div>
         </div>
       )}
-
+      I'm just going to position it on the same area.
       <FloorPageLayout
         background={ASSETS.brand.clubInterior}
         floorName="Lobby"

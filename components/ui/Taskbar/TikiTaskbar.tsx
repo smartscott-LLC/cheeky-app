@@ -27,7 +27,7 @@ interface BarState {
 interface Prefs {
   hidden: boolean;
   collapsed: boolean;
-  /** 'topleft' | 'topright' | 'bottomleft' | 'bottomright' */
+  /** 'topleft' | 'topleft' | 'topleft' | 'topleft' */
   anchor: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
   /** offset px from the chosen corner */
   offset: { x: number; y: number };
@@ -35,14 +35,14 @@ interface Prefs {
 
 const PREFS_KEY = 'tiki:prefs';
 const REFRESH_MS = 60_000;
-const DEFAULT_OFFSET = { x: 12, y: 12 };
+const DEFAULT_OFFSET = { x: 0, y: 0 };
 const BAR_W = 280;
 const BAR_H = 90;
 
 const DEFAULT_PREFS: Prefs = {
   hidden: false,
   collapsed: false,
-  anchor: 'bottomleft',
+  anchor: 'topleft',
   offset: DEFAULT_OFFSET
 };
 
@@ -150,7 +150,12 @@ export default function TikiTaskbar() {
     const rect = barRef.current?.getBoundingClientRect();
     if (!rect) return;
     // Store absolute screen coords — independent of anchor logic.
-    dragStart.current = { x: e.clientX, y: e.clientY, ox: rect.left, oy: rect.top };
+    dragStart.current = {
+      x: e.clientX,
+      y: e.clientY,
+      ox: rect.left,
+      oy: rect.top
+    };
     setDragging(true);
   };
 
@@ -158,9 +163,15 @@ export default function TikiTaskbar() {
     if (!dragging) return;
     const dx = e.clientX - dragStart.current.x;
     const dy = e.clientY - dragStart.current.y;
-    const nx = Math.max(0, Math.min(window.innerWidth - BAR_W, dragStart.current.ox + dx));
-    const ny = Math.max(0, Math.min(window.innerHeight - BAR_H, dragStart.current.oy + dy));
-    // Always store as top-left; the renderer flips to bottom/right as needed.
+    const nx = Math.max(
+      0,
+      Math.min(window.innerWidth - BAR_W, dragStart.current.ox + dx)
+    );
+    const ny = Math.max(
+      0,
+      Math.min(window.innerHeight - BAR_H, dragStart.current.oy + dy)
+    );
+    // Always store as top-left; the renderer flips to top/left as needed.
     savePrefs({ ...prefs, anchor: 'topleft', offset: { x: nx, y: ny } });
   };
 
@@ -178,6 +189,21 @@ export default function TikiTaskbar() {
   const isTop = anchor.startsWith('top');
   const isLeft = anchor.startsWith('left');
 
+  // Compute top/left from the offset so the absolute pixel position is always correct,
+  // regardless of which corner anchor is active.
+  let absTop: number | undefined;
+  let absLeft: number | undefined;
+  if (isTop) {
+    absTop = offY;
+  } else {
+    absTop = window.innerHeight - BAR_H - offY;
+  }
+  if (isLeft) {
+    absLeft = offX;
+  } else {
+    absLeft = window.innerWidth - BAR_W - offX;
+  }
+
   return (
     <div
       ref={barRef}
@@ -188,10 +214,8 @@ export default function TikiTaskbar() {
       style={{
         position: 'fixed',
         zIndex: 40,
-        left: isLeft ? offX : undefined,
-        right: isLeft ? undefined : offX,
-        top: isTop ? offY : undefined,
-        bottom: isTop ? undefined : offY,
+        top: absTop,
+        left: absLeft,
         cursor: dragging ? 'grabbing' : 'grab'
       }}
     >
@@ -211,21 +235,26 @@ export default function TikiTaskbar() {
             <h2 className="font-hero text-gold text-sm tracking-wide sm:text-base">
               Tiki Taskbar
             </h2>
-            <div className="absolute right-0 top-0 flex items-center gap-1 text-zinc-500">
+            <div className="absolute left-0 top-0 flex items-center gap-1 text-zinc-500">
               <button
                 onClick={() => {
-                  // Flip top↔bottom; preserve absolute screen position.
+                  // Flip top↔bottom while keeping the bar visually in place.
                   const isCurrentlyTop = prefs.anchor.startsWith('top');
                   const nextAnchor: Prefs['anchor'] = isCurrentlyTop
                     ? 'bottomleft'
                     : 'topleft';
+                  // Flip the y offset so absTop stays the same pixel value.
                   const newY = isCurrentlyTop
                     ? window.innerHeight - prefs.offset.y - BAR_H
                     : prefs.offset.y;
-                  savePrefs({ ...prefs, anchor: nextAnchor, offset: { ...prefs.offset, y: newY } });
+                  savePrefs({
+                    ...prefs,
+                    anchor: nextAnchor,
+                    offset: { x: prefs.offset.x, y: newY }
+                  });
                 }}
                 className="rounded px-1 py-0.5 text-[10px] transition hover:text-cyan"
-                title="Toggle top/bottom position"
+                title="Toggle top/bottom"
               >
                 ⇅
               </button>
