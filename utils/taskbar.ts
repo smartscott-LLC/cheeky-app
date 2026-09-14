@@ -125,7 +125,7 @@ export const TASKBAR_TILES: Record<string, TaskbarTileDef> = {
   },
   swipes: {
     key: 'swipes',
-    icon: '⚡',
+    icon: '😎',
     label: 'Swipes',
     href: '/browse',
     minRank: 0

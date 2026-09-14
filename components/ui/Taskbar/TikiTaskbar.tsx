@@ -191,10 +191,9 @@ export default function TikiTaskbar() {
     if (!dragging) return;
     const dx = e.clientX - dragStart.current.x;
     const dy = e.clientY - dragStart.current.y;
-    const nx = Math.max(
-      0,
-      Math.min(window.innerWidth - BAR_W, dragStart.current.ox + dx)
-    );
+    // Constrain: never more than 16px from right wall
+    const maxLeft = Math.max(0, window.innerWidth - BAR_W - 16);
+    const nx = Math.max(0, Math.min(maxLeft, dragStart.current.ox + dx));
     const ny = Math.max(
       0,
       Math.min(window.innerHeight - BAR_H, dragStart.current.oy + dy)
