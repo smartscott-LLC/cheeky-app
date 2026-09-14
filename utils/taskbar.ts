@@ -50,6 +50,14 @@ export interface TierCaps {
   giftsPer15min: number;
   /** Icebreakers per day — silver=5, gold=10, platinum/diamond=∞. */
   icebreakers: number | null;
+  /** Dance Floor free entries per day — 1 for all tiers. */
+  danceFree: number;
+  /** Speed Dating free entries per day — 0 silver/gold, 1 platinum, 2 diamond. */
+  speedFree: number;
+  /** Rooftop free entries per day — 0 for all except diamond (1). */
+  rooftopFree: number;
+  /** Blind Date free entries per day — 1 silver, 2 gold/plat/dia. */
+  blindFree: number;
 }
 
 export const TIER_CAPS: Record<TierName, TierCaps> = {
@@ -60,7 +68,11 @@ export const TIER_CAPS: Record<TierName, TierCaps> = {
     plays: 3,
     blindDate: 0,
     giftsPer15min: 4,
-    icebreakers: 5
+    icebreakers: 5,
+    danceFree: 1,
+    speedFree: 0,
+    rooftopFree: 0,
+    blindFree: 1
   },
   gold: {
     messages: 75,
@@ -69,7 +81,11 @@ export const TIER_CAPS: Record<TierName, TierCaps> = {
     plays: 5,
     blindDate: 2,
     giftsPer15min: 4,
-    icebreakers: 10
+    icebreakers: 10,
+    danceFree: 1,
+    speedFree: 0,
+    rooftopFree: 0,
+    blindFree: 1
   },
   platinum: {
     messages: null,
@@ -78,7 +94,11 @@ export const TIER_CAPS: Record<TierName, TierCaps> = {
     plays: 8,
     blindDate: 2,
     giftsPer15min: 4,
-    icebreakers: null
+    icebreakers: null,
+    danceFree: 1,
+    speedFree: 1,
+    rooftopFree: 0,
+    blindFree: 2
   },
   diamond: {
     messages: null,
@@ -87,7 +107,11 @@ export const TIER_CAPS: Record<TierName, TierCaps> = {
     plays: 12,
     blindDate: 2,
     giftsPer15min: 4,
-    icebreakers: null
+    icebreakers: null,
+    danceFree: 1,
+    speedFree: 2,
+    rooftopFree: 1,
+    blindFree: 2
   }
 };
 
@@ -127,6 +151,27 @@ export const TASKBAR_TILES: Record<string, TaskbarTileDef> = {
     href: '/events/blind_date',
     minRank: 1
   },
+  dance: {
+    key: 'dance',
+    icon: '💃',
+    label: 'Dance Floor',
+    href: '/events/dance_floor',
+    minRank: 0
+  },
+  speed: {
+    key: 'speed',
+    icon: '⚡',
+    label: 'Speed Dating',
+    href: '/events/speed',
+    minRank: 2
+  },
+  rooftop: {
+    key: 'rooftop',
+    icon: '🌙',
+    label: 'Rooftop',
+    href: '/events/rooftop',
+    minRank: 3
+  },
   gifts: {
     key: 'gifts',
     icon: '🎁',
@@ -164,6 +209,9 @@ export const TILE_ORDER = [
   'l3',
   'matchmaker',
   'blind',
+  'dance',
+  'speed',
+  'rooftop',
   'gifts',
   'icebreakers',
   'dateNight',

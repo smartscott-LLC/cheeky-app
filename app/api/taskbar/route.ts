@@ -15,6 +15,10 @@ interface TaskbarStateRow {
   matchmaker_plays_left: number | null;
   l3_trios_used_today: number | null;
   blind_date_joins_today: number | null;
+  blind_free_remaining: number | null;
+  dance_free_remaining: number | null;
+  speed_free_remaining: number | null;
+  rooftop_free_remaining: number | null;
   gift_ready: boolean | null;
   gift_ready_in_minutes: number | null;
   swipes_today: number | null;
@@ -85,7 +89,16 @@ export async function GET() {
           count = row.matchmaker_plays_left;
           break;
         case 'blind':
-          count = left(caps.blindDate, row.blind_date_joins_today);
+          count = row.blind_free_remaining;
+          break;
+        case 'dance':
+          count = row.dance_free_remaining;
+          break;
+        case 'speed':
+          count = row.speed_free_remaining;
+          break;
+        case 'rooftop':
+          count = row.rooftop_free_remaining;
           break;
         case 'gifts':
           count = row.gift_ready ? 1 : (row.gift_ready_in_minutes ?? 0);
