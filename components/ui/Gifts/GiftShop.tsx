@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { buyGift, respondGift, sendGift, blowHorn } from '@/app/gifts/actions';
+import { buyGift, respondGift, sendGift, blowHorn, blowHornFull } from '@/app/gifts/actions';
 
 export interface GiftPerson {
   id: string;
@@ -295,26 +295,39 @@ export default function GiftShop({
               );
             })()}
 
-            {/* ── Blow the Horn — standalone, no recipient needed ─── */}
+            {/* ── Blow the Horn — two tiers ─────────────────────── */}
             <div>
               <h3 className="font-header text-gold text-base uppercase tracking-[0.3em]">
                 🎺 Blow the Horn
               </h3>
               <p className="mt-1 text-sm font-body text-club">
-                Announce yourself to the entire club — appears on the ticker.
-                One per 15 minutes, 5 tokens.
+                Announce yourself to the club. Choose your reach.
               </p>
-              <div className="mt-3">
+              <div className="mt-3 space-y-2">
+                {/* 5-token chat-only horn */}
                 <button
                   onClick={() => run('horn', blowHorn)}
                   disabled={busy === 'horn'}
+                  className="w-full rounded-lg border-2 border-gold/60 bg-gold/5 px-4 py-3 text-center transition hover:bg-gold/15 disabled:opacity-40"
+                >
+                  <span className="font-header text-gold text-base">
+                    🎺 Chat-only Horn
+                  </span>
+                  <span className="ml-2 font-body text-club text-sm">
+                    — 5 tokens · lounge chat only
+                  </span>
+                </button>
+                {/* 10-token full horn */}
+                <button
+                  onClick={() => run('horn_full', blowHornFull)}
+                  disabled={busy === 'horn_full'}
                   className="w-full rounded-lg border-2 border-gold bg-gold/10 px-4 py-3 text-center transition hover:bg-gold/20 disabled:opacity-40"
                 >
                   <span className="font-header text-gold text-lg">
-                    {busy === 'horn' ? 'Announcing…' : '🎺 Blow the Horn'}
+                    🎺 Full Horn
                   </span>
                   <span className="ml-2 font-body text-club text-sm">
-                    — 5 tokens
+                    — 10 tokens · ticker + chat
                   </span>
                 </button>
               </div>

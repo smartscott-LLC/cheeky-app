@@ -125,6 +125,11 @@ export async function streamHorn(body: string): Promise<{ error?: string }> {
     delta: -10,
     reason: 'horn'
   });
+  // Full horn: also writes to the ticker so the entire club sees it.
+  await supabaseAdmin.from('club_announcements').insert({
+    body: '🎺 Someone just blew the Horn!',
+    kind: 'horn'
+  });
   await (
     supabase.rpc as unknown as (
       fn: string,
