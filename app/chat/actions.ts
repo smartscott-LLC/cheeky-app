@@ -23,7 +23,7 @@ export async function loungeSend(
   return { id: data ?? undefined };
 }
 
-/** The Horn — 10 tokens, one per hour, lights up + crosses the ticker. */
+/** The Horn — 10 tokens, one per 15 minutes, lights up + crosses the ticker. */
 export async function loungeHorn(
   body: string
 ): Promise<{ id?: number; error?: string }> {

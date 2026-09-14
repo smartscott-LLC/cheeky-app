@@ -17,7 +17,7 @@ export async function buyGift(slug: string): Promise<{ error?: string }> {
   return {};
 }
 
-/** Sends a gift from your stash — 1 offer/hour, block-aware, ticker fires. */
+/** Sends a gift from your stash — 1 offer per 15 minutes, block-aware, ticker fires. */
 export async function sendGift(
   giftId: string,
   recipientId: string

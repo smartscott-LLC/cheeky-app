@@ -94,7 +94,7 @@ function describe(code: string): string {
     case 'tier_required':
       return 'That gift lives on a higher floor — climb the ladder first.';
     case 'send_cooldown':
-      return 'One gift offer per hour. The ticker needs a breather — try again soon.';
+      return 'One gift offer every 15 minutes. The ticker needs a breather — try again soon.';
     case 'blocked':
       return 'This person blocked you, or you blocked them.';
     case 'gift_not_available':
@@ -392,7 +392,7 @@ export default function GiftShop({
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
             <h2 className="font-header text-cyan text-2xl">🧥 My stash</h2>
             <p className="mt-1 text-base font-body text-club">
-              Your inventory. One offer per hour, and a denied gift comes right
+              Your inventory. One offer every 15 minutes, and a denied gift comes right
               back here.
             </p>
             {stash.length === 0 ? (

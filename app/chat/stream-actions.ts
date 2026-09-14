@@ -64,7 +64,7 @@ export async function streamSend(
       return { error: 'floor_too_high' };
     }
   }
-  // The Horn costs 10 tokens and burns one slot per hour.
+  // The Horn costs 10 tokens and burns one slot per 15 minutes.
   if (options.horn) {
     const { error: hornErr } = await streamHorn(trimmed);
     if (hornErr) return { error: hornErr };
