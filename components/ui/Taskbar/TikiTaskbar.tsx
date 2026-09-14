@@ -27,10 +27,14 @@ interface BarState {
 interface Prefs {
   hidden: boolean;
   collapsed: boolean;
-  /** 'topleft' | 'topleft' | 'topleft' | 'topleft' */
+  /** 'topleft' | 'topright' | 'bottomleft' | 'bottomright' */
   anchor: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
   /** offset px from the chosen corner */
   offset: { x: number; y: number };
+  /** absolute pixel position on screen — computed from offset+anchor on load,
+   *  written directly during drag. Always used for rendering. */
+  absX: number;
+  absY: number;
 }
 
 const PREFS_KEY = 'tiki:prefs';
@@ -42,19 +46,39 @@ const BAR_H = 90;
 const DEFAULT_PREFS: Prefs = {
   hidden: false,
   collapsed: false,
-  anchor: 'topleft',
-  offset: DEFAULT_OFFSET
+  anchor: 'bottomleft',
+  offset: DEFAULT_OFFSET,
+  absX: 12,
+  absY: 0 // filled in by loadPrefs on client
 };
 
 function loadPrefs(): Prefs {
-  if (typeof window === 'undefined') return DEFAULT_PREFS;
+  if (typeof window === 'undefined') return { ...DEFAULT_PREFS };
   try {
     const raw = localStorage.getItem(PREFS_KEY);
-    if (raw) return { ...DEFAULT_PREFS, ...JSON.parse(raw) };
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      // Fill in absX/absY from offset+anchor if missing (backwards compat).
+      if (parsed.absX == null || parsed.absY == null) {
+        const a = parsed.anchor ?? 'bottomleft';
+        const o = parsed.offset ?? DEFAULT_OFFSET;
+        const isTop = a.startsWith('top');
+        const isLeft = a.startsWith('left');
+        parsed.absX = isLeft ? o.x : window.innerWidth - BAR_W - o.x;
+        parsed.absY = isTop ? o.y : window.innerHeight - BAR_H - o.y;
+      }
+      return { ...DEFAULT_PREFS, ...parsed };
+    }
+    // First-time default: bottom-left, 12px from edges.
+    return {
+      ...DEFAULT_PREFS,
+      absX: 12,
+      absY: window.innerHeight - BAR_H - 12
+    };
   } catch {
     /* corrupted pref — fall back */
   }
-  return DEFAULT_PREFS;
+  return { ...DEFAULT_PREFS, absX: 12, absY: window.innerHeight - BAR_H - 12 };
 }
 
 function formatCount(count: number | null): string {
@@ -171,8 +195,8 @@ export default function TikiTaskbar() {
       0,
       Math.min(window.innerHeight - BAR_H, dragStart.current.oy + dy)
     );
-    // Always store as top-left; the renderer flips to top/left as needed.
-    savePrefs({ ...prefs, anchor: 'topleft', offset: { x: nx, y: ny } });
+    // Store absolute pixels directly — no anchor math needed.
+    savePrefs({ ...prefs, absX: nx, absY: ny });
   };
 
   const onPointerUp = () => {
@@ -183,26 +207,9 @@ export default function TikiTaskbar() {
 
   const { tiles, tier } = state;
 
-  // Render the bar at the saved position
-  const anchor = prefs.anchor;
-  const { x: offX, y: offY } = prefs.offset;
-  const isTop = anchor.startsWith('top');
-  const isLeft = anchor.startsWith('left');
-
-  // Compute top/left from the offset so the absolute pixel position is always correct,
-  // regardless of which corner anchor is active.
-  let absTop: number | undefined;
-  let absLeft: number | undefined;
-  if (isTop) {
-    absTop = offY;
-  } else {
-    absTop = window.innerHeight - BAR_H - offY;
-  }
-  if (isLeft) {
-    absLeft = offX;
-  } else {
-    absLeft = window.innerWidth - BAR_W - offX;
-  }
+  // Render using stored absolute pixel position directly.
+  const absTop = prefs.absY;
+  const absLeft = prefs.absX;
 
   return (
     <div
@@ -239,19 +246,12 @@ export default function TikiTaskbar() {
               <button
                 onClick={() => {
                   // Flip top↔bottom while keeping the bar visually in place.
+                  // Only change the anchor label — absY stays the same pixel value.
                   const isCurrentlyTop = prefs.anchor.startsWith('top');
                   const nextAnchor: Prefs['anchor'] = isCurrentlyTop
                     ? 'bottomleft'
                     : 'topleft';
-                  // Flip the y offset so absTop stays the same pixel value.
-                  const newY = isCurrentlyTop
-                    ? window.innerHeight - prefs.offset.y - BAR_H
-                    : prefs.offset.y;
-                  savePrefs({
-                    ...prefs,
-                    anchor: nextAnchor,
-                    offset: { x: prefs.offset.x, y: newY }
-                  });
+                  savePrefs({ ...prefs, anchor: nextAnchor });
                 }}
                 className="rounded px-1 py-0.5 text-[10px] transition hover:text-cyan"
                 title="Toggle top/bottom"
