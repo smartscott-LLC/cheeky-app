@@ -14,6 +14,18 @@ export default async function MessagesPage() {
   }
   const floorHref = await getReturnFloor();
 
+  // Icebreaker daily count
+  const { data: taskbarState } = await supabase.rpc('taskbar_state');
+  const row = (taskbarState?.[0] ?? {}) as {
+    tier?: string;
+    icebreakers_used_today?: number | null;
+  };
+  const tier = (row.tier ?? 'silver') as string;
+  const icebreakersUsed = row.icebreakers_used_today ?? 0;
+  const icebreakerCaps: Record<string, number | null> = { silver: 5, gold: 10, platinum: null, diamond: null };
+  const icebreakerCap = icebreakerCaps[tier] ?? 5;
+  const icebreakersLeft = icebreakerCap !== null ? Math.max(0, icebreakerCap - icebreakersUsed) : null;
+
   // Incoming waves — a one-tap "noticed you" waiting for a hello.
   const { data: waves } = await supabase
     .from('waves')
@@ -113,6 +125,26 @@ export default async function MessagesPage() {
             ← Back to the floor
           </Link>
         </p>
+
+        {/* Icebreakers — quick entry point */}
+        <div className="mt-6 rounded-xl border border-club/30 bg-zinc-900/50 p-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-header text-cyan text-xl">🧊 Icebreakers</h3>
+              <p className="mt-1 font-body text-club text-sm">
+                {icebreakersLeft === null
+                  ? 'Unlimited icebreakers for your tier'
+                  : `${icebreakersLeft} remaining today`}
+              </p>
+            </div>
+            <Link
+              href="/events"
+              className="rounded-lg bg-club px-5 py-2.5 text-sm font-bold text-white transition hover:bg-club-cotton"
+            >
+              Browse Icebreakers →
+            </Link>
+          </div>
+        </div>
 
         <MomentsStrip />
 

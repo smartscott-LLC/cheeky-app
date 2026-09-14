@@ -9,7 +9,8 @@ import {
   reportUser,
   resolveSong,
   sendEventMessage,
-  sendMessage
+  sendMessage,
+  useIcebreaker
 } from '@/app/messages/actions';
 import { startDateNight } from '@/app/date-night/actions';
 import DateNightPanel from '@/components/ui/DateNight/DateNightPanel';
@@ -393,7 +394,10 @@ export default function MessageThread({
             💬 {ICEBREAKERS[promptIdx]}
           </p>
           <button
-            onClick={() => setPromptIdx((i) => (i + 1) % ICEBREAKERS.length)}
+            onClick={async () => {
+              await useIcebreaker();
+              setPromptIdx((i) => (i + 1) % ICEBREAKERS.length);
+            }}
             className="ml-auto rounded-full border border-zinc-700 px-3 py-1 text-xs text-cyan hover:border-club hover:font-body text-club"
           >
             Another

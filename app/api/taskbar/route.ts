@@ -17,6 +17,7 @@ interface TaskbarStateRow {
   gift_ready: boolean | null;
   gift_ready_in_minutes: number | null;
   swipes_today: number | null;
+  icebreakers_used_today: number | null;
 }
 
 const left = (cap: number | null, used: number | null): number | null => {
@@ -93,6 +94,10 @@ export async function GET() {
         case 'dateNight':
           count = activeDateNights ?? 0;
           if (count === 0) return null as null;
+          break;
+        case 'icebreakers':
+          count = left(caps.icebreakers, row.icebreakers_used_today);
+          unlimited = caps.icebreakers === null;
           break;
         default:
           count = null;

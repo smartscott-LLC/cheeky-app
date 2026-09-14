@@ -46,24 +46,28 @@ export interface TierCaps {
   blindDate: number;
   /** Gifts sendable per hour (the send_gift cooldown). */
   giftsPerHour: number;
+  /** Icebreakers per day — silver=5, gold=10, platinum/diamond=∞. */
+  icebreakers: number | null;
 }
 
 export const TIER_CAPS: Record<TierName, TierCaps> = {
-  silver: { messages: 30, people: 5, plays: 2, blindDate: 0, giftsPerHour: 1 },
-  gold: { messages: 75, people: 15, plays: 3, blindDate: 2, giftsPerHour: 1 },
+  silver: { messages: 30, people: 5, plays: 2, blindDate: 0, giftsPerHour: 1, icebreakers: 5 },
+  gold: { messages: 75, people: 15, plays: 3, blindDate: 2, giftsPerHour: 1, icebreakers: 10 },
   platinum: {
     messages: null,
     people: 40,
     plays: 4,
     blindDate: 2,
-    giftsPerHour: 1
+    giftsPerHour: 1,
+    icebreakers: null
   },
   diamond: {
     messages: null,
     people: 100,
     plays: 5,
     blindDate: 2,
-    giftsPerHour: 1
+    giftsPerHour: 1,
+    icebreakers: null
   }
 };
 
@@ -110,6 +114,13 @@ export const TASKBAR_TILES: Record<string, TaskbarTileDef> = {
     href: '/gifts',
     minRank: 0
   },
+  icebreakers: {
+    key: 'icebreakers',
+    icon: '🧊',
+    label: 'Icebreakers',
+    href: '/messages',
+    minRank: 0
+  },
   dateNight: {
     key: 'dateNight',
     icon: '💘',
@@ -134,6 +145,7 @@ export const TILE_ORDER = [
   'matchmaker',
   'blind',
   'gifts',
+  'icebreakers',
   'dateNight',
   'coat'
 ];

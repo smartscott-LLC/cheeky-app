@@ -274,3 +274,17 @@ export async function resolveSong(
   }
   return {};
 }
+
+/**
+ * Consumes one icebreaker use for the current CST day.
+ * Server-side cap: silver=5, gold=10, platinum/diamond=∞.
+ */
+export async function useIcebreaker(): Promise<{ error?: string }> {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc('use_icebreaker');
+  if (error) {
+    console.error('useIcebreaker failed:', error.message);
+    return { error: error.message };
+  }
+  return {};
+}
