@@ -86,19 +86,19 @@ export async function GET() {
           unlimited = caps.l3 === null;
           break;
         case 'matchmaker':
-          count = row.matchmaker_plays_left;
+          count = row.matchmaker_plays_left ?? 0;
           break;
         case 'blind':
-          count = row.blind_free_remaining;
+          count = row.blind_free_remaining ?? 0;
           break;
         case 'dance':
-          count = row.dance_free_remaining;
+          count = row.dance_free_remaining ?? 0;
           break;
         case 'speed':
-          count = row.speed_free_remaining;
+          count = row.speed_free_remaining ?? 0;
           break;
         case 'rooftop':
-          count = row.rooftop_free_remaining;
+          count = row.rooftop_free_remaining ?? 0;
           break;
         case 'gifts':
           count = row.gift_ready ? 1 : (row.gift_ready_in_minutes ?? 0);

@@ -86,7 +86,7 @@ function loadPrefs(): Prefs {
 }
 
 function formatCount(count: number | null): string {
-  if (count === null) return '·';
+  if (count === null || count === undefined) return '—';
   return count > 999 ? `${Math.round(count / 1000)}k` : String(count);
 }
 
