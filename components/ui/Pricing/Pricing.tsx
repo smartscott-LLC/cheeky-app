@@ -230,32 +230,31 @@ export default function Pricing({
                   Silver — free
                 </p>
                 <p className="mt-1 text-sm font-body text-club">
-                  30 messages + 5 new conversations a day. Generous on purpose,
-                  never shrunk.
+                  30 msgs · 5 people · 15 swipes · 4 L³ · 3 matchmaker · 0 blind date · 5 icebreakers · no tokens
                 </p>
               </div>
               <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
                 <p className="font-body text-club text-xs font-bold uppercase tracking-wide">
-                  Gold
+                  Gold — $9.99/mo
                 </p>
                 <p className="mt-1 text-sm font-body text-club">
-                  75 messages + 15 new people a day.
+                  75 msgs · 15 people · 30 swipes · 8 L³ · 5 matchmaker · 2 blind date · 10 icebreakers · +50 tokens
                 </p>
               </div>
               <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
                 <p className="font-body text-club text-xs font-bold uppercase tracking-wide">
-                  Platinum
+                  Platinum — $19.99/mo
                 </p>
                 <p className="mt-1 text-sm font-body text-club">
-                  Unlimited messages + 40 new people a day.
+                  ∞ msgs · 40 people · 50 swipes · 12 L³ · 8 matchmaker · 2 blind date · ∞ icebreakers · +150 tokens
                 </p>
               </div>
               <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
                 <p className="font-body text-club text-xs font-bold uppercase tracking-wide">
-                  Diamond
+                  Diamond — $29.99/mo
                 </p>
                 <p className="mt-1 text-sm font-body text-club">
-                  Unlimited messages + 100 new people a day.
+                  ∞ msgs · 100 people · 100 swipes · 20 L³ · 12 matchmaker · 2 blind date · ∞ icebreakers · +500 tokens
                 </p>
               </div>
             </div>
