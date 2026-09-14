@@ -213,25 +213,37 @@ export default function MatchmakerBoard({
             The pair you matched stays unlocked — a win is a win.
           </p>
         )}
-        {unsentMatches.length > 0 && (
-          <div className="mx-auto mt-4 max-w-md space-y-2">
-            {unsentMatches.map((c) => {
-              const reveal = faceUp[c.id];
-              if (!reveal) return null;
-              return (
-                <button
-                  key={c.id}
-                  onClick={() => {
-                    setUnlockTarget({ cardId: c.id, person: reveal });
+        {unsentMatches.length > 0 ? (
+          <div className="mx-auto mt-5 max-w-md space-y-3">
+            <p className="text-sm font-body text-club">
+              {unsentMatches.length === 1
+                ? 'One match left — send a first impression?'
+                : `You found ${unsentMatches.length} more people you matched with. Send an intro?`}
+            </p>
+            {/* Single consolidated button to open the draft for remaining matches */}
+            <button
+              onClick={() => {
+                // Jump to the first unsent match's card to trigger the unlock flow
+                const first = unsentMatches[0];
+                if (first) {
+                  const reveal = faceUp[first.id];
+                  if (reveal) {
+                    setUnlockTarget({ cardId: first.id, person: reveal });
                     setUnlockSent(false);
-                  }}
-                  className="w-full rounded-lg border border-gold/50 px-4 py-2 text-base font-semibold text-gold transition hover:bg-gold/10"
-                >
-                  Send your first impression to {reveal.display_name} →
-                </button>
-              );
-            })}
+                  }
+                }
+              }}
+              className="w-full rounded-lg border border-gold px-6 py-3 text-base font-bold text-gold transition hover:bg-gold/10"
+            >
+              Send {unsentMatches.length === 1 ? 'your' : `${unsentMatches.length} intros`} →
+            </button>
           </div>
+        ) : (
+          <p className="mt-4 text-sm font-body text-club/70">
+            {unlockSentFor.size > 0
+              ? 'All your first impressions are sent.'
+              : 'No first impressions unlocked this round.'}
+          </p>
         )}
         <button
           onClick={onFinished}
