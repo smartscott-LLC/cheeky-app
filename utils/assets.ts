@@ -122,6 +122,8 @@ export const ASSETS = {
     collectibleCardBack2: iconUrl('collectible_card_back2'),
     coatCheck: iconUrl('coat_check'),
     cursive1: iconUrl('cursive1'),
+    cursiveBold: iconUrl('cursive_bold'),
+    cursiveThin: iconUrl('cursive_thin'),
     danceFloor: iconUrl('dance_floor'),
     diamond: iconUrl('diamond'),
     diamondBadge: iconUrl('diamond_badge'),

@@ -4,12 +4,17 @@
 // gold Fascinate, tiny pink caption. Fetches live counts from /api/taskbar
 // on mount, on navigation, on focus, and every 60s. Per-device prefs
 // (localStorage): collapsed, hidden, and the draggable position.
+//
+// Layout: 2 rows — bottom row has 6 tiles, top row (left of bar) has 5 tiles
+// (first slot is a cycling cursive icon, last is a refresh button).
+// Default position: 4px from bottom, 16px from right edge.
 'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { isTaskbarHidden } from '../../../utils/taskbar';
+import { ASSETS } from '@/utils/assets';
 
 interface Tile {
   key: string;
@@ -40,13 +45,22 @@ interface Prefs {
 const PREFS_KEY = 'tiki:prefs';
 const REFRESH_MS = 60_000;
 const DEFAULT_OFFSET = { x: 0, y: 0 };
-const BAR_W = 350;
-const BAR_H = 90;
+
+// Two-row layout constants
+const BAR_W = 400;
+const BAR_H = 170;
+
+// Cursive icon variants — cycle through these 3 options.
+const CURSIVE_ICONS = [
+  ASSETS.icons.cursive1,
+  ASSETS.icons.cursiveBold,
+  ASSETS.icons.cursiveThin
+] as const;
 
 const DEFAULT_PREFS: Prefs = {
   hidden: false,
   collapsed: false,
-  anchor: 'bottomleft',
+  anchor: 'bottomright',
   offset: DEFAULT_OFFSET,
   absX: 12,
   absY: 0 // filled in by loadPrefs on client
@@ -60,7 +74,7 @@ function loadPrefs(): Prefs {
       const parsed = JSON.parse(raw);
       // Fill in absX/absY from offset+anchor if missing (backwards compat).
       if (parsed.absX == null || parsed.absY == null) {
-        const a = parsed.anchor ?? 'bottomleft';
+        const a = parsed.anchor ?? 'bottomright';
         const o = parsed.offset ?? DEFAULT_OFFSET;
         const isTop = a.startsWith('top');
         const isLeft = a.startsWith('left');
@@ -69,19 +83,21 @@ function loadPrefs(): Prefs {
       }
       return { ...DEFAULT_PREFS, ...parsed };
     }
-    // First-time default: bottom-right, 16px from right edge, 4px from bottom.
+    // First-time default: 16px from right edge, 4px from bottom.
     return {
       ...DEFAULT_PREFS,
-      absX: window.innerWidth - BAR_W - 20,
-      absY: window.innerHeight - BAR_H - 2
+      anchor: 'bottomright',
+      absX: window.innerWidth - BAR_W - 16,
+      absY: window.innerHeight - BAR_H - 4
     };
   } catch {
     /* corrupted pref — fall back */
   }
   return {
     ...DEFAULT_PREFS,
-    absX: window.innerWidth - BAR_W - 20,
-    absY: window.innerHeight - BAR_H - 2
+    anchor: 'bottomright',
+    absX: window.innerWidth - BAR_W - 16,
+    absY: window.innerHeight - BAR_H - 4
   };
 }
 
@@ -95,6 +111,7 @@ export default function TikiTaskbar() {
   const [state, setState] = useState<BarState | null>(null);
   const [prefs, setPrefs] = useState<Prefs>(loadPrefs);
   const [dragging, setDragging] = useState(false);
+  const [cursiveIdx, setCursiveIdx] = useState(0);
   const dragStart = useRef<{ x: number; y: number; ox: number; oy: number }>({
     x: 0,
     y: 0,
@@ -168,6 +185,11 @@ export default function TikiTaskbar() {
     void fetchState();
   };
 
+  // Cycle cursive icon variant
+  const cycleCursive = () => {
+    setCursiveIdx((i) => (i + 1) % CURSIVE_ICONS.length);
+  };
+
   const savePrefs = (next: Prefs) => {
     setPrefs(next);
     try {
@@ -179,6 +201,10 @@ export default function TikiTaskbar() {
 
   const hiddenByRoute = isTaskbarHidden(pathname);
   const nothingToShow = !state || state.tiles.length === 0;
+
+  // Split tiles into top-row (first 5) and bottom-row (remaining).
+  const topTiles = (state?.tiles ?? []).slice(0, 5);
+  const bottomTiles = (state?.tiles ?? []).slice(5);
 
   // Drag handlers
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -218,7 +244,7 @@ export default function TikiTaskbar() {
 
   if (hiddenByRoute || nothingToShow) return null;
 
-  const { tiles, tier } = state;
+  const { tier } = state;
 
   // Render using stored absolute pixel position directly.
   const absTop = prefs.absY;
@@ -250,20 +276,19 @@ export default function TikiTaskbar() {
         </button>
       ) : (
         <div>
-          {/* Label — centered over the bar, small. Controls hug the corner. */}
-          <div className="relative pr-20">
+          {/* Label row — top of bar, controls on the right */}
+          <div className="relative pr-24">
             <h2 className="font-hero text-gold text-sm tracking-wide sm:text-base">
               Tiki Taskbar
             </h2>
-            <div className="absolute left-0 top-0 flex items-center gap-1 text-zinc-500">
+            <div className="absolute right-0 top-0 flex items-center gap-0.5 text-zinc-500">
               <button
                 onClick={() => {
                   // Flip top↔bottom while keeping the bar visually in place.
-                  // Only change the anchor label — absY stays the same pixel value.
                   const isCurrentlyTop = prefs.anchor.startsWith('top');
                   const nextAnchor: Prefs['anchor'] = isCurrentlyTop
-                    ? 'bottomleft'
-                    : 'topleft';
+                    ? 'bottomright'
+                    : 'topright';
                   savePrefs({ ...prefs, anchor: nextAnchor });
                 }}
                 className="rounded px-1 py-0.5 text-[10px] transition hover:text-cyan"
@@ -295,35 +320,99 @@ export default function TikiTaskbar() {
             </div>
           </div>
 
-          <div className="mt-1 flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 rounded-2xl border-2 border-gold bg-zinc-950/95 px-4 py-2 shadow-[0_0_24px_rgba(255,215,0,0.12)]">
-            {tiles.map((t) => (
-              <Link
-                key={t.key}
-                href={t.href}
-                title={t.label}
-                className="group flex flex-col items-center gap-0.5 rounded-lg px-1 py-0.5 transition hover:scale-105"
+          {/* Two-row tile layout */}
+          <div className="mt-1 flex flex-col items-stretch rounded-2xl border-2 border-gold bg-zinc-950/95 shadow-[0_0_24px_rgba(255,215,0,0.12)]">
+            {/* Top row — 5 tiles (first is cursive icon, then refresh-style controls) */}
+            <div className="flex items-center justify-between px-3 py-1.5">
+              {/* Cursive icon — cycles through 3 variants on click */}
+              <button
+                onClick={cycleCursive}
+                className="flex shrink-0 items-center gap-1 rounded-lg px-1.5 py-0.5 transition hover:scale-105"
+                title="Click to cycle cursive style"
               >
-                {t.icon.startsWith('http') ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={t.icon}
-                    alt={t.label}
-                    className="h-6 w-6 object-contain"
-                  />
-                ) : (
-                  <span className="text-xl leading-none">{t.icon}</span>
+                <img
+                  src={CURSIVE_ICONS[cursiveIdx]}
+                  alt="cursive"
+                  className="h-7 w-7 object-contain"
+                />
+              </button>
+
+              {/* Top row tiles (skip first 5 if we have them, otherwise show remaining) */}
+              <div className="flex flex-1 justify-center gap-x-4 gap-y-0.5">
+                {topTiles.map((t) => (
+                  <Link
+                    key={t.key}
+                    href={t.href}
+                    title={t.label}
+                    className="group flex flex-col items-center gap-0.5 rounded-lg px-1 py-0.5 transition hover:scale-105"
+                  >
+                    {t.icon.startsWith('http') ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={t.icon}
+                        alt={t.label}
+                        className="h-6 w-6 object-contain"
+                      />
+                    ) : (
+                      <span className="text-xl leading-none">{t.icon}</span>
+                    )}
+                    <span className="font-header text-cyan text-sm leading-none">
+                      {t.unlimited ? '∞' : formatCount(t.count)}
+                    </span>
+                    <span className="font-body text-club text-[9px] font-semibold leading-tight tracking-wide">
+                      {t.label}
+                    </span>
+                  </Link>
+                ))}
+                {/* If fewer than 5 top tiles, pad with empty space */}
+                {Array.from({ length: Math.max(0, 5 - topTiles.length) }).map(
+                  (_, i) => (
+                    <div key={`pad-top-${i}`} className="w-12" />
+                  )
                 )}
-                <span className="font-header text-cyan text-sm leading-none">
-                  {t.unlimited ? '∞' : formatCount(t.count)}
-                </span>
-                <span className="font-body text-club text-[9px] font-semibold leading-tight tracking-wide">
-                  {t.label}
-                </span>
-              </Link>
-            ))}
+              </div>
+
+              {/* Spacer for right-side controls alignment */}
+              <div className="w-20" />
+            </div>
+
+            {/* Bottom row — 6 tiles */}
+            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 px-4 py-2">
+              {bottomTiles.map((t) => (
+                <Link
+                  key={t.key}
+                  href={t.href}
+                  title={t.label}
+                  className="group flex flex-col items-center gap-0.5 rounded-lg px-1 py-0.5 transition hover:scale-105"
+                >
+                  {t.icon.startsWith('http') ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={t.icon}
+                      alt={t.label}
+                      className="h-6 w-6 object-contain"
+                    />
+                  ) : (
+                    <span className="text-xl leading-none">{t.icon}</span>
+                  )}
+                  <span className="font-header text-cyan text-sm leading-none">
+                    {t.unlimited ? '∞' : formatCount(t.count)}
+                  </span>
+                  <span className="font-body text-club text-[9px] font-semibold leading-tight tracking-wide">
+                    {t.label}
+                  </span>
+                </Link>
+              ))}
+              {/* Pad bottom row if fewer than 6 tiles */}
+              {Array.from({ length: Math.max(0, 6 - bottomTiles.length) }).map(
+                (_, i) => (
+                  <div key={`pad-bottom-${i}`} className="w-12" />
+                )
+              )}
+            </div>
           </div>
 
-          <p className="font-body text-club mt-1 text-center font-body text-xs opacity-70">
+          <p className="font-body text-club mt-1 text-center text-xs opacity-70">
             {tier === 'guest'
               ? 'Get your card to start your night'
               : 'Your daily to-dos'}
