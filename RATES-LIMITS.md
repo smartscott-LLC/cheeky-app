@@ -100,11 +100,12 @@ Tracked in: MessageThread (Date Night) when cycling prompts; NOT tracked in Spee
 
 |                       | All tiers  |
 | --------------------- | ---------- |
-| Cooldown              | 1 per hour |
-| Cost (in-lounge chat) | 10 tokens  |
-| Cost (gift shop blow) | 5 tokens   |
+| Cooldown              | 1 per 15 min |
+| Cost (in-lounge chat — full horn) | 10 tokens |
+| Cost (gift shop chat-only) | 5 tokens |
+| Cost (gift shop full horn) | 10 tokens |
 
-Keys: `horn:user:{user_id}` (lounge) + `horn:shop:{user_id}` (gift shop)
+Keys: `horn:user:{user_id}` (lounge) + `horn:shop:{user_id}` (gift shop, chat-only 5t) + `horn:shop:full:{user_id}` (gift shop full 10t)
 Error name: `horn_cooldown`
 Writes to `club_announcements` table on success; awards `chat_horn` badge.
 
@@ -114,12 +115,12 @@ Writes to `club_announcements` table on success; awards `chat_horn` badge.
 
 |                        | All tiers                               |
 | ---------------------- | --------------------------------------- |
-| Send cooldown          | 1 per hour                              |
+| Send cooldown          | 1 per 15 min                            |
 | Featured gift accepted | 2-hour floor pass + decorated date room |
 | Basket gift accepted   | tier pass + decorated date room         |
 | Mini gift accepted     | just opens chat (silent gesture)        |
 
-No daily cap — hourly cooldown only.
+No daily cap — 15-minute cooldown only.
 Ticker fires for featured and basket gifts only (not mini).
 
 ---
