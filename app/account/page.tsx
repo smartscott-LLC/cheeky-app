@@ -93,7 +93,7 @@ export default async function Account() {
     return `expires ${new Date(iso).toLocaleDateString()}`;
   };
   const photoLimit =
-    tier === 'gold' ? 6 : tier === 'platinum' ? 8 : tier === 'diamond' ? 10 : 3;
+    tier === 'gold' ? 6 : tier === 'platinum' ? 10 : tier === 'diamond' ? 15 : 3;
 
   // Certificates + special interests: who did you meet at Speed Dating?
   const certPartners = (certRows?.data ?? []).map((c) => {
