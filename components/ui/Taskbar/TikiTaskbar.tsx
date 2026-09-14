@@ -69,16 +69,16 @@ function loadPrefs(): Prefs {
       }
       return { ...DEFAULT_PREFS, ...parsed };
     }
-    // First-time default: bottom-left, 12px from edges.
+    // First-time default: bottom-right, 12px from edges (bottom-left is the story nudge).
     return {
       ...DEFAULT_PREFS,
-      absX: 12,
+      absX: window.innerWidth - BAR_W - 12,
       absY: window.innerHeight - BAR_H - 12
     };
   } catch {
     /* corrupted pref — fall back */
   }
-  return { ...DEFAULT_PREFS, absX: 12, absY: window.innerHeight - BAR_H - 12 };
+  return { ...DEFAULT_PREFS, absX: window.innerWidth - BAR_W - 12, absY: window.innerHeight - BAR_H - 12 };
 }
 
 function formatCount(count: number | null): string {
