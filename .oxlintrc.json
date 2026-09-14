@@ -32,7 +32,8 @@
         "app/owner/page.tsx"
       ],
       "rules": {
-        "jsx-a11y/prefer-tag-over-role": "off"
+        "jsx-a11y/prefer-tag-over-role": "off",
+        "jsx-a11y/no-noninteractive-element-interactions": "off"
       }
     }
   ]
