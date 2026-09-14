@@ -6,7 +6,7 @@
 // below (the "left" math happens in the API route).
 //
 // The caps mirror send_message's tier logic (30/5, 75/15, ∞/40, ∞/100), the
-// Matchmaker plays dial (2/3/4/5 — PRD-matchmaker §5), and the Blind Date
+// Matchmaker plays dial (3/5/8/12), L³ trios (4/8/12/20), and the Blind Date
 // daily cap (2/day — join_blind_date enforces it). If a cap moves there, it
 // moves here too — the bar must agree with the enforcement.
 //
@@ -40,33 +40,37 @@ export interface TierCaps {
   messages: number | null;
   /** New conversations per day — always capped, per the mission guardrails. */
   people: number;
-  /** Matchmaker plays per day (PRD-matchmaker §5: 2/3/4/5). */
+  /** L³ trios per day (4/8/12/20). */
+  l3: number | null;
+  /** Matchmaker plays per day (3/5/8/12). */
   plays: number;
   /** Blind Date joins per day (enforced in join_blind_date). */
   blindDate: number;
-  /** Gifts sendable per hour (the send_gift cooldown). */
-  giftsPerHour: number;
+  /** Gifts sendable per 15 min window (the send_gift cooldown). */
+  giftsPer15min: number;
   /** Icebreakers per day — silver=5, gold=10, platinum/diamond=∞. */
   icebreakers: number | null;
 }
 
 export const TIER_CAPS: Record<TierName, TierCaps> = {
-  silver: { messages: 30, people: 5, plays: 2, blindDate: 0, giftsPerHour: 1, icebreakers: 5 },
-  gold: { messages: 75, people: 15, plays: 3, blindDate: 2, giftsPerHour: 1, icebreakers: 10 },
+  silver: { messages: 30, people: 5, l3: 4, plays: 3, blindDate: 0, giftsPer15min: 4, icebreakers: 5 },
+  gold: { messages: 75, people: 15, l3: 8, plays: 5, blindDate: 2, giftsPer15min: 4, icebreakers: 10 },
   platinum: {
     messages: null,
     people: 40,
-    plays: 4,
+    l3: 12,
+    plays: 8,
     blindDate: 2,
-    giftsPerHour: 1,
+    giftsPer15min: 4,
     icebreakers: null
   },
   diamond: {
     messages: null,
     people: 100,
-    plays: 5,
+    l3: 20,
+    plays: 12,
     blindDate: 2,
-    giftsPerHour: 1,
+    giftsPer15min: 4,
     icebreakers: null
   }
 };

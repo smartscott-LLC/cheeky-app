@@ -72,10 +72,10 @@ export async function blowHorn(): Promise<{ error?: string }> {
   const user = await getUser(supabase);
   if (!user) return { error: 'not_signed_in' };
 
-  // 1-per-hour cooldown
+  // 1-per-15-min cooldown
   const { data: ok } = await supabase.rpc('bump_rate_limit', {
     p_key: `horn:shop:${user.id}`,
-    p_window_seconds: 3600,
+    p_window_seconds: 900,
     p_max: 1
   });
   if (!ok) return { error: 'horn_cooldown' };

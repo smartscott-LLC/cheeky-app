@@ -13,6 +13,7 @@ interface TaskbarStateRow {
   new_people_today: number | null;
   checked_in_today: boolean | null;
   matchmaker_plays_left: number | null;
+  l3_trios_used_today: number | null;
   blind_date_joins_today: number | null;
   gift_ready: boolean | null;
   gift_ready_in_minutes: number | null;
@@ -77,7 +78,8 @@ export async function GET() {
           count = row.swipes_today;
           break;
         case 'l3':
-          count = left(caps.people, row.new_people_today);
+          count = left(caps.l3, row.l3_trios_used_today);
+          unlimited = caps.l3 === null;
           break;
         case 'matchmaker':
           count = row.matchmaker_plays_left;

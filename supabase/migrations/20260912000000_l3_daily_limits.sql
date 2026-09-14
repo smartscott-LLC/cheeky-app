@@ -1,5 +1,5 @@
 -- Add L3 trio daily play limits by tier.
--- Rates: silver=4, gold=8, platinum=12, diamond=15 per 24h.
+-- Rates: silver=4, gold=8, platinum=12, diamond=20 per 24h.
 -- Also add 'l3' to the bump_rate_limit key allowlist.
 
 -- 1. Expand bump_rate_limit to accept l3: keys
@@ -66,7 +66,7 @@ begin
   v_plays := case v_tier
     when 'gold' then 8
     when 'platinum' then 12
-    when 'diamond' then 15
+    when 'diamond' then 20
     else 4
   end;
   v_ok := public.bump_rate_limit('l3:trios:' || v_user, 86400, v_plays);

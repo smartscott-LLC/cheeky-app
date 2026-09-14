@@ -7,7 +7,7 @@ export const RATE_LIMIT_ERRORS = new Set([
   'daily_plays_limit', // matchmaker plays dial
   'daily_trios_limit', // L³ trio dial
   'daily_swipes_limit', // swipes daily cap
-  'horn_cooldown' // lounge horn (1/hour)
+  'horn_cooldown' // lounge horn (1/15min)
 ]);
 
 /**

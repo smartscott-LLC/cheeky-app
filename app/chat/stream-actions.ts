@@ -90,10 +90,10 @@ export async function streamHorn(body: string): Promise<{ error?: string }> {
   const user = await getUser(supabase);
   if (!user) return { error: 'not_authenticated' };
 
-  // The 1-per-hour cap lives in the existing bump_rate_limit RPC.
+  // The 1-per-15-min cap lives in the existing bump_rate_limit RPC.
   const { data: ok, error: rateErr } = await supabase.rpc('bump_rate_limit', {
     p_key: `horn:user:${user.id}`,
-    p_window_seconds: 3600,
+    p_window_seconds: 900,
     p_max: 1
   });
   if (rateErr) return { error: rateErr.message };
