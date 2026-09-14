@@ -93,7 +93,13 @@ export default async function Account() {
     return `expires ${new Date(iso).toLocaleDateString()}`;
   };
   const photoLimit =
-    tier === 'gold' ? 6 : tier === 'platinum' ? 10 : tier === 'diamond' ? 15 : 3;
+    tier === 'gold'
+      ? 6
+      : tier === 'platinum'
+        ? 10
+        : tier === 'diamond'
+          ? 15
+          : 3;
 
   // Certificates + special interests: who did you meet at Speed Dating?
   const certPartners = (certRows?.data ?? []).map((c) => {
@@ -234,7 +240,11 @@ export default async function Account() {
             drinking={profile?.drinking ?? null}
             religion={profile?.religion ?? null}
             hasKids={profile?.has_kids ?? false}
-            livingArrangement={(profile?.living_arrangement as 'own' | 'rent' | 'parents' | 'roommates' | 'other' | null) ?? null}
+            livingArrangement={
+              (profile?.living_arrangement as
+                'own' | 'rent' | 'parents' | 'roommates' | 'other' | null) ??
+              null
+            }
             hobbies={(profile?.hobbies as string[] | null) ?? null}
             photos={(photos?.data ?? []).map((p) => ({
               id: p.id,

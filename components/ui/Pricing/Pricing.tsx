@@ -230,7 +230,8 @@ export default function Pricing({
                   Silver — free
                 </p>
                 <p className="mt-1 text-sm font-body text-club">
-                  30 msgs · 5 people · 15 swipes · 4 L³ · 3 matchmaker · 0 blind date · 5 icebreakers · no tokens
+                  30 msgs · 5 people · 15 swipes · 4 L³ · 3 matchmaker · 0 blind
+                  date · 5 icebreakers · no tokens
                 </p>
               </div>
               <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
@@ -238,7 +239,8 @@ export default function Pricing({
                   Gold — $9.99/mo
                 </p>
                 <p className="mt-1 text-sm font-body text-club">
-                  75 msgs · 15 people · 30 swipes · 8 L³ · 5 matchmaker · 2 blind date · 10 icebreakers · +50 tokens
+                  75 msgs · 15 people · 30 swipes · 8 L³ · 5 matchmaker · 2
+                  blind date · 10 icebreakers · +50 tokens
                 </p>
               </div>
               <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
@@ -246,7 +248,8 @@ export default function Pricing({
                   Platinum — $19.99/mo
                 </p>
                 <p className="mt-1 text-sm font-body text-club">
-                  ∞ msgs · 40 people · 50 swipes · 12 L³ · 8 matchmaker · 2 blind date · ∞ icebreakers · +150 tokens
+                  ∞ msgs · 40 people · 50 swipes · 12 L³ · 8 matchmaker · 2
+                  blind date · ∞ icebreakers · +150 tokens
                 </p>
               </div>
               <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
@@ -254,7 +257,8 @@ export default function Pricing({
                   Diamond — $29.99/mo
                 </p>
                 <p className="mt-1 text-sm font-body text-club">
-                  ∞ msgs · 100 people · 100 swipes · 20 L³ · 12 matchmaker · 2 blind date · ∞ icebreakers · +500 tokens
+                  ∞ msgs · 100 people · 100 swipes · 20 L³ · 12 matchmaker · 2
+                  blind date · ∞ icebreakers · +500 tokens
                 </p>
               </div>
             </div>

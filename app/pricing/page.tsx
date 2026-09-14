@@ -46,7 +46,8 @@ export default async function PricingPage() {
             What each tier gets you
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-sm font-body text-club text-center">
-            All memberships include verified access, lounge chat, and AI crew members. Higher tiers unlock more daily actions and bonus tokens.
+            All memberships include verified access, lounge chat, and AI crew
+            members. Higher tiers unlock more daily actions and bonus tokens.
           </p>
           <div className="mt-6 grid grid-cols-1 gap-4 text-left sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
@@ -54,7 +55,9 @@ export default async function PricingPage() {
                 Silver — free
               </p>
               <p className="mt-2 text-sm font-body text-club">
-                30 msgs · 5 people · 15 swipes · 4 L³ · 3 matchmaker · 0 blind date · 5 icebreakers · <strong className="text-cyan">No tokens</strong>
+                30 msgs · 5 people · 15 swipes · 4 L³ · 3 matchmaker · 0 blind
+                date · 5 icebreakers ·{' '}
+                <strong className="text-cyan">No tokens</strong>
               </p>
             </div>
             <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
@@ -62,7 +65,9 @@ export default async function PricingPage() {
                 Gold — $9.99/mo
               </p>
               <p className="mt-2 text-sm font-body text-club">
-                75 msgs · 15 people · 30 swipes · 8 L³ · 5 matchmaker · 2 blind date · 10 icebreakers · <strong className="text-cyan">+50 tokens</strong>
+                75 msgs · 15 people · 30 swipes · 8 L³ · 5 matchmaker · 2 blind
+                date · 10 icebreakers ·{' '}
+                <strong className="text-cyan">+50 tokens</strong>
               </p>
             </div>
             <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
@@ -70,7 +75,9 @@ export default async function PricingPage() {
                 Platinum — $19.99/mo
               </p>
               <p className="mt-2 text-sm font-body text-club">
-                ∞ msgs · 40 people · 50 swipes · 12 L³ · 8 matchmaker · 2 blind date · ∞ icebreakers · <strong className="text-cyan">+150 tokens</strong>
+                ∞ msgs · 40 people · 50 swipes · 12 L³ · 8 matchmaker · 2 blind
+                date · ∞ icebreakers ·{' '}
+                <strong className="text-cyan">+150 tokens</strong>
               </p>
             </div>
             <div className="rounded-lg border border-gold bg-zinc-900/60 p-4">
@@ -78,12 +85,16 @@ export default async function PricingPage() {
                 Diamond — $29.99/mo
               </p>
               <p className="mt-2 text-sm font-body text-club">
-                ∞ msgs · 100 people · 100 swipes · 20 L³ · 12 matchmaker · 2 blind date · ∞ icebreakers · <strong className="text-cyan">+500 tokens</strong>
+                ∞ msgs · 100 people · 100 swipes · 20 L³ · 12 matchmaker · 2
+                blind date · ∞ icebreakers ·{' '}
+                <strong className="text-cyan">+500 tokens</strong>
               </p>
             </div>
           </div>
           <p className="mt-5 text-xs font-body text-club text-center">
-            All daily limits reset at midnight CST. Tokens never expire while your subscription is active. Tokens power events and gifts only — never messaging.
+            All daily limits reset at midnight CST. Tokens never expire while
+            your subscription is active. Tokens power events and gifts only —
+            never messaging.
           </p>
         </div>
 

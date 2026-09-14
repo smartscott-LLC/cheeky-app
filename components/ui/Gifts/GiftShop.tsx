@@ -54,17 +54,23 @@ const FLOOR_LABEL: Record<string, string> = {
 
 const FLOOR_ORDER = ['silver', 'gold', 'platinum', 'diamond'];
 
-function giftCategory(g: { kind: string; name: string; emoji: string }): string {
+function giftCategory(g: {
+  kind: string;
+  name: string;
+  emoji: string;
+}): string {
   if (g.kind === 'basket') return '🎁 Gift Basket';
   if (g.kind === 'featured') return '✨ Featured';
   // Categorize mini gifts by what they actually are
   const slug = g.emoji + ' ' + (g.name || '').toLowerCase();
-  if (/cocktail|mock|mojito|fizz|margarita|shrub|wine|coffee|prosecco|kombucha|mocktail/.test(slug))
+  if (
+    /cocktail|mock|mojito|fizz|margarita|shrub|wine|coffee|prosecco|kombucha|mocktail/.test(
+      slug
+    )
+  )
     return '🍹 Drinks';
-  if (/pen|glasses|shades|key|dice|ticket/.test(slug))
-    return '🎩 Novelty';
-  if (/bear|bunny|duck|heart|candy/.test(slug))
-    return '🧸 Stuffed & Sweet';
+  if (/pen|glasses|shades|key|dice|ticket/.test(slug)) return '🎩 Novelty';
+  if (/bear|bunny|duck|heart|candy/.test(slug)) return '🧸 Stuffed & Sweet';
   return '🎁 Gesture';
 }
 
@@ -94,7 +100,7 @@ function describe(code: string): string {
     case 'gift_not_available':
       return 'That gift is already out of your hands.';
     case 'horn_cooldown':
-      return 'You just blew the horn — it\'s on cooldown for a minute. Try again soon.';
+      return "You just blew the horn — it's on cooldown for a minute. Try again soon.";
     case 'not_signed_in':
       return 'Sign in to blow the horn.';
     default:
@@ -317,7 +323,12 @@ export default function GiftShop({
             {/* ── Regular floor gifts ─────────────────────────────── */}
             {FLOOR_ORDER.map((floor) => {
               const floorGifts = catalog
-                .filter((g) => g.floor === floor && g.kind !== 'featured' && g.kind !== 'basket')
+                .filter(
+                  (g) =>
+                    g.floor === floor &&
+                    g.kind !== 'featured' &&
+                    g.kind !== 'basket'
+                )
                 .sort((a, b) => a.token_cost - b.token_cost);
               if (floorGifts.length === 0) return null;
               return (

@@ -108,7 +108,9 @@ export default function EventFloor({
   const [participants, setParticipants] = useState(initialParticipants);
   const [myEntry, setMyEntry] = useState(initialEntry);
   const [myPicks, setMyPicks] = useState(initialPicks);
-  const [showingProfile, setShowingProfile] = useState<Participant['profile'] & { id: string } | null>(null);
+  const [showingProfile, setShowingProfile] = useState<
+    (Participant['profile'] & { id: string }) | null
+  >(null);
 
   const handleViewProfile = (p: Participant) => {
     if (p.profile && p.profile.bio) {

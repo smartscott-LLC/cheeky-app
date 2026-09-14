@@ -503,9 +503,7 @@ export async function ownerGrantDirect(input: {
     page: 1,
     perPage: 1000
   });
-  let target = users?.users.find(
-    (u) => u.email?.toLowerCase() === emailLower
-  );
+  let target = users?.users.find((u) => u.email?.toLowerCase() === emailLower);
   let created = false;
   let emailSent = false;
 
@@ -537,13 +535,17 @@ export async function ownerGrantDirect(input: {
   const profileId = target?.id;
   if (!profileId) return { error: 'could not resolve user ID' };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error: profileErr } = await (supabaseAdmin.from('profiles') as any)
-    .upsert(
-      { id: profileId, email: emailLower, updated_at: new Date().toISOString() },
-      { onConflict: 'id' }
-    );
+  const { error: profileErr } = await (
+    supabaseAdmin.from('profiles') as any
+  ).upsert(
+    { id: profileId, email: emailLower, updated_at: new Date().toISOString() },
+    { onConflict: 'id' }
+  );
   if (profileErr) {
-    console.error('ownerGrantDirect upsert profile failed:', profileErr.message);
+    console.error(
+      'ownerGrantDirect upsert profile failed:',
+      profileErr.message
+    );
   }
 
   const { error: grantErr } = await supabaseAdmin.rpc('owner_grant', {

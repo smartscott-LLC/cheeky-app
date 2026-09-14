@@ -21,7 +21,8 @@ export default function StoryNudge({
   let initiallyDismissed = false;
   if (typeof window !== 'undefined') {
     try {
-      initiallyDismissed = localStorage.getItem('tiki:story-nudge') === 'dismissed';
+      initiallyDismissed =
+        localStorage.getItem('tiki:story-nudge') === 'dismissed';
     } catch {
       /* ignore */
     }

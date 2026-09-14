@@ -108,7 +108,12 @@ export default function OwnerPage() {
   const [flags, setFlags] = useState<FlagRow[]>([]);
   const [staleCodes, setStaleCodes] = useState<StaleCodeRow[]>([]);
   const [announcements, setAnnouncements] = useState<
-    { id: number; message: string; display_style: string; ends_at: string | null }[]
+    {
+      id: number;
+      message: string;
+      display_style: string;
+      ends_at: string | null;
+    }[]
   >([]);
   const [unpurchased, setUnpurchased] = useState<
     { id: string; display_name: string | null; verified_at: string | null }[]
@@ -230,12 +235,12 @@ export default function OwnerPage() {
     setFlags((res.flags ?? []) as FlagRow[]);
     setStaleCodes((res.staleCodes ?? []) as StaleCodeRow[]);
     setAnnouncements(
-      ((res.announcement ?? []) as {
+      (res.announcement ?? []) as {
         id: number;
         message: string;
         display_style: string;
         ends_at: string | null;
-      }[])
+      }[]
     );
     setUnpurchased(
       (res.unpurchased ?? []) as {
@@ -471,8 +476,7 @@ export default function OwnerPage() {
     const res = await ownerPostAnnouncement({
       key,
       message: getFormString(fd, 'message'),
-      displayStyle: getFormString(fd, 'style') as
-        'scroll' | 'roll' | 'fade',
+      displayStyle: getFormString(fd, 'style') as 'scroll' | 'roll' | 'fade',
       hours: Number(fd.get('hours') ?? 0)
     });
     setBusy(false);

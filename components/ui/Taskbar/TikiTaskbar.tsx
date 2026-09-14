@@ -78,7 +78,11 @@ function loadPrefs(): Prefs {
   } catch {
     /* corrupted pref — fall back */
   }
-  return { ...DEFAULT_PREFS, absX: window.innerWidth - BAR_W - 16, absY: window.innerHeight - BAR_H - 4 };
+  return {
+    ...DEFAULT_PREFS,
+    absX: window.innerWidth - BAR_W - 16,
+    absY: window.innerHeight - BAR_H - 4
+  };
 }
 
 function formatCount(count: number | null): string {

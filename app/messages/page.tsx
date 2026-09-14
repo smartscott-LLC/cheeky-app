@@ -22,9 +22,17 @@ export default async function MessagesPage() {
   };
   const tier = (row.tier ?? 'silver') as string;
   const icebreakersUsed = row.icebreakers_used_today ?? 0;
-  const icebreakerCaps: Record<string, number | null> = { silver: 5, gold: 10, platinum: null, diamond: null };
+  const icebreakerCaps: Record<string, number | null> = {
+    silver: 5,
+    gold: 10,
+    platinum: null,
+    diamond: null
+  };
   const icebreakerCap = icebreakerCaps[tier] ?? 5;
-  const icebreakersLeft = icebreakerCap !== null ? Math.max(0, icebreakerCap - icebreakersUsed) : null;
+  const icebreakersLeft =
+    icebreakerCap !== null
+      ? Math.max(0, icebreakerCap - icebreakersUsed)
+      : null;
 
   // Incoming waves — a one-tap "noticed you" waiting for a hello.
   const { data: waves } = await supabase

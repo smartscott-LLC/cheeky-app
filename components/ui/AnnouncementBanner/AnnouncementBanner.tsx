@@ -23,8 +23,7 @@ const ANIM_DURATION: Record<string, number> = {
  * announcements. Each one plays its full animation before moving to the next.
  */
 export default function AnnouncementBanner() {
-  const [announcements, setAnnouncements] =
-    useState<Announcement[]>([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const announceRef = useRef(announcements);
   const indexRef = useRef(currentIndex);
@@ -61,7 +60,8 @@ export default function AnnouncementBanner() {
               id: 0,
               message: data.message,
               display_style:
-                data.display_style ?? ('scroll' as Announcement['display_style']),
+                data.display_style ??
+                ('scroll' as Announcement['display_style']),
               link: data.link ?? null,
               ends_at: null,
               created_at: new Date().toISOString()
@@ -90,11 +90,7 @@ export default function AnnouncementBanner() {
       fetch('/api/announcement', { cache: 'no-store' })
         .then((r) => r.json())
         .then((data) => {
-          if (
-            data?.all &&
-            Array.isArray(data.all) &&
-            data.all.length > 0
-          ) {
+          if (data?.all && Array.isArray(data.all) && data.all.length > 0) {
             setAnnouncements(data.all);
             setCurrentIndex(0);
           } else if (data?.message) {
@@ -103,7 +99,8 @@ export default function AnnouncementBanner() {
                 id: 0,
                 message: data.message,
                 display_style:
-                  data.display_style ?? ('scroll' as Announcement['display_style']),
+                  data.display_style ??
+                  ('scroll' as Announcement['display_style']),
                 link: data.link ?? null,
                 ends_at: null,
                 created_at: new Date().toISOString()

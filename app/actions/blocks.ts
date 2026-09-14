@@ -21,7 +21,9 @@ export async function blockUser(targetId: string): Promise<{ error?: string }> {
   return {};
 }
 
-export async function unblockUser(targetId: string): Promise<{ error?: string }> {
+export async function unblockUser(
+  targetId: string
+): Promise<{ error?: string }> {
   const supabase = await createClient();
   const {
     data: { user }
@@ -41,7 +43,12 @@ export async function unblockUser(targetId: string): Promise<{ error?: string }>
 }
 
 export async function getMyBlocks(): Promise<
-  Array<{ id: string; blocked_id: string; display_name: string | null; photo: string | null }>
+  Array<{
+    id: string;
+    blocked_id: string;
+    display_name: string | null;
+    photo: string | null;
+  }>
 > {
   const supabase = await createClient();
   const {
@@ -64,8 +71,7 @@ export async function getMyBlocks(): Promise<
 
   return (profiles ?? []).map((p) => {
     const photos = p.photos as unknown as
-      | Array<{ storage_path: string; is_primary: boolean }>
-      | undefined;
+      Array<{ storage_path: string; is_primary: boolean }> | undefined;
     return {
       id: p.id,
       blocked_id: p.id,

@@ -293,25 +293,33 @@ export default function RooftopPool({
                   ✓ picked
                 </p>
               )}
-              {!busy && myPicks.length < MAX_PICKS && !blockedIds.has(m.userId) && (
-                <div className="mt-1 flex justify-center gap-1">
-                  <button
-                    onClick={(e) => { e.stopPropagation(); handleBlock(m.userId); }}
-                    disabled={blockingUserId === m.userId}
-                    className="text-[12px] font-body text-zinc-500 hover:text-red-400 transition"
-                  >
-                    🚫
-                  </button>
-                  {blockedIds.has(m.userId) && (
+              {!busy &&
+                myPicks.length < MAX_PICKS &&
+                !blockedIds.has(m.userId) && (
+                  <div className="mt-1 flex justify-center gap-1">
                     <button
-                      onClick={(e) => { e.stopPropagation(); handleUnblock(m.userId); }}
-                      className="text-[12px] font-body text-zinc-500 hover:text-club transition"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        void handleBlock(m.userId);
+                      }}
+                      disabled={blockingUserId === m.userId}
+                      className="text-[12px] font-body text-zinc-500 hover:text-red-400 transition"
                     >
-                      ✓
+                      🚫
                     </button>
-                  )}
-                </div>
-              )}
+                    {blockedIds.has(m.userId) && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          void handleUnblock(m.userId);
+                        }}
+                        className="text-[12px] font-body text-zinc-500 hover:text-club transition"
+                      >
+                        ✓
+                      </button>
+                    )}
+                  </div>
+                )}
             </button>
           );
         })}

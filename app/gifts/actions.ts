@@ -85,7 +85,10 @@ export async function blowHorn(): Promise<{ error?: string }> {
     .from('token_ledger')
     .select('delta')
     .eq('user_id', user.id);
-  const balance = (ledger ?? []).reduce((s: number, r: { delta: number }) => s + (r.delta ?? 0), 0);
+  const balance = (ledger ?? []).reduce(
+    (s: number, r: { delta: number }) => s + (r.delta ?? 0),
+    0
+  );
   if (balance < 5) return { error: 'insufficient_tokens' };
 
   // Debit 5 tokens
@@ -101,7 +104,10 @@ export async function blowHorn(): Promise<{ error?: string }> {
   });
 
   // Award badge
-  await supabaseAdmin.rpc('award_badge', { p_user: user.id, p_slug: 'chat_horn' });
+  await supabaseAdmin.rpc('award_badge', {
+    p_user: user.id,
+    p_slug: 'chat_horn'
+  });
 
   return {};
 }

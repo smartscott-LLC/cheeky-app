@@ -53,8 +53,24 @@ export interface TierCaps {
 }
 
 export const TIER_CAPS: Record<TierName, TierCaps> = {
-  silver: { messages: 30, people: 5, l3: 4, plays: 3, blindDate: 0, giftsPer15min: 4, icebreakers: 5 },
-  gold: { messages: 75, people: 15, l3: 8, plays: 5, blindDate: 2, giftsPer15min: 4, icebreakers: 10 },
+  silver: {
+    messages: 30,
+    people: 5,
+    l3: 4,
+    plays: 3,
+    blindDate: 0,
+    giftsPer15min: 4,
+    icebreakers: 5
+  },
+  gold: {
+    messages: 75,
+    people: 15,
+    l3: 8,
+    plays: 5,
+    blindDate: 2,
+    giftsPer15min: 4,
+    icebreakers: 10
+  },
   platinum: {
     messages: null,
     people: 40,

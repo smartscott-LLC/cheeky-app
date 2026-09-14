@@ -14,9 +14,7 @@ import type { Database } from '@/types_db';
  * Likes another member via the atomic create_like RPC. If they already
  * liked you, an instant match is created and its id is returned.
  */
-export async function likeUser(
-  userId: string
-): Promise<{
+export async function likeUser(userId: string): Promise<{
   matched: boolean;
   matchId?: string | null;
   rateLimited?: boolean;

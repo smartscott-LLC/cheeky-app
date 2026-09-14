@@ -2,7 +2,10 @@
 
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
-import { streamAGNESDirect, DirectMessage } from '@/utils/agent/deepseek-direct';
+import {
+  streamAGNESDirect,
+  DirectMessage
+} from '@/utils/agent/deepseek-direct';
 import { NextResponse } from 'next/server';
 
 const CHARACTERS: Record<string, { name: string; prompt: string }> = {
@@ -61,7 +64,8 @@ export async function getBioDraft(
   if (draft?.hobbies) parts.push(`Hobbies: ${draft.hobbies}`);
   if (existingBio) parts.push(`Current bio: "${existingBio}"`);
 
-  const context = parts.length > 0 ? 'Context: ' + parts.join(', ') : 'Nothing shared yet';
+  const context =
+    parts.length > 0 ? 'Context: ' + parts.join(', ') : 'Nothing shared yet';
 
   const system = `${char.prompt}\n\nYou are helping a member write their bio. They've given you some context. Produce a single bio draft (max 200 characters) that's confident, fun, and makes them sound like someone worth meeting. Output ONLY the bio text - no explanations, no quotes, no markdown.`;
 

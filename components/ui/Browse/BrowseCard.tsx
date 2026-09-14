@@ -152,10 +152,14 @@ export default function BrowseCard({
           )}
         </div>
         <p className="mt-2 font-body text-club">
-          {expanded && person.bio ? person.bio : person.one_liner || person.bio || 'Just got through the door.'}
+          {expanded && person.bio
+            ? person.bio
+            : person.one_liner || person.bio || 'Just got through the door.'}
         </p>
         {!expanded && person.bio && (
-          <p className="mt-1 text-xs font-body text-club/60">Tap card to read more</p>
+          <p className="mt-1 text-xs font-body text-club/60">
+            Tap card to read more
+          </p>
         )}
         {expanded && person.bio && person.bio !== person.one_liner && (
           <p className="mt-1 text-xs font-body text-club/60">Tap to collapse</p>
@@ -165,7 +169,7 @@ export default function BrowseCard({
         <button
           onClick={(e) => {
             e.stopPropagation();
-            openConversation(person.id);
+            void openConversation(person.id);
           }}
           className="rounded-lg border border-zinc-700 px-3 py-3 text-sm font-semibold text-cyan transition hover:border-zinc-500 hover:text-white"
         >
@@ -174,7 +178,7 @@ export default function BrowseCard({
         <button
           onClick={(e) => {
             e.stopPropagation();
-            handleWave();
+            void handleWave();
           }}
           disabled={waved.has(person.id) || waveBusy}
           title={waved.has(person.id) ? 'You waved at them' : 'Send a wave'}

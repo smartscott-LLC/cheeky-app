@@ -50,7 +50,14 @@ export async function updateProfile(
     .eq('id', user.id);
 
   // Additional extended fields (may not exist in generated types yet)
-  if (smoking || drinking || religion || hasKids !== undefined || livingArrangement !== undefined || hobbies !== undefined) {
+  if (
+    smoking ||
+    drinking ||
+    religion ||
+    hasKids !== undefined ||
+    livingArrangement !== undefined ||
+    hobbies !== undefined
+  ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await (supabase.rpc as any)('update_profile_extended', {
       p_user: user.id,
@@ -60,7 +67,10 @@ export async function updateProfile(
       p_has_kids: hasKids ?? false,
       p_living_arrangement: livingArrangement ?? null,
       p_hobbies: hobbies
-        ? hobbies.split(',').map((h) => h.trim()).filter(Boolean)
+        ? hobbies
+            .split(',')
+            .map((h) => h.trim())
+            .filter(Boolean)
         : null
     });
   }

@@ -37,12 +37,27 @@ interface ProfileFormProps {
 const MAX_PHOTOS = 3;
 
 const AI_CHARACTERS = [
-  { key: 'trixie', name: 'Trixie', floor: 'Platinum', desc: 'Sharp, confident' },
+  {
+    key: 'trixie',
+    name: 'Trixie',
+    floor: 'Platinum',
+    desc: 'Sharp, confident'
+  },
   { key: 'bartender', name: 'Roxy', floor: 'Gold', desc: 'Playful, dangerous' },
-  { key: 'hostess', name: 'Valentina', floor: 'Diamond', desc: 'High standards' }
+  {
+    key: 'hostess',
+    name: 'Valentina',
+    floor: 'Diamond',
+    desc: 'High standards'
+  }
 ] as const;
 
-const HOME_OPTIONS = ['own place', 'rents', 'with roommates', "it's complicated"];
+const HOME_OPTIONS = [
+  'own place',
+  'rents',
+  'with roommates',
+  "it's complicated"
+];
 
 export default function ProfileForm({
   userId: _userId,
@@ -72,10 +87,15 @@ export default function ProfileForm({
   const [drinkingSel, setDrinkingSel] = useState(drinking ?? '');
   const [religionSel, setReligionSel] = useState(religion ?? '');
   const [hasKidsSel, setHasKidsSel] = useState(Boolean(hasKids));
-  const [livingSel, setLivingSel] = useState<'own' | 'rent' | 'parents' | 'roommates' | 'other'>(
-    (livingArrangement as 'own' | 'rent' | 'parents' | 'roommates' | 'other') ?? 'own'
+  const [livingSel, setLivingSel] = useState<
+    'own' | 'rent' | 'parents' | 'roommates' | 'other'
+  >(
+    (livingArrangement as 'own' | 'rent' | 'parents' | 'roommates' | 'other') ??
+      'own'
   );
-  const [hobbiesSel, setHobbiesSel] = useState((initialHobbies ?? []).join(', '));
+  const [hobbiesSel, setHobbiesSel] = useState(
+    (initialHobbies ?? []).join(', ')
+  );
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -193,15 +213,24 @@ export default function ProfileForm({
   const handleAiDraft = async () => {
     setAiBusy(true);
     setError(null);
-    const res = await (await import('@/app/api/bio-draft/route')).getBioDraft({
-      personality: selectedChar,
-      vices: draftInput.vices,
-      home: draftInput.home,
-      hobbies: draftInput.extra
-    }, bioText);
+    const res = await (
+      await import('@/app/api/bio-draft/route')
+    ).getBioDraft(
+      {
+        personality: selectedChar,
+        vices: draftInput.vices,
+        home: draftInput.home,
+        hobbies: draftInput.extra
+      },
+      bioText
+    );
     setAiBusy(false);
     if (res.error) {
-      setError(res.error === 'ai_unavailable' ? 'The cast is on break — fill it in yourself.' : res.error);
+      setError(
+        res.error === 'ai_unavailable'
+          ? 'The cast is on break — fill it in yourself.'
+          : res.error
+      );
       return;
     }
     if (res.draft) {
@@ -304,7 +333,9 @@ export default function ProfileForm({
                       : 'border-zinc-700 hover:border-zinc-500'
                   }`}
                 >
-                  <span className="font-header text-gold text-sm">{ch.name}</span>
+                  <span className="font-header text-gold text-sm">
+                    {ch.name}
+                  </span>
                   <span className="ml-2 text-[11px] font-body text-club/70">
                     ({ch.floor}) — {ch.desc}
                   </span>
@@ -313,10 +344,14 @@ export default function ProfileForm({
             </div>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               <div>
-                <label className="text-xs font-semibold text-cyan">Vices / habits</label>
+                <label className="text-xs font-semibold text-cyan">
+                  Vices / habits
+                </label>
                 <select
                   value={draftInput.vices}
-                  onChange={(e) => setDraftInput({ ...draftInput, vices: e.target.value })}
+                  onChange={(e) =>
+                    setDraftInput({ ...draftInput, vices: e.target.value })
+                  }
                   className="mt-1 w-full rounded-lg bg-zinc-800 p-2.5 text-sm text-white outline-none ring-club/50 focus:ring-2"
                 >
                   <option value="">None of your business</option>
@@ -328,23 +363,33 @@ export default function ProfileForm({
                 </select>
               </div>
               <div>
-                <label className="text-xs font-semibold text-cyan">Living situation</label>
+                <label className="text-xs font-semibold text-cyan">
+                  Living situation
+                </label>
                 <select
                   value={draftInput.home}
-                  onChange={(e) => setDraftInput({ ...draftInput, home: e.target.value })}
+                  onChange={(e) =>
+                    setDraftInput({ ...draftInput, home: e.target.value })
+                  }
                   className="mt-1 w-full rounded-lg bg-zinc-800 p-2.5 text-sm text-white outline-none ring-club/50 focus:ring-2"
                 >
                   {HOME_OPTIONS.map((h) => (
-                    <option key={h} value={h}>{h}</option>
+                    <option key={h} value={h}>
+                      {h}
+                    </option>
                   ))}
                 </select>
               </div>
             </div>
             <div className="mt-2">
-              <label className="text-xs font-semibold text-cyan">Anything else to add?</label>
+              <label className="text-xs font-semibold text-cyan">
+                Anything else to add?
+              </label>
               <input
                 value={draftInput.extra}
-                onChange={(e) => setDraftInput({ ...draftInput, extra: e.target.value })}
+                onChange={(e) =>
+                  setDraftInput({ ...draftInput, extra: e.target.value })
+                }
                 placeholder="Hobbies, quirks, deal-breakers..."
                 maxLength={200}
                 className="mt-1 w-full rounded-lg bg-zinc-800 p-2.5 text-sm text-white outline-none ring-club/50 focus:ring-2"
@@ -382,7 +427,10 @@ export default function ProfileForm({
 
       <div className="mt-6 grid gap-4">
         <div className="grid gap-1">
-          <label htmlFor="displayName" className="font-header text-cyan text-base">
+          <label
+            htmlFor="displayName"
+            className="font-header text-cyan text-base"
+          >
             Name
           </label>
           <p className="text-xs font-body text-club">
@@ -437,7 +485,10 @@ export default function ProfileForm({
           </p>
         </div>
         <div className="grid gap-1">
-          <label htmlFor="interestedIn" className="font-header text-cyan text-base">
+          <label
+            htmlFor="interestedIn"
+            className="font-header text-cyan text-base"
+          >
             Dating preference
           </label>
           <select
@@ -539,10 +590,17 @@ export default function ProfileForm({
           </p>
         </div>
         <div className="grid gap-1">
-          <label className="font-header text-cyan text-base">Living situation</label>
+          <label className="font-header text-cyan text-base">
+            Living situation
+          </label>
           <select
             value={livingSel}
-            onChange={(e) => setLivingSel(e.target.value as 'own' | 'rent' | 'parents' | 'roommates' | 'other')}
+            onChange={(e) =>
+              setLivingSel(
+                e.target.value as
+                  'own' | 'rent' | 'parents' | 'roommates' | 'other'
+              )
+            }
             className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
           >
             <option value="own">Own a place</option>
@@ -568,11 +626,15 @@ export default function ProfileForm({
             className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
           />
           <p className="text-xs font-body text-club">
-            List your interests — they show on your profile card. Max 300 characters.
+            List your interests — they show on your profile card. Max 300
+            characters.
           </p>
         </div>
         <div className="grid gap-1 sm:col-span-2">
-          <label htmlFor="bio" className="font-header text-cyan text-base flex items-center gap-2">
+          <label
+            htmlFor="bio"
+            className="font-header text-cyan text-base flex items-center gap-2"
+          >
             Bio
             {aiDraft && (
               <button
@@ -590,7 +652,11 @@ export default function ProfileForm({
             onChange={(e) => setBioText(e.target.value)}
             maxLength={500}
             rows={4}
-            placeholder={aiDraft ? aiDraft : 'Say something that makes them want to match...'}
+            placeholder={
+              aiDraft
+                ? aiDraft
+                : 'Say something that makes them want to match...'
+            }
             className="w-full rounded-lg bg-zinc-800 p-3 text-white outline-none ring-club/50 focus:ring-2"
           />
           {bioText.length > 400 && (
@@ -599,7 +665,8 @@ export default function ProfileForm({
             </span>
           )}
           <p className="text-xs font-body text-club">
-            Your bio is public — make it count. Max 500 characters. No explicit content allowed; all images are AI-reviewed.
+            Your bio is public — make it count. Max 500 characters. No explicit
+            content allowed; all images are AI-reviewed.
           </p>
         </div>
 
@@ -607,7 +674,9 @@ export default function ProfileForm({
         <div className="mt-4 rounded-lg border border-club/30 bg-club/5 px-4 py-3">
           <p className="font-header text-cyan text-sm">Note</p>
           <p className="text-xs font-body text-club mt-1">
-            Explicit or pornographic content is not allowed on Club Cheeky. All photos undergo AI review before appearing on profiles. Violations result in immediate removal.
+            Explicit or pornographic content is not allowed on Club Cheeky. All
+            photos undergo AI review before appearing on profiles. Violations
+            result in immediate removal.
           </p>
         </div>
       </div>

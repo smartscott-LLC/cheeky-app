@@ -19,7 +19,11 @@ interface ProfileModalProps {
  * ProfileModal — shows public profile info for a member.
  * Triggered by clicking a card in event games, browse, etc.
  */
-export default function ProfileModal({ person, photoBase, onClose }: ProfileModalProps) {
+export default function ProfileModal({
+  person,
+  photoBase,
+  onClose
+}: ProfileModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
 
   // Close on backdrop click or Escape key
@@ -37,9 +41,7 @@ export default function ProfileModal({ person, photoBase, onClose }: ProfileModa
     }
   };
 
-  const photo = person.photo
-    ? `${photoBase}${person.photo}`
-    : null;
+  const photo = person.photo ? `${photoBase}${person.photo}` : null;
 
   return (
     <div

@@ -16,7 +16,9 @@ void test('the bar carries every hard-capped allowance — no hourly/token-only 
     'blind',
     'chats',
     'coat',
+    'dateNight',
     'gifts',
+    'icebreakers',
     'l3',
     'matchmaker',
     'swipes'
@@ -38,6 +40,8 @@ void test('tile expansion: silver sees the spark hub + gifts; gold adds Blind Da
     'l3',
     'matchmaker',
     'gifts',
+    'icebreakers',
+    'dateNight',
     'coat'
   ]);
   const gold = tilesForRank(1).map((t) => t.key);
@@ -48,6 +52,8 @@ void test('tile expansion: silver sees the spark hub + gifts; gold adds Blind Da
     'matchmaker',
     'blind',
     'gifts',
+    'icebreakers',
+    'dateNight',
     'coat'
   ]);
   // Every tier from gold up sees the same full set (numbers vary by cap).
@@ -65,30 +71,38 @@ void test('tier caps mirror the enforcement ladder + the plays dial + blind-date
   assert.deepEqual(TIER_CAPS.silver, {
     messages: 30,
     people: 5,
-    plays: 2,
+    l3: 4,
+    plays: 3,
     blindDate: 0,
-    giftsPerHour: 1
+    giftsPer15min: 4,
+    icebreakers: 5
   });
   assert.deepEqual(TIER_CAPS.gold, {
     messages: 75,
     people: 15,
-    plays: 3,
+    l3: 8,
+    plays: 5,
     blindDate: 2,
-    giftsPerHour: 1
+    giftsPer15min: 4,
+    icebreakers: 10
   });
   assert.deepEqual(TIER_CAPS.platinum, {
     messages: null,
     people: 40,
-    plays: 4,
+    l3: 12,
+    plays: 8,
     blindDate: 2,
-    giftsPerHour: 1
+    giftsPer15min: 4,
+    icebreakers: null
   });
   assert.deepEqual(TIER_CAPS.diamond, {
     messages: null,
     people: 100,
-    plays: 5,
+    l3: 20,
+    plays: 12,
     blindDate: 2,
-    giftsPerHour: 1
+    giftsPer15min: 4,
+    icebreakers: null
   });
 });
 

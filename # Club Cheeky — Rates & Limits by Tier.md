@@ -1,4 +1,4 @@
-***All corrections, additions, and adjustments have been underlined and expressed in bold text.***
+_**All corrections, additions, and adjustments have been underlined and expressed in bold text.**_
 
 \# Club Cheeky — Rates & Limits by Tier
 
@@ -9,12 +9,12 @@ Sources: \`utils/taskbar.ts\`, \`utils/rate-limit.ts\`, \`utils/events.ts\`, per
 
 \#\# Messaging
 
-| Tier | Messages / day | New people / day |  
-|------|---------------|------------------|  
-| Silver | 30 | 5 |  
-| Gold | 75 | 15 |  
-| Platinum | ∞ (unlimited) | 40 |  
-| Diamond | ∞ (unlimited) | 100 |
+| Tier     | Messages / day | New people / day |
+| -------- | -------------- | ---------------- |
+| Silver   | 30             | 5                |
+| Gold     | 75             | 15               |
+| Platinum | ∞ (unlimited)  | 40               |
+| Diamond  | ∞ (unlimited)  | 100              |
 
 Enforced by: \`send\_message\` RPC \+ \`taskbar\_state\` RPC counters.  
 Matches are always reachable (unlimited new-people spend on matches).
@@ -23,12 +23,12 @@ Matches are always reachable (unlimited new-people spend on matches).
 
 \#\# Swipes (SPARX)
 
-| Tier | Swipes / day |  
-|------|-------------|  
-| Silver | 15 |  
-| Gold | 30 |  
-| Platinum | 50 |  
-| Diamond | 100 |
+| Tier     | Swipes / day |
+| -------- | ------------ |
+| Silver   | 15           |
+| Gold     | 30           |
+| Platinum | 50           |
+| Diamond  | 100          |
 
 Key: \`swipes:{user\_id}:cst\` → error name: \`daily\_swipes\_limit\`  
 Enforced in: \`app/browse/actions.ts\` → \`likeUser()\`
@@ -37,12 +37,12 @@ Enforced in: \`app/browse/actions.ts\` → \`likeUser()\`
 
 \#\# L³ (Leave · Like · Love)
 
-| Tier | Trios / day |  
-|------|------------|  
-| Silver | 4 |  
-| Gold | 8 |  
-| Platinum | 12 |  
-**| Diamond | 20 |**
+| Tier     | Trios / day |
+| -------- | ----------- |
+| Silver   | 4           |
+| Gold     | 8           |
+| Platinum | 12          |
+| **       | Diamond     | 20  | **  |
 
 ⚠️ \*\*DISCREPANCY:\*\* \`utils/taskbar.ts\` \`TIER\_CAPS.l3\` says 2/3/4/5 but the RPC in \`20260912000000\_l3\_daily\_limits.sql\` enforces 4/8/12/15. Taskbar display is \*\*wrong\*\* — needs fixing.
 
@@ -53,12 +53,12 @@ Enforced in: \`l3\_trio()\` RPC
 
 \#\# Matchmaker
 
-| Tier | Plays / day |  
-|------|------------|  
-**| Silver | 3 |**  
-**| Gold | 5 |**  
-**| Platinum | 8 |**  
-**| Diamond | 12 |**
+| Tier | Plays / day |
+| ---- | ----------- |
+| **   | Silver      | 3   | **  |
+| **   | Gold        | 5   | **  |
+| **   | Platinum    | 8   | **  |
+| **   | Diamond     | 12  | **  |
 
 Key: \`matchmaker:plays:{user\_id}\` → error name: \`daily\_plays\_limit\`  
 Enforced in: \`matchmaker\_start\_board()\` RPC
@@ -67,14 +67,14 @@ Enforced in: \`matchmaker\_start\_board()\` RPC
 
 \#\# Blind Date
 
-| Tier | Joins / day | Cost per join |  
-|------|------------|---------------|  
-**| Silver | 0 (locked) | — | 1 free |**  
-**| Gold | 2 | 15 tokens | 1 free |**  
-**| Platinum | 2 | 15 tokens | 2 free |**  
-**| Diamond | 2 | 15 tokens | 2 free |**
+| Tier | Joins / day | Cost per join |
+| ---- | ----------- | ------------- |
+| **   | Silver      | 0 (locked)    | —         | 1 free | **  |
+| **   | Gold        | 2             | 15 tokens | 1 free | **  |
+| **   | Platinum    | 2             | 15 tokens | 2 free | **  |
+| **   | Diamond     | 2             | 15 tokens | 2 free | **  |
 
-***\*You can give silver access through the events center w/o giving them access to the floor. It will load them into a game and then direct them back to events center when done.\****
+_**\*You can give silver access through the events center w/o giving them access to the floor. It will load them into a game and then direct them back to events center when done.\***_
 
 **\- Female users only can \*\*host\*\* (create\_blind\_date) We must make an exception, only in the case where ‘gender \= gender preference’ i.e. If a male user prefers to date males, then this constitutes an exception. Users that have ‘no preference’ or a ‘both preference’ fall back to default.**  
 \- Male users can only join as suitors  
@@ -86,12 +86,12 @@ Enforced in: \`join\_blind\_date()\` RPC \+ \`create\_blind\_date()\` RPC
 
 \#\# Icebreakers (new — added 2026-09-13)
 
-| Tier | Uses / day |  
-|------|-----------|  
-| Silver | 5 |  
-| Gold | 10 |  
-| Platinum | ∞ |  
-| Diamond | ∞ |
+| Tier     | Uses / day |
+| -------- | ---------- |
+| Silver   | 5          |
+| Gold     | 10         |
+| Platinum | ∞          |
+| Diamond  | ∞          |
 
 Table: \`icebreaker\_usage\` with \`(user\_id, day)\` unique constraint.  
 RPC: \`use\_icebreaker()\` (security definer, increments usage counter).  
@@ -117,12 +117,12 @@ Writes to \`club\_announcements\` table on success; awards \`chat\_horn\` badge.
 
 \#\# Gifts
 
-| | All tiers |  
-|---|----------|  
-**| Send cooldown | 1 per 15 minutes |**  
-**| Featured gift accepted for premium gifts only | 2-hour floor pass \+ decorated date room |**  
-**| Premium Basket gift accepted | 24 hour floor pass \+ decorated date room |**  
-| Mini gift accepted | just opens chat (silent gesture) |
+|                    | All tiers                                     |
+| ------------------ | --------------------------------------------- |
+| **                 | Send cooldown                                 | 1 per 15 minutes                          | **  |
+| **                 | Featured gift accepted for premium gifts only | 2-hour floor pass \+ decorated date room  | **  |
+| **                 | Premium Basket gift accepted                  | 24 hour floor pass \+ decorated date room | **  |
+| Mini gift accepted | just opens chat (silent gesture)              |
 
 No daily cap — hourly cooldown only.  
 Ticker fires for featured and basket gifts only (not mini).
@@ -148,16 +148,16 @@ Blind Date: host-created, runs on-demand within 10-min fill window.
 
 \#\# Cheeky Challenge (lounge mini-game)
 
-| | All tiers |  
-|---|----------|  
-| Games / day | Unlimited |  
-| Rounds per game | 3 |  
-| Directives per round | 60 |  
-| Round duration | 60 seconds |  
-| Points per directive | 3 (\<300ms) / 2 (\<700ms) / 1 (rest) |  
-| Perfect round score | 180 |  
-| Bot avg per round | \~48 (80% of perfect) |  
-| Score Board top | 20 |
+|                      | All tiers                            |
+| -------------------- | ------------------------------------ |
+| Games / day          | Unlimited                            |
+| Rounds per game      | 3                                    |
+| Directives per round | 60                                   |
+| Round duration       | 60 seconds                           |
+| Points per directive | 3 (\<300ms) / 2 (\<700ms) / 1 (rest) |
+| Perfect round score  | 180                                  |
+| Bot avg per round    | \~48 (80% of perfect)                |
+| Score Board top      | 20                                   |
 
 Score tiers for ranking:  
 \- 3 pts: respond within 300ms  
@@ -171,11 +171,11 @@ Implemented in: \`chub/app/page.js\` → \`ChallengeOverlay\` component.
 
 \#\# Check-in / Daily Streak
 
-| | All tiers |  
-|---|----------|  
-| Check-in | 1 per day |  
-| First verification reward | 20 tokens |  
-| Streak bonuses | See \`daily\_checkins\` table |
+|                           | All tiers                     |
+| ------------------------- | ----------------------------- |
+| Check-in                  | 1 per day                     |
+| First verification reward | 20 tokens                     |
+| Streak bonuses            | See \`daily\_checkins\` table |
 
 Check-in tracked via \`public.daily\_checkins(user\_id, day)\`.
 
@@ -183,12 +183,12 @@ Check-in tracked via \`public.daily\_checkins(user\_id, day)\`.
 
 \#\# Photo Limits (profile)
 
-| Tier | Max photos |  
-|------|-----------|  
-| Silver | 3 |  
-| Gold | 6 |  
-| Platinum | 10 |  
-| Diamond | 15 |
+| Tier     | Max photos |
+| -------- | ---------- |
+| Silver   | 3          |
+| Gold     | 6          |
+| Platinum | 10         |
+| Diamond  | 15         |
 
 Enforced in: \`app/account/page.tsx\` photo upload handler.
 
@@ -196,10 +196,10 @@ Enforced in: \`app/account/page.tsx\` photo upload handler.
 
 \#\# Token Store (buy packs)
 
-| Pack | Tokens | Price |  
-|------|--------|-------|  
-| Starter | 100 | $4.99 |  
-| Standard | 1000 | $9.99 |
+| Pack     | Tokens | Price |
+| -------- | ------ | ----- |
+| Starter  | 100    | $4.99 |
+| Standard | 1000   | $9.99 |
 
 ## Membership Token Grants per membership purchase.
 
@@ -225,8 +225,8 @@ Tokens DO NOT roll-over for membership granted tokens. The DO rollover for Token
 \`tests/supabase/migrations/20260801193952\_message\_limits\_tiers.sql\` hardcodes:  
 \`\`\`sql  
 v\_msg\_limit := case v\_tier  
-  when 'Gold Membership' then 75  
-  else 30  
+when 'Gold Membership' then 75  
+else 30  
 end;  
 \`\`\`  
 Platinum and Diamond fall through to the \`else\` branch \= 30 messages/day, same as silver. \*\*Needs fix — should be ∞ for plat/diamond.\*\*
@@ -241,11 +241,11 @@ The taskbar has no tile for Blind Date cost or remaining joins visibility beyond
 
 \#\# Files to Update
 
-| File | Issue |  
-|------|-------|  
-| \`utils/taskbar.ts\` | L³ caps: change 2/3/4/5 → 4/8/12/15 |  
-| \`supabase/migrations/20260801193952\_message\_limits\_tiers.sql\` | Add platinum/diamond branches for msg/people limits |  
-| \`app/events/\[kind\]/page.tsx\` | Add Blind Date token cost to event metadata |  
-| \`docs/rate-limits-by-tier.md\` | This file — keep synced with code |
+| File                                                               | Issue                                               |
+| ------------------------------------------------------------------ | --------------------------------------------------- |
+| \`utils/taskbar.ts\`                                               | L³ caps: change 2/3/4/5 → 4/8/12/15                 |
+| \`supabase/migrations/20260801193952\_message\_limits\_tiers.sql\` | Add platinum/diamond branches for msg/people limits |
+| \`app/events/\[kind\]/page.tsx\`                                   | Add Blind Date token cost to event metadata         |
+| \`docs/rate-limits-by-tier.md\`                                    | This file — keep synced with code                   |
 
 **TASKS: Take care of all of the issues and make all the adjustments needed and add what elements you need to bring all of this up to date\!\!**
