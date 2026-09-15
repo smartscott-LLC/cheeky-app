@@ -54,7 +54,7 @@ export default function Hud() {
         aria-label="Open Club Cheeky HUD"
       >
         <span className="text-xl">☰</span>
-        <span className="hidden sm:inline font-hero text-sm tracking-wider">CHEEKY</span>
+        <span className="hidden sm:inline font-hero text-sm tracking-wider">CHEEKY HUD</span>
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-club text-xs font-bold text-white animate-pulse">
             {unreadCount}
@@ -68,7 +68,7 @@ export default function Hud() {
           className="fixed z-50 rounded-2xl border-2 border-gold bg-zinc-950/98 shadow-[0_0_50px_rgba(255,215,0,0.25)] backdrop-blur-xl flex flex-col"
           style={{
             bottom: '24px',
-            right: '140px',
+            right: '180px',
             width: '520px',
             maxHeight: '580px'
           }}
