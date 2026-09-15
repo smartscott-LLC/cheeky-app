@@ -72,7 +72,7 @@ components/     ui primitives (ui/) + feature components (Agent, Club, Events,
                 Gifts, Messages, Audio, Swag, Navbar, Footer, Browse, ClubChat) — see docs/COMPONENT-LIBRARY.md
 utils/          supabase clients + queries, stripe client/server, auth helpers, floors map,
                 characters, events config, swag, rate limits, token-amount
-supabase/       migrations (30) — apply to hosted with scripts/migrate-hosted.mjs
+supabase/       migrations (87) — apply to hosted with scripts/migrate-hosted.mjs
 scripts/        dev utilities (migrate-hosted, backfill-*, check-*, smoke-*, purge-mmtest)
 styles/         global css (main.css) + floor palettes (styles/palettes/*.scss)
 docs/           PRD-foundation.md + PRDs + GAME-ENGINES.md (the two game engines
@@ -82,7 +82,7 @@ docs/           PRD-foundation.md + PRDs + GAME-ENGINES.md (the two game engines
                 docs/archives/)
 fixtures/       Stripe fixture JSON for bootstrapping products/prices
 tests/          node:test suite — safe (pnpm test) + live (RUN_LIVE_TESTS=1)
-public/         served assets: personas/, audio/ (via Supabase Storage 'cheeky-assets' bucket, accessed via `utils/assets.ts`), icons/, .well-known/
+public/         served assets: brand/, personas/, audio/, icons/, .well-known/
 types_db.ts     generated Supabase types — commit after regenerating
 CHANGELOG.md    milestone changelog — keep [Unreleased] current
 CONTRIBUTING.md the discipline doc: standing rule, migrations, testing, secrets

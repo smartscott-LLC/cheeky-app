@@ -16,33 +16,29 @@ void test('the bar carries every hard-capped allowance — no hourly/token-only 
     'blind',
     'chats',
     'coat',
-    'dance',
     'dateNight',
     'gifts',
     'icebreakers',
     'l3',
     'matchmaker',
-    'rooftop',
-    'speed',
     'swipes'
   ]);
   // Hourly events are self-limiting; pure token items never appear.
   assert.ok(
-    !['tokens', 'store'].some((k) =>
+    !['dance', 'speed', 'rooftop', 'tokens', 'store'].some((k) =>
       keys.includes(k)
     ),
-    'the wallet and store never appear'
+    'hourly events and the wallet never appear'
   );
 });
 
-void test('tile expansion: silver sees the spark hub + gifts; gold adds Blind Date + Dance Floor', () => {
+void test('tile expansion: silver sees the spark hub + gifts; gold adds Blind Date', () => {
   const silver = tilesForRank(0).map((t) => t.key);
   assert.deepEqual(silver, [
     'chats',
     'swipes',
     'l3',
     'matchmaker',
-    'dance',
     'gifts',
     'icebreakers',
     'dateNight',
@@ -55,48 +51,23 @@ void test('tile expansion: silver sees the spark hub + gifts; gold adds Blind Da
     'l3',
     'matchmaker',
     'blind',
-    'dance',
     'gifts',
     'icebreakers',
     'dateNight',
     'coat'
   ]);
-  const platinum = tilesForRank(2).map((t) => t.key);
-  assert.deepEqual(platinum, [
-    'chats',
-    'swipes',
-    'l3',
-    'matchmaker',
-    'blind',
-    'dance',
-    'speed',
-    'gifts',
-    'icebreakers',
-    'dateNight',
-    'coat'
-  ]);
-  const diamond = tilesForRank(3).map((t) => t.key);
-  assert.deepEqual(diamond, [
-    'chats',
-    'swipes',
-    'l3',
-    'matchmaker',
-    'blind',
-    'dance',
-    'speed',
-    'rooftop',
-    'gifts',
-    'icebreakers',
-    'dateNight',
-    'coat'
-  ]);
+  // Every tier from gold up sees the same full set (numbers vary by cap).
+  assert.deepEqual(
+    tilesForRank(3).map((t) => t.key),
+    gold
+  );
 });
 
 void test('Matchmaker is live (un-gated) now that the dial is locked', () => {
   assert.equal(TASKBAR_TILES.matchmaker.shipped, undefined);
 });
 
-void test('tier caps mirror the enforcement ladder + free event allowances', () => {
+void test('tier caps mirror the enforcement ladder + the plays dial + blind-date cap', () => {
   assert.deepEqual(TIER_CAPS.silver, {
     messages: 30,
     people: 5,
@@ -104,11 +75,7 @@ void test('tier caps mirror the enforcement ladder + free event allowances', () 
     plays: 3,
     blindDate: 0,
     giftsPer15min: 4,
-    icebreakers: 5,
-    danceFree: 1,
-    speedFree: 0,
-    rooftopFree: 0,
-    blindFree: 1
+    icebreakers: 5
   });
   assert.deepEqual(TIER_CAPS.gold, {
     messages: 75,
@@ -117,11 +84,7 @@ void test('tier caps mirror the enforcement ladder + free event allowances', () 
     plays: 5,
     blindDate: 2,
     giftsPer15min: 4,
-    icebreakers: 10,
-    danceFree: 1,
-    speedFree: 0,
-    rooftopFree: 0,
-    blindFree: 1
+    icebreakers: 10
   });
   assert.deepEqual(TIER_CAPS.platinum, {
     messages: null,
@@ -130,11 +93,7 @@ void test('tier caps mirror the enforcement ladder + free event allowances', () 
     plays: 8,
     blindDate: 2,
     giftsPer15min: 4,
-    icebreakers: null,
-    danceFree: 1,
-    speedFree: 1,
-    rooftopFree: 0,
-    blindFree: 2
+    icebreakers: null
   });
   assert.deepEqual(TIER_CAPS.diamond, {
     messages: null,
@@ -143,11 +102,7 @@ void test('tier caps mirror the enforcement ladder + free event allowances', () 
     plays: 12,
     blindDate: 2,
     giftsPer15min: 4,
-    icebreakers: null,
-    danceFree: 1,
-    speedFree: 2,
-    rooftopFree: 1,
-    blindFree: 2
+    icebreakers: null
   });
 });
 

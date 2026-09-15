@@ -19,18 +19,6 @@ points — every push to `main` is production.
 - **Lounge coat check panel** — sidebar button fetches `/api/coat-check` and shows badges, gems, daily streak, and persona in a glassmorphism overlay.
 - **Lounge challenge tables** — migration `20260903000001_lounge_challenge.sql` creates `challenge_queue`, `challenge_matches`, `challenge_leaderboard` with RLS and RPCs. Challenge handlers rewritten from in-memory to DB-backed.
 - **Lounge ticker connected to live data** — reads main app's `announcements` marquee + `club_announcements` (horn/gift ticker) instead of static hardcoded array.
-- **Taskbar free event allowances** — dance floor (1 free/hour all tiers), speed dating (0/0/1/2), rooftop (0/0/0/1), blind date (1/2/2/2) now shown on taskbar tiles. Migration `20260914000009_taskbar_free_events.sql` adds the free-event columns to `taskbar_state`.
-- **Taskbar two-row layout** — bar is now 400×170px with 6 tiles on the bottom row and 5 on the top row. Default position: 4px from bottom, 16px from right edge. Draggable everywhere. Cursive icon cycles through 3 variants (cursive1, cursive_bold, cursive_thin) on click. Refresh button (↻) in control row.
-- **Pricing page full limits** — `/pricing` now shows the complete daily caps table (messages, new people, swipes, matchmaker plays, L³ trios, free events) per tier, plus token grant amounts. Uses `RATES-LIMITS.md` as source of truth.
-- **Icebreakers tile on taskbar** — shows remaining daily icebreaker uses (tier-capped) via `icebreaker_usage` table.
-- **Date Night tile on taskbar** — shows count of active Date Night events for the user.
-
-### Changed
-
-- **Taskbar icons** — matchmaker now uses the heart-and-key custom icon, swipes uses the neon-heart icon, dance floor uses the dance-floor icon. Other tiles keep emoji. All icon URLs are served from Supabase Storage via `utils/assets.ts`.
-- **Rate limit values corrected** — L³ trios/day: 4/8/12/20 (was 2/3/4/5). Matchmaker plays/day: 3/5/8/12 (was 2/3/4/5). Horn cooldown: 1 hour → 15 minutes. Gift cooldown: 1 hour → 15 minutes. Documented in `docs/rate-limits-by-tier.md` and `RATES-LIMITS.md`.
-- **Gift/horn cooldown text** — all UI references to "per hour" updated to "per 15 minutes" in gift shop, horn button, and related copy.
-- **Horn blow two-tier option** — horn now offers two intensity levels in the gift shop (standard and full-blown), both writing to the announcement ticker.
 
 ### Changed
 
@@ -53,12 +41,7 @@ points — every push to `main` is production.
 
 ### Fixed
 
-- **Taskbar showing zeros/undefined** — `taskbar_state` RPC was returning NULL for free-event columns because `greatest(0, NULL)` produces NULL. Migration `20260914000010_taskbar_coalesce_fix.sql` wraps every free-event subtraction in `coalesce(greatest(0, ...), 0)`. Migration `20260914000012_taskbar_state_v2.sql` adds an optional `p_user uuid` parameter and fixes an integer→bigint type mismatch on `l3_trios_used_today`. API route uses `?? 0` as defensive fallback.
-- **Taskbar icons broken** — matchmaker, swipes, and dance floor tiles were showing emoji instead of custom icons. Fixed by using `ASSETS.icons.*` URLs from Supabase Storage.
-- **Taskbar RPC type mismatch** — `l3_trios_used_today` declared as `bigint` but `rate_limits.calls` is `integer`. PostgreSQL rejected the query. Fixed with `::bigint` cast.
-- **Matchmaker ending screen** — removed duplicate 'send message' buttons that appeared after a match was accepted.
-- **JSX a11y** — real fixes: BrowseCard `button` elements got proper labels, overlay click handlers moved off `role=document` containers, aria attributes added to toggle controls, intentional patterns suppressed.
-- **Taskbar tests** — updated to reflect new rate-limit caps (L³ 4/8/12/20, matchmaker 3/5/8/12) and new tiles (icebreakers, dateNight).
+- **instrumentation.ts Edge warning** — Replaced `path.resolve(__dirname, ...)` with `import.meta.url` string ops to avoid Turbopack Edge Runtime warning.
 - **Resend env handling** — Deferred `new Resend()` instantiation to request time in `utils/email.ts` to prevent build failures when `RESEND_API_KEY` is absent.
 - **Lobby back button** — Added gold-bordered "Back to Lobby" button with cursive icon to lounge entrance and chat header. Glow animation on hover, scale on tap.
 - **Blind date UI simplified** — Males see only "Join a room" option. Females see only "Host a Blind Date" option. Removed error message trap.
