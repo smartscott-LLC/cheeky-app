@@ -68,7 +68,7 @@ export default function Hud() {
           className="fixed z-50 rounded-2xl border-2 border-gold bg-zinc-950/98 shadow-[0_0_50px_rgba(255,215,0,0.25)] backdrop-blur-xl flex flex-col"
           style={{
             bottom: '24px',
-            right: '180px',
+            right: '220px',
             width: '520px',
             maxHeight: '580px'
           }}
