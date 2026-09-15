@@ -168,28 +168,18 @@ function formatCount(count: number | null): string {
 export default function TikiTaskbar() {
   const pathname = usePathname();
   const [state, setState] = useState<BarState | null>(null);
-  // Start with safe defaults — will be corrected by useEffect after mount
-  const [prefs, setPrefs] = useState<Prefs>(() => {
-    if (typeof window === 'undefined') {
-      const w = 1920;
-      const h = 1080;
-      return {
-        ...DEFAULT_PREFS,
-        absX: w - BAR_W - 16,
-        absY: h - BAR_H - 6
-      };
-    }
-    return loadPrefs();
-  });
+  // Don't render until we have a real window — prevents SSR position from bleeding out
   const [mounted, setMounted] = useState(false);
+  const [prefs, setPrefs] = useState<Prefs>(loadPrefs);
+
   // Force recalc after mount to handle SSR/client mismatch
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     setMounted(true);
-    // State updates here are safe — they happen once on mount to fix SSR mismatch
     setPrefs(loadPrefs());
   }, []);
-  const effectivePrefs = mounted ? prefs : { ...prefs, absX: 1920 - BAR_W - 16, absY: 1080 - BAR_H - 6 };
+
+  if (!mounted) return null;
   const [dragging, setDragging] = useState(false);
   const [cursiveIdx, setCursiveIdx] = useState(0);
   const dragStart = useRef<{ x: number; y: number; ox: number; oy: number }>({
@@ -336,12 +326,12 @@ export default function TikiTaskbar() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  if (hiddenByRoute || nothingToShow) return null;
+  if (hiddenByRoute || nothingToShow || !mounted) return null;
 
   const { tier } = state;
 
-  const absTop = Number.isFinite(effectivePrefs.absY) ? effectivePrefs.absY : (typeof window !== 'undefined' ? window.innerHeight - BAR_H - 6 : 500);
-  const absLeft = Number.isFinite(effectivePrefs.absX) ? effectivePrefs.absX : (typeof window !== 'undefined' ? window.innerWidth - BAR_W - 16 : 500);
+  const absTop = Number.isFinite(prefs.absY) ? prefs.absY : (window.innerHeight - BAR_H - 6);
+  const absLeft = Number.isFinite(prefs.absX) ? prefs.absX : (window.innerWidth - BAR_W - 16);
 
   return (
     <div
@@ -360,7 +350,7 @@ export default function TikiTaskbar() {
         cursor: dragging ? 'grabbing' : 'grab'
       }}
     >
-      {effectivePrefs.collapsed ? (
+      {prefs.collapsed ? (
         <button
           onClick={() => savePrefs({ ...prefs, collapsed: false })}
           className="flex items-center gap-2 rounded-full border-2 border-gold bg-zinc-950/95 px-4 py-1.5 text-gold shadow-[0_0_24px_rgba(255,215,0,0.15)] transition hover:bg-zinc-900"
@@ -380,7 +370,7 @@ export default function TikiTaskbar() {
               <button
                 onClick={() => {
                   // Flip top↔bottom while keeping the bar visually in place.
-                  const isCurrentlyTop = effectivePrefs.anchor.startsWith('top');
+                  const isCurrentlyTop = prefs.anchor.startsWith('top');
                   const nextAnchor: Prefs['anchor'] = isCurrentlyTop
                     ? 'bottomright'
                     : 'topright';
