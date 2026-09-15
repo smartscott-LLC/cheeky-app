@@ -44,7 +44,7 @@ interface Prefs {
 
 const PREFS_KEY = 'tiki:prefs';
 const REFRESH_MS = 60_000;
-const DEFAULT_OFFSET = { x: 0, y: 0 };
+const DEFAULT_OFFSET = { x: 16, y: 16 };
 
 // Two-row layout constants
 const BAR_W = 400;
@@ -62,8 +62,8 @@ const DEFAULT_PREFS: Prefs = {
   collapsed: false,
   anchor: 'bottomright',
   offset: DEFAULT_OFFSET,
-  absX: 12,
-  absY: 0 // filled in by loadPrefs on client
+  absX: 16,
+  absY: 16 // filled in by loadPrefs on client
 };
 
 function loadPrefs(): Prefs {
@@ -83,12 +83,12 @@ function loadPrefs(): Prefs {
       }
       return { ...DEFAULT_PREFS, ...parsed };
     }
-    // First-time default: 16px from right edge, 4px from bottom.
+    // First-time default: 16px from right edge, 6px from bottom.
     return {
       ...DEFAULT_PREFS,
       anchor: 'bottomright',
       absX: window.innerWidth - BAR_W - 16,
-      absY: window.innerHeight - BAR_H - 4
+      absY: window.innerHeight - BAR_H - 6
     };
   } catch {
     /* corrupted pref — fall back */
@@ -97,7 +97,7 @@ function loadPrefs(): Prefs {
     ...DEFAULT_PREFS,
     anchor: 'bottomright',
     absX: window.innerWidth - BAR_W - 16,
-    absY: window.innerHeight - BAR_H - 4
+    absY: window.innerHeight - BAR_H - 6
   };
 }
 
