@@ -18,7 +18,7 @@ const TABS: { id: TabId; icon: string; label: string }[] = [
 export default function Hud() {
   const pathname = usePathname();
 
-  // Site pages — no HUD. These are info/legal/contact pages outside the app.
+  // Site pages — no HUD. These are info/legal/contact/static pages outside the app.
   const sitePages = [
     '/',
     '/signin',
@@ -31,7 +31,8 @@ export default function Hud() {
     '/law-enforcement',
     '/sitemap',
     '/contact',
-    '/owner'
+    '/owner',
+    '/pricing'  // Static pricing page, not part of the app
   ];
 
   // Only render inside the club (app pages)
