@@ -69,18 +69,28 @@ const DEFAULT_PREFS: Prefs = {
 };
 
 function clampPosition(x: number, y: number): { x: number; y: number } {
+  // visualViewport.height = actual visible area (no browser chrome).
+  // Fall back to innerHeight when unavailable (desktop).
+  const visibleH = window.visualViewport?.height ?? window.innerHeight;
+  const screenH = window.innerHeight;
+  const usedH = Math.min(visibleH, screenH);
   const maxLeft = Math.max(MIN_FROM_EDGE, window.innerWidth - BAR_W - MIN_FROM_EDGE);
-  const maxTop = Math.max(MIN_FROM_EDGE, window.innerHeight - BAR_H - MIN_FROM_EDGE);
+  const maxTop = Math.max(MIN_FROM_EDGE, usedH - BAR_H - MIN_FROM_EDGE);
   return {
     x: Math.max(MIN_FROM_EDGE, Math.min(maxLeft, x)),
     y: Math.max(MIN_FROM_EDGE, Math.min(maxTop, y))
   };
 }
 
+function getVisibleViewportHeight(): number {
+  return Math.min(window.visualViewport?.height ?? Infinity, window.innerHeight);
+}
+
 function isValidPosition(x: number, y: number): boolean {
   if (typeof window === 'undefined') return false;
+  const vh = getVisibleViewportHeight();
   const maxLeft = Math.max(MIN_FROM_EDGE, window.innerWidth - BAR_W - MIN_FROM_EDGE);
-  const maxTop = Math.max(MIN_FROM_EDGE, window.innerHeight - BAR_H - MIN_FROM_EDGE);
+  const maxTop = Math.max(MIN_FROM_EDGE, vh - BAR_H - MIN_FROM_EDGE);
   return x >= MIN_FROM_EDGE && x <= maxLeft && y >= MIN_FROM_EDGE && y <= maxTop;
 }
 
@@ -90,7 +100,6 @@ function loadPrefs(): Prefs {
     const raw = localStorage.getItem(PREFS_KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as Partial<Prefs>;
-      // Recalculate absX/absY from offset+anchor if missing or invalid.
       let absX = parsed.absX;
       let absY = parsed.absY;
       if (
@@ -104,8 +113,9 @@ function loadPrefs(): Prefs {
         const o = parsed.offset ?? DEFAULT_OFFSET;
         const isTop = a.startsWith('top');
         const isLeft = a.startsWith('left');
+        const vh = getVisibleViewportHeight();
         absX = isLeft ? o.x : window.innerWidth - BAR_W - o.x;
-        absY = isTop ? o.y : window.innerHeight - BAR_H - o.y;
+        absY = isTop ? o.y : vh - BAR_H - o.y;
       }
       const clamped = clampPosition(absX, absY);
       return {
@@ -115,8 +125,8 @@ function loadPrefs(): Prefs {
         absY: clamped.y
       };
     }
-    // First-time default: 16px from right edge, 6px from bottom.
-    const clamped = clampPosition(window.innerWidth - BAR_W - 16, window.innerHeight - BAR_H - 6);
+    const vh = getVisibleViewportHeight();
+    const clamped = clampPosition(window.innerWidth - BAR_W - 16, vh - BAR_H - 6);
     return {
       ...DEFAULT_PREFS,
       anchor: 'bottomright',
@@ -127,7 +137,7 @@ function loadPrefs(): Prefs {
     /* corrupted pref — fall back */
   }
   const w = typeof window !== 'undefined' ? window.innerWidth : 1920;
-  const h = typeof window !== 'undefined' ? window.innerHeight : 1080;
+  const h = getVisibleViewportHeight();
   const clamped = clampPosition(w - BAR_W - 16, h - BAR_H - 6);
   return {
     ...DEFAULT_PREFS,
