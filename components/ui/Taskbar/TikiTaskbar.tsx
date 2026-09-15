@@ -171,15 +171,6 @@ export default function TikiTaskbar() {
   // Don't render until we have a real window — prevents SSR position from bleeding out
   const [mounted, setMounted] = useState(false);
   const [prefs, setPrefs] = useState<Prefs>(loadPrefs);
-
-  // Force recalc after mount to handle SSR/client mismatch
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    setMounted(true);
-    setPrefs(loadPrefs());
-  }, []);
-
-  if (!mounted) return null;
   const [dragging, setDragging] = useState(false);
   const [cursiveIdx, setCursiveIdx] = useState(0);
   const dragStart = useRef<{ x: number; y: number; ox: number; oy: number }>({
@@ -190,6 +181,13 @@ export default function TikiTaskbar() {
   });
   const barRef = useRef<HTMLDivElement>(null);
   const inFlight = useRef(false);
+
+  // Force recalc after mount to handle SSR/client mismatch
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    setMounted(true);
+    setPrefs(loadPrefs());
+  }, []);
 
   const fetchState = useCallback(async () => {
     if (inFlight.current) return;
@@ -326,7 +324,10 @@ export default function TikiTaskbar() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  if (hiddenByRoute || nothingToShow || !mounted) return null;
+  const hiddenByRoute = isTaskbarHidden(pathname);
+  const nothingToShow = !state || state.tiles.length === 0;
+
+  if (!mounted || hiddenByRoute || nothingToShow) return null;
 
   const { tier } = state;
 
