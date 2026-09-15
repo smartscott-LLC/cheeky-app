@@ -168,7 +168,23 @@ function formatCount(count: number | null): string {
 export default function TikiTaskbar() {
   const pathname = usePathname();
   const [state, setState] = useState<BarState | null>(null);
-  const [prefs, setPrefs] = useState<Prefs>(loadPrefs);
+  // Start with safe defaults — will be corrected by useEffect after mount
+  const [prefs, setPrefs] = useState<Prefs>(() => {
+    if (typeof window === 'undefined') {
+      const w = 1920;
+      const h = 1080;
+      return {
+        ...DEFAULT_PREFS,
+        absX: w - BAR_W - 16,
+        absY: h - BAR_H - 6
+      };
+    }
+    return loadPrefs();
+  });
+  // Force recalc after mount to handle SSR/client mismatch
+  useEffect(() => {
+    setPrefs(loadPrefs());
+  }, []);
   const [dragging, setDragging] = useState(false);
   const [cursiveIdx, setCursiveIdx] = useState(0);
   const dragStart = useRef<{ x: number; y: number; ox: number; oy: number }>({
