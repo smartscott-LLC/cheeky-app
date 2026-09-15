@@ -178,7 +178,7 @@ export default function Hud() {
 
 // ─── Tab Components ───────────────────────────────────────────────────────────
 
-function LimitsTab({ dailyLimits }: { dailyLimits: typeof import('@/utils/store/hudStore').DailyLimits }) {
+function LimitsTab({ dailyLimits }: { dailyLimits: { messagesSent: number; swipesUsed: number; matchmakerPlays: number; l3TriosUsed: number; icebreakersUsed: number; blindDateJoins: number; danceFreeRemaining: number; speedFreeRemaining: number; rooftopFreeRemaining: number } }) {
   return (
     <div className="space-y-3">
       <h3 className="font-header text-cyan text-base">Daily Limits</h3>
