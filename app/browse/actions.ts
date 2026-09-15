@@ -198,8 +198,9 @@ export async function matchmakerState(): Promise<{
   error?: string;
 }> {
   const supabase = await createClient();
-  const [plays, incoming, active] = await Promise.all([
-    supabase.rpc('taskbar_state'),
+  // taskbar_state removed — placeholder until rebuild
+  const playsLeft = null;
+  const [incoming, active] = await Promise.all([
     supabase.rpc('matchmaker_incoming'),
     supabase
       .from('matchmaker_boards')
@@ -208,11 +209,11 @@ export async function matchmakerState(): Promise<{
       .order('created_at', { ascending: false })
       .limit(1)
   ]);
-  const errors = [plays.error, incoming.error, active.error]
+  const errors = [incoming.error, active.error]
     .map((e) => e?.message)
     .filter(Boolean);
   return {
-    playsLeft: plays.data?.[0]?.matchmaker_plays_left ?? null,
+    playsLeft,
     incoming: incoming.data ?? [],
     active: (active.data?.[0] as MatchmakerActiveBoard | undefined) ?? null,
     error: errors.length ? errors.join('; ') : undefined

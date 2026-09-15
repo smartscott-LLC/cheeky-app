@@ -3,7 +3,6 @@ import { Metadata } from 'next';
 import localFont from 'next/font/local';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
-import TikiTaskbar from '@/components/ui/Taskbar/TikiTaskbar';
 import { Toaster } from '@/components/ui/Toasts/toaster';
 import Concierge from '@/components/ui/Agent/Concierge';
 import ClubAudio from '@/components/ui/Audio/ClubAudio';
@@ -71,9 +70,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
           id="skip"
           className="flex min-h-[calc(100dvh-4rem)] flex-col md:min-h-[calc(100dvh-5rem)]"
         >
-          <Suspense>
-            <TikiTaskbar />
-          </Suspense>
           {children}
         </main>
         <Footer />

@@ -14,25 +14,8 @@ export default async function MessagesPage() {
   }
   const floorHref = await getReturnFloor();
 
-  // Icebreaker daily count
-  const { data: taskbarState } = await supabase.rpc('taskbar_state');
-  const row = (taskbarState?.[0] ?? {}) as {
-    tier?: string;
-    icebreakers_used_today?: number | null;
-  };
-  const tier = (row.tier ?? 'silver') as string;
-  const icebreakersUsed = row.icebreakers_used_today ?? 0;
-  const icebreakerCaps: Record<string, number | null> = {
-    silver: 5,
-    gold: 10,
-    platinum: null,
-    diamond: null
-  };
-  const icebreakerCap = icebreakerCaps[tier] ?? 5;
-  const icebreakersLeft =
-    icebreakerCap !== null
-      ? Math.max(0, icebreakerCap - icebreakersUsed)
-      : null;
+  // Icebreakers — placeholder until taskbar rebuild (toggled off for now)
+  const icebreakersLeft = null;
 
   // Incoming waves — a one-tap "noticed you" waiting for a hello.
   const { data: waves } = await supabase
