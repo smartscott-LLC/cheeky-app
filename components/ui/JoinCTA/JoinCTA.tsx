@@ -28,7 +28,7 @@ export default function JoinCTA({ verified }: { verified: boolean }) {
   return (
     <Link
       href="/verify"
-      className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full border-2 border-gold bg-zinc-950/95 px-5 py-3 text-sm font-bold text-gold shadow-[0_0_24px_rgba(255,215,0,0.25)] transition-all hover:bg-zinc-900 hover:scale-105"
+      className="fixed bottom-6 right-24 z-[9999] flex items-center gap-2 rounded-full border-2 border-gold bg-zinc-950/95 px-5 py-3 text-sm font-bold text-gold shadow-[0_0_24px_rgba(255,215,0,0.25)] transition-all hover:bg-zinc-900 hover:scale-105"
     >
       <span className="text-lg">🎫</span>
       <span>Join for Free</span>

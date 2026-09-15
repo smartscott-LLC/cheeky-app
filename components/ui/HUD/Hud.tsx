@@ -40,10 +40,10 @@ export default function Hud() {
 
   return (
     <>
-      {/* HUD Trigger Button — floating LEFT to avoid JoinCTA conflict */}
+      {/* HUD Trigger Button — bottom-right with padding */}
       <button
         onClick={toggleExpand}
-        className={`fixed bottom-6 left-6 z-50 flex items-center gap-2 rounded-full border-2 px-5 py-3 text-sm font-bold shadow-lg transition-all duration-200 hover:scale-105 ${
+        className={`fixed bottom-6 right-6 z-[9999] flex items-center gap-2 rounded-full border-2 px-5 py-3 text-sm font-bold shadow-lg transition-all duration-200 hover:scale-105 ${
           expanded
             ? 'border-gold bg-zinc-900 text-gold'
             : hasActivity
@@ -62,13 +62,13 @@ export default function Hud() {
         )}
       </button>
 
-      {/* Expanded Panel — positioned to the RIGHT of the button */}
+      {/* Expanded Panel — positioned above the button */}
       {expanded && (
         <div
-          className="fixed z-50 rounded-2xl border-2 border-gold bg-zinc-950/98 shadow-[0_0_50px_rgba(255,215,0,0.25)] backdrop-blur-xl flex flex-col"
+          className="fixed z-[9999] rounded-2xl border-2 border-gold bg-zinc-950/98 shadow-[0_0_50px_rgba(255,215,0,0.25)] backdrop-blur-xl flex flex-col"
           style={{
-            bottom: '24px',
-            left: '140px',
+            bottom: '80px',
+            right: '24px',
             width: '520px',
             maxHeight: '580px'
           }}
