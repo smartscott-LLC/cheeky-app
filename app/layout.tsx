@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import localFont from 'next/font/local';
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
+import Hud from '@/components/ui/HUD/Hud';
 import { Toaster } from '@/components/ui/Toasts/toaster';
 import Concierge from '@/components/ui/Agent/Concierge';
 import ClubAudio from '@/components/ui/Audio/ClubAudio';
@@ -72,6 +73,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         >
           {children}
         </main>
+        <Hud />
         <Footer />
         <Suspense>
           <Toaster />

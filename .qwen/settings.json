@@ -334,7 +334,8 @@
       "Bash(f.write)",
       "Bash(print)",
       "Bash(pyeof)",
-      "Bash(specials\" section\n  at top with gold borders, no longer buried per-floor\n- regular gifts categorized by type (drinks, novelty, stuffed & sweet, gesture)\n- basket gets prominent gold border + \"full *)"
+      "Bash(specials\" section\n  at top with gold borders, no longer buried per-floor\n- regular gifts categorized by type (drinks, novelty, stuffed & sweet, gesture)\n- basket gets prominent gold border + \"full *)",
+      "Bash(mkdir *)"
     ]
   },
   "$version": 4
