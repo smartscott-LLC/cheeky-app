@@ -62,10 +62,16 @@ export default function Hud() {
         )}
       </button>
 
-      {/* Expanded Panel — positioned to the LEFT of the button with gap */}
+      {/* Expanded Panel — positioned with explicit pixels to clear button */}
       {expanded && (
         <div
-          className="fixed bottom-6 right-28 z-50 w-[520px] max-h-[580px] rounded-2xl border-2 border-gold bg-zinc-950/98 shadow-[0_0_50px_rgba(255,215,0,0.25)] backdrop-blur-xl flex flex-col"
+          className="fixed z-50 rounded-2xl border-2 border-gold bg-zinc-950/98 shadow-[0_0_50px_rgba(255,215,0,0.25)] backdrop-blur-xl flex flex-col"
+          style={{
+            bottom: '24px',
+            right: '140px',
+            width: '520px',
+            maxHeight: '580px'
+          }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
