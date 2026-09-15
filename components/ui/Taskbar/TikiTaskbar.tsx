@@ -183,8 +183,10 @@ export default function TikiTaskbar() {
   });
   const [mounted, setMounted] = useState(false);
   // Force recalc after mount to handle SSR/client mismatch
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     setMounted(true);
+    // State updates here are safe — they happen once on mount to fix SSR mismatch
     setPrefs(loadPrefs());
   }, []);
   const effectivePrefs = mounted ? prefs : { ...prefs, absX: 1920 - BAR_W - 16, absY: 1080 - BAR_H - 6 };
