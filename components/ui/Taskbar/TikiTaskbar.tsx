@@ -292,21 +292,35 @@ export default function TikiTaskbar() {
     savePrefs({ ...prefs, absX: clamped.x, absY: clamped.y });
   };
 
-  const onPointerUp = () => {
-    setDragging(false);
+  const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (dragging) {
+      setDragging(false);
+      try {
+        (e.target as HTMLElement).releasePointerCapture(e.pointerId);
+      } catch {
+        // Ignore if already released
+      }
+    }
   };
+
+  // Window resize listener to keep taskbar within view boundaries
+  useEffect(() => {
+    const handleResize = () => {
+      setPrefs((prev) => {
+        const clamped = clampPosition(prev.absX, prev.absY);
+        return { ...prev, absX: clamped.x, absY: clamped.y };
+      });
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   if (hiddenByRoute || nothingToShow) return null;
 
   const { tier } = state;
 
-  const absTop = prefs.absY;
-  const absLeft = prefs.absX;
-
-  // Force re-verify position on every render
-  if (absTop < 0 || absTop > (window.innerHeight || 1080) - BAR_H || absLeft < 0 || absLeft > (window.innerWidth || 1920) - BAR_W) {
-    console.warn('[Taskbar] Invalid position detected, forcing clamp:', { absTop, absLeft, W: window.innerWidth, H: window.innerHeight });
-  }
+  const absTop = Number.isFinite(prefs.absY) ? prefs.absY : (typeof window !== 'undefined' ? window.innerHeight - BAR_H - 6 : 500);
+  const absLeft = Number.isFinite(prefs.absX) ? prefs.absX : (typeof window !== 'undefined' ? window.innerWidth - BAR_W - 16 : 500);
 
   return (
     <div
@@ -317,9 +331,11 @@ export default function TikiTaskbar() {
       onPointerLeave={onPointerUp}
       style={{
         position: 'fixed',
-        zIndex: 40,
-        top: absTop,
-        left: absLeft,
+        zIndex: 9999,
+        top: `${absTop}px`,
+        left: `${absLeft}px`,
+        touchAction: 'none',
+        userSelect: 'none',
         cursor: dragging ? 'grabbing' : 'grab'
       }}
     >
