@@ -142,7 +142,7 @@ The full set (see `.env.local.example` for the core local-dev values).
 
 ## Database & migrations
 
-- Schema changes go through `supabase/migrations/` (87 and counting).
+- Schema changes go through `supabase/migrations/` (30 and counting).
 - **Apply to hosted, then regenerate types** — that's the whole workflow:
   `node scripts/migrate-hosted.mjs <name>` then `pnpm supabase:generate-types`, and commit the
   diff. (Local Supabase is optional; it is not the default path.)
@@ -182,7 +182,7 @@ docs/           PRD-foundation.md + PRDs + GAME-ENGINES.md (the two game
 tests/          node:test suite — safe (pnpm test) + live (RUN_LIVE_TESTS=1)
 fixtures/       Stripe fixture JSON for bootstrapping products/prices
 public/         served assets: brand/ (floor art, entrance), personas/ (crew
-                images), audio/ (DJ tracks), cheeky_icons_and_things/ (112 icons)
+                images), audio/ (DJ tracks, served via Supabase Storage), icons/ (collectible card backs)
 types_db.ts     generated Supabase types — commit after regenerating
 oxlint.config.ts    oxlint ruleset
 next.config.ts      Next.js configuration

@@ -18,11 +18,11 @@ It's a dating app with gamification — floors, events, collectibles, crew chara
 
 | Layer                       | Technology                                                                                                                                        |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Framework                   | **Next.js 15** (App Router) + **TypeScript**                                                                                                      |
-| Styling                     | **Tailwind CSS 3** + custom fonts (Fascinate, Damion, Rancho)                                                                                     |
+| Framework                   | **Next.js 16** (App Router) + **TypeScript**                                                                                                      |
+| Styling                     | **Tailwind v4** (`@import "tailwindcss"` + `@theme`) + custom fonts (Fascinate, Damion, Rancho)                                                   |
 | Auth & Database             | **Supabase** (Auth + Postgres + RLS on every table)                                                                                               |
 | Payments & Verification     | **Stripe** (subscriptions, checkout, Identity)                                                                                                    |
-| User Storage                | **MongoDB** (photos, collectibles, user-owned content)                                                                                            |
+| User Storage                | **Supabase Storage** ('cheeky-assets' bucket via `utils/assets.ts`) — photos, collectibles, floor art, personas, icons, audio                              |
 | Lounge Chat                 | **Stream Chat** (full moderation: blocks, mutes, rate limits, violations, whispers, tier-gated channels)                                          |
 | AI Chat                     | **Agnes-02.5-flash** from [AgnesAI](https://apihub.agnes-ai.com/v1) via `/api/agent` (crew character brains)                                      |
 | Deployment                  | **Vercel** (auto-deploy from `main`)                                                                                                              |
@@ -89,17 +89,15 @@ app/              Next.js App Router pages + API routes
 components/       React components (ui/ for primitives, feature directories)
 utils/            Business logic (supabase/, stripe/, stream/, auth, events, floors, tokens, etc.)
 styles/           CSS (main.css, palette-colors.js, lounge-animations.css, fonts/)
-supabase/         Migrations (87+), seed data
+supabase/         Migrations (30+), seed data
 docs/             PRDs, game engine docs, governance policies, floor map, component library
 tests/            node:test suite (safe + live)
 scripts/          Dev utilities (migrate-hosted, sync-env, seed-test-members, purge-mmtest, etc.)
 fixtures/         Stripe fixture JSON for bootstrapping products/prices
 public/
-  cheeky_icons_and_things/   112 custom icons (WebP, optimized) — use these as much as possible
-  brand/                     Brand assets
-  personas/                  Persona images
-  audio/                     Audio assets
-  icons/                     App icons
+  icons/                     2 placeholder WebPs (collectible card backs)
+  personas/                  Crew persona images (served via Supabase Storage)
+  audio/                     DJ tracks (served via Supabase Storage)
 types_db.ts       Generated Supabase types (regenerate after schema changes)
 ```
 
@@ -218,7 +216,7 @@ The entire app follows one consistent pattern — no grey, no alternate colors:
 | ------------------------------- | ------------- | ----- | --------- | ------------------------------------------- |
 | Hero / Headers / Section Labels | **Fascinate** | Gold  | `#FFD800` | Large headers, section titles, major labels |
 | Small Headers / Element Labels  | **Damion**    | Cyan  | `#66FFFF` | Small headers, labels on single elements    |
-| Body Text                       | **Rancho**    | pink  | `#FFB5FF` | All body copy, descriptions, paragraphs     |
+| Body Text                       | **Rancho**    | pink  | `#FF97FF` | All body copy, descriptions, paragraphs     |
 
 - `font-synthesis: none` is set on headings so weight utilities never fake-bold these single-weight display fonts.
 - Floor color schemes live in `styles/palette-colors.js` (source of truth), mirrored as Tailwind tokens in `tailwind.config.js`. Never hardcode hex in components.
@@ -235,8 +233,7 @@ The entire app follows one consistent pattern — no grey, no alternate colors:
 
 ### Database architecture
 
-- **Supabase + Stripe** are threaded together for membership, validation, auth, and token services.
-- **MongoDB** handles user-owned storage: photos, collectibles, and similar content.
+- **Supabase + Stripe** are threaded together for membership, validation, auth, and token services. All user-owned storage (photos, collectibles, floor art, personas, icons, audio) lives in Supabase Storage ('cheeky-assets' bucket), accessed via `utils/assets.ts`.
 - **Stream Chat** handles everything for the lounge chat: blocks, mutes, rate limits, violations, whispers, tier-gated channels, and moderation.
 - **RLS is mandatory** on every Supabase table. Never disable "just for now."
 - **Service role key** is server-only. Client code uses the anon key.
@@ -280,7 +277,7 @@ The entire app follows one consistent pattern — no grey, no alternate colors:
 
 - **PRD first** — product decisions land in `docs/` before code.
 - **Surgical changes** — do exactly what the task asks. No opportunistic refactors.
-- **No placeholders** — never suggest placeholder images/text/dummy content. Use real assets (the 112 custom icons in `public/cheeky_icons_and_things/` are already optimized WebP) or leave the space for the founder to fill.
+- **No placeholders** — never suggest placeholder images/text/dummy content. Use real assets (icons, personas, floor art, and audio are served from Supabase Storage 'cheeky-assets' bucket via `utils/assets.ts`) or leave the space for the founder to fill.
 - **No dark patterns** — no fake likes, artificial scarcity, surprise charges, hidden cancel buttons.
 - **Free tier stays genuinely free** — 30 messages/day, 5 new conversations/day.
 - **Anti-gouging** — $9.99–$29.99/month ceiling by design.
