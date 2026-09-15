@@ -18,8 +18,11 @@ const TABS: { id: TabId; icon: string; label: string }[] = [
 export default function Hud() {
   const pathname = usePathname();
   
-  // Only show on club pages, NOT on landing page
-  const showHud = pathname !== '/' && !pathname.startsWith('/verify');
+  // NEVER render on landing page or pricing — only inside the club
+  const isInsideClub = pathname !== '/' && pathname !== '/pricing' && !pathname.startsWith('/verify');
+  
+  // Early return — component doesn't exist outside the club
+  if (!isInsideClub) return null;
   
   const {
     activeTab,
@@ -46,9 +49,7 @@ export default function Hud() {
 
   return (
     <>
-      {showHud && (
-      <>
-      {/* HUD Trigger Button — bottom-right with padding */}
+      {/* HUD Trigger Button — bottom-right */}
       <button
         onClick={toggleExpand}
         className={`fixed bottom-6 right-6 z-[9999] flex items-center gap-2 rounded-full border-2 px-5 py-3 text-sm font-bold shadow-lg transition-all duration-200 hover:scale-105 ${
@@ -229,8 +230,6 @@ export default function Hud() {
             </div>
           </div>
         </div>
-      )}
-      </>
       )}
     </>
   );
