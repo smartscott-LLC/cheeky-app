@@ -49,6 +49,7 @@ const DEFAULT_OFFSET = { x: 16, y: 16 };
 // Two-row layout constants
 const BAR_W = 400;
 const BAR_H = 170;
+const MIN_FROM_EDGE = 6; // minimum px from any viewport edge
 
 // Cursive icon variants — cycle through these 3 options.
 const CURSIVE_ICONS = [
@@ -62,42 +63,77 @@ const DEFAULT_PREFS: Prefs = {
   collapsed: false,
   anchor: 'bottomright',
   offset: DEFAULT_OFFSET,
-  absX: 16,
-  absY: 16 // filled in by loadPrefs on client
+  // Set to NaN so loadPrefs recalculates on mount (prevents SSR/client mismatch)
+  absX: NaN as unknown as number,
+  absY: NaN as unknown as number
 };
+
+function clampPosition(x: number, y: number): { x: number; y: number } {
+  const maxLeft = Math.max(MIN_FROM_EDGE, window.innerWidth - BAR_W - MIN_FROM_EDGE);
+  const maxTop = Math.max(MIN_FROM_EDGE, window.innerHeight - BAR_H - MIN_FROM_EDGE);
+  return {
+    x: Math.max(MIN_FROM_EDGE, Math.min(maxLeft, x)),
+    y: Math.max(MIN_FROM_EDGE, Math.min(maxTop, y))
+  };
+}
+
+function isValidPosition(x: number, y: number): boolean {
+  if (typeof window === 'undefined') return false;
+  const maxLeft = Math.max(MIN_FROM_EDGE, window.innerWidth - BAR_W - MIN_FROM_EDGE);
+  const maxTop = Math.max(MIN_FROM_EDGE, window.innerHeight - BAR_H - MIN_FROM_EDGE);
+  return x >= MIN_FROM_EDGE && x <= maxLeft && y >= MIN_FROM_EDGE && y <= maxTop;
+}
 
 function loadPrefs(): Prefs {
   if (typeof window === 'undefined') return { ...DEFAULT_PREFS };
   try {
     const raw = localStorage.getItem(PREFS_KEY);
     if (raw) {
-      const parsed = JSON.parse(raw);
-      // Fill in absX/absY from offset+anchor if missing (backwards compat).
-      if (parsed.absX == null || parsed.absY == null) {
+      const parsed = JSON.parse(raw) as Partial<Prefs>;
+      // Recalculate absX/absY from offset+anchor if missing or invalid.
+      let absX = parsed.absX;
+      let absY = parsed.absY;
+      if (
+        absX == null ||
+        absY == null ||
+        !Number.isFinite(absX) ||
+        !Number.isFinite(absY) ||
+        !isValidPosition(absX, absY)
+      ) {
         const a = parsed.anchor ?? 'bottomright';
         const o = parsed.offset ?? DEFAULT_OFFSET;
         const isTop = a.startsWith('top');
         const isLeft = a.startsWith('left');
-        parsed.absX = isLeft ? o.x : window.innerWidth - BAR_W - o.x;
-        parsed.absY = isTop ? o.y : window.innerHeight - BAR_H - o.y;
+        absX = isLeft ? o.x : window.innerWidth - BAR_W - o.x;
+        absY = isTop ? o.y : window.innerHeight - BAR_H - o.y;
       }
-      return { ...DEFAULT_PREFS, ...parsed };
+      const clamped = clampPosition(absX, absY);
+      return {
+        ...DEFAULT_PREFS,
+        ...parsed,
+        absX: clamped.x,
+        absY: clamped.y
+      };
     }
     // First-time default: 16px from right edge, 6px from bottom.
+    const clamped = clampPosition(window.innerWidth - BAR_W - 16, window.innerHeight - BAR_H - 6);
     return {
       ...DEFAULT_PREFS,
       anchor: 'bottomright',
-      absX: window.innerWidth - BAR_W - 16,
-      absY: window.innerHeight - BAR_H - 6
+      absX: clamped.x,
+      absY: clamped.y
     };
   } catch {
     /* corrupted pref — fall back */
   }
+  const w = typeof window !== 'undefined' ? window.innerWidth : 1920;
+  const h = typeof window !== 'undefined' ? window.innerHeight : 1080;
+  const clamped = clampPosition(w - BAR_W - 16, h - BAR_H - 6);
   return {
     ...DEFAULT_PREFS,
     anchor: 'bottomright',
-    absX: window.innerWidth - BAR_W - 16,
-    absY: window.innerHeight - BAR_H - 6
+    absX: clamped.x,
+    absY: clamped.y
   };
 }
 
@@ -227,15 +263,10 @@ export default function TikiTaskbar() {
     if (!dragging) return;
     const dx = e.clientX - dragStart.current.x;
     const dy = e.clientY - dragStart.current.y;
-    // Constrain: never more than 16px from right wall
-    const maxLeft = Math.max(0, window.innerWidth - BAR_W - 16);
-    const nx = Math.max(0, Math.min(maxLeft, dragStart.current.ox + dx));
-    const ny = Math.max(
-      0,
-      Math.min(window.innerHeight - BAR_H, dragStart.current.oy + dy)
-    );
-    // Store absolute pixels directly — no anchor math needed.
-    savePrefs({ ...prefs, absX: nx, absY: ny });
+    const nx = dragStart.current.ox + dx;
+    const ny = dragStart.current.oy + dy;
+    const clamped = clampPosition(nx, ny);
+    savePrefs({ ...prefs, absX: clamped.x, absY: clamped.y });
   };
 
   const onPointerUp = () => {
