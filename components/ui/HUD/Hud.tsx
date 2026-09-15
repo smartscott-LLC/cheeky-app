@@ -62,10 +62,11 @@ export default function Hud() {
         )}
       </button>
 
-      {/* Expanded Panel */}
+      {/* Expanded Panel — positioned to the LEFT of the button */}
       {expanded && (
         <div 
-          className="fixed bottom-20 right-6 z-50 w-[400px] max-w-[calc(100vw-1.5rem)] rounded-2xl border-2 border-gold bg-zinc-950/98 shadow-[0_0_50px_rgba(255,215,0,0.25)] backdrop-blur-xl"
+          className="fixed bottom-6 left-0 right-6 z-50 w-[340px] max-w-[calc(100vw-1.5rem)] rounded-2xl border-2 border-gold bg-zinc-950/98 shadow-[0_0_50px_rgba(255,215,0,0.25)] backdrop-blur-xl"
+          style={{ marginLeft: 'auto', marginRight: '2.5rem' }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
