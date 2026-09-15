@@ -9,7 +9,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type ActiveModule = 'main' | 'chub' | 'creator' | 'game';
 export type Tier = 'guest' | 'silver' | 'gold' | 'platinum' | 'diamond';
-export type TabId = 'limits' | 'chat' | 'character' | 'game' | 'wallet';
+export type TabId = 'limits' | 'chat' | 'character' | 'game' | 'wallet' | 'help';
 
 export interface InventoryItem {
   id: string;
