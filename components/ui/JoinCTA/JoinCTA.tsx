@@ -2,13 +2,20 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 /**
  * A sticky floating "Join for Free" button that hovers bottom-right.
- * Disappears once you're verified (no point nudging someone who's already inside).
+ * Only shows on landing (/) and pricing pages for unverified guests.
+ * Disappears once you're verified or on any internal page.
  */
 export default function JoinCTA({ verified }: { verified: boolean }) {
   const [visible, setVisible] = useState(false);
+  const pathname = usePathname();
+
+  // Only show on landing and pricing pages
+  const allowedPaths = ['/', '/pricing'];
+  const isAllowedPath = allowedPaths.includes(pathname);
 
   useEffect(() => {
     // Delay mount so it doesn't flash on first paint
@@ -16,7 +23,7 @@ export default function JoinCTA({ verified }: { verified: boolean }) {
     return () => clearTimeout(t);
   }, []);
 
-  if (verified || !visible) return null;
+  if (verified || !visible || !isAllowedPath) return null;
 
   return (
     <Link
