@@ -324,9 +324,6 @@ export default function TikiTaskbar() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const hiddenByRoute = isTaskbarHidden(pathname);
-  const nothingToShow = !state || state.tiles.length === 0;
-
   if (!mounted || hiddenByRoute || nothingToShow) return null;
 
   const { tier } = state;
