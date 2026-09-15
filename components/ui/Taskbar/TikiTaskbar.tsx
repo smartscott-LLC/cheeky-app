@@ -181,10 +181,13 @@ export default function TikiTaskbar() {
     }
     return loadPrefs();
   });
+  const [mounted, setMounted] = useState(false);
   // Force recalc after mount to handle SSR/client mismatch
   useEffect(() => {
+    setMounted(true);
     setPrefs(loadPrefs());
   }, []);
+  const effectivePrefs = mounted ? prefs : { ...prefs, absX: 1920 - BAR_W - 16, absY: 1080 - BAR_H - 6 };
   const [dragging, setDragging] = useState(false);
   const [cursiveIdx, setCursiveIdx] = useState(0);
   const dragStart = useRef<{ x: number; y: number; ox: number; oy: number }>({
@@ -335,8 +338,8 @@ export default function TikiTaskbar() {
 
   const { tier } = state;
 
-  const absTop = Number.isFinite(prefs.absY) ? prefs.absY : (typeof window !== 'undefined' ? window.innerHeight - BAR_H - 6 : 500);
-  const absLeft = Number.isFinite(prefs.absX) ? prefs.absX : (typeof window !== 'undefined' ? window.innerWidth - BAR_W - 16 : 500);
+  const absTop = Number.isFinite(effectivePrefs.absY) ? effectivePrefs.absY : (typeof window !== 'undefined' ? window.innerHeight - BAR_H - 6 : 500);
+  const absLeft = Number.isFinite(effectivePrefs.absX) ? effectivePrefs.absX : (typeof window !== 'undefined' ? window.innerWidth - BAR_W - 16 : 500);
 
   return (
     <div
@@ -355,7 +358,7 @@ export default function TikiTaskbar() {
         cursor: dragging ? 'grabbing' : 'grab'
       }}
     >
-      {prefs.collapsed ? (
+      {effectivePrefs.collapsed ? (
         <button
           onClick={() => savePrefs({ ...prefs, collapsed: false })}
           className="flex items-center gap-2 rounded-full border-2 border-gold bg-zinc-950/95 px-4 py-1.5 text-gold shadow-[0_0_24px_rgba(255,215,0,0.15)] transition hover:bg-zinc-900"
@@ -375,7 +378,7 @@ export default function TikiTaskbar() {
               <button
                 onClick={() => {
                   // Flip top↔bottom while keeping the bar visually in place.
-                  const isCurrentlyTop = prefs.anchor.startsWith('top');
+                  const isCurrentlyTop = effectivePrefs.anchor.startsWith('top');
                   const nextAnchor: Prefs['anchor'] = isCurrentlyTop
                     ? 'bottomright'
                     : 'topright';
