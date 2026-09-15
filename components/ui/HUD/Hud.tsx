@@ -64,8 +64,8 @@ export default function Hud() {
 
       {/* Expanded Panel — positioned to the LEFT of the button */}
       {expanded && (
-        <div 
-          className="fixed bottom-6 right-20 z-50 w-[320px] max-w-[calc(100vw-6rem)] rounded-2xl border-2 border-gold bg-zinc-950/98 shadow-[0_0_50px_rgba(255,215,0,0.25)] backdrop-blur-xl"
+        <div
+          className="fixed bottom-16 right-6 z-50 w-[320px] max-h-[520px] rounded-2xl border-2 border-gold bg-zinc-950/98 shadow-[0_0_50px_rgba(255,215,0,0.25)] backdrop-blur-xl flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
@@ -114,8 +114,8 @@ export default function Hud() {
             ))}
           </div>
 
-          {/* Tab Content */}
-          <div className="max-h-[65vh] overflow-y-auto">
+          {/* Tab Content — scrollable */}
+          <div className="flex-1 overflow-y-auto min-h-0 p-4">
             {activeTab === 'limits' && <LimitsTab dailyLimits={dailyLimits} />}
             {activeTab === 'chat' && <ChatTab alerts={alerts} />}
             {activeTab === 'character' && <CharacterTab />}
@@ -125,7 +125,7 @@ export default function Hud() {
           </div>
 
           {/* Footer with Delete Button */}
-          <div className="border-t border-gold/20 bg-zinc-900/80 px-4 py-3 flex justify-end">
+          <div className="border-t border-gold/20 bg-zinc-900/80 px-4 py-2.5 flex-shrink-0">
             <button
               onClick={() => setShowDeleteModal(true)}
               className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold text-red-400 transition hover:bg-red-500/20 hover:border-red-500/50"
