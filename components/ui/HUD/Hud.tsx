@@ -18,11 +18,8 @@ const TABS: { id: TabId; icon: string; label: string }[] = [
 export default function Hud() {
   const pathname = usePathname();
   
-  // NEVER render on landing page or pricing — only inside the club
-  const isInsideClub = pathname !== '/' && pathname !== '/pricing' && !pathname.startsWith('/verify');
-  
-  // Early return — component doesn't exist outside the club
-  if (!isInsideClub) return null;
+  // Only show inside the club — never on the landing page
+  if (pathname === '/') return null;
   
   const {
     activeTab,
