@@ -4,6 +4,7 @@
 
 import { useState } from 'react';
 import { useHudStore, TabId } from '@/utils/store/hudStore';
+import { usePathname } from 'next/navigation';
 
 const TABS: { id: TabId; icon: string; label: string }[] = [
   { id: 'limits', icon: '📋', label: 'Limits' },
@@ -15,6 +16,11 @@ const TABS: { id: TabId; icon: string; label: string }[] = [
 ];
 
 export default function Hud() {
+  const pathname = usePathname();
+  
+  // Only show on club pages, NOT on landing page
+  const showHud = pathname !== '/' && !pathname.startsWith('/verify');
+  
   const {
     activeTab,
     expanded,
@@ -40,6 +46,8 @@ export default function Hud() {
 
   return (
     <>
+      {showHud && (
+      <>
       {/* HUD Trigger Button — bottom-right with padding */}
       <button
         onClick={toggleExpand}
@@ -147,8 +155,7 @@ export default function Hud() {
       )}
 
       {/* Delete Confirmation Modal */}
-      {showDeleteModal && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm">
+      {showDeleteModal && (        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm">
           <div className="w-full max-w-sm rounded-2xl border-2 border-red-500 bg-zinc-950 p-6 shadow-[0_0_60px_rgba(239,68,68,0.3)]">
             <div className="flex items-center gap-3 mb-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500/20 border border-red-500/50">
@@ -222,6 +229,8 @@ export default function Hud() {
             </div>
           </div>
         </div>
+      )}
+      </>
       )}
     </>
   );
