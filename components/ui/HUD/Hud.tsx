@@ -17,9 +17,25 @@ const TABS: { id: TabId; icon: string; label: string }[] = [
 
 export default function Hud() {
   const pathname = usePathname();
-  
-  // Only show inside the club — never on the landing page
-  if (pathname === '/') return null;
+
+  // Site pages — no HUD. These are info/legal/contact pages outside the app.
+  const sitePages = [
+    '/',
+    '/signin',
+    '/verify',
+    '/terms',
+    '/privacy',
+    '/aup',
+    '/refunds',
+    '/best-practices',
+    '/law-enforcement',
+    '/sitemap',
+    '/contact',
+    '/owner'
+  ];
+
+  // Only render inside the club (app pages)
+  if (sitePages.includes(pathname) || pathname.startsWith('/api')) return null;
   
   const {
     activeTab,
@@ -127,7 +143,7 @@ export default function Hud() {
           </div>
 
           {/* Tab Content — scrollable with visible scrollbar */}
-          <div className="flex-1 overflow-y-auto min-h-0 p-4" style={{ scrollbarWidth: 'thin', scrollbarColor: '#66ffff #18181b' }}>
+          <div className="flex-1 overflow-y-auto min-h-0 p-4" style={{ scrollbarWidth: 'thin', scrollbarColor: '#66ffff #18181b', paddingRight: '16px' }}>
             {activeTab === 'limits' && <LimitsTab dailyLimits={dailyLimits} />}
             {activeTab === 'chat' && <ChatTab alerts={alerts} />}
             {activeTab === 'character' && <CharacterTab />}
