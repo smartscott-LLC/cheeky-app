@@ -69,27 +69,40 @@ const DEFAULT_PREFS: Prefs = {
 };
 
 function clampPosition(x: number, y: number): { x: number; y: number } {
-  // visualViewport.height = actual visible area (no browser chrome).
-  // Fall back to innerHeight when unavailable (desktop).
-  const visibleH = window.visualViewport?.height ?? window.innerHeight;
-  const screenH = window.innerHeight;
-  const usedH = Math.min(visibleH, screenH);
-  const maxLeft = Math.max(MIN_FROM_EDGE, window.innerWidth - BAR_W - MIN_FROM_EDGE);
+  // Use the smallest reliable viewport height:
+  //   documentElement.clientHeight — actual visible content area
+  //   window.innerHeight           — gross viewport (includes browser chrome)
+  //   visualViewport.height        — mobile-only, changes with keyboard
+  const docH = document.documentElement.clientHeight;
+  const viewH = window.innerHeight;
+  const vpH = window.visualViewport?.height ?? 0;
+  const usedH = Math.min(docH, viewH, vpH || Infinity);
+  const vw = window.innerWidth;
+  const maxLeft = Math.max(MIN_FROM_EDGE, vw - BAR_W - MIN_FROM_EDGE);
   const maxTop = Math.max(MIN_FROM_EDGE, usedH - BAR_H - MIN_FROM_EDGE);
-  return {
+  const result = {
     x: Math.max(MIN_FROM_EDGE, Math.min(maxLeft, x)),
     y: Math.max(MIN_FROM_EDGE, Math.min(maxTop, y))
   };
+  console.log(
+    '[Taskbar] clamp',
+    { x, y, usedH, docH, viewH, vpH, maxTop, result }
+  );
+  return result;
 }
 
 function getVisibleViewportHeight(): number {
-  return Math.min(window.visualViewport?.height ?? Infinity, window.innerHeight);
+  const docH = document.documentElement.clientHeight;
+  const viewH = window.innerHeight;
+  const vpH = window.visualViewport?.height ?? 0;
+  return Math.min(docH, viewH, vpH || Infinity);
 }
 
 function isValidPosition(x: number, y: number): boolean {
   if (typeof window === 'undefined') return false;
   const vh = getVisibleViewportHeight();
-  const maxLeft = Math.max(MIN_FROM_EDGE, window.innerWidth - BAR_W - MIN_FROM_EDGE);
+  const vw = window.innerWidth;
+  const maxLeft = Math.max(MIN_FROM_EDGE, vw - BAR_W - MIN_FROM_EDGE);
   const maxTop = Math.max(MIN_FROM_EDGE, vh - BAR_H - MIN_FROM_EDGE);
   return x >= MIN_FROM_EDGE && x <= maxLeft && y >= MIN_FROM_EDGE && y <= maxTop;
 }
@@ -287,9 +300,13 @@ export default function TikiTaskbar() {
 
   const { tier } = state;
 
-  // Render using stored absolute pixel position directly.
   const absTop = prefs.absY;
   const absLeft = prefs.absX;
+
+  // Force re-verify position on every render
+  if (absTop < 0 || absTop > (window.innerHeight || 1080) - BAR_H || absLeft < 0 || absLeft > (window.innerWidth || 1920) - BAR_W) {
+    console.warn('[Taskbar] Invalid position detected, forcing clamp:', { absTop, absLeft, W: window.innerWidth, H: window.innerHeight });
+  }
 
   return (
     <div
