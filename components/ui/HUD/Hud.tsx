@@ -43,7 +43,7 @@ export default function Hud() {
       {/* HUD Trigger Button — floating right */}
       <button
         onClick={toggleExpand}
-        className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full border-2 px-4 py-3 text-sm font-bold shadow-lg transition-all duration-200 hover:scale-105 ${
+        className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full border-2 px-5 py-3 text-sm font-bold shadow-lg transition-all duration-200 hover:scale-105 ${
           expanded
             ? 'border-gold bg-zinc-900 text-gold'
             : hasActivity
@@ -54,7 +54,7 @@ export default function Hud() {
         aria-label="Open Club Cheeky HUD"
       >
         <span className="text-xl">☰</span>
-        <span className="hidden sm:inline font-hero text-xs">Club</span>
+        <span className="hidden sm:inline font-hero text-sm tracking-wider">CHEEKY</span>
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-club text-xs font-bold text-white animate-pulse">
             {unreadCount}
@@ -62,10 +62,10 @@ export default function Hud() {
         )}
       </button>
 
-      {/* Expanded Panel — positioned to the LEFT of the button */}
+      {/* Expanded Panel — positioned to the LEFT of the button with gap */}
       {expanded && (
         <div
-          className="fixed bottom-16 right-24 z-50 w-[320px] max-h-[520px] rounded-2xl border-2 border-gold bg-zinc-950/98 shadow-[0_0_50px_rgba(255,215,0,0.25)] backdrop-blur-xl flex flex-col"
+          className="fixed bottom-6 right-28 z-50 w-[520px] max-h-[580px] rounded-2xl border-2 border-gold bg-zinc-950/98 shadow-[0_0_50px_rgba(255,215,0,0.25)] backdrop-blur-xl flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
@@ -114,8 +114,8 @@ export default function Hud() {
             ))}
           </div>
 
-          {/* Tab Content — scrollable */}
-          <div className="flex-1 overflow-y-auto min-h-0 p-4">
+          {/* Tab Content — scrollable with visible scrollbar */}
+          <div className="flex-1 overflow-y-auto min-h-0 p-4" style={{ scrollbarWidth: 'thin', scrollbarColor: '#66ffff #18181b' }}>
             {activeTab === 'limits' && <LimitsTab dailyLimits={dailyLimits} />}
             {activeTab === 'chat' && <ChatTab alerts={alerts} />}
             {activeTab === 'character' && <CharacterTab />}
