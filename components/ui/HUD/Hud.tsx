@@ -211,7 +211,7 @@ export default function Hud() {
 
           {/* ── Content ── */}
           <div className="flex-1 overflow-y-auto min-h-0 p-5" style={{ scrollbarWidth: 'thin', scrollbarColor: '#66ffff #18181b', paddingRight: '12px' }}>
-            {activeTab === 'daily' && <DailyTab dailyLimits={dailyLimits} />}
+            {activeTab === 'daily' && <DailyTab dailyLimits={dailyLimits} caps={caps} />}
             {activeTab === 'profile' && <ProfileTab />}
             {activeTab === 'wallet' && <WalletTab wallet={wallet} inventory={inventory} />}
             {activeTab === 'help' && <HelpTab />}
@@ -298,11 +298,11 @@ export default function Hud() {
 
 // ─── Tab Components ───────────────────────────────────────────────────────────
 
-function DailyTab({ dailyLimits }: { dailyLimits: {
+function DailyTab({ dailyLimits, caps }: { dailyLimits: {
   messagesSent: number; swipesUsed: number; matchmakerPlays: number;
   l3TriosUsed: number; icebreakersUsed: number; blindDateJoins: number;
   danceFreeRemaining: number; speedFreeRemaining: number; rooftopFreeRemaining: number;
-} }) {
+}, caps: { messages: number | null; swipes: number; matchmakerPlays: number; l3Trios: number; icebreakers: number | null } }) {
   return (
     <div className="p-5 space-y-5">
       <div className="flex items-center justify-between">
@@ -310,11 +310,11 @@ function DailyTab({ dailyLimits }: { dailyLimits: {
         <span className="text-xs font-body text-zinc-500 uppercase tracking-wider">Resets midnight CST</span>
       </div>
       <div className="space-y-3">
-        <LimitRow label="Messages" used={dailyLimits.messagesSent} max={30} />
-        <LimitRow label="Swipes" used={dailyLimits.swipesUsed} max={15} />
-        <LimitRow label="Matchmaker" used={dailyLimits.matchmakerPlays} max={3} />
-        <LimitRow label="L³ Trios" used={dailyLimits.l3TriosUsed} max={4} />
-        <LimitRow label="Icebreakers" used={dailyLimits.icebreakersUsed} max={5} />
+        <LimitRow label="Messages" used={dailyLimits.messagesSent} max={caps.messages ?? Infinity} />
+        <LimitRow label="Swipes" used={dailyLimits.swipesUsed} max={caps.swipes} />
+        <LimitRow label="Matchmaker" used={dailyLimits.matchmakerPlays} max={caps.matchmakerPlays} />
+        <LimitRow label="L³ Trios" used={dailyLimits.l3TriosUsed} max={caps.l3Trios} />
+        <LimitRow label="Icebreakers" used={dailyLimits.icebreakersUsed} max={caps.icebreakers ?? Infinity} />
       </div>
       <div className="border-t border-gold/20 pt-4">
         <h4 className="font-header text-cyan text-base mb-3">Free Events</h4>
