@@ -46,10 +46,10 @@ const BAR_H = 90;
 const DEFAULT_PREFS: Prefs = {
   hidden: false,
   collapsed: false,
-  anchor: 'bottomleft',
+  anchor: 'topright',
   offset: DEFAULT_OFFSET,
-  absX: 12,
-  absY: 0 // filled in by loadPrefs on client
+  absX: window.innerWidth - BAR_W - 12,
+  absY: 12 // Start visible at top-right instead of bottom
 };
 
 function loadPrefs(): Prefs {
@@ -69,11 +69,11 @@ function loadPrefs(): Prefs {
       }
       return { ...DEFAULT_PREFS, ...parsed };
     }
-    // First-time default: bottom-right, 16px from right edge, 4px from bottom.
+    // First-time default: top-right, 16px from edges
     return {
       ...DEFAULT_PREFS,
       absX: window.innerWidth - BAR_W - 16,
-      absY: window.innerHeight - BAR_H - 4
+      absY: 16
     };
   } catch {
     /* corrupted pref — fall back */
@@ -81,7 +81,7 @@ function loadPrefs(): Prefs {
   return {
     ...DEFAULT_PREFS,
     absX: window.innerWidth - BAR_W - 16,
-    absY: window.innerHeight - BAR_H - 4
+    absY: 16
   };
 }
 
