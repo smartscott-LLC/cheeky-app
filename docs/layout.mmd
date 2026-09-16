@@ -1,0 +1,50 @@
+flowchart TD
+    Header["Header"]
+    Background["Background Image — fills entire page behind layout"]
+
+    subgraph Top["Top Box — 15% height, 100% width"]
+        direction TB
+        Ticker["Ticker — centered, y-pos 5, directly under header"]
+        Floor["Floor Announcement — floor name in Damion / brief description in Rancho"]
+        Ticker --> Floor
+    end
+
+    Header --> Top
+    Background ~~~ Header
+
+    subgraph Main["Main Row — remaining 85% height"]
+        direction LR
+
+        subgraph Col1["Column 1 — 1/3 width"]
+            direction TB
+            ActionBar["Action Bar — overlay, centered vertically along left edge"]
+            AudioToggle["Audio Toggle — between action bar and lower-left corner"]
+            ActionBar ~~~ AudioToggle
+        end
+
+        subgraph Col2["Column 2 — 1/3 width"]
+            direction TB
+            ClubCheeky["Club Cheeky Button"]
+            CheekyChats["Cheeky Chats / Sparx Area Buttons"]
+            FloorEvent["Floor Event Button"]
+            ClubCheeky --> CheekyChats --> FloorEvent
+        end
+
+        subgraph Col3["Column 3 — 1/3 width"]
+            direction TB
+            Elevator["Elevator"]
+            AIChat["AI Chat"]
+            GiftStore["Gift Store"]
+            EventCalendar["Event Calendar"]
+            ClubManager["Club Manager Button — bottom right"]
+            Elevator --> AIChat --> GiftStore --> EventCalendar
+            EventCalendar -. bottom 5% cushion .-> ClubManager
+        end
+    end
+
+    Top --> Main
+
+    %% All buttons use custom icons/images.
+    %% Column 3 buttons are circular with a gold border and the label underneath.
+    classDef gold stroke:#FFD700,stroke-width:3px;
+    class Elevator,AIChat,GiftStore,EventCalendar,ClubManager gold;

@@ -5,7 +5,6 @@
 /fixtures/node_modules
 /.pnp
 .pnp.js
-/docs
 
 
 # testing

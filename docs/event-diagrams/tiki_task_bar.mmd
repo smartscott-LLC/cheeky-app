@@ -1,0 +1,23 @@
+flowchart TD
+    subgraph TopOfPage [Top of Feed]
+        Bar([Action Bar / Hot Bar])
+    end
+
+    subgraph Contents [What's displayed on the Bar]
+        I1[📩 # Unread Messages] --> Nav1[Message Queue]
+        I2[⚡ # Unanswered Sparks] --> Nav2[Sparks / Likes Screen]
+        I3[🎯 # Matchmaker Plays Left] --> Nav3[Matchmaker Game]
+        I4[❤️ # Blind Date Tries Left] --> Nav4[Blind Date Event]
+    end
+
+    subgraph UpdateLogic [How the Bar Updates]
+        A1[New action triggers:<br/>New message / Spark / Event unlock] --> A2[Add icon + count to bar]
+        A3[User taps icon] --> A4[Navigate to linked event screen]
+        A4 --> A5{User completes task?}
+        A5 -- Yes --> A6[Decrement count or remove from bar]
+        A6 --> A7[Bar refreshes to show remaining to-dos]
+        A5 -- No --> A4
+    end
+
+    Bar --> Contents
+    Nav1 & Nav2 & Nav3 & Nav4 --> A4
