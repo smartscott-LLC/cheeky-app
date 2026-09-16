@@ -125,7 +125,7 @@ export default async function MessagesPage() {
               <p className="mt-1 font-body text-club text-sm">
                 {icebreakersLeft === null
                   ? 'Unlimited icebreakers for your tier'
-                  : `${icebreakersLeft} remaining today`}
+                  : `${Number(icebreakersLeft)} remaining today`}
               </p>
             </div>
             <Link
