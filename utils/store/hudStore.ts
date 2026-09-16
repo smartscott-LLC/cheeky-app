@@ -9,7 +9,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type ActiveModule = 'main' | 'chub' | 'creator' | 'game';
 export type Tier = 'guest' | 'silver' | 'gold' | 'platinum' | 'diamond';
-export type TabId = 'limits' | 'chat' | 'character' | 'game' | 'wallet' | 'help';
+export type TabId = 'daily' | 'profile' | 'wallet' | 'help';
 
 export interface InventoryItem {
   id: string;
@@ -83,11 +83,14 @@ export interface HudState {
   
   // Alerts
   alerts: Alert[];
-  
+
+  // Cheeky Chats (1-on-1 dating messages) — separate from lounge
+  cheekyChatUnread: number;
+
   // Sync state
   isSyncing: boolean;
   lastSync: string | null;
-  
+
   // Actions
   setActiveTab: (tab: TabId) => void;
   toggleExpand: () => void;
@@ -99,13 +102,14 @@ export interface HudState {
   addAlert: (alert: Omit<Alert, 'id' | 'read' | 'timestamp'>) => void;
   markAlertRead: (alertId: string) => void;
   clearAllAlerts: () => void;
+  setCheekyChatUnread: (count: number) => void;
   clearAllData: (confirmation: string, userDisplayName: string) => boolean;
 }
 
 // ─── Store ───────────────────────────────────────────────────────────────────
 
 const initialState = {
-  activeTab: 'limits' as TabId,
+  activeTab: 'daily' as TabId,
   expanded: false,
   userId: null as string | null,
   displayName: null as string | null,
@@ -132,6 +136,7 @@ const initialState = {
   },
   inventory: [] as InventoryItem[],
   alerts: [] as Alert[] as Alert[],
+  cheekyChatUnread: 0,
   isSyncing: false,
   lastSync: null as string | null,
 };
@@ -209,7 +214,9 @@ export const useHudStore = create<HudState>()(
         })),
       
       clearAllAlerts: () => set({ alerts: [] }),
-      
+
+      setCheekyChatUnread: (count) => set({ cheekyChatUnread: count }),
+
       clearAllData: (confirmation, userDisplayName) => {
         const state = get();
         // Require typing "CLEAR" or their display name
@@ -224,7 +231,7 @@ export const useHudStore = create<HudState>()(
         
         // Clear localStorage
         localStorage.removeItem('cheeky-weave');
-        
+
         // Clear runtime state
         set({
           userId: null,
@@ -235,9 +242,10 @@ export const useHudStore = create<HudState>()(
           wallet: initialState.wallet,
           inventory: [],
           alerts: [],
+          cheekyChatUnread: 0,
           lastSync: null,
         });
-        
+
         return true;
       },
     }),
@@ -251,6 +259,7 @@ export const useHudStore = create<HudState>()(
         wallet: state.wallet,
         inventory: state.inventory,
         alerts: state.alerts,
+        cheekyChatUnread: state.cheekyChatUnread,
       }),
     }
   )
