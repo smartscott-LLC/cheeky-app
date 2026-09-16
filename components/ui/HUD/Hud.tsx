@@ -330,18 +330,23 @@ function DailyTab({ dailyLimits, caps }: { dailyLimits: {
 }
 
 function LimitRow({ label, used, max }: { label: string; used: number; max: number }) {
-  const remaining = Math.max(0, max - used);
-  const pct = Math.min(100, (used / max) * 100);
-  const isLow = remaining <= 2;
+  const remaining = max === Infinity ? Infinity : Math.max(0, max - used);
+  const pct = max === Infinity ? 0 : Math.min(100, (used / max) * 100);
+  const isLow = remaining !== Infinity && remaining <= 2;
+
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
         <span className="font-body text-club text-base">{label}</span>
-        <span className={`font-header text-base ${isLow ? 'text-red-400' : 'text-cyan'}`}>{remaining} left</span>
+        <span className={`font-header text-base ${isLow ? 'text-red-400' : remaining === Infinity ? 'text-gold' : 'text-cyan'}`}>
+          {remaining === Infinity ? '∞' : `${remaining} left`}
+        </span>
       </div>
-      <div className="h-2 rounded-full bg-zinc-800 overflow-hidden">
-        <div className={`h-full rounded-full transition-all duration-500 ${isLow ? 'bg-red-500' : 'bg-gold'}`} style={{ width: `${pct}%` }} />
-      </div>
+      {max !== Infinity && (
+        <div className="h-2 rounded-full bg-zinc-800 overflow-hidden">
+          <div className={`h-full rounded-full transition-all duration-500 ${isLow ? 'bg-red-500' : 'bg-gold'}`} style={{ width: `${pct}%` }} />
+        </div>
+      )}
     </div>
   );
 }
