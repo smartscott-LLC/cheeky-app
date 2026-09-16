@@ -10,6 +10,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 export type ActiveModule = 'main' | 'chub' | 'creator' | 'game';
 export type Tier = 'guest' | 'silver' | 'gold' | 'platinum' | 'diamond';
 export type TabId = 'daily' | 'profile' | 'wallet' | 'help';
+export type ViewMode = 'button' | 'taskbar' | 'hud';
 
 export const TIER_LABELS: Record<Tier, string> = {
   guest: 'Guest',
@@ -81,6 +82,7 @@ export interface HudState {
   // Core
   activeTab: TabId;
   expanded: boolean;
+  viewMode: ViewMode;
   
   // Session
   userId: string | null;
@@ -111,6 +113,8 @@ export interface HudState {
   setActiveTab: (tab: TabId) => void;
   toggleExpand: () => void;
   setExpanded: (expanded: boolean) => void;
+  setViewMode: (mode: ViewMode) => void;
+  cycleViewMode: () => void;
   updateDailyLimits: (limits: Partial<DailyLimits>) => void;
   updateWallet: (wallet: Partial<WalletState>) => void;
   updateTier: (tier: Tier) => void;
@@ -129,6 +133,7 @@ export interface HudState {
 const initialState = {
   activeTab: 'daily' as TabId,
   expanded: false,
+  viewMode: 'button' as ViewMode,
   userId: null as string | null,
   displayName: null as string | null,
   tier: 'silver' as Tier,
@@ -167,9 +172,15 @@ export const useHudStore = create<HudState>()(
       setActiveTab: (tab) => set({ activeTab: tab }),
       
       toggleExpand: () => set((state) => ({ expanded: !state.expanded })),
-      
+
       setExpanded: (expanded) => set({ expanded }),
-      
+
+      setViewMode: (mode) => set({ viewMode: mode }),
+
+      cycleViewMode: () => set((state) => ({
+        viewMode: state.viewMode === 'button' ? 'taskbar' : state.viewMode === 'taskbar' ? 'hud' : 'button'
+      })),
+
       updateDailyLimits: (limits) =>
         set((state) => ({
           dailyLimits: { ...state.dailyLimits, ...limits },
@@ -312,6 +323,7 @@ export const useHudStore = create<HudState>()(
       partialize: (state) => ({
         activeTab: state.activeTab,
         expanded: state.expanded,
+        viewMode: state.viewMode,
         dailyLimits: state.dailyLimits,
         wallet: state.wallet,
         inventory: state.inventory,

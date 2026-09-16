@@ -3,9 +3,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useHudStore, TabId, TIER_CAPS, TIER_LABELS } from '@/utils/store/hudStore';
+import { useHudStore, TabId, TIER_CAPS, TIER_LABELS, ViewMode } from '@/utils/store/hudStore';
 import { usePathname } from 'next/navigation';
 import { ASSETS } from '@/utils/assets';
+import TikiTaskbar from '@/components/ui/Taskbar/TikiTaskbar';
 
 const TABS: { id: TabId; icon: string; label: string }[] = [
   { id: 'daily', icon: '💓', label: 'Daily' },
@@ -37,6 +38,7 @@ export default function Hud() {
   const {
     activeTab, expanded, toggleExpand, setActiveTab, tier,
     dailyLimits, wallet, inventory, alerts, cheekyChatUnread,
+    viewMode, cycleViewMode,
   } = useHudStore();
 
   // Sync real data from API on mount AND every 60s — MUST be before any early return
@@ -74,9 +76,9 @@ export default function Hud() {
     <>
       {/* ─── Trigger Button ─────────────────────────────────────────── */}
       <button
-        onClick={toggleExpand}
+        onClick={cycleViewMode}
         className={`fixed bottom-5 right-5 z-[9999] flex items-center gap-3 rounded-full border transition-all duration-300 ${
-          expanded
+          viewMode === 'hud'
             ? 'border-gold bg-zinc-900/95 text-gold shadow-[0_0_30px_rgba(255,215,0,0.4)]'
             : hasActivity
               ? 'border-gold/80 bg-zinc-900/90 text-gold hover:border-gold'
@@ -84,12 +86,12 @@ export default function Hud() {
         }`}
         style={{
           padding: '12px 20px',
-          transform: hasActivity && !expanded ? `scale(${pulseScale})` : 'scale(1)',
-          boxShadow: hasActivity
+          transform: hasActivity && viewMode === 'button' ? `scale(${pulseScale})` : 'scale(1)',
+          boxShadow: hasActivity && viewMode === 'button'
             ? `0 0 ${20 + glowIntensity * 30}px rgba(255,215,0,${glowIntensity}), 0 4px 20px rgba(0,0,0,0.6)`
             : '0 4px 20px rgba(0,0,0,0.5)',
         }}
-        aria-label="Open Club Cheeky HUD"
+        aria-label="Cycle Club Cheeky HUD"
       >
         {/* Token count */}
         <span className="font-hero text-gold text-base leading-none">{wallet.tokens}</span>
@@ -97,7 +99,7 @@ export default function Hud() {
         {/* HUD label */}
         <span className="font-hero text-gold text-sm tracking-widest hidden sm:inline">CHEEKY HUD</span>
         {/* Menu icon */}
-        <span className={`text-lg transition-transform duration-200 ${expanded ? 'rotate-90' : ''}`}>☰</span>
+        <span className={`text-lg transition-transform duration-200 ${viewMode === 'hud' ? 'rotate-90' : ''}`}>☰</span>
         {/* Badges */}
         {cheekyChatUnread > 0 && (
           <span className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-club text-xs font-bold text-white flex items-center justify-center animate-pulse">
@@ -111,8 +113,11 @@ export default function Hud() {
         )}
       </button>
 
-      {/* ─── Expanded Panel ─────────────────────────────────────────── */}
-      {expanded && (
+      {/* ─── Taskbar State ─────────────────────────────────────────── */}
+      {viewMode === 'taskbar' && <TikiTaskbar />}
+
+      {/* ─── Full HUD Panel ─────────────────────────────────────────── */}
+      {viewMode === 'hud' && (
         <div
           className="fixed z-[9999] rounded-2xl border-2 border-gold bg-zinc-950/98 shadow-[0_0_60px_rgba(255,215,0,0.3)] backdrop-blur-xl flex flex-col overflow-hidden"
           style={{ bottom: '76px', right: '24px', width: '520px', maxHeight: '640px' }}
