@@ -53,14 +53,20 @@ export async function GET() {
     });
   }
 
-  const [{ data: state }, { count: activeDateNights }] = await Promise.all([
+  const [{ data: state }, { count: activeDateNights }, { data: tokenRows }] = await Promise.all([
     supabase.rpc('taskbar_state'),
     supabase
       .from('date_nights')
       .select('*', { count: 'exact', head: true })
       .or(`user_a.eq.${user.id},user_b.eq.${user.id}`)
-      .eq('status', 'active')
+      .eq('status', 'active'),
+    supabase
+      .from('token_ledger')
+      .select('delta')
+      .eq('user_id', user.id)
   ]);
+
+  const tokenBalance = (tokenRows ?? []).reduce((sum, r) => sum + (r.delta ?? 0), 0);
   const row = (state?.[0] ?? {}) as TaskbarStateRow;
   const tier = row.tier ?? 'silver';
   const caps = capsForTier(tier);
@@ -115,5 +121,5 @@ export async function GET() {
     })
     .filter((t): t is NonNullable<typeof t> => t !== null);
 
-  return NextResponse.json({ tier, tiles });
+  return NextResponse.json({ tier, tiles, tokenBalance });
 }

@@ -11,6 +11,22 @@ export type ActiveModule = 'main' | 'chub' | 'creator' | 'game';
 export type Tier = 'guest' | 'silver' | 'gold' | 'platinum' | 'diamond';
 export type TabId = 'daily' | 'profile' | 'wallet' | 'help';
 
+export const TIER_LABELS: Record<Tier, string> = {
+  guest: 'Guest',
+  silver: 'Silver',
+  gold: 'Gold',
+  platinum: 'Platinum',
+  diamond: 'Diamond'
+};
+
+export const TIER_CAPS: Record<Tier, { messages: number | null; swipes: number; matchmakerPlays: number; l3Trios: number; icebreakers: number | null }> = {
+  guest: { messages: 0, swipes: 0, matchmakerPlays: 0, l3Trios: 0, icebreakers: 0 },
+  silver: { messages: 30, swipes: 15, matchmakerPlays: 3, l3Trios: 4, icebreakers: 5 },
+  gold: { messages: 75, swipes: 30, matchmakerPlays: 5, l3Trios: 8, icebreakers: 10 },
+  platinum: { messages: Infinity, swipes: 50, matchmakerPlays: 8, l3Trios: 12, icebreakers: Infinity },
+  diamond: { messages: Infinity, swipes: 100, matchmakerPlays: 12, l3Trios: 20, icebreakers: Infinity }
+};
+
 export interface InventoryItem {
   id: string;
   itemId: string;
@@ -97,12 +113,14 @@ export interface HudState {
   setExpanded: (expanded: boolean) => void;
   updateDailyLimits: (limits: Partial<DailyLimits>) => void;
   updateWallet: (wallet: Partial<WalletState>) => void;
+  updateTier: (tier: Tier) => void;
   addInventoryItem: (item: InventoryItem) => void;
   removeInventoryItem: (itemId: string, quantity: number) => boolean;
   addAlert: (alert: Omit<Alert, 'id' | 'read' | 'timestamp'>) => void;
   markAlertRead: (alertId: string) => void;
   clearAllAlerts: () => void;
   setCheekyChatUnread: (count: number) => void;
+  syncHudData: () => Promise<void>;
   clearAllData: (confirmation: string, userDisplayName: string) => boolean;
 }
 
@@ -217,6 +235,43 @@ export const useHudStore = create<HudState>()(
 
       setCheekyChatUnread: (count) => set({ cheekyChatUnread: count }),
 
+      updateTier: (tier) => set({ tier }),
+
+      syncHudData: async () => {
+        try {
+          const res = await fetch('/api/taskbar');
+          const data = await res.json();
+          if (data.tier && data.tiles) {
+            set({ tier: data.tier as Tier });
+
+            // Map taskbar tiles to daily limits
+            const caps = TIER_CAPS[data.tier as Tier] ?? TIER_CAPS.silver;
+            const limits: Partial<DailyLimits> = {};
+            for (const tile of data.tiles) {
+              if (tile.unlimited) {
+                if (tile.key === 'chats') limits.messagesSent = Infinity;
+                else if (tile.key === 'l3') limits.l3TriosUsed = Infinity;
+                else if (tile.key === 'icebreakers') limits.icebreakersUsed = Infinity;
+              } else if (typeof tile.count === 'number') {
+                if (tile.key === 'chats') limits.messagesSent = (caps.messages ?? 0) - tile.count;
+                else if (tile.key === 'swipes') limits.swipesUsed = caps.swipes - tile.count;
+                else if (tile.key === 'l3') limits.l3TriosUsed = caps.l3Trios - tile.count;
+                else if (tile.key === 'matchmaker') limits.matchmakerPlays = caps.matchmakerPlays - tile.count;
+                else if (tile.key === 'icebreakers') limits.icebreakersUsed = (caps.icebreakers ?? 0) - tile.count;
+              }
+            }
+            if (Object.keys(limits).length > 0) set({ dailyLimits: { ...get().dailyLimits, ...limits } });
+
+            // Token balance
+            if (typeof data.tokenBalance === 'number') {
+              set({ wallet: { ...get().wallet, tokens: data.tokenBalance, lastUpdated: new Date().toISOString() } });
+            }
+          }
+        } catch (e) {
+          console.error('syncHudData failed:', e);
+        }
+      },
+
       clearAllData: (confirmation, userDisplayName) => {
         const state = get();
         // Require typing "CLEAR" or their display name
@@ -268,7 +323,6 @@ export const useHudStore = create<HudState>()(
 // ─── Sync helpers ─────────────────────────────────────────────────────────────
 
 export async function syncFromSupabase(_userId: string) {
-  // This would call taskbar_state RPC and update the store
-  // For now, returns a promise that resolves after a delay
-  return new Promise<void>((resolve) => setTimeout(resolve, 500));
+  // Use the new syncHudData instead
+  useHudStore.getState().syncHudData();
 }

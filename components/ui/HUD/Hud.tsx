@@ -3,7 +3,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useHudStore, TabId } from '@/utils/store/hudStore';
+import { useHudStore, TabId, TIER_CAPS, TIER_LABELS } from '@/utils/store/hudStore';
 import { usePathname } from 'next/navigation';
 import { ASSETS } from '@/utils/assets';
 
@@ -47,10 +47,16 @@ export default function Hud() {
   ];
   if (sitePages.includes(pathname) || pathname.startsWith('/api')) return null;
 
+  // Sync real data from API on mount
+  useEffect(() => {
+    useHudStore.getState().syncHudData();
+  }, []);
+
   const unreadCount = alerts.filter((a) => !a.read).length;
-  const messagesLeft = Math.max(0, 30 - dailyLimits.messagesSent);
-  const swipesLeft = Math.max(0, 15 - dailyLimits.swipesUsed);
-  const hasActivity = messagesLeft < 30 || swipesLeft < 15 || unreadCount > 0 || cheekyChatUnread > 0;
+  const caps = useHudStore.getState().tier ? TIER_CAPS[useHudStore.getState().tier] : TIER_CAPS.silver;
+  const messagesLeft = Math.max(0, (caps.messages ?? 30) - dailyLimits.messagesSent);
+  const swipesLeft = Math.max(0, caps.swipes - dailyLimits.swipesUsed);
+  const hasActivity = messagesLeft < (caps.messages ?? 30) || swipesLeft < caps.swipes || unreadCount > 0 || cheekyChatUnread > 0;
 
   const recentActivity = alerts.slice(0, 3).map((a) => ({
     type: a.type,
@@ -118,6 +124,7 @@ export default function Hud() {
               </div>
               <div className="flex items-center gap-4 text-sm">
                 <span className="font-hero text-gold">{wallet.tokens}</span>
+                <span className="rounded-full bg-gold/20 px-2 py-0.5 text-xs font-bold text-gold uppercase tracking-wider">{TIER_LABELS[tier]}</span>
                 {cheekyChatUnread > 0 && (
                   <span className="flex items-center gap-1.5 text-club">
                     <img src={ASSETS.icons.cheekyChats} alt="" className="w-4 h-4" />
@@ -170,7 +177,7 @@ export default function Hud() {
                 </a>
               ))}
               <a href="/events" onClick={toggleExpand} className="flex-1 flex flex-col items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900/60 py-2.5 text-center transition hover:border-gold/40 hover:bg-gold/5 group">
-                <img src={ASSETS.icons.danceFloor} alt="Events" className="w-7 h-7 opacity-75 group-hover:opacity-100 transition" />
+                <span className="text-2xl">⚡</span>
                 <span className="font-body text-sm text-zinc-400 group-hover:text-gold transition">Events</span>
               </a>
               <a href="/gifts" onClick={toggleExpand} className="flex-1 flex flex-col items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900/60 py-2.5 text-center transition hover:border-gold/40 hover:bg-gold/5 group">
@@ -211,12 +218,12 @@ export default function Hud() {
           <div className="border-t border-gold/20 bg-zinc-900/50 px-5 py-3 flex-shrink-0 flex items-center justify-between">
             <button
               onClick={() => setShowDeleteModal(true)}
-              className="flex items-center gap-2 rounded border border-red-500/20 bg-red-500/5 px-3 py-1.5 text-sm font-bold text-red-400/70 transition hover:bg-red-500/15 hover:border-red-500/40"
+              className="flex items-center gap-1.5 rounded border border-red-500/20 bg-red-500/5 px-2 py-1 text-xs font-bold text-red-400/70 transition hover:bg-red-500/15 hover:border-red-500/40"
             >
-              <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg className="h-2.5 w-2.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
               </svg>
-              Delete Data
+              Delete All My Data
             </button>
             <span className="text-xs font-body text-zinc-600">Midnight CST reset</span>
           </div>
