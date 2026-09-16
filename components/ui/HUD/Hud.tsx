@@ -23,6 +23,9 @@ const SPARK_MODES = [
 export default function Hud() {
   const pathname = usePathname();
   const [pulsePhase, setPulsePhase] = useState(0);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteInput, setDeleteInput] = useState('');
+  const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -31,22 +34,18 @@ export default function Hud() {
     return () => clearInterval(interval);
   }, []);
 
-  const sitePages = [
-    '/', '/signin', '/verify', '/terms', '/privacy',
-    '/aup', '/refunds', '/best-practices',
-    '/law-enforcement', '/sitemap', '/contact', '/owner', '/pricing'
-  ];
-
-  if (sitePages.includes(pathname) || pathname.startsWith('/api')) return null;
-
   const {
     activeTab, expanded, toggleExpand, setActiveTab,
     dailyLimits, wallet, inventory, alerts, cheekyChatUnread,
   } = useHudStore();
 
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteInput, setDeleteInput] = useState('');
-  const [deleteError, setDeleteError] = useState('');
+  // All hooks above — site-page guard goes after everything
+  const sitePages = [
+    '/', '/signin', '/verify', '/terms', '/privacy',
+    '/aup', '/refunds', '/best-practices',
+    '/law-enforcement', '/sitemap', '/contact', '/owner', '/pricing'
+  ];
+  if (sitePages.includes(pathname) || pathname.startsWith('/api')) return null;
 
   const unreadCount = alerts.filter((a) => !a.read).length;
   const messagesLeft = Math.max(0, 30 - dailyLimits.messagesSent);
