@@ -326,5 +326,5 @@ export const useHudStore = create<HudState>()(
 
 export async function syncFromSupabase(_userId: string) {
   // Use the new syncHudData instead
-  useHudStore.getState().syncHudData();
+  void useHudStore.getState().syncHudData();
 }

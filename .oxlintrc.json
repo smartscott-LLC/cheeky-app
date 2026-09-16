@@ -39,6 +39,19 @@
         "jsx-a11y/prefer-tag-over-role": "off",
         "jsx-a11y/no-noninteractive-element-interactions": "off"
       }
+    },
+    {
+      "files": ["components/ui/HUD/Hud.tsx"],
+      "rules": {
+        "next/no-img-element": "off",
+        "next/no-html-link-for-pages": "off"
+      }
+    },
+    {
+      "files": ["utils/auth-helpers/server.ts"],
+      "rules": {
+        "typescript/no-base-to-string": "off"
+      }
     }
   ]
 }

@@ -41,7 +41,7 @@ export default function Hud() {
 
   // Sync real data from API on mount AND every 60s — MUST be before any early return
   useEffect(() => {
-    useHudStore.getState().syncHudData();
+    void useHudStore.getState().syncHudData();
     const interval = setInterval(() => useHudStore.getState().syncHudData(), 60000);
     return () => clearInterval(interval);
   }, []);

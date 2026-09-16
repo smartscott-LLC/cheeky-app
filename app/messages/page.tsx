@@ -15,7 +15,7 @@ export default async function MessagesPage() {
   const floorHref = await getReturnFloor();
 
   // Icebreakers — placeholder until taskbar rebuild (toggled off for now)
-  const icebreakersLeft = null;
+  const icebreakersLeft: number | null = null;
 
   // Incoming waves — a one-tap "noticed you" waiting for a hello.
   const { data: waves } = await supabase
