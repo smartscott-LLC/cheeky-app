@@ -48,8 +48,8 @@ const DEFAULT_PREFS: Prefs = {
   collapsed: false,
   anchor: 'topright',
   offset: DEFAULT_OFFSET,
-  absX: window.innerWidth - BAR_W - 12,
-  absY: 12 // Start visible at top-right instead of bottom
+  absX: 0,
+  absY: 12
 };
 
 function loadPrefs(): Prefs {
