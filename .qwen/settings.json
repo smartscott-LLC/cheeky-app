@@ -338,7 +338,11 @@
       "Bash(mkdir *)",
       "Bash(kill *)",
       "Bash(lsof *)",
-      "Bash(xargs *)"
+      "Bash(xargs *)",
+      "Bash(done)",
+      "Bash(md5sum)",
+      "Bash(pkill *)",
+      "Bash(sleep *)"
     ]
   },
   "$version": 4

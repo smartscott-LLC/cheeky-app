@@ -86,6 +86,8 @@ export default function Hud() {
         {/* Token count */}
         <span className="font-hero text-gold text-base leading-none">{wallet.tokens}</span>
         <span className="w-px h-5 bg-zinc-700" />
+        {/* HUD label */}
+        <span className="font-hero text-gold text-sm tracking-widest hidden sm:inline">CHEEKY HUD</span>
         {/* Menu icon */}
         <span className={`text-lg transition-transform duration-200 ${expanded ? 'rotate-90' : ''}`}>☰</span>
         {/* Badges */}
@@ -117,7 +119,6 @@ export default function Hud() {
               </div>
               <div className="flex items-center gap-4 text-sm">
                 <span className="font-hero text-gold">{wallet.tokens}</span>
-                <span className="text-zinc-500 font-body">tokens</span>
                 {cheekyChatUnread > 0 && (
                   <span className="flex items-center gap-1.5 text-club">
                     <img src={ASSETS.icons.cheekyChats} alt="" className="w-4 h-4" />
@@ -426,7 +427,7 @@ function HelpTab() {
       <h3 className="font-header text-gold text-lg mb-5">Help & Support</h3>
       <div className="rounded-xl border border-club/30 bg-gradient-to-br from-club/10 to-transparent p-4 mb-5">
         <div className="flex items-center gap-3 mb-4">
-          <img src={ASSETS.personas.chaz} alt="Chaz" className="h-14 w-14 rounded-full border-2 border-club/60 object-cover" />
+          <img src="/personas/chaz/portrait.webp" alt="Chaz" className="h-14 w-14 rounded-full border-2 border-club/60 object-cover" />
           <div>
             <p className="font-header text-club text-lg">Chaz</p>
             <p className="font-body text-club/70 text-sm">Club Manager & AI Assistant</p>
