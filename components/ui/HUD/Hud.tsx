@@ -56,9 +56,10 @@ export default function Hud() {
 
   const unreadCount = alerts.filter((a) => !a.read).length;
   const caps = TIER_CAPS[tier] ?? TIER_CAPS.silver;
-  const messagesLeft = Math.max(0, (caps.messages ?? 30) - dailyLimits.messagesSent);
+  // Diamond = Infinity messages, so don't subtract from Infinity
+  const messagesLeft = caps.messages === Infinity ? Infinity : Math.max(0, caps.messages - dailyLimits.messagesSent);
   const swipesLeft = Math.max(0, caps.swipes - dailyLimits.swipesUsed);
-  const hasActivity = messagesLeft < (caps.messages ?? 30) || swipesLeft < caps.swipes || unreadCount > 0 || cheekyChatUnread > 0;
+  const hasActivity = messagesLeft !== Infinity && messagesLeft < caps.messages || swipesLeft < caps.swipes || unreadCount > 0 || cheekyChatUnread > 0;
 
   const recentActivity = alerts.slice(0, 3).map((a) => ({
     type: a.type,
@@ -147,8 +148,8 @@ export default function Hud() {
 
             {/* Activity strip */}
             <div className="flex items-center gap-3 text-sm">
-              <span className={`font-body ${messagesLeft < 5 ? 'text-red-400' : 'text-zinc-400'}`}>
-                💬 {messagesLeft} msgs left
+              <span className={`font-body ${messagesLeft === Infinity ? 'text-gold' : messagesLeft < 5 ? 'text-red-400' : 'text-zinc-400'}`}>
+                💬 {messagesLeft === Infinity ? '∞' : `${messagesLeft} msgs left`}
               </span>
               <span className="text-zinc-700">|</span>
               <span className={`font-body ${swipesLeft < 3 ? 'text-red-400' : 'text-zinc-400'}`}>
