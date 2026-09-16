@@ -298,7 +298,7 @@ export default function TikiTaskbar() {
             ))}
           </div>
 
-          <p className="font-body text-club mt-1 text-center font-body text-xs opacity-70">
+          <p className="text-club mt-1 text-center font-body text-xs opacity-70">
             {tier === 'guest'
               ? 'Get your card to start your night'
               : 'Your daily to-dos'}
