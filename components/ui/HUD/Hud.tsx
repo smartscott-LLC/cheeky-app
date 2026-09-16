@@ -3,7 +3,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useHudStore, TabId, TIER_CAPS, TIER_LABELS, ViewMode } from '@/utils/store/hudStore';
+import { useHudStore, TabId, TIER_CAPS, TIER_LABELS } from '@/utils/store/hudStore';
 import { usePathname } from 'next/navigation';
 import { ASSETS } from '@/utils/assets';
 import TikiTaskbar from '@/components/ui/Taskbar/TikiTaskbar';
@@ -36,7 +36,7 @@ export default function Hud() {
   }, []);
 
   const {
-    activeTab, expanded, toggleExpand, setActiveTab, tier,
+    activeTab, toggleExpand, setActiveTab, tier,
     dailyLimits, wallet, inventory, alerts, cheekyChatUnread,
     viewMode, cycleViewMode,
   } = useHudStore();
