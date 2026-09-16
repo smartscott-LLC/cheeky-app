@@ -15,7 +15,7 @@ const TABS: { id: TabId; icon: string; label: string }[] = [
 ];
 
 const SPARK_MODES = [
-  { id: 'spark', label: 'Spark', icon: ASSETS.icons.sparkList, slug: 'spark' },
+  { id: 'spark', label: 'Spark', icon: '🔥', slug: 'spark' },
   { id: 'l3', label: 'L³', icon: ASSETS.icons.neonHeart, slug: 'l3' },
   { id: 'mm', label: 'Match', icon: ASSETS.icons.heartAndKey, slug: 'matchmaker' },
 ];
@@ -218,9 +218,9 @@ export default function Hud() {
           <div className="border-t border-gold/20 bg-zinc-900/50 px-5 py-3 flex-shrink-0 flex items-center justify-between">
             <button
               onClick={() => setShowDeleteModal(true)}
-              className="flex items-center gap-1.5 rounded border border-red-500/20 bg-red-500/5 px-2 py-1 text-xs font-bold text-red-400/70 transition hover:bg-red-500/15 hover:border-red-500/40"
+              className="flex items-center gap-1 rounded border border-red-500/20 bg-red-500/5 px-1.5 py-0.5 text-[10px] font-bold text-red-400/60 transition hover:bg-red-500/15 hover:border-red-500/40"
             >
-              <svg className="h-2.5 w-2.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg className="h-2 w-2 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
               </svg>
               Delete All My Data

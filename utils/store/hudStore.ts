@@ -241,31 +241,33 @@ export const useHudStore = create<HudState>()(
         try {
           const res = await fetch('/api/taskbar');
           const data = await res.json();
-          if (data.tier && data.tiles) {
-            set({ tier: data.tier as Tier });
+          if (!data.tier || !data.tiles) return;
 
-            // Map taskbar tiles to daily limits
-            const caps = TIER_CAPS[data.tier as Tier] ?? TIER_CAPS.silver;
-            const limits: Partial<DailyLimits> = {};
-            for (const tile of data.tiles) {
-              if (tile.unlimited) {
-                if (tile.key === 'chats') limits.messagesSent = Infinity;
-                else if (tile.key === 'l3') limits.l3TriosUsed = Infinity;
-                else if (tile.key === 'icebreakers') limits.icebreakersUsed = Infinity;
-              } else if (typeof tile.count === 'number') {
-                if (tile.key === 'chats') limits.messagesSent = (caps.messages ?? 0) - tile.count;
-                else if (tile.key === 'swipes') limits.swipesUsed = caps.swipes - tile.count;
-                else if (tile.key === 'l3') limits.l3TriosUsed = caps.l3Trios - tile.count;
-                else if (tile.key === 'matchmaker') limits.matchmakerPlays = caps.matchmakerPlays - tile.count;
-                else if (tile.key === 'icebreakers') limits.icebreakersUsed = (caps.icebreakers ?? 0) - tile.count;
-              }
-            }
-            if (Object.keys(limits).length > 0) set({ dailyLimits: { ...get().dailyLimits, ...limits } });
+          set({ tier: data.tier as Tier });
 
-            // Token balance
-            if (typeof data.tokenBalance === 'number') {
-              set({ wallet: { ...get().wallet, tokens: data.tokenBalance, lastUpdated: new Date().toISOString() } });
+          // API returns REMAINING counts (not used). Compute used = cap - remaining.
+          const caps = TIER_CAPS[data.tier as Tier] ?? TIER_CAPS.silver;
+          const limits: Partial<DailyLimits> = {};
+          for (const tile of data.tiles) {
+            if (tile.unlimited) {
+              // Unlimited tier — don't cap, show ∞ in UI
+              if (tile.key === 'chats') limits.messagesSent = Infinity;
+              else if (tile.key === 'l3') limits.l3TriosUsed = Infinity;
+              else if (tile.key === 'icebreakers') limits.icebreakersUsed = Infinity;
+            } else if (typeof tile.count === 'number') {
+              // Remaining → used = cap - remaining
+              if (tile.key === 'chats') limits.messagesSent = (caps.messages ?? 0) - tile.count;
+              else if (tile.key === 'swipes') limits.swipesUsed = caps.swipes - tile.count;
+              else if (tile.key === 'l3') limits.l3TriosUsed = caps.l3Trios - tile.count;
+              else if (tile.key === 'matchmaker') limits.matchmakerPlays = caps.matchmakerPlays - tile.count;
+              else if (tile.key === 'icebreakers') limits.icebreakersUsed = (caps.icebreakers ?? 0) - tile.count;
             }
+          }
+          if (Object.keys(limits).length > 0) set({ dailyLimits: { ...get().dailyLimits, ...limits } });
+
+          // Token balance
+          if (typeof data.tokenBalance === 'number') {
+            set({ wallet: { ...get().wallet, tokens: data.tokenBalance, lastUpdated: new Date().toISOString() } });
           }
         } catch (e) {
           console.error('syncHudData failed:', e);
