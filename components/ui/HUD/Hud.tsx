@@ -35,7 +35,7 @@ export default function Hud() {
   }, []);
 
   const {
-    activeTab, expanded, toggleExpand, setActiveTab,
+    activeTab, expanded, toggleExpand, setActiveTab, tier,
     dailyLimits, wallet, inventory, alerts, cheekyChatUnread,
   } = useHudStore();
 
@@ -53,7 +53,7 @@ export default function Hud() {
   }, []);
 
   const unreadCount = alerts.filter((a) => !a.read).length;
-  const caps = useHudStore.getState().tier ? TIER_CAPS[useHudStore.getState().tier] : TIER_CAPS.silver;
+  const caps = TIER_CAPS[tier] ?? TIER_CAPS.silver;
   const messagesLeft = Math.max(0, (caps.messages ?? 30) - dailyLimits.messagesSent);
   const swipesLeft = Math.max(0, caps.swipes - dailyLimits.swipesUsed);
   const hasActivity = messagesLeft < (caps.messages ?? 30) || swipesLeft < caps.swipes || unreadCount > 0 || cheekyChatUnread > 0;
