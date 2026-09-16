@@ -40,6 +40,8 @@ export interface TierCaps {
   messages: number | null;
   /** New conversations per day — always capped, per the mission guardrails. */
   people: number;
+  /** Swipes per day (15/30/50/100). */
+  swipes: number;
   /** L³ trios per day (4/8/12/20). */
   l3: number | null;
   /** Matchmaker plays per day (3/5/8/12). */
@@ -56,6 +58,7 @@ export const TIER_CAPS: Record<TierName, TierCaps> = {
   silver: {
     messages: 30,
     people: 5,
+    swipes: 15,
     l3: 4,
     plays: 3,
     blindDate: 0,
@@ -65,6 +68,7 @@ export const TIER_CAPS: Record<TierName, TierCaps> = {
   gold: {
     messages: 75,
     people: 15,
+    swipes: 30,
     l3: 8,
     plays: 5,
     blindDate: 2,
@@ -74,6 +78,7 @@ export const TIER_CAPS: Record<TierName, TierCaps> = {
   platinum: {
     messages: null,
     people: 40,
+    swipes: 50,
     l3: 12,
     plays: 8,
     blindDate: 2,
@@ -83,6 +88,7 @@ export const TIER_CAPS: Record<TierName, TierCaps> = {
   diamond: {
     messages: null,
     people: 100,
+    swipes: 100,
     l3: 20,
     plays: 12,
     blindDate: 2,
