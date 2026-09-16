@@ -81,7 +81,8 @@ export async function GET() {
           unlimited = caps.messages === null;
           break;
         case 'swipes':
-          count = row.swipes_today;
+          count = left(caps.swipes, row.swipes_today);
+          unlimited = caps.swipes === null;
           break;
         case 'l3':
           count = left(caps.l3, row.l3_trios_used_today);
