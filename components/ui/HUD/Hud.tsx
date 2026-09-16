@@ -57,9 +57,9 @@ export default function Hud() {
   const unreadCount = alerts.filter((a) => !a.read).length;
   const caps = TIER_CAPS[tier] ?? TIER_CAPS.silver;
   // Diamond = Infinity messages, so don't subtract from Infinity
-  const messagesLeft = caps.messages === Infinity ? Infinity : Math.max(0, caps.messages - dailyLimits.messagesSent);
+  const messagesLeft = (caps.messages ?? Infinity) === Infinity ? Infinity : Math.max(0, caps.messages! - dailyLimits.messagesSent);
   const swipesLeft = Math.max(0, caps.swipes - dailyLimits.swipesUsed);
-  const hasActivity = messagesLeft !== Infinity && messagesLeft < caps.messages || swipesLeft < caps.swipes || unreadCount > 0 || cheekyChatUnread > 0;
+  const hasActivity = messagesLeft !== Infinity && messagesLeft < (caps.messages ?? Infinity) || swipesLeft < caps.swipes || unreadCount > 0 || cheekyChatUnread > 0;
 
   const recentActivity = alerts.slice(0, 3).map((a) => ({
     type: a.type,
