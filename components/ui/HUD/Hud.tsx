@@ -47,9 +47,11 @@ export default function Hud() {
   ];
   if (sitePages.includes(pathname) || pathname.startsWith('/api')) return null;
 
-  // Sync real data from API on mount
+  // Sync real data from API on mount AND every 60s
   useEffect(() => {
     useHudStore.getState().syncHudData();
+    const interval = setInterval(() => useHudStore.getState().syncHudData(), 60000);
+    return () => clearInterval(interval);
   }, []);
 
   const unreadCount = alerts.filter((a) => !a.read).length;
