@@ -39,6 +39,13 @@ export default function Hud() {
     dailyLimits, wallet, inventory, alerts, cheekyChatUnread,
   } = useHudStore();
 
+  // Sync real data from API on mount AND every 60s — MUST be before any early return
+  useEffect(() => {
+    useHudStore.getState().syncHudData();
+    const interval = setInterval(() => useHudStore.getState().syncHudData(), 60000);
+    return () => clearInterval(interval);
+  }, []);
+
   // All hooks above — site-page guard goes after everything
   const sitePages = [
     '/', '/signin', '/verify', '/terms', '/privacy',
@@ -46,13 +53,6 @@ export default function Hud() {
     '/law-enforcement', '/sitemap', '/contact', '/owner', '/pricing'
   ];
   if (sitePages.includes(pathname) || pathname.startsWith('/api')) return null;
-
-  // Sync real data from API on mount AND every 60s
-  useEffect(() => {
-    useHudStore.getState().syncHudData();
-    const interval = setInterval(() => useHudStore.getState().syncHudData(), 60000);
-    return () => clearInterval(interval);
-  }, []);
 
   const unreadCount = alerts.filter((a) => !a.read).length;
   const caps = TIER_CAPS[tier] ?? TIER_CAPS.silver;
