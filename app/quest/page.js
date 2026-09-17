@@ -826,7 +826,7 @@ function AccessoriesStep({ config, onUpdate, onBack, onNext }) {
   );
 }
 
-function GeneratingScreen({ step }) {
+function GeneratingScreen({ step, queueStatus }) {
   const messages = {
     generating: [
       'The Oracle is weaving your destiny…',
@@ -863,6 +863,11 @@ function GeneratingScreen({ step }) {
       <p className="text-gray-400 text-sm animate-pulse" style={{fontFamily:'var(--font-damion)',fontSize:'1.1rem'}}>
         {msgList[msgIdx]}
       </p>
+      {queueStatus && (
+        <p className="mt-4 text-amber-400 text-xs font-damion" style={{fontFamily:'var(--font-damion)'}}>
+          ⏳ {queueStatus}
+        </p>
+      )}
     </div>
   );
 }
@@ -991,6 +996,7 @@ export default function App() {
   const [isSaving, setIsSaving] = useState(false);
   const [savedId, setSavedId] = useState(null);
   const [error, setError] = useState(null);
+  const [queueStatus, setQueueStatus] = useState(null);
 
   const updateConfig = useCallback((updates) => setConfig(p=>({...p,...updates})), []);
 
@@ -1009,7 +1015,39 @@ export default function App() {
   const generatePortrait = useCallback(async (aiData=null) => {
     setIsGenerating(true);
     setError(null);
+    setQueueStatus(null);
     setStepName('generating');
+
+    // Retry helper for queue-full errors
+    const fetchWithRetry = async (url, options, maxRetries = 5) => {
+      let lastError = null;
+      for (let i = 0; i < maxRetries; i++) {
+        try {
+          const res = await fetch(url, options);
+          if (res.ok) return res;
+          const errText = await res.text().catch(() => '');
+          // Queue-full error — retry with backoff
+          if (res.status === 503 && (errText.includes('queue') || errText.includes('full'))) {
+            lastError = new Error(errText.slice(0, 200));
+            const delay = Math.min(2000 * Math.pow(2, i), 30000);
+            console.log(`[Quest] Queue full, retry ${i+1}/${maxRetries} in ${delay}ms`);
+            setQueueStatus(`Queue busy, waiting... (${i+1}/${maxRetries})`);
+            await new Promise(r => setTimeout(r, delay));
+            continue;
+          }
+          throw new Error(errText.slice(0, 300));
+        } catch (err) {
+          lastError = err;
+          if (!err.message?.includes('queue') || i === maxRetries - 1) throw err;
+          const delay = Math.min(2000 * Math.pow(2, i), 30000);
+          console.log(`[Quest] Queue full, retry ${i+1}/${maxRetries} in ${delay}ms`);
+          setQueueStatus(`Queue busy, waiting... (${i+1}/${maxRetries})`);
+          await new Promise(r => setTimeout(r, delay));
+        }
+      }
+      throw lastError;
+    };
+
     try {
       let body, headers;
       if (aiData) {
@@ -1023,15 +1061,16 @@ export default function App() {
         body = JSON.stringify({config});
         headers = {'Content-Type':'application/json'};
       }
-      const res = await fetch('/api/quest/generate', {method:'POST', headers, body});
+      const res = await fetchWithRetry('/api/quest/generate', {method:'POST', headers, body});
       const data = await res.json();
       if (!res.ok) throw new Error(data.message||data.error||'Generation failed');
       setGeneratedImage(data.imageUrl);
+      setQueueStatus(null); // Clear queue message on success
 
       // Auto-generate video animation from approved image
       setStepName('animating');
       try {
-        const videoRes = await fetch('/api/quest/animate', {
+        const videoRes = await fetchWithRetry('/api/quest/animate', {
           method: 'POST',
           headers: {'Content-Type':'application/json'},
           body: JSON.stringify({ imageUrl: data.imageUrl, duration: 4, resolution: '720p' }),
@@ -1047,6 +1086,7 @@ export default function App() {
       setStepName('final');
     } catch (err) {
       console.error('Generation error:', err);
+      setQueueStatus(null);
       setError(err.message);
       setStepName(path==='ai' ? 'ai' : 'style');
     } finally {
@@ -1150,8 +1190,8 @@ export default function App() {
                 {stepName==='outfit'&&<OutfitStep config={config} onUpdate={updateConfig} onBack={goBack} onNext={goNext}/>}
                 {stepName==='accessories'&&<AccessoriesStep config={config} onUpdate={updateConfig} onBack={goBack} onNext={goNext}/>}
                 {stepName==='ai'&&<AIInputStep onGenerate={generatePortrait} onBack={goBack} isGenerating={isGenerating}/>}
-                {stepName==='generating'&&<GeneratingScreen step="generating"/>}
-                {stepName==='animating'&&<GeneratingScreen step="animating"/>}
+                {stepName==='generating'&&<GeneratingScreen step="generating" queueStatus={queueStatus}/>}
+                {stepName==='animating'&&<GeneratingScreen step="animating" queueStatus={queueStatus}/>}
                 {stepName==='final'&&(
                   <FinalReviewScreen config={config} imageUrl={generatedImage} videoUrl={generatedVideo} rpgClassOverride={aiGenData?.rpgClass}
                     nameOverride={aiGenData?.name} onSave={saveAvatar} onRegenerate={handleRegenerate}

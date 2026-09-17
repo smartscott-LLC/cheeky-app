@@ -1,17 +1,9 @@
 import { NextResponse } from 'next/server';
-import OpenAI from 'openai';
 
-// ===== API Keys — priority order: TOKEN → ENTERPRISE → FREE → OpenRouter =====
+// ===== API Keys — priority order: TOKEN → ENTERPRISE → FREE =====
 const AGNES_TOKEN_KEY = process.env.AGNES_TOKEN_MODEL_API_KEY || '';
 const AGNES_ENTERPRISE_KEY = process.env.AGNES_ENTERPRISE_KEY || '';
 const AGNES_FREE_KEY = process.env.AGNES_FREE_API_KEY || '';
-const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY || '';
-
-const AI_MODEL = process.env.OPENROUTER_AI_MODEL || 'bytedance-seed/seedream-5-0-lite';
-
-const openai = OPENROUTER_KEY
-  ? new OpenAI({ apiKey: OPENROUTER_KEY, baseURL: process.env.OPENROUTER_URL || 'https://openrouter.ai/api/v1' })
-  : null;
 
 // ===== Prompt Builders =====
 function buildManualPrompt(config: Record<string, unknown>) {
@@ -120,7 +112,25 @@ Art direction (CRITICAL):
 - UNIQUE CHARACTER: this portrait must be one-of-a-kind, never seen before`;
 }
 
-// Agnes image API call with fallback chain
+// Retry helper with exponential backoff for queue-full errors
+async function withRetry<T>(fn: () => Promise<T>, maxRetries = 5): Promise<T> {
+  let lastError: any;
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (err: any) {
+      lastError = err;
+      const isQueueFull = err?.message?.includes('queue') || err?.status === 503;
+      if (!isQueueFull || i === maxRetries - 1) throw err;
+      const delay = Math.min(2000 * Math.pow(2, i), 30000);
+      console.log(`[Generate] Queue full, retry ${i+1}/${maxRetries} in ${delay}ms`);
+      await new Promise(r => setTimeout(r, delay));
+    }
+  }
+  throw lastError;
+}
+
+// Agnes image API call with fallback chain and queue retry
 async function tryAgnesImage(prompt: string, photoFile: File | null, freeKey: string, enterpriseKey: string, tokenKey: string) {
   const keys = [
     { key: tokenKey, label: 'token' },
@@ -130,48 +140,56 @@ async function tryAgnesImage(prompt: string, photoFile: File | null, freeKey: st
 
   for (const { key, label } of keys) {
     try {
-      const body: Record<string, unknown> = {
-        model: 'agnes-image-2.5-flash',
-        prompt,
-        size: '1K',
-        ratio: '1:1',
-      };
-
-      if (photoFile) {
-        const photoBuffer = await photoFile.arrayBuffer();
-        const photoBase64 = Buffer.from(photoBuffer).toString('base64');
-        body.extra_body = {
-          image: [`data:${photoFile.type};base64,${photoBase64}`],
-          response_format: 'url',
+      const result = await withRetry(async () => {
+        const body: Record<string, unknown> = {
+          model: 'agnes-image-2.5-flash',
+          prompt,
+          size: '1K',
+          ratio: '1:1',
         };
-      } else {
-        body.extra_body = { response_format: 'url' };
-      }
 
-      const resp = await fetch('https://apihub.agnes-ai.com/v1/images/generations', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${key}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
+        if (photoFile) {
+          const photoBuffer = await photoFile.arrayBuffer();
+          const photoBase64 = Buffer.from(photoBuffer).toString('base64');
+          body.extra_body = {
+            image: [`data:${photoFile.type};base64,${photoBase64}`],
+            response_format: 'url',
+          };
+        } else {
+          body.extra_body = { response_format: 'url' };
+        }
 
-      if (!resp.ok) {
-        const errText = await resp.text().catch(() => '');
-        console.log(`[Avatar] Agnes ${label} key failed (${resp.status}): ${errText.slice(0, 200)}`);
-        continue;
-      }
+        const resp = await fetch('https://apihub.agnes-ai.com/v1/images/generations', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${key}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        });
 
-      const data = await resp.json();
-      if (data.data?.[0]?.b64_json) {
-        return { data: [{ b64_json: data.data[0].b64_json }], provider: `Agnes(${label})` };
-      }
-      if (data.data?.[0]?.url) {
-        return { data: [{ url: data.data[0].url }], provider: `Agnes(${label})` };
-      }
+        if (!resp.ok) {
+          const errText = await resp.text().catch(() => '');
+          // Re-throw queue-full errors so retry logic handles them
+          if (resp.status === 503 && errText.includes('queue')) {
+            throw Object.assign(new Error(`Agnes ${label} queue full`), { status: 503 });
+          }
+          console.log(`[Avatar] Agnes ${label} failed (${resp.status}): ${errText.slice(0, 200)}`);
+          throw new Error(`Agnes ${label} failed: ${resp.status}`);
+        }
+
+        const data = await resp.json();
+        if (data.data?.[0]?.b64_json) {
+          return { data: [{ b64_json: data.data[0].b64_json }], provider: `Agnes(${label})` };
+        }
+        if (data.data?.[0]?.url) {
+          return { data: [{ url: data.data[0].url }], provider: `Agnes(${label})` };
+        }
+      }, 5);
+
+      if (result) return result;
     } catch (err) {
-      console.log(`[Avatar] Agnes ${label} exception:`, err);
+      console.log(`[Avatar] Agnes ${label} exception after retries:`, err);
     }
   }
   return null;
@@ -206,34 +224,13 @@ export async function POST(request: Request) {
       ? buildManualPrompt(config)
       : buildAIPrompt(description || 'A charming, attractive person ready for adventure');
 
-    // Try Agnes first (TOKEN → ENTERPRISE → FREE)
+    // Try Agnes (TOKEN → ENTERPRISE → FREE) with queue retry
     const agnesResult = await tryAgnesImage(prompt, photoFile, AGNES_TOKEN_KEY, AGNES_ENTERPRISE_KEY, AGNES_FREE_KEY);
-    if (agnesResult) {
-      const imageData = agnesResult.data[0] as any;
-      const externalUrl = imageData.url;
-      if (!externalUrl) throw new Error('No image URL in Agnes response');
-      return NextResponse.json({ success: true, imageUrl: externalUrl, provider: agnesResult.provider });
-    }
-
-    // Fall back to OpenRouter
-    if (!openai) throw new Error('No image generation provider configured');
-    try {
-      let openResult: any;
-      if (photoFile) {
-        openResult = await openai.images.edit({ model: AI_MODEL, image: photoFile, prompt, n: 1, quality: 'medium' });
-      } else {
-        openResult = await openai.images.generate({ model: AI_MODEL, prompt, n: 1, quality: 'high' });
-      }
-      const imageData = openResult?.data?.[0];
-      if (!imageData) throw new Error('No image data in OpenRouter response');
-      const externalUrl = imageData.b64_json
-        ? `data:image/png;base64,${imageData.b64_json}`
-        : (imageData as any).url;
-      if (!externalUrl) throw new Error('No image URL returned from OpenRouter');
-      return NextResponse.json({ success: true, imageUrl: externalUrl, provider: 'OpenRouter' });
-    } catch (orErr) {
-      throw new Error(`Both providers failed: Agnes(free+enterprise+token exhausted), OpenRouter(${orErr})`);
-    }
+    if (!agnesResult) throw new Error('Agnes generation failed — all keys exhausted or queued');
+    const imageData = agnesResult.data[0] as any;
+    const externalUrl = imageData.url;
+    if (!externalUrl) throw new Error('No image URL in Agnes response');
+    return NextResponse.json({ success: true, imageUrl: externalUrl, provider: agnesResult.provider });
   } catch (error) {
     console.error('Avatar generation error:', error);
     return NextResponse.json(

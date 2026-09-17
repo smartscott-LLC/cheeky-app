@@ -1,5 +1,23 @@
 import { NextResponse } from 'next/server';
 
+// Retry helper with exponential backoff for queue-full errors
+async function withRetry<T>(fn: () => Promise<T>, maxRetries = 5): Promise<T> {
+  let lastError: any;
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (err: any) {
+      lastError = err;
+      const isQueueFull = err?.message?.includes('queue') || err?.code === 'video_queue_full' || err?.status === 503;
+      if (!isQueueFull || i === maxRetries - 1) throw err;
+      const delay = Math.min(2000 * Math.pow(2, i), 30000);
+      console.log(`[Animate] Queue full, retry ${i+1}/${maxRetries} in ${delay}ms`);
+      await new Promise(r => setTimeout(r, delay));
+    }
+  }
+  throw lastError;
+}
+
 // ===== API Keys — priority order: FREE → ENTERPRISE → TOKEN =====
 const AGNES_FREE_KEY = process.env.AGNES_FREE_API_KEY || '';
 const AGNES_ENTERPRISE_KEY = process.env.AGNES_ENTERPRISE_KEY || '';
@@ -36,30 +54,39 @@ export async function POST(request: Request) {
     // Try each Agnes key in priority order
     for (const { key, label } of agnesKeys) {
       try {
-        const createResp = await fetch('https://apihub.agnes-ai.com/v1/videos', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${key}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: 'agnes-video-2.5-flash',
-            prompt: videoPrompt,
-            image: imageUrl,
-            seconds: duration,
-            mode: 'keyframe',
-            size: '720P',
-            aspect_ratio: '16:9',
-          }),
-        });
+        const createData = await withRetry(async () => {
+          const createResp = await fetch('https://apihub.agnes-ai.com/v1/videos', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${key}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              model: 'agnes-video-2.5-flash',
+              prompt: videoPrompt,
+              image: imageUrl,
+              seconds: duration,
+              mode: 'keyframe',
+              size: '720P',
+              aspect_ratio: '16:9',
+            }),
+          });
 
-        if (!createResp.ok) {
-          const errText = await createResp.text().catch(() => '');
-          console.log(`[Video] Agnes ${label} create failed (${createResp.status}): ${errText.slice(0, 200)}`);
-          continue;
-        }
+          if (!createResp.ok) {
+            const errText = await createResp.text().catch(() => '');
+            // Re-throw queue-full errors
+            if (createResp.status === 503 && errText.includes('queue')) {
+              throw Object.assign(new Error(`Agnes ${label} video queue full`), { code: 'video_queue_full' });
+            }
+            console.log(`[Video] Agnes ${label} create failed (${createResp.status}): ${errText.slice(0, 200)}`);
+            throw new Error(`Agnes ${label} create failed: ${createResp.status}`);
+          }
 
-        const createData = await createResp.json();
+          const data = await createResp.json();
+          if (!data.video_id && !data.id) throw new Error('No video_id in response');
+          return data;
+        }, 5);
+
         const videoId = createData.video_id || createData.id;
         if (!videoId) continue;
 
@@ -91,7 +118,7 @@ export async function POST(request: Request) {
 
         if (videoResult) break;
       } catch (agnesErr) {
-        console.log(`[Video] Agnes ${label} exception:`, agnesErr);
+        console.log(`[Video] Agnes ${label} exception after retries:`, agnesErr);
       }
     }
 
