@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
+import { uploadToSupabase } from '@/utils/supabase/storage';
 
 // ===== API Keys — priority order: FREE → ENTERPRISE → TOKEN → OpenRouter =====
 const AGNES_FREE_KEY = process.env.AGNES_FREE_API_KEY || '';
@@ -210,9 +211,12 @@ export async function POST(request: Request) {
     const agnesResult = await tryAgnesImage(prompt, photoFile, AGNES_FREE_KEY, AGNES_ENTERPRISE_KEY, AGNES_TOKEN_KEY);
     if (agnesResult) {
       const imageData = agnesResult.data[0] as any;
-      const imageUrl = imageData.url;
-      if (!imageUrl) throw new Error('No image URL in Agnes response');
-      return NextResponse.json({ success: true, imageUrl, provider: agnesResult.provider });
+      const externalUrl = imageData.url;
+      if (!externalUrl) throw new Error('No image URL in Agnes response');
+      // Upload to Supabase Storage
+      const fileId = crypto.randomUUID();
+      const supabaseUrl = await uploadToSupabase(externalUrl, `${fileId}.webp`);
+      return NextResponse.json({ success: true, imageUrl: supabaseUrl, provider: agnesResult.provider });
     }
 
     // Fall back to OpenRouter
@@ -226,11 +230,14 @@ export async function POST(request: Request) {
       }
       const imageData = openResult?.data?.[0];
       if (!imageData) throw new Error('No image data in OpenRouter response');
-      const imageUrl = imageData.b64_json
+      const externalUrl = imageData.b64_json
         ? `data:image/png;base64,${imageData.b64_json}`
         : (imageData as any).url;
-      if (!imageUrl) throw new Error('No image URL returned from OpenRouter');
-      return NextResponse.json({ success: true, imageUrl, provider: 'OpenRouter' });
+      if (!externalUrl) throw new Error('No image URL returned from OpenRouter');
+      // Upload to Supabase Storage
+      const fileId = crypto.randomUUID();
+      const supabaseUrl = await uploadToSupabase(externalUrl, `${fileId}.webp`);
+      return NextResponse.json({ success: true, imageUrl: supabaseUrl, provider: 'OpenRouter' });
     } catch (orErr) {
       throw new Error(`Both providers failed: Agnes(free+enterprise+token exhausted), OpenRouter(${orErr})`);
     }
