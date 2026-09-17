@@ -127,8 +127,8 @@ export async function updateManifestField(
   value: string
 ): Promise<QuestManifest> {
   const manifest = await loadUserManifest(userId);
-  (manifest as Record<string, unknown>)[field] = value;
+  (manifest as any)[field] = value;
   manifest.updatedAt = new Date().toISOString();
-  await writeJsonToStorage(userId, manifest);
+  await writeJsonToStorage(userId, manifest as any);
   return manifest;
 }
