@@ -9,11 +9,12 @@ let _client: MemoryClient | null = null;
 
 export function getMem0Client(): MemoryClient {
   if (!_client) {
-    const config: Record<string, unknown> = { apiKey: MEM0_API_KEY };
-    if (MEM0_ORG_ID) config.org_id = MEM0_ORG_ID;
-    if (MEM0_PROJECT_ID) config.project_id = MEM0_PROJECT_ID;
-    if (MEM0_BASE_URL) config.base_url = MEM0_BASE_URL;
-    _client = new MemoryClient(config as Parameters<typeof MemoryClient>[0]);
+    _client = new MemoryClient({
+      apiKey: MEM0_API_KEY,
+      ...(MEM0_ORG_ID ? { org_id: MEM0_ORG_ID } : {}),
+      ...(MEM0_PROJECT_ID ? { project_id: MEM0_PROJECT_ID } : {}),
+      ...(MEM0_BASE_URL ? { base_url: MEM0_BASE_URL } : {}),
+    } as any);
   }
   return _client;
 }
