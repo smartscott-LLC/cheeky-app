@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { updateManifestField, uploadToUserFolder } from '@/utils/quest-storage';
+import {
+  uploadAsset,
+  setAvatar,
+  setAvatarMeta,
+  getManifest,
+} from '@/utils/quest-storage';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -32,23 +37,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
-    // Download image and upload to user's folder
+    // Download image and upload to user's manifest folder
     const imgRes = await fetch(imageUrl);
     if (!imgRes.ok) throw new Error('Failed to download image');
     const imgBuffer = await imgRes.arrayBuffer();
     const imgMimeType = imgRes.headers.get('content-type') || 'image/png';
-    
-    const savedImageUrl = await uploadToUserFolder(
-      userId,
-      'avatar.png',
-      imgBuffer,
-      imgMimeType
-    );
 
-    // Update user manifest
-    await updateManifestField(userId, 'avatar', savedImageUrl);
+    const savedImageUrl = await uploadAsset(userId, 'avatar.png', imgBuffer, imgMimeType);
 
-    // Save to DB
+    // Update manifest
+    await setAvatar(userId, 'image', savedImageUrl);
+    await setAvatarMeta(userId, { name, rpgClass, generationType, config });
+
+    // Also save to avatars table for queryability
     const id = crypto.randomUUID();
     const avatarDoc = {
       id,
@@ -73,10 +74,18 @@ export async function POST(request: Request) {
 
     if (!res.ok) {
       const err = await res.text();
-      throw new Error(`Supabase save failed: ${err}`);
+      console.error('DB save failed:', err);
     }
 
-    return NextResponse.json({ success: true, id, name: avatarDoc.name, imageUrl: savedImageUrl });
+    // Fetch updated manifest to return
+    const manifest = await getManifest(userId);
+
+    return NextResponse.json({
+      success: true,
+      id,
+      name: avatarDoc.name,
+      manifestUrl: manifest.userId, // client can refetch
+    });
   } catch (error) {
     console.error('Save avatar error:', error);
     return NextResponse.json(

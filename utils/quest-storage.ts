@@ -4,32 +4,74 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.en
 const BUCKET = 'quest-avatars';
 
 /**
- * Build the full storage URL for a user asset.
+ * Full user manifest — one source of truth for all user assets.
+ * Everything lives here: bio, pics, avatars, inventory, quest data.
  */
-export function userAssetUrl(userId: string, filename: string): string {
+export interface QuestAsset {
+  url: string;
+  mimeType?: string;
+  sizeBytes?: number;
+  uploadedAt?: string;
+  tags?: string[];
+}
+
+export interface QuestManifest {
+  userId: string;
+  
+  // Profile
+  name?: string;
+  bio?: string;
+  gender?: 'male' | 'female' | 'other';
+  
+  // Photos (profile pics, etc.)
+  photos: Record<string, QuestAsset>;
+  
+  // Quest avatar pipeline
+  avatarPhoto?: QuestAsset;      // uploaded reference photo
+  avatarImage?: QuestAsset;      // generated portrait
+  avatarVideo?: QuestAsset;      // 360° spin video
+  avatarModel?: QuestAsset;      // 3D model (.glb)
+  avatarMeta?: {
+    name?: string;
+    rpgClass?: string;
+    generationType?: 'manual' | 'ai';
+    config?: Record<string, unknown>;
+  };
+  
+  // Inventory & collectibles
+  inventory: Record<string, QuestAsset>;
+  
+  // Metadata
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Build the storage URL for any user asset. */
+export function assetUrl(userId: string, filename: string): string {
   return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${userId}/${filename}`;
 }
 
-/**
- * Build the manifest URL for a user.
- */
-export function userManifestUrl(userId: string): string {
+/** Build the manifest URL for a user. */
+export function manifestUrl(userId: string): string {
   return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${userId}/manifest.json`;
 }
 
-/**
- * Upload a file to Supabase Storage in a user's folder.
- */
-export async function uploadToUserFolder(
+/** Download a remote file and return as ArrayBuffer. */
+export async function downloadBuffer(url: string): Promise<ArrayBuffer> {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Download failed: ${res.status} ${url}`);
+  return res.arrayBuffer();
+}
+
+/** Upload a buffer to a user's folder in Supabase Storage. */
+export async function uploadAsset(
   userId: string,
   filename: string,
   buffer: ArrayBuffer,
   mimeType: string
 ): Promise<string> {
-  const path = `${userId}/${filename}`;
-  
   const res = await fetch(
-    `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`,
+    `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${userId}/${filename}`,
     {
       method: 'POST',
       headers: {
@@ -41,36 +83,40 @@ export async function uploadToUserFolder(
       body: buffer,
     }
   );
-
   if (!res.ok) {
     const err = await res.text();
     throw new Error(`Upload failed: ${err}`);
   }
-
-  return userAssetUrl(userId, filename);
+  return assetUrl(userId, filename);
 }
 
-/**
- * Read a JSON file from Supabase Storage.
- */
-export async function readJsonFromStorage<T>(url: string): Promise<T | null> {
+/** Read JSON from a user's manifest in storage. */
+export async function loadManifest(userId: string): Promise<QuestManifest> {
   try {
-    const res = await fetch(url);
-    if (!res.ok) return null;
-    return res.json() as Promise<T>;
-  } catch {
-    return null;
-  }
+    const res = await fetch(manifestUrl(userId));
+    if (res.ok) {
+      const data = await res.json() as QuestManifest;
+      if (data.userId) return data;
+    }
+  } catch {}
+  
+  // Create fresh manifest
+  const now = new Date().toISOString();
+  const fresh: QuestManifest = {
+    userId,
+    photos: {},
+    inventory: {},
+    createdAt: now,
+    updatedAt: now,
+  };
+  await saveManifest(userId, fresh);
+  return fresh;
 }
 
-/**
- * Write a JSON file to Supabase Storage.
- */
-export async function writeJsonToStorage(
-  userId: string,
-  data: Record<string, unknown>
-): Promise<void> {
-  const buffer = new TextEncoder().encode(JSON.stringify(data, null, 2));
+/** Write the full manifest back to storage. */
+export async function saveManifest(userId: string, manifest: QuestManifest): Promise<void> {
+  manifest.updatedAt = new Date().toISOString();
+  const buffer = new TextEncoder().encode(JSON.stringify(manifest, null, 2));
   
   const res = await fetch(
     `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${userId}/manifest.json`,
@@ -85,50 +131,97 @@ export async function writeJsonToStorage(
       body: buffer,
     }
   );
-
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`Manifest write failed: ${err}`);
+    throw new Error(`Manifest save failed: ${err}`);
   }
 }
 
-/**
- * Load or create a user manifest.
- */
-export interface QuestManifest {
-  userId: string;
-  photo?: string;
-  avatar?: string;
-  video?: string;
-  model3d?: string;
-  createdAt: string;
-  updatedAt: string;
+/** Get a single asset from the manifest. */
+export async function getAsset(userId: string, key: string): Promise<QuestAsset | null> {
+  const manifest = await loadManifest(userId);
+  return manifest.photos[key] || manifest.inventory[key] || null;
 }
 
-export async function loadUserManifest(userId: string): Promise<QuestManifest> {
-  const existing = await readJsonFromStorage<QuestManifest>(userManifestUrl(userId));
-  if (existing) return existing;
-  
-  const newManifest: QuestManifest = {
-    userId,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-  await writeJsonToStorage(userId, newManifest as any);
-  return newManifest;
-}
-
-/**
- * Update a field in the user manifest.
- */
-export async function updateManifestField(
+/** Add/update a photo in the manifest. */
+export async function setPhoto(
   userId: string,
-  field: keyof QuestManifest,
-  value: string
+  key: string,
+  url: string,
+  meta: Partial<QuestAsset> = {}
 ): Promise<QuestManifest> {
-  const manifest = await loadUserManifest(userId);
-  (manifest as any)[field] = value;
-  manifest.updatedAt = new Date().toISOString();
-  await writeJsonToStorage(userId, manifest as any);
+  const manifest = await loadManifest(userId);
+  manifest.photos[key] = {
+    url,
+    uploadedAt: new Date().toISOString(),
+    ...meta,
+  };
+  await saveManifest(userId, manifest);
   return manifest;
+}
+
+/** Add/update an inventory item in the manifest. */
+export async function setInventory(
+  userId: string,
+  key: string,
+  url: string,
+  meta: Partial<QuestAsset> = {}
+): Promise<QuestManifest> {
+  const manifest = await loadManifest(userId);
+  manifest.inventory[key] = {
+    url,
+    uploadedAt: new Date().toISOString(),
+    ...meta,
+  };
+  await saveManifest(userId, manifest);
+  return manifest;
+}
+
+/** Set quest avatar pipeline state. */
+export async function setAvatar(
+  userId: string,
+  stage: 'photo' | 'image' | 'video' | 'model',
+  url: string,
+  meta?: Partial<QuestAsset>
+): Promise<QuestManifest> {
+  const manifest = await loadManifest(userId);
+  const field = stage === 'photo' ? 'avatarPhoto'
+              : stage === 'image' ? 'avatarImage'
+              : stage === 'video' ? 'avatarVideo'
+              : 'avatarModel';
+  (manifest as any)[field] = {
+    url,
+    mimeType: meta?.mimeType,
+    uploadedAt: new Date().toISOString(),
+    tags: meta?.tags,
+  };
+  await saveManifest(userId, manifest);
+  return manifest;
+}
+
+/** Update quest avatar metadata (name, class, config). */
+export async function setAvatarMeta(
+  userId: string,
+  meta: QuestManifest['avatarMeta']
+): Promise<QuestManifest> {
+  const manifest = await loadManifest(userId);
+  manifest.avatarMeta = { ...manifest.avatarMeta, ...meta };
+  await saveManifest(userId, manifest);
+  return manifest;
+}
+
+/** Update profile fields. */
+export async function setProfile(
+  userId: string,
+  updates: Partial<Pick<QuestManifest, 'name' | 'bio' | 'gender'>>
+): Promise<QuestManifest> {
+  const manifest = await loadManifest(userId);
+  Object.assign(manifest, updates);
+  await saveManifest(userId, manifest);
+  return manifest;
+}
+
+/** Fetch a user's full manifest (for HUD, profile, etc.). */
+export async function getManifest(userId: string): Promise<QuestManifest> {
+  return loadManifest(userId);
 }
