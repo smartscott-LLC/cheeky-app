@@ -81,7 +81,7 @@ ${nameStr ? `- Hero name: ${nameStr}` : ''}
 
 Art direction (CRITICAL):
 - Pixar/Disney 3D animated film quality — smooth luminous skin, expressive sparkling eyes, vibrant saturated colors
-- Head and shoulders portrait, face perfectly centered and lit, heroic stance
+- Full body portrait, character centered and fully visible from head to toe
 - Cinematic lighting: warm golden rim light + soft cyan fill light = magical glow
 - Deep purple/navy bokeh background with floating magical particles
 - Rich jewel-tone colors, ultra high detail
@@ -97,12 +97,13 @@ Character description: "${description}"
 
 Art direction (CRITICAL):
 - Pixar/Disney 3D animated film quality — smooth luminous skin, expressive sparkling eyes
-- Head and shoulders portrait, face perfectly centered
+- Full body portrait, character centered and fully visible from head to toe
 - Cinematic lighting: warm golden rim light + soft cyan fill light
 - Deep purple bokeh background with magical floating particles
 - Rich jewel-tone colors, ultra high detail, vibrant
 - Warm confident charming expression — a hero seeking love
 - No text, no watermarks, no logos, single character, 4K quality
+- UNIQUE CHARACTER: this portrait must be one-of-a-kind, never seen before`;
 - UNIQUE CHARACTER: this portrait must be one-of-a-kind, never seen before`;
 }
 
