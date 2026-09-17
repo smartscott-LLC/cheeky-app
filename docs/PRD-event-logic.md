@@ -17,12 +17,12 @@ Club Cheeky plays **defense**: instead of fighting the ratio, we **design events
 
 ## 1. The lineup — one event per floor
 
-| Floor | Event | Time | Token cost | Round type |
-|---|---|---|---|---|
-| Silver (free) | **The Dance Floor** | :00 | 3 | 2-min grid, one round |
-| Gold | **Blind Date** | :15 · host-driven | TBD (proposal: 15) | Grid engine — questions, marks, most-marks wins |
-| Platinum | **Speed Dating** | :30 | 25 | Rotating 1:1s → ranked selection |
-| Diamond | **The Rooftop** | :45 | 40 | Multi-round pool, fast rounds |
+| Floor         | Event               | Time              | Token cost         | Round type                                      |
+| ------------- | ------------------- | ----------------- | ------------------ | ----------------------------------------------- |
+| Silver (free) | **The Dance Floor** | :00               | 3                  | 2-min grid, one round                           |
+| Gold          | **Blind Date**      | :15 · host-driven | TBD (proposal: 15) | Grid engine — questions, marks, most-marks wins |
+| Platinum      | **Speed Dating**    | :30               | 25                 | Rotating 1:1s → ranked selection                |
+| Diamond       | **The Rooftop**     | :45               | 40                 | Multi-round pool, fast rounds                   |
 
 **Themed Night is retired.** It was the Dance Floor with a different skin — the skin/theme concept stays (rooms keep their vibe and palette), but the Gold slot is now Blind Date, the first of the founder's new event family.
 
@@ -38,10 +38,12 @@ Club Cheeky plays **defense**: instead of fighting the ratio, we **design events
 **What it is:** one chooser on one side, up to 5 suitors on the other. She's deciding on **personality only** — she sees the suitors' photos **blurred**; they see her normally. The gender-defense event: several men in the room, one woman, and it feels like a fair game — not a sausage fest.
 
 **The engine:** Blind Date **rides the grid engine**. Same rounds, same selection — two small mechanic tweaks instead of auto-match:
+
 1. **A question component during the round** — the chooser asks a question; the suitors answer; her answer-pick for that round IS her selection.
 2. **Marks instead of instant rooms** — selecting someone does NOT open the private room; it gives them a **mark**. The match is whoever has the most marks **over several rounds** (not one mutual click).
 
 **The flow:**
+
 1. **Entry** — suitors pay the entry ticket for a chance. The chooser plays free — she's the one who decides, and she leaves with a match.
 2. **Who hosts — always a real member. Never bots.** The room runs when a real woman opts in to host; the suitor side then fills. Demand-driven: a woman can host whenever — there can be multiples in a day. No AI/crew seats, ever — we're playing to the real percentages.
 3. **The room** — suitors don't see the chooser until they're **in-game** (no preview outside the room). In-game: she sees their faces blurred, they see her normally.
@@ -60,6 +62,7 @@ Club Cheeky plays **defense**: instead of fighting the ratio, we **design events
 **What you're buying:** the chance to sit down with up to 5 people you could never message outside the game (messaging requires a match — you can't cold-message).
 
 **The round:**
+
 1. Groups of up to 6, sorted by orientation preference.
 2. **Rotating 1:1 sessions, 90 seconds each.** 5v5 → 7.5 minutes of continuous rotation.
 3. At the end, **rank everyone you met, full order: 1 = most wanted … 5 = least wanted** (not top-plus-alternate).
@@ -67,6 +70,7 @@ Club Cheeky plays **defense**: instead of fighting the ratio, we **design events
 5. **The economics: everybody (almost) always gets matched.** Even the last-ranked member is someone's last pick. "If you're not 5, you're 1." The 25 is essentially always spent.
 
 **The money:**
+
 - The 25 is **held** as insurance through the event (protects against mid-game failure / disconnects).
 - It **charges after the selection round resolves** — held through the rotation AND the selections.
 - **No refunds.** A member may exit and not date anyone — the charge stands. No "pay 25, exit, repeat."
@@ -97,12 +101,12 @@ Not a reskin of the Dance Floor:
 
 Every paid membership comes with tokens, **every cycle** — this is what makes the free floors survivable AND juices the first week:
 
-| Membership | Price | Tokens per cycle | ≈ value at pack pricing |
-|---|---|---|---|
-| Silver (free) | $0 | 20 (at verification, existing) | — |
-| Gold | $9.99 | **100** | ~$4.99 |
-| Platinum | $19.99 | **200** | ~$9.98 |
-| Diamond | $29.99 | **500** | ~$24.95 |
+| Membership    | Price  | Tokens per cycle               | ≈ value at pack pricing |
+| ------------- | ------ | ------------------------------ | ----------------------- |
+| Silver (free) | $0     | 20 (at verification, existing) | —                       |
+| Gold          | $9.99  | **100**                        | ~$4.99                  |
+| Platinum      | $19.99 | **200**                        | ~$9.98                  |
+| Diamond       | $29.99 | **500**                        | ~$24.95                 |
 
 - **The point:** 100 tokens = one big event a week (25/week). Fair and reasonable.
 - **Diamond becomes the deal that can't be ignored** — 500 tokens ≈ $24.95 of value on a $29.99 membership.

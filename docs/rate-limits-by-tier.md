@@ -6,71 +6,71 @@ Sources: `utils/taskbar.ts` (`TIER_CAPS`), `utils/rate-limit.ts` (`RATE_LIMIT_ER
 ## Messaging (send_message RPC)
 
 | Tier     | Messages / day | New people / day |
-|----------|---------------|------------------|
-| Silver   | 30            | 5                |
-| Gold     | 75            | 15               |
-| Platinum | ∞ (unlimited) | 40               |
-| Diamond  | ∞ (unlimited) | 100              |
+| -------- | -------------- | ---------------- |
+| Silver   | 30             | 5                |
+| Gold     | 75             | 15               |
+| Platinum | ∞ (unlimited)  | 40               |
+| Diamond  | ∞ (unlimited)  | 100              |
 
 Enforced by: `send_message` RPC + `taskbar_state` RPC counters.
 
 ## Swipes (SPARX — likeUser action)
 
 | Tier     | Swipes / day |
-|----------|-------------|
-| Silver   | 15          |
-| Gold     | 30          |
-| Platinum | 50          |
-| Diamond  | 100         |
+| -------- | ------------ |
+| Silver   | 15           |
+| Gold     | 30           |
+| Platinum | 50           |
+| Diamond  | 100          |
 
 Enforced by: `bump_rate_limit` RPC with key `swipes:{user_id}:cst`. Error name: `daily_swipes_limit`.
 
 ## L³ (L³Trio — selectTrio action)
 
 | Tier     | Trios / day |
-|----------|------------|
-| Silver   | 2          |
-| Gold     | 3          |
-| Platinum | 4          |
-| Diamond  | 5          |
+| -------- | ----------- |
+| Silver   | 2           |
+| Gold     | 3           |
+| Platinum | 4           |
+| Diamond  | 5           |
 
 Enforced by: `bump_rate_limit` RPC with key `l3:{user_id}:cst`. Error names: `daily_trios_limit`, `daily_l3_limit`.
 
 ## Matchmaker (MatchmakerBoard — playMatchmaker action)
 
 | Tier     | Plays / day |
-|----------|------------|
-| Silver   | 2          |
-| Gold     | 3          |
-| Platinum | 4          |
-| Diamond  | 5          |
+| -------- | ----------- |
+| Silver   | 2           |
+| Gold     | 3           |
+| Platinum | 4           |
+| Diamond  | 5           |
 
 Enforced by: `bump_rate_limit` RPC with key `matchmaker:{user_id}:cst`. Error name: `daily_plays_limit`.
 
 ## Blind Date (join_blind_date action)
 
 | Tier     | Joins / day |
-|----------|------------|
-| Silver   | 0          |
-| Gold     | 2          |
-| Platinum | 2          |
-| Diamond  | 2          |
+| -------- | ----------- |
+| Silver   | 0           |
+| Gold     | 2           |
+| Platinum | 2           |
+| Diamond  | 2           |
 
 Enforced by: `join_blind_date` RPC (tier-gated). Error name: `daily_blind_limit`.
 
 ## Lounge Horn (blowHorn — chub app)
 
-| Tier     | Cooldown    |
-|----------|------------|
-| All tiers| 1 per hour |
+| Tier      | Cooldown   |
+| --------- | ---------- |
+| All tiers | 1 per hour |
 
 Enforced by: `bump_rate_limit` RPC with key `horn:{user_id}`. Error name: `horn_cooldown`.
 
 ## Gifts (send_gift RPC)
 
-| Tier     | Send window |
-|----------|------------|
-| All tiers| 1 per hour |
+| Tier      | Send window |
+| --------- | ----------- |
+| All tiers | 1 per hour  |
 
 Enforced by: `send_gift` RPC cooldown. Not rate-limited by daily cap — hourly cooldown only.
 

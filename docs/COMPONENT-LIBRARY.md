@@ -35,14 +35,14 @@ the database directly.
 
 ### Shell & navigation
 
-| Component                | What it is                                                                                 |
-| ------------------------ | ------------------------------------------------------------------------------------------ |
-| `ui/Navbar/`             | The marquee — logo, centered links, Enter-the-club/Lobby switch, account, swag, sign-out   |
-| `ui/PWA/`                | `ServiceWorkerRegister` (offline shell for the Android wrapper)                            |
-| `ui/Audio/`              | `ClubAudio` — the house DJ (synthesized fallback + the founder's tracks, crossfaded)                                |
-| `utils/audio/dj.ts`      | The in-house DJ (procedural loop + announcer voice + MP3 tracks with smooth crossfades) — starts on match/pick, stops on exit |
+| Component                | What it is                                                                                                                                                                                                                                                                                                                                                                              |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ui/Navbar/`             | The marquee — logo, centered links, Enter-the-club/Lobby switch, account, swag, sign-out                                                                                                                                                                                                                                                                                                |
+| `ui/PWA/`                | `ServiceWorkerRegister` (offline shell for the Android wrapper)                                                                                                                                                                                                                                                                                                                         |
+| `ui/Audio/`              | `ClubAudio` — the house DJ (synthesized fallback + the founder's tracks, crossfaded)                                                                                                                                                                                                                                                                                                    |
+| `utils/audio/dj.ts`      | The in-house DJ (procedural loop + announcer voice + MP3 tracks with smooth crossfades) — starts on match/pick, stops on exit                                                                                                                                                                                                                                                           |
 | `ui/ClubChat/`           | The Cheeky Lounge — the always-available chat overlay: `ClubChat` (floating button, draggable panel, five rooms with the dimmed climb, realtime + presence, the Horn), `ClubChatMenu` (right-click/long-press: go private · whisper · mute · block · report · gift), `ClubChatWhisper` (ephemeral pair rooms), `LoungePrefs` (the invites/gifts privacy toggles, mounted on `/account`) |
-| `ui/AnnouncementBanner/` | The floor marquee — ticker/roll/fade, fed from the `announcements` table via the Lions Den |
+| `ui/AnnouncementBanner/` | The floor marquee — ticker/roll/fade, fed from the `announcements` table via the Lions Den                                                                                                                                                                                                                                                                                              |
 
 ### Identity & account
 
@@ -54,13 +54,13 @@ the database directly.
 
 ### The club & events
 
-| Component       | What it is                                                                                                          |
-| --------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `ui/Club/`      | `FloorLayout` — the shared room scene (art backdrop + positioned room spots); lobby + every floor render through it |
-| `ui/Events/`    | `EventFloor` (grid room + song phase), `SpeedDatingFloor` (rotation/certificates), `MatchedOverlay`                 |
-| `ui/DateNight/` | Couple Trivia — the mutual-tap game in matched chats                                                                |
+| Component       | What it is                                                                                                                                                                                                                                                                                                                                                                        |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ui/Club/`      | `FloorLayout` — the shared room scene (art backdrop + positioned room spots); lobby + every floor render through it                                                                                                                                                                                                                                                               |
+| `ui/Events/`    | `EventFloor` (grid room + song phase), `SpeedDatingFloor` (rotation/certificates), `MatchedOverlay`                                                                                                                                                                                                                                                                               |
+| `ui/DateNight/` | Couple Trivia — the mutual-tap game in matched chats                                                                                                                                                                                                                                                                                                                              |
 | `ui/Browse/`    | The spark hub: `SparkLab` (mode tabs), `BrowseCard` (the 1-for-1 Swipes card — like/wave, match overlay), `L3Trio` (Leave · Like · Love), and the Matchmaker suite — `Matchmaker` (the room: incoming unlocks + board orchestration), `MatchmakerDraft` (phase-1 picks), `MatchmakerBoard` (the 4×4 board + flip/unlock), `MatchmakerHistory` (results + the decline consolation) |
-| `ui/Messages/`  | `MessageThread` — Cheeky Chats: composer, report/block, waves, Date Night, song mode                                |
+| `ui/Messages/`  | `MessageThread` — Cheeky Chats: composer, report/block, waves, Date Night, song mode                                                                                                                                                                                                                                                                                              |
 
 ### Cast & commerce
 

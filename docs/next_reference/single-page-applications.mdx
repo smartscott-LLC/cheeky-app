@@ -49,11 +49,11 @@ When a Client Component needs focus revalidation, polling, mutations, or request
 Start the request in a Server Component (here, the root layout) without awaiting it, and pass the Promise to the provider:
 
 ```tsx filename="app/layout.tsx" switcher
-import { UserProvider } from './user-provider'
-import { getUser } from './user' // some server-side function
+import { UserProvider } from './user-provider';
+import { getUser } from './user'; // some server-side function
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
-  let userPromise = getUser() // do NOT await
+  let userPromise = getUser(); // do NOT await
 
   return (
     <html lang="en">
@@ -61,16 +61,16 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <UserProvider userPromise={userPromise}>{children}</UserProvider>
       </body>
     </html>
-  )
+  );
 }
 ```
 
 ```jsx filename="app/layout.js" switcher
-import { UserProvider } from './user-provider'
-import { getUser } from './user' // some server-side function
+import { UserProvider } from './user-provider';
+import { getUser } from './user'; // some server-side function
 
 export default function RootLayout({ children }) {
-  let userPromise = getUser() // do NOT await
+  let userPromise = getUser(); // do NOT await
 
   return (
     <html lang="en">
@@ -78,7 +78,7 @@ export default function RootLayout({ children }) {
         <UserProvider userPromise={userPromise}>{children}</UserProvider>
       </body>
     </html>
-  )
+  );
 }
 ```
 
@@ -89,112 +89,112 @@ If several components read the same data in one request, wrap `getUser` in React
 The provider forwards the Promise through context:
 
 ```tsx filename="app/user-provider.tsx" switcher
-'use client'
+'use client';
 
-import { createContext, useContext } from 'react'
+import { createContext, useContext } from 'react';
 
-type User = { id: string; name: string }
+type User = { id: string; name: string };
 
-const UserContext = createContext<Promise<User> | null>(null)
+const UserContext = createContext<Promise<User> | null>(null);
 
 export function useUser() {
-  const userPromise = useContext(UserContext)
+  const userPromise = useContext(UserContext);
   if (!userPromise) {
-    throw new Error('useUser must be used within a UserProvider')
+    throw new Error('useUser must be used within a UserProvider');
   }
-  return userPromise
+  return userPromise;
 }
 
 export function UserProvider({
   children,
-  userPromise,
+  userPromise
 }: {
-  children: React.ReactNode
-  userPromise: Promise<User>
+  children: React.ReactNode;
+  userPromise: Promise<User>;
 }) {
   return (
     <UserContext.Provider value={userPromise}>{children}</UserContext.Provider>
-  )
+  );
 }
 ```
 
 ```js filename="app/user-provider.js" switcher
-'use client'
+'use client';
 
-import { createContext, useContext } from 'react'
+import { createContext, useContext } from 'react';
 
-const UserContext = createContext(null)
+const UserContext = createContext(null);
 
 export function useUser() {
-  const userPromise = useContext(UserContext)
+  const userPromise = useContext(UserContext);
   if (!userPromise) {
-    throw new Error('useUser must be used within a UserProvider')
+    throw new Error('useUser must be used within a UserProvider');
   }
-  return userPromise
+  return userPromise;
 }
 
 export function UserProvider({ children, userPromise }) {
   return (
     <UserContext.Provider value={userPromise}>{children}</UserContext.Provider>
-  )
+  );
 }
 ```
 
 Finally, call the `useUser()` hook in any Client Component and unwrap the Promise with `use()`, which suspends the component until the data is ready:
 
 ```tsx filename="app/profile.tsx" switcher
-'use client'
+'use client';
 
-import { use } from 'react'
-import { useUser } from './user-provider'
+import { use } from 'react';
+import { useUser } from './user-provider';
 
 export function Profile() {
-  const userPromise = useUser()
-  const user = use(userPromise)
+  const userPromise = useUser();
+  const user = use(userPromise);
 
-  return <p>{user.name}</p>
+  return <p>{user.name}</p>;
 }
 ```
 
 ```jsx filename="app/profile.js" switcher
-'use client'
+'use client';
 
-import { use } from 'react'
-import { useUser } from './user-provider'
+import { use } from 'react';
+import { useUser } from './user-provider';
 
 export function Profile() {
-  const userPromise = useUser()
-  const user = use(userPromise)
+  const userPromise = useUser();
+  const user = use(userPromise);
 
-  return <p>{user.name}</p>
+  return <p>{user.name}</p>;
 }
 ```
 
 Wrap the consumer in a [`<Suspense>`](https://react.dev/reference/react/Suspense) boundary to show a fallback while the Promise resolves:
 
 ```tsx filename="app/page.tsx" switcher
-import { Suspense } from 'react'
-import { Profile } from './profile'
+import { Suspense } from 'react';
+import { Profile } from './profile';
 
 export default function Page() {
   return (
     <Suspense fallback={<p>Loading…</p>}>
       <Profile />
     </Suspense>
-  )
+  );
 }
 ```
 
 ```jsx filename="app/page.js" switcher
-import { Suspense } from 'react'
-import { Profile } from './profile'
+import { Suspense } from 'react';
+import { Profile } from './profile';
 
 export default function Page() {
   return (
     <Suspense fallback={<p>Loading…</p>}>
       <Profile />
     </Suspense>
-  )
+  );
 }
 ```
 
@@ -207,11 +207,11 @@ See the [live demo](https://next-spa-patterns.labs.vercel.dev/use-context) and i
 Client components are [prerendered](https://github.com/reactwg/server-components/discussions/4) during `next build`. If you want to disable prerendering for a Client Component and only load it in the browser environment, you can use [`next/dynamic`](/docs/app/guides/lazy-loading#nextdynamic):
 
 ```jsx
-import dynamic from 'next/dynamic'
+import dynamic from 'next/dynamic';
 
 const ClientOnlyComponent = dynamic(() => import('./component'), {
-  ssr: false,
-})
+  ssr: false
+});
 ```
 
 This can be useful for third-party libraries that rely on browser APIs like `window` or `document`. You can also add a `useEffect` that checks for the existence of these APIs, and if they do not exist, return `null` or a loading state which would be prerendered.
@@ -227,17 +227,17 @@ Next.js lets you use the native [`window.history.pushState`](https://developer.m
 The `pushState` and `replaceState` calls integrate into the Next.js Router, allowing you to sync with [`usePathname`](/docs/app/api-reference/functions/use-pathname) and [`useSearchParams`](/docs/app/api-reference/functions/use-search-params).
 
 ```tsx filename="app/ui/sort-products.tsx" switcher
-'use client'
+'use client';
 
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation';
 
 export default function SortProducts() {
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
 
   function updateSorting(sortOrder: string) {
-    const urlSearchParams = new URLSearchParams(searchParams.toString())
-    urlSearchParams.set('sort', sortOrder)
-    window.history.pushState(null, '', `?${urlSearchParams.toString()}`)
+    const urlSearchParams = new URLSearchParams(searchParams.toString());
+    urlSearchParams.set('sort', sortOrder);
+    window.history.pushState(null, '', `?${urlSearchParams.toString()}`);
   }
 
   return (
@@ -245,22 +245,22 @@ export default function SortProducts() {
       <button onClick={() => updateSorting('asc')}>Sort Ascending</button>
       <button onClick={() => updateSorting('desc')}>Sort Descending</button>
     </>
-  )
+  );
 }
 ```
 
 ```jsx filename="app/ui/sort-products.js" switcher
-'use client'
+'use client';
 
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation';
 
 export default function SortProducts() {
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
 
   function updateSorting(sortOrder) {
-    const urlSearchParams = new URLSearchParams(searchParams.toString())
-    urlSearchParams.set('sort', sortOrder)
-    window.history.pushState(null, '', `?${urlSearchParams.toString()}`)
+    const urlSearchParams = new URLSearchParams(searchParams.toString());
+    urlSearchParams.set('sort', sortOrder);
+    window.history.pushState(null, '', `?${urlSearchParams.toString()}`);
   }
 
   return (
@@ -268,7 +268,7 @@ export default function SortProducts() {
       <button onClick={() => updateSorting('asc')}>Sort Ascending</button>
       <button onClick={() => updateSorting('desc')}>Sort Descending</button>
     </>
-  )
+  );
 }
 ```
 
@@ -285,13 +285,13 @@ A Server Action takes time and can fail. React has useful tools to keep the UI r
 At its simplest, a Client Component calls a Server Action inside a transition and uses the pending state for feedback:
 
 ```tsx filename="app/delete-post.tsx" switcher
-'use client'
+'use client';
 
-import { useTransition } from 'react'
-import { deletePost } from './actions'
+import { useTransition } from 'react';
+import { deletePost } from './actions';
 
 export function DeletePost({ id }: { id: string }) {
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition();
 
   return (
     <button
@@ -300,18 +300,18 @@ export function DeletePost({ id }: { id: string }) {
     >
       {isPending ? 'Deleting…' : 'Delete'}
     </button>
-  )
+  );
 }
 ```
 
 ```jsx filename="app/delete-post.js" switcher
-'use client'
+'use client';
 
-import { useTransition } from 'react'
-import { deletePost } from './actions'
+import { useTransition } from 'react';
+import { deletePost } from './actions';
 
 export function DeletePost({ id }) {
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition();
 
   return (
     <button
@@ -320,37 +320,37 @@ export function DeletePost({ id }) {
     >
       {isPending ? 'Deleting…' : 'Delete'}
     </button>
-  )
+  );
 }
 ```
 
 For list-like state where each change should appear instantly, you can combine `useActionState` with `useOptimistic`. The example below is a to-do list: a pure reducer defines how each action changes the list, so the client and server share one copy of that logic:
 
 ```ts filename="app/todos-reducer.ts" switcher
-export type Todo = { id: string; text: string; done: boolean }
+export type Todo = { id: string; text: string; done: boolean };
 
 export type TodoAction =
   | { type: 'add'; id: string; text: string }
   | { type: 'toggle'; id: string }
   | { type: 'edit'; id: string; text: string }
-  | { type: 'delete'; id: string }
+  | { type: 'delete'; id: string };
 
 export function todosReducer(todos: Todo[], action: TodoAction): Todo[] {
   switch (action.type) {
     case 'add':
-      return [...todos, { id: action.id, text: action.text, done: false }]
+      return [...todos, { id: action.id, text: action.text, done: false }];
     case 'toggle':
       return todos.map((todo) =>
         todo.id === action.id ? { ...todo, done: !todo.done } : todo
-      )
+      );
     case 'edit':
       return todos.map((todo) =>
         todo.id === action.id ? { ...todo, text: action.text } : todo
-      )
+      );
     case 'delete':
-      return todos.filter((todo) => todo.id !== action.id)
+      return todos.filter((todo) => todo.id !== action.id);
     default:
-      return todos
+      return todos;
   }
 }
 ```
@@ -359,19 +359,19 @@ export function todosReducer(todos: Todo[], action: TodoAction): Todo[] {
 export function todosReducer(todos, action) {
   switch (action.type) {
     case 'add':
-      return [...todos, { id: action.id, text: action.text, done: false }]
+      return [...todos, { id: action.id, text: action.text, done: false }];
     case 'toggle':
       return todos.map((todo) =>
         todo.id === action.id ? { ...todo, done: !todo.done } : todo
-      )
+      );
     case 'edit':
       return todos.map((todo) =>
         todo.id === action.id ? { ...todo, text: action.text } : todo
-      )
+      );
     case 'delete':
-      return todos.filter((todo) => todo.id !== action.id)
+      return todos.filter((todo) => todo.id !== action.id);
     default:
-      return todos
+      return todos;
   }
 }
 ```
@@ -379,52 +379,52 @@ export function todosReducer(todos, action) {
 The Server Action applies the reducer, persists the result, and returns the next list:
 
 ```ts filename="app/actions.ts" switcher
-'use server'
+'use server';
 
-import { db } from './db'
-import { todosReducer, type Todo, type TodoAction } from './todos-reducer'
+import { db } from './db';
+import { todosReducer, type Todo, type TodoAction } from './todos-reducer';
 
 export async function saveTodos(
   todos: Todo[],
   action: TodoAction
 ): Promise<Todo[]> {
-  const next = todosReducer(todos, action)
-  await db.saveTodos(next)
-  return next
+  const next = todosReducer(todos, action);
+  await db.saveTodos(next);
+  return next;
 }
 ```
 
 ```js filename="app/actions.js" switcher
-'use server'
+'use server';
 
-import { db } from './db'
-import { todosReducer } from './todos-reducer'
+import { db } from './db';
+import { todosReducer } from './todos-reducer';
 
 export async function saveTodos(todos, action) {
-  const next = todosReducer(todos, action)
-  await db.saveTodos(next)
-  return next
+  const next = todosReducer(todos, action);
+  await db.saveTodos(next);
+  return next;
 }
 ```
 
 The client passes the same reducer to `useOptimistic`, so the optimistic update and the server compute the next state identically. A `runAction` helper applies the optimistic change and dispatches the Server Action in the same transition, so every change shows immediately:
 
 ```tsx filename="app/todo-list.tsx" switcher
-'use client'
+'use client';
 
-import { useActionState, useOptimistic, startTransition } from 'react'
-import { saveTodos } from './actions'
-import { todosReducer, type Todo, type TodoAction } from './todos-reducer'
+import { useActionState, useOptimistic, startTransition } from 'react';
+import { saveTodos } from './actions';
+import { todosReducer, type Todo, type TodoAction } from './todos-reducer';
 
 export function TodoList({ initialTodos }: { initialTodos: Todo[] }) {
-  const [todos, dispatch, isPending] = useActionState(saveTodos, initialTodos)
-  const [optimisticTodos, addOptimistic] = useOptimistic(todos, todosReducer)
+  const [todos, dispatch, isPending] = useActionState(saveTodos, initialTodos);
+  const [optimisticTodos, addOptimistic] = useOptimistic(todos, todosReducer);
 
   function runAction(action: TodoAction) {
     startTransition(() => {
-      addOptimistic(action)
-      dispatch(action)
-    })
+      addOptimistic(action);
+      dispatch(action);
+    });
   }
 
   return (
@@ -434,7 +434,7 @@ export function TodoList({ initialTodos }: { initialTodos: Todo[] }) {
           runAction({
             type: 'add',
             id: crypto.randomUUID(),
-            text: String(formData.get('text')),
+            text: String(formData.get('text'))
           })
         }
       >
@@ -462,26 +462,26 @@ export function TodoList({ initialTodos }: { initialTodos: Todo[] }) {
       </ul>
       {isPending && <p>Syncing to server…</p>}
     </>
-  )
+  );
 }
 ```
 
 ```jsx filename="app/todo-list.js" switcher
-'use client'
+'use client';
 
-import { useActionState, useOptimistic, startTransition } from 'react'
-import { saveTodos } from './actions'
-import { todosReducer } from './todos-reducer'
+import { useActionState, useOptimistic, startTransition } from 'react';
+import { saveTodos } from './actions';
+import { todosReducer } from './todos-reducer';
 
 export function TodoList({ initialTodos }) {
-  const [todos, dispatch, isPending] = useActionState(saveTodos, initialTodos)
-  const [optimisticTodos, addOptimistic] = useOptimistic(todos, todosReducer)
+  const [todos, dispatch, isPending] = useActionState(saveTodos, initialTodos);
+  const [optimisticTodos, addOptimistic] = useOptimistic(todos, todosReducer);
 
   function runAction(action) {
     startTransition(() => {
-      addOptimistic(action)
-      dispatch(action)
-    })
+      addOptimistic(action);
+      dispatch(action);
+    });
   }
 
   return (
@@ -491,7 +491,7 @@ export function TodoList({ initialTodos }) {
           runAction({
             type: 'add',
             id: crypto.randomUUID(),
-            text: String(formData.get('text')),
+            text: String(formData.get('text'))
           })
         }
       >
@@ -519,7 +519,7 @@ export function TodoList({ initialTodos }) {
       </ul>
       {isPending && <p>Syncing to server…</p>}
     </>
-  )
+  );
 }
 ```
 
@@ -539,13 +539,13 @@ Next.js also supports generating a fully [static site](/docs/app/guides/static-e
 To enable a static export, update your configuration:
 
 ```ts filename="next.config.ts"
-import type { NextConfig } from 'next'
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  output: 'export',
-}
+  output: 'export'
+};
 
-export default nextConfig
+export default nextConfig;
 ```
 
 After running `next build`, Next.js will create an `out` folder with the HTML/CSS/JS assets for your application.

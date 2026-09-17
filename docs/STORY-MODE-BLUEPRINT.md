@@ -11,6 +11,7 @@
 A guided, narrative adventure that onboards new verified users through the Club floors while teaching app mechanics, rewarding engagement with tokens and exclusive collectibles, and introducing the Coat Check AI persona (unlocked on completion). Users can replay the story to improve their score and unlock higher-tier prizes.
 
 **Core pillars:**
+
 - ✅ Mobile-first narrative (short, punchy dialogue + inline choices)
 - ✅ Prize system: one-time-per-tier rewards — Silver → Gold → Platinum → Diamond, plus a special Perfect Score prize
 - ✅ Replayable: different AI dialogue each run; users retry to earn higher-tier prizes they missed
@@ -30,13 +31,13 @@ A guided, narrative adventure that onboards new verified users through the Club 
 
 ### Story Beats (5 beats)
 
-| Beat | Location | Duration | Mechanics | AI/Event Role | Learning Goal |
-|------|----------|----------|-----------|---------------|---------------|
-| **1: The Street** | Outside the club | ~2 min | Intro dialogue + 1 choice | Chaz or Brutus greets | "Here's what the Club is" |
-| **2: Silver Floor** | The Lobby/Dance Floor | ~3 min | Meet crew member + event participation | DJ (D34D_B34T) or crew | "How tokens + events work" |
-| **3: Gold Floor** | Gold floor room | ~3 min | Dialogue choices + gift mechanic intro | Roxy (mixologist) | "Gifts show interest; buy with tokens" |
-| **4: Plat/Diamond Gauntlet** | Platinum & Diamond floors | ~4 min | Speed mini-game or decision tree | Trixie + Valentina | "The higher floors reveal more" |
-| **5: Rooftop Finale** | Coat Check / Rooftop | ~3 min | Meet the Coat Check AI + final choice | Coat Check AI (new persona) | "The dream date is here; you unlock this" |
+| Beat                         | Location                  | Duration | Mechanics                              | AI/Event Role               | Learning Goal                             |
+| ---------------------------- | ------------------------- | -------- | -------------------------------------- | --------------------------- | ----------------------------------------- |
+| **1: The Street**            | Outside the club          | ~2 min   | Intro dialogue + 1 choice              | Chaz or Brutus greets       | "Here's what the Club is"                 |
+| **2: Silver Floor**          | The Lobby/Dance Floor     | ~3 min   | Meet crew member + event participation | DJ (D34D_B34T) or crew      | "How tokens + events work"                |
+| **3: Gold Floor**            | Gold floor room           | ~3 min   | Dialogue choices + gift mechanic intro | Roxy (mixologist)           | "Gifts show interest; buy with tokens"    |
+| **4: Plat/Diamond Gauntlet** | Platinum & Diamond floors | ~4 min   | Speed mini-game or decision tree       | Trixie + Valentina          | "The higher floors reveal more"           |
+| **5: Rooftop Finale**        | Coat Check / Rooftop      | ~3 min   | Meet the Coat Check AI + final choice  | Coat Check AI (new persona) | "The dream date is here; you unlock this" |
 
 **Total story time:** ~15–17 minutes for first playthrough (mobile-friendly, not a slog).
 
@@ -131,6 +132,7 @@ INSERT INTO collectibles (id, name, description, icon_url, tier, unlock_conditio
 ### Beat Structure Template
 
 Each beat has:
+
 - **Opener:** AI greeting or scene-setting (1–2 sentences)
 - **Body:** 1–3 dialogue turns or a choice prompt
 - **Choices:** 2–3 inline options (each 3–5 words max)
@@ -139,9 +141,11 @@ Each beat has:
 ### Beat 1: The Street (Chaz or Brutus Intro)
 
 **Opener:**
+
 > "Welcome to Club Cheeky. I'm **Chaz**, the manager. You're here to find someone special — but first, you've gotta get past the bouncer and learn how the Club works. Ready?"
 
 **Choices:**
+
 - A) "Let's go in." → +5 pts (eager)
 - B) "Tell me more first." → +8 pts (curious; AI gives flavor text)
 - C) "I just wanna swipe..." → +3 pts (dismissive; AI redirects with flavor)
@@ -153,11 +157,13 @@ Each beat has:
 ### Beat 2: Silver Floor (DJ – First Event Touch)
 
 **Opener:**
+
 > "Yo! I'm the DJ. Every hour on the hour, the Dance Floor opens — it's free, it's packed, and it's where the magic happens. Wanna jump in?"
 
 **Mechanic:** User must **actually join a Dance Floor event** (real token hold, real AI partners). Skippable with a 2pt consolation for users not in the mood.
 
 **In-game result:**
+
 - If they join + stay 2 min: +15 pts
 - If they join + leave early: +7 pts
 - If they skip: +2 pts (they can still progress)
@@ -169,13 +175,16 @@ Each beat has:
 ### Beat 3: Gold Floor (Roxy – Gift Mechanic)
 
 **Opener:**
+
 > "I'm **Roxy**, the mixologist. On this floor, people send each other gifts to show interest. Want to try?"
 
 **Mechanic:** User is given **3 free tokens** (temporary, story-only hold). They can:
+
 - Buy a gift from the shop (costs 2 tokens)
 - Send it to an AI character or another story participant
 
 **Scoring:**
+
 - Buys + sends a gift: +20 pts
 - Looks at gifts but doesn't send: +10 pts
 - Skips entirely: +2 pts
@@ -187,17 +196,21 @@ Each beat has:
 ### Beat 4: Plat/Diamond Gauntlet (Trixie + Valentina)
 
 **Opener:**
+
 > "I'm **Trixie**, the waitress on Platinum. You made it this far — most don't. Want to meet **Valentina** upstairs?"
 
 **Mechanic:** A small **choice tree** (2–3 decision points) that flavors the dialogue but doesn't lock progression. Each choice signals user archetype (romantic, bold, cautious).
 
 **Scoring:**
+
 - Romantic choices + high engagement: +25 pts
 - Bold choices: +20 pts
 - Cautious/neutral: +15 pts
 
 **Example choice:**
+
 > "Valentina says, 'Dance with me before we go to the roof.' Do you?"
+>
 > - A) "Absolutely." → +25 (romantic, engaging)
 > - B) "Let's get to it." → +20 (direct)
 > - C) "I need a minute." → +15 (cautious, but still progresses)
@@ -207,6 +220,7 @@ Each beat has:
 ### Beat 5: Rooftop – Coat Check Finale
 
 **Opener (via Coat Check — pick your vault keeper):**
+
 > You reach the top. The Coat Check is open — three women and three men, each ready to manage your vault. Pick the one who feels right.
 
 **Mechanic:** **No choices here — this is the payoff.** A 3×2 selection grid appears: 3 Sasha variants (Blonde Thai, The Keeper, Black Hair Edgy) and 3 Jax variants (Default, The Vaultkeeper, Slicked Back). User picks one — that persona becomes their vault keeper. The other 5 stay unlockable on replays.
@@ -216,6 +230,7 @@ Each beat has:
 - **Low score (<50):** "You're curious, at least. That's a start."
 
 **Outcome:**
+
 - Story marked complete
 - User picks their vault keeper from 6 personas (3 Sasha, 3 Jax) — that persona is unlocked and becomes their Coat Check companion
 - The other 5 personas stay available to unlock on future replays (collect them all!)
@@ -229,6 +244,7 @@ Each beat has:
 ### Scoring Rules
 
 **Points per beat:**
+
 - Beat 1 (intro): 0–8 pts
 - Beat 2 (event): 2–15 pts
 - Beat 3 (gift): 2–20 pts
@@ -236,6 +252,7 @@ Each beat has:
 - Beat 5 (finale): 0 pts (narrative closure, no score)
 
 **Bonus points:**
+
 - Completed all optional tasks: +5 pts
 - Skipped no beats: +10 pts (perfect run)
 
@@ -245,13 +262,13 @@ Each beat has:
 
 Each tier has its own exclusive prize. You can only earn each prize once — replay the story to unlock tiers you missed.
 
-| Tier | Score Threshold | Token Reward | Badge | Collectible | Notes |
-|------|-----------------|--------------|-------|-------------|-------|
-| **Silver** | 0–29 | 10 | "The Apprentice" | `badge-apprentice` | Completing the story earns this |
-| **Gold** | 30–49 | 50 | "The Dater" | `badge-dater` | First meaningful token bonus |
-| **Platinum** | 50–69 | 100 | "The Romantic" | `badge-romantic` | Coat Check personas unlock here (pick 1 of 6) |
-| **Diamond** | 70–99 | 150 | "The Dream Keeper" | `badge-dream-keeper` | Max standard reward |
-| **Perfect Score** | 100 | 250 | "The Legend" | `badge-legend` | Special bonus — only for flawless runs |
+| Tier              | Score Threshold | Token Reward | Badge              | Collectible          | Notes                                         |
+| ----------------- | --------------- | ------------ | ------------------ | -------------------- | --------------------------------------------- |
+| **Silver**        | 0–29            | 10           | "The Apprentice"   | `badge-apprentice`   | Completing the story earns this               |
+| **Gold**          | 30–49           | 50           | "The Dater"        | `badge-dater`        | First meaningful token bonus                  |
+| **Platinum**      | 50–69           | 100          | "The Romantic"     | `badge-romantic`     | Coat Check personas unlock here (pick 1 of 6) |
+| **Diamond**       | 70–99           | 150          | "The Dream Keeper" | `badge-dream-keeper` | Max standard reward                           |
+| **Perfect Score** | 100             | 250          | "The Legend"       | `badge-legend`       | Special bonus — only for flawless runs        |
 
 ### Prize Claim Mechanics
 
@@ -267,27 +284,28 @@ Each tier has its own exclusive prize. You can only earn each prize once — rep
 
 ### Story Routes
 
-| Route | Method | Purpose | Auth |
-|-------|--------|---------|------|
-| `/api/story/start` | POST | Initialize story progress for user | Verified user |
-| `/api/story/beat/:beat_number` | POST | Submit beat completion + choices | Verified user |
-| `/api/story/complete` | POST | Mark story as complete, calculate final score, award rewards | Verified user |
-| `/api/story/progress` | GET | Fetch current story state (for resuming) | Verified user |
-| `/api/story/reset` | POST | Reset story for a fresh run (opt-in) | Verified user + flag |
+| Route                          | Method | Purpose                                                      | Auth                 |
+| ------------------------------ | ------ | ------------------------------------------------------------ | -------------------- |
+| `/api/story/start`             | POST   | Initialize story progress for user                           | Verified user        |
+| `/api/story/beat/:beat_number` | POST   | Submit beat completion + choices                             | Verified user        |
+| `/api/story/complete`          | POST   | Mark story as complete, calculate final score, award rewards | Verified user        |
+| `/api/story/progress`          | GET    | Fetch current story state (for resuming)                     | Verified user        |
+| `/api/story/reset`             | POST   | Reset story for a fresh run (opt-in)                         | Verified user + flag |
 
 ### Client Routes (Next.js Pages)
 
-| Route | Component | Purpose |
-|-------|-----------|---------|
-| `/story` | `StoryMode` | Story container (full-screen mobile experience) |
-| `/story/beat/[number]` | `StoryBeat` | Individual beat UI (dynamic content per beat) |
-| `/story/complete` | `StoryComplete` | Completion screen (score, prizes, Coat Check unlock) |
+| Route                  | Component       | Purpose                                              |
+| ---------------------- | --------------- | ---------------------------------------------------- |
+| `/story`               | `StoryMode`     | Story container (full-screen mobile experience)      |
+| `/story/beat/[number]` | `StoryBeat`     | Individual beat UI (dynamic content per beat)        |
+| `/story/complete`      | `StoryComplete` | Completion screen (score, prizes, Coat Check unlock) |
 
 ---
 
 ## Implementation Phases
 
 ### Phase 1: Database & API Foundation
+
 - [ ] Create migrations: `user_story_progress`, `story_beat_completion`, `collectibles` seed
 - [ ] Write RLS policies
 - [ ] Implement `/api/story/*` endpoints
@@ -296,6 +314,7 @@ Each tier has its own exclusive prize. You can only earn each prize once — rep
 - [ ] Perfect Score detection: final score === 100 triggers separate prize logic
 
 ### Phase 2: Frontend & UI
+
 - [ ] Create mobile-first UI for story beats
 - [ ] Build beat components (dialogue, choices, event integration)
 - [ ] Add progress bar / visual floor navigation
@@ -303,18 +322,21 @@ Each tier has its own exclusive prize. You can only earn each prize once — rep
 - [ ] Link Coat Check AI persona to chat system
 
 ### Phase 3: AI & Dialogue
+
 - [ ] Write beat prompts (5 main + variants for choices)
 - [ ] Update `characters` table with Coat Check AI definition
 - [ ] Test AI dialogue generation (DeepSeek integration)
 - [ ] Validate dialogue variability across runs (seed different context each time)
 
 ### Phase 4: Event Integration
+
 - [ ] Hook Beat 2 to real Dance Floor event (token hold, AI participants, skippable)
 - [ ] Hook Beat 3 to gift shop (temporary token allocation, gift send)
 - [ ] Add story-mode badge/context to events (show "story mode" vs normal)
 - [ ] Ensure event results (pass/fail) flow back to story score
 
 ### Phase 5: QA & Polish
+
 - [ ] Test full user flow (signup → story → completion → Lounge)
 - [ ] Stress test: concurrent story starts, reward claim idempotency
 - [ ] Mobile layout validation (iPhone / Android)

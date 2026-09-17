@@ -2,7 +2,7 @@
 
 > Status: **DRAFT** (2026-08-08) — founder's design; not yet built.
 > The universal action bar — the club's to-do list. Shows every member, on
-> entry, exactly what's available to *them* right now, keyed to their tier.
+> entry, exactly what's available to _them_ right now, keyed to their tier.
 > Extends `PRD-foundation.md` (the Ladder, the Event Engine). Companion:
 > `AGENTS.md`. Reference flow: `tiki_task_bar.mmd` (founder's sketch).
 
@@ -42,7 +42,7 @@ Platinum). Universal, collapsible, and movable.
 - **Numbers**: **teal (cyan), Damion font** — the curved script makes the
   counts pop against the gold bar.
 - **Heading above the bar**: **"Tiki Taskbar"** in **gold, Fascinate**.
-- **Caption under the bar** (optional, pink, Rancho): *"Your daily to-dos."*
+- **Caption under the bar** (optional, pink, Rancho): _"Your daily to-dos."_
 - All via existing tokens (`text-gold`, `text-cyan`, `font-hero`,
   `font-header`, `font-body`) — never hardcoded hex.
 
@@ -72,17 +72,18 @@ One config file (`utils/taskbar.ts`) drives the tile set + the caps (they
 mirror `send_message`'s tier logic, the Matchmaker plays dial, and the
 `join_blind_date` daily cap — if a cap moves there, it moves here too).
 
-| # | Icon | Tile | The count | Unlocks | Taps to |
-|---|---|---|---|---|---|
-| 1 | 📩 | Cheeky Chats | messages left today — 30 / 75 / ∞ / ∞ | all | `/messages` |
-| 2 | ⚡ | Swipes | new people left today — 5 / 15 / 40 / 100 (the sparks hub's allowance) | all | `/browse` |
-| 3 | 💞 | L³ | same new-people allowance (L³ shares the cap, no separate limit) | all | `/browse` |
-| 4 | 🎯 | Matchmaker | plays left today — 2 / 3 / 4 / 5 | all | `/browse` |
-| 5 | ❤️ | Blind Date | joins left today — 2 / day (enforced in `join_blind_date`) | Gold+ | `/events/blind_date` |
-| 6 | 🎁 | Gifts | 1 when a send is ready; minutes-to-ready while cooling (1/hour) | all | `/gifts` |
-| 7 | 🔥 | Coat Check | 1 = not checked in today, 0 = done | all | `/coat-check` |
+| #   | Icon | Tile         | The count                                                              | Unlocks | Taps to              |
+| --- | ---- | ------------ | ---------------------------------------------------------------------- | ------- | -------------------- |
+| 1   | 📩   | Cheeky Chats | messages left today — 30 / 75 / ∞ / ∞                                  | all     | `/messages`          |
+| 2   | ⚡   | Swipes       | new people left today — 5 / 15 / 40 / 100 (the sparks hub's allowance) | all     | `/browse`            |
+| 3   | 💞   | L³           | same new-people allowance (L³ shares the cap, no separate limit)       | all     | `/browse`            |
+| 4   | 🎯   | Matchmaker   | plays left today — 2 / 3 / 4 / 5                                       | all     | `/browse`            |
+| 5   | ❤️   | Blind Date   | joins left today — 2 / day (enforced in `join_blind_date`)             | Gold+   | `/events/blind_date` |
+| 6   | 🎁   | Gifts        | 1 when a send is ready; minutes-to-ready while cooling (1/hour)        | all     | `/gifts`             |
+| 7   | 🔥   | Coat Check   | 1 = not checked in today, 0 = done                                     | all     | `/coat-check`        |
 
 Notes:
+
 - **∞** renders for unlimited messages (Platinum/Diamond) — Damion falls
   back to a system glyph for the symbol itself.
 - Pending (founder to decide): **daily like caps** and **super likes** —

@@ -2,7 +2,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { buyGift, respondGift, sendGift, blowHorn, blowHornFull } from '@/app/gifts/actions';
+import {
+  buyGift,
+  respondGift,
+  sendGift,
+  blowHorn,
+  blowHornFull
+} from '@/app/gifts/actions';
 
 export interface GiftPerson {
   id: string;
@@ -392,8 +398,8 @@ export default function GiftShop({
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
             <h2 className="font-header text-cyan text-2xl">🧥 My stash</h2>
             <p className="mt-1 text-base font-body text-club">
-              Your inventory. One offer every 15 minutes, and a denied gift comes right
-              back here.
+              Your inventory. One offer every 15 minutes, and a denied gift
+              comes right back here.
             </p>
             {stash.length === 0 ? (
               <p className="mt-4 text-base font-body text-club">

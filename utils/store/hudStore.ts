@@ -20,12 +20,51 @@ export const TIER_LABELS: Record<Tier, string> = {
   diamond: 'Diamond'
 };
 
-export const TIER_CAPS: Record<Tier, { messages: number | null; swipes: number; matchmakerPlays: number; l3Trios: number; icebreakers: number | null }> = {
-  guest: { messages: 0, swipes: 0, matchmakerPlays: 0, l3Trios: 0, icebreakers: 0 },
-  silver: { messages: 30, swipes: 15, matchmakerPlays: 3, l3Trios: 4, icebreakers: 5 },
-  gold: { messages: 75, swipes: 30, matchmakerPlays: 5, l3Trios: 8, icebreakers: 10 },
-  platinum: { messages: Infinity, swipes: 50, matchmakerPlays: 8, l3Trios: 12, icebreakers: Infinity },
-  diamond: { messages: Infinity, swipes: 100, matchmakerPlays: 12, l3Trios: 20, icebreakers: Infinity }
+export const TIER_CAPS: Record<
+  Tier,
+  {
+    messages: number | null;
+    swipes: number;
+    matchmakerPlays: number;
+    l3Trios: number;
+    icebreakers: number | null;
+  }
+> = {
+  guest: {
+    messages: 0,
+    swipes: 0,
+    matchmakerPlays: 0,
+    l3Trios: 0,
+    icebreakers: 0
+  },
+  silver: {
+    messages: 30,
+    swipes: 15,
+    matchmakerPlays: 3,
+    l3Trios: 4,
+    icebreakers: 5
+  },
+  gold: {
+    messages: 75,
+    swipes: 30,
+    matchmakerPlays: 5,
+    l3Trios: 8,
+    icebreakers: 10
+  },
+  platinum: {
+    messages: Infinity,
+    swipes: 50,
+    matchmakerPlays: 8,
+    l3Trios: 12,
+    icebreakers: Infinity
+  },
+  diamond: {
+    messages: Infinity,
+    swipes: 100,
+    matchmakerPlays: 12,
+    l3Trios: 20,
+    icebreakers: Infinity
+  }
 };
 
 export interface InventoryItem {
@@ -83,22 +122,22 @@ export interface HudState {
   activeTab: TabId;
   expanded: boolean;
   viewMode: ViewMode;
-  
+
   // Session
   userId: string | null;
   displayName: string | null;
   tier: Tier;
   verified: boolean;
-  
+
   // Daily limits (synced from taskbar_state RPC)
   dailyLimits: DailyLimits;
-  
+
   // Wallet
   wallet: WalletState;
-  
+
   // Inventory
   inventory: InventoryItem[];
-  
+
   // Alerts
   alerts: Alert[];
 
@@ -150,62 +189,70 @@ const initialState = {
     hornCooldownExpires: null,
     danceFreeRemaining: 1,
     speedFreeRemaining: 0,
-    rooftopFreeRemaining: 0,
+    rooftopFreeRemaining: 0
   },
   wallet: {
     tokens: 0,
     lifetimeSpent: 0,
-    lastUpdated: new Date().toISOString(),
+    lastUpdated: new Date().toISOString()
   },
   inventory: [] as InventoryItem[],
   alerts: [] as Alert[] as Alert[],
   cheekyChatUnread: 0,
   isSyncing: false,
-  lastSync: null as string | null,
+  lastSync: null as string | null
 };
 
 export const useHudStore = create<HudState>()(
   persist(
     (set, get) => ({
       ...initialState,
-      
+
       setActiveTab: (tab) => set({ activeTab: tab }),
-      
+
       toggleExpand: () => set((state) => ({ expanded: !state.expanded })),
 
       setExpanded: (expanded) => set({ expanded }),
 
       setViewMode: (mode) => set({ viewMode: mode }),
 
-      cycleViewMode: () => set((state) => ({
-        viewMode: state.viewMode === 'button' ? 'taskbar' : state.viewMode === 'taskbar' ? 'hud' : 'button'
-      })),
+      cycleViewMode: () =>
+        set((state) => ({
+          viewMode:
+            state.viewMode === 'button'
+              ? 'taskbar'
+              : state.viewMode === 'taskbar'
+                ? 'hud'
+                : 'button'
+        })),
 
       updateDailyLimits: (limits) =>
         set((state) => ({
-          dailyLimits: { ...state.dailyLimits, ...limits },
+          dailyLimits: { ...state.dailyLimits, ...limits }
         })),
-      
+
       updateWallet: (wallet) =>
         set((state) => ({
-          wallet: { ...state.wallet, ...wallet },
+          wallet: { ...state.wallet, ...wallet }
         })),
-      
+
       addInventoryItem: (item) =>
         set((state) => {
-          const existing = state.inventory.find((i) => i.itemId === item.itemId);
+          const existing = state.inventory.find(
+            (i) => i.itemId === item.itemId
+          );
           if (existing) {
             return {
               inventory: state.inventory.map((i) =>
                 i.itemId === item.itemId
                   ? { ...i, quantity: i.quantity + item.quantity }
                   : i
-              ),
+              )
             };
           }
           return { inventory: [...state.inventory, item] };
         }),
-      
+
       removeInventoryItem: (itemId, quantity) => {
         const state = get();
         const item = state.inventory.find((i) => i.itemId === itemId);
@@ -215,13 +262,15 @@ export const useHudStore = create<HudState>()(
         set((state) => ({
           inventory: state.inventory
             .map((i) =>
-              i.itemId === itemId ? { ...i, quantity: i.quantity - quantity } : i
+              i.itemId === itemId
+                ? { ...i, quantity: i.quantity - quantity }
+                : i
             )
-            .filter((i) => i.quantity > 0),
+            .filter((i) => i.quantity > 0)
         }));
         return true;
       },
-      
+
       addAlert: (alertData) =>
         set((state) => ({
           alerts: [
@@ -229,19 +278,19 @@ export const useHudStore = create<HudState>()(
               ...alertData,
               id: Math.random().toString(36).slice(2),
               read: false,
-              timestamp: new Date().toISOString(),
+              timestamp: new Date().toISOString()
             },
-            ...state.alerts,
-          ].slice(0, 50), // Keep last 50
+            ...state.alerts
+          ].slice(0, 50) // Keep last 50
         })),
-      
+
       markAlertRead: (alertId) =>
         set((state) => ({
           alerts: state.alerts.map((a) =>
             a.id === alertId ? { ...a, read: true } : a
-          ),
+          )
         })),
-      
+
       clearAllAlerts: () => set({ alerts: [] }),
 
       setCheekyChatUnread: (count) => set({ cheekyChatUnread: count }),
@@ -264,21 +313,34 @@ export const useHudStore = create<HudState>()(
               // Unlimited tier — don't cap, show ∞ in UI
               if (tile.key === 'chats') limits.messagesSent = Infinity;
               else if (tile.key === 'l3') limits.l3TriosUsed = Infinity;
-              else if (tile.key === 'icebreakers') limits.icebreakersUsed = Infinity;
+              else if (tile.key === 'icebreakers')
+                limits.icebreakersUsed = Infinity;
             } else if (typeof tile.count === 'number') {
               // Remaining → used = cap - remaining
-              if (tile.key === 'chats') limits.messagesSent = (caps.messages ?? 0) - tile.count;
-              else if (tile.key === 'swipes') limits.swipesUsed = caps.swipes - tile.count;
-              else if (tile.key === 'l3') limits.l3TriosUsed = caps.l3Trios - tile.count;
-              else if (tile.key === 'matchmaker') limits.matchmakerPlays = caps.matchmakerPlays - tile.count;
-              else if (tile.key === 'icebreakers') limits.icebreakersUsed = (caps.icebreakers ?? 0) - tile.count;
+              if (tile.key === 'chats')
+                limits.messagesSent = (caps.messages ?? 0) - tile.count;
+              else if (tile.key === 'swipes')
+                limits.swipesUsed = caps.swipes - tile.count;
+              else if (tile.key === 'l3')
+                limits.l3TriosUsed = caps.l3Trios - tile.count;
+              else if (tile.key === 'matchmaker')
+                limits.matchmakerPlays = caps.matchmakerPlays - tile.count;
+              else if (tile.key === 'icebreakers')
+                limits.icebreakersUsed = (caps.icebreakers ?? 0) - tile.count;
             }
           }
-          if (Object.keys(limits).length > 0) set({ dailyLimits: { ...get().dailyLimits, ...limits } });
+          if (Object.keys(limits).length > 0)
+            set({ dailyLimits: { ...get().dailyLimits, ...limits } });
 
           // Token balance
           if (typeof data.tokenBalance === 'number') {
-            set({ wallet: { ...get().wallet, tokens: data.tokenBalance, lastUpdated: new Date().toISOString() } });
+            set({
+              wallet: {
+                ...get().wallet,
+                tokens: data.tokenBalance,
+                lastUpdated: new Date().toISOString()
+              }
+            });
           }
         } catch (e) {
           console.error('syncHudData failed:', e);
@@ -290,13 +352,14 @@ export const useHudStore = create<HudState>()(
         // Require typing "CLEAR" or their display name
         const validConfirmation =
           confirmation.toUpperCase() === 'CLEAR' ||
-          confirmation.trim().toLowerCase() === state.displayName?.toLowerCase() ||
+          confirmation.trim().toLowerCase() ===
+            state.displayName?.toLowerCase() ||
           confirmation.trim() === userDisplayName;
-        
+
         if (!validConfirmation) {
           return false;
         }
-        
+
         // Clear localStorage
         localStorage.removeItem('cheeky-weave');
 
@@ -311,11 +374,11 @@ export const useHudStore = create<HudState>()(
           inventory: [],
           alerts: [],
           cheekyChatUnread: 0,
-          lastSync: null,
+          lastSync: null
         });
 
         return true;
-      },
+      }
     }),
     {
       name: 'cheeky-weave',
@@ -328,8 +391,8 @@ export const useHudStore = create<HudState>()(
         wallet: state.wallet,
         inventory: state.inventory,
         alerts: state.alerts,
-        cheekyChatUnread: state.cheekyChatUnread,
-      }),
+        cheekyChatUnread: state.cheekyChatUnread
+      })
     }
   )
 );

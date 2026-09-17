@@ -15,7 +15,7 @@ button on every screen opens a panel with **five rooms**: a Global room
 channels. You type in your floor and below; floors above you are **dimmed,
 read-only** — the climb, visible from the cheap seats — and the Global room
 is full for everyone. It's a **standard chat room**: no message caps, no
-rate limits, no token costs to talk — the room *is* the retention play. The
+rate limits, no token costs to talk — the room _is_ the retention play. The
 club's AI (a rotating persona) and a profanity filter moderate it silently.
 Club-only frills: **chat-exclusive collectible badges** and the **Horn** —
 10 tokens lights up a message and sends it across the club ticker.
@@ -26,7 +26,7 @@ Club-only frills: **chat-exclusive collectible badges** and the **Horn** —
    rooms are between sets, the club goes quiet — and quiet apps die. Club
    Chat is always on: the longer a member stays, the stickier the platform.
 2. **The message caps pressure.** The free tier's 30/day + 5 new people are
-   generous *on purpose* and must never shrink — but they still run out.
+   generous _on purpose_ and must never shrink — but they still run out.
    The chat room is a separate channel with no caps, so "out of messages"
    never means "out of the club."
 3. **The gender imbalance.** One-on-one attention is pressure; public
@@ -40,20 +40,20 @@ Club-only frills: **chat-exclusive collectible badges** and the **Horn** —
 
 ## 3. The five rooms
 
-| Room          | Who's in it                     | Who can type                          |
-| ------------- | ------------------------------- | ------------------------------------- |
-| 🌐 Global     | Everyone, all floors            | **Everyone — full**                   |
-| 🥈 Silver     | Everyone (all can *see* it)     | Silver and above (paid floors type down) |
-| 🥇 Gold       | Everyone                        | Gold and above                        |
-| 💎 Platinum   | Everyone                        | Platinum and above                    |
-| 🔷 Diamond    | Everyone                        | Diamond only                          |
+| Room        | Who's in it                 | Who can type                             |
+| ----------- | --------------------------- | ---------------------------------------- |
+| 🌐 Global   | Everyone, all floors        | **Everyone — full**                      |
+| 🥈 Silver   | Everyone (all can _see_ it) | Silver and above (paid floors type down) |
+| 🥇 Gold     | Everyone                    | Gold and above                           |
+| 💎 Platinum | Everyone                    | Platinum and above                       |
+| 🔷 Diamond  | Everyone                    | Diamond only                             |
 
 - **The ladder:** your floor and below = full. Every floor above = **dimmed,
   read-only** — you can watch the Diamond room buzz, but you can't type.
   The climb is the point (the same pull that sells memberships).
 - **Global is the exception:** everyone's full there — the town square
   belongs to the whole club.
-- Reading is never blocked (the dimmed view *is* the aspirational UI);
+- Reading is never blocked (the dimmed view _is_ the aspirational UI);
   **typing is server-gated** by your tier vs the room's floor.
 
 ## 4. It's a chat room. A regular one.
@@ -69,7 +69,7 @@ for thirty years:
   the two of you, ephemeral, chat-internal. Light by design; the room is
   public, whispers are a courtesy.
 - **Take private.** Click a name → go private: **a consent dialog first**
-  (see §5) — this creates a *match*, not a side-channel.
+  (see §5) — this creates a _match_, not a side-channel.
 - **Context menu on every name** (right-click / long-press): Go private ·
   Whisper · Mute · Block · Report · **Give gift**.
 - **Give gift from the menu.** Opens the member's inventory → pick a gift →
@@ -88,7 +88,7 @@ invite is sent:
 > "Inviting them to a private chat **constitutes a match**. If they accept,
 > it counts against your new-people-per-day and message allowances. Continue?"
 
-**Consent is two-sided (founder):** the *acceptor* gets the same
+**Consent is two-sided (founder):** the _acceptor_ gets the same
 confirmation before the match is created — they may not want to give up one
 of their people/messages for the day. **Both parties must agree**; only then
 is the room created.
@@ -96,7 +96,7 @@ is the room created.
 Yes → the invite goes. **Accept → a real match** (matches row, conversation
 opens, both can talk under the normal messaging rules). Decline/ignore →
 nothing, silent. This closes the obvious loophole ("I'm out of messages,
-meet me in chat and we'll go private") — going private *is* the messaging
+meet me in chat and we'll go private") — going private _is_ the messaging
 system, with its consent and its caps intact — and it turns the town square
 into another **match engine**. The confirmation boxes are the consent
 moments, on record.
@@ -135,11 +135,11 @@ The badge system is one catalog, many collectible families — **no badge is
 ever shared between families** (a login-streak badge ≠ a gift badge ≠ a
 chat badge). Club Chat adds a new family, **earned only in the room**:
 
-| Badge                 | Trigger                                   |
-| --------------------- | ----------------------------------------- |
-| Chatterbox (series)   | 50 / 200 / 500 / 1,000 messages in chat   |
-| Regular               | 1 hour spent in the room                  |
-| Horn Blower           | First Horn blast                          |
+| Badge               | Trigger                                 |
+| ------------------- | --------------------------------------- |
+| Chatterbox (series) | 50 / 200 / 500 / 1,000 messages in chat |
+| Regular             | 1 hour spent in the room                |
+| Horn Blower         | First Horn blast                        |
 
 Awarded by the existing collectible machinery (catalog + inventory +
 `award_badge`-style grant); earned chat badges flash in-room when they
@@ -175,7 +175,7 @@ book-ready: every badge carries its family + floor + rarity metadata now.
 
 - Tables: `club_chat_messages` (room_id, sender, floor tag, body, horn
   flag), a fixed room registry by slug (`global|silver|gold|platinum|
-  diamond`), `club_chat_whispers` (ephemeral pair rooms),
+diamond`), `club_chat_whispers` (ephemeral pair rooms),
   `club_chat_mutes` (timed moderator mutes; user mutes are client-side
   hides), Horn → `club_announcements`.
 - **RLS:** read = verified members (the dimmed view needs the data);
@@ -191,7 +191,7 @@ book-ready: every badge carries its family + floor + rarity metadata now.
 
 - Voice / video rooms, file uploads (images later, maybe).
 - Per-user chat history beyond the 24h window (logs are request-only).
-- DMs outside the room — the room's "private" *is* the normal messaging
+- DMs outside the room — the room's "private" _is_ the normal messaging
   system, on purpose.
 
 ## 13. Locked decisions (this session)

@@ -18,8 +18,8 @@ promo) from the base format instead of reverse-engineered.
 
 ## Library
 
-| Chart | What it is | PRD |
-|---|---|---|
+| Chart            | What it is                                                                                                                     | PRD                      |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------ |
 | `matchmaker.mmd` | Matchmaker — the memory-game intro unlocker (draft picks → 4×4 board → 2-match win / 3-strike loss → first-impression message) | `docs/PRD-matchmaker.md` |
 
 More charts land here as they're built — Dance Floor, L³, and every event

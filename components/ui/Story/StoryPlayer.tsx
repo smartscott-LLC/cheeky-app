@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { useState, useCallback } from 'react';
 import {
   STORY_BEATS,
-  type StoryBeat,
   PERSONAS,
   getTierForScore
 } from '@/utils/story/beats';
+import type { StoryBeat } from '@/utils/story/beats';
 
 interface StoryPlayerProps {
   initialBeat: number;

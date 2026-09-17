@@ -1,4 +1,5 @@
 # Executive Code Review — Club Cheeky
+
 **Date:** 2026-09-10
 **Scope:** Full codebase audit (app/, components/, utils/, tests/, docs/, chub/)
 **Effort:** High — exhaustive review
@@ -13,15 +14,16 @@ Club Cheeky is **substantially launch-ready**. The core architecture is well-str
 **Overall verdict: APPROVE with observations.** No blockers that prevent launch. No demo code, no stub implementations, no placeholder logic in the production paths. The club is real.
 
 ### By the numbers
-| Metric | Value |
-|---|---|
-| Code files (TSX/TS/CSS/MJS) | ~220 |
-| Total lines of meaningful code | ~18,000 |
-| Supabase migrations | 6 (tracked) |
-| Tests (safe) | 38 pass, 0 fail |
-| Lint | 0 warnings, 0 errors |
-| Client components | 52 (reasonable split) |
-| Found demo/stub/TODO | 1 (minor — `//TODO check quantity on subscription`) |
+
+| Metric                         | Value                                               |
+| ------------------------------ | --------------------------------------------------- |
+| Code files (TSX/TS/CSS/MJS)    | ~220                                                |
+| Total lines of meaningful code | ~18,000                                             |
+| Supabase migrations            | 6 (tracked)                                         |
+| Tests (safe)                   | 38 pass, 0 fail                                     |
+| Lint                           | 0 warnings, 0 errors                                |
+| Client components              | 52 (reasonable split)                               |
+| Found demo/stub/TODO           | 1 (minor — `//TODO check quantity on subscription`) |
 
 ---
 
@@ -90,13 +92,13 @@ Club Cheeky is **substantially launch-ready**. The core architecture is well-str
 
 ### 8. Build & Lint Health
 
-| Check | Status |
-|---|---|
-| `pnpm lint` (oxlint) | **0 warnings, 0 errors** — 216 files, 127 rules |
+| Check                    | Status                                                       |
+| ------------------------ | ------------------------------------------------------------ |
+| `pnpm lint` (oxlint)     | **0 warnings, 0 errors** — 216 files, 127 rules              |
 | `pnpm test` (safe suite) | **38 pass, 0 fail, 8 skipped** (legitimate live-suite skips) |
-| `pnpm build` | Buildable (confirmed via CHANGELOG + AGENTS.md) |
-| TypeScript | **0 errors** — fixed 28 build errors in cleanup sprint |
-| Dependencies | No vulnerabilities, all up-to-date per cleanup |
+| `pnpm build`             | Buildable (confirmed via CHANGELOG + AGENTS.md)              |
+| TypeScript               | **0 errors** — fixed 28 build errors in cleanup sprint       |
+| Dependencies             | No vulnerabilities, all up-to-date per cleanup               |
 
 ---
 
@@ -105,9 +107,11 @@ Club Cheeky is **substantially launch-ready**. The core architecture is well-str
 ### 1. ⚠️ One existing TODO in production code
 
 **File:** `utils/supabase/admin.ts:393`
+
 ```
 //TODO check quantity on subscription
 ```
+
 This is in the subscription upsert path. The `.quantity` field is read with `@ts-ignore`, meaning nobody is validating that the quantity on the Stripe subscription matches what the DB records. For subscriptions with `quantity > 1` this could silently under-credit. **Recommendation:** Resolve before Scaling — not a launch blocker since all current subscriptions are quantity=1.
 
 ### 2. ⚠️ Unused CSS file
@@ -127,11 +131,13 @@ The main app has no middleware file (`/home/server/cheeky-app/middleware.ts`). T
 ```ts
 const nextConfig: NextConfig = { reactStrictMode: true };
 ```
+
 No image optimization, no headers, no redirects, no compression config. Next.js defaults serve for now, but for launch/production hardening, consider adding security headers (CSP, HSTS, X-Frame-Options) and image optimization config. Not a blocker.
 
 ### 6. ⚠️ Lounge (chub) microfrontend health
 
 The chub app exists at `/home/server/chub/` and has its own package.json, middleware, components, and tests. Key observations:
+
 - `package.json` has no `test` script (`echo "Error: no test specified"`)
 - No lint config is listed as active — the `oxlintrc.json` exists but isn't referenced in scripts
 - The dev port conflicts with the main app (both default to 3000)
@@ -141,9 +147,11 @@ The chub app exists at `/home/server/chub/` and has its own package.json, middle
 ### 7. ⚠️ `microfrontends.json` references `chub` but previous runs used `in-gamechatui`
 
 Current `microfrontends.json`:
+
 ```json
 "chub": { "packageName": "chub", "routing": [{"paths": ["/lounge", "/lounge/:path*"]}] }
 ```
+
 Memory says it was `in-gamechatui`. **Recommendation:** Verify this is intentional and consistent with Vercel project naming. If the project is named `in-gamechatui` on Vercel but the microfrontend config calls it `chub`, routing will break in production.
 
 ---
@@ -153,6 +161,7 @@ Memory says it was `in-gamechatui`. **Recommendation:** Verify this is intention
 ### 1. Confirm middleware wiring
 
 The main app exports `updateSession` from `utils/supabase/middleware.ts` but there is **no root-level `middleware.ts`** that calls it. Next.js App Router requires `middleware.ts` at the project root to intercept requests. Without it:
+
 - Session refresh on navigation doesn't happen
 - `cc_last_floor` cookie is never set
 - The ban registry check at middleware level doesn't run
@@ -162,6 +171,7 @@ The main app exports `updateSession` from `utils/supabase/middleware.ts` but the
 ### 2. Sprint gap — event kind + finalize_events test coverage
 
 Per the LAUNCH-STATUS.md (dated 2026-08-06), the one real code gap was:
+
 > Automated tests for Speed Dating mechanics, Themed Night, Rooftop, Date Night, and a `finalize_events` cycle under load
 
 This gap remains — the test suite has no event-specific tests (only `events.live.test.mjs` which tests infrastructure). The 1,000-burst stress test tested joins, but the minute-cron releasing holds at volume was never stress-tested. **Recommendation:** Fast-follow before scaling beyond early users.
@@ -169,9 +179,11 @@ This gap remains — the test suite has no event-specific tests (only `events.li
 ### 3. AGNES direct key dependency
 
 `/api/agent/route.ts` uses `AGNES_API_KEY` for the primary path, falling back to `Vercel AI Gateway` via `AI_MODEL`. The live test suite reports:
+
 ```
 ‑ AGNES burst probe (live) — AGNES_API_KEY not in .env.local
 ```
+
 This is a live-only test so it doesn't block CI, but in production the agent chat won't work without either `AGNES_API_KEY` or `VERCEL_OIDC_TOKEN`. **Recommendation:** Verify the production environment has one of these set before launch.
 
 ### 4. Stream API secrets in production
@@ -182,20 +194,21 @@ This is a live-only test so it doesn't block CI, but in production the agent cha
 
 ## 🧹 MINOR CLEANUP (Low Priority)
 
-| Item | File | Note |
-|---|---|---|
-| Dead CSS | `styles/main.css` | Unreachable — not imported anywhere, colors conflict with `globals.css` |
-| Unused import | `layout.tsx` | May have unused `Suspense` wrapper |
-| Single TODO | `utils/supabase/admin.ts:393` | `//TODO check quantity on subscription` — quantity with `@ts-ignore` |
-| Docs reference stale | `QWEN.md` | Mentions `styles/palette-colors.js` which no longer exists |
-| Chub test script | `/home/server/chub/package.json` | `test` script is `echo "Error: no test specified"` |
-| No root middleware | `middleware.ts` missing | `updateSession` exists in utils but is never called |
+| Item                 | File                             | Note                                                                    |
+| -------------------- | -------------------------------- | ----------------------------------------------------------------------- |
+| Dead CSS             | `styles/main.css`                | Unreachable — not imported anywhere, colors conflict with `globals.css` |
+| Unused import        | `layout.tsx`                     | May have unused `Suspense` wrapper                                      |
+| Single TODO          | `utils/supabase/admin.ts:393`    | `//TODO check quantity on subscription` — quantity with `@ts-ignore`    |
+| Docs reference stale | `QWEN.md`                        | Mentions `styles/palette-colors.js` which no longer exists              |
+| Chub test script     | `/home/server/chub/package.json` | `test` script is `echo "Error: no test specified"`                      |
+| No root middleware   | `middleware.ts` missing          | `updateSession` exists in utils but is never called                     |
 
 ---
 
 ## ✅ CONCLUSION
 
 **Club Cheeky is production-quality code.** The architecture shows clear engineering discipline:
+
 - Server-side authority for all financial/stateful operations
 - RLS on every table
 - Webhook idempotency with fail-closed behavior
@@ -205,6 +218,7 @@ This is a live-only test so it doesn't block CI, but in production the agent cha
 **No demo code found.** Zero placeholder implementations in production paths. Every subsystem (auth, payments, events, chat, matching, admin, story mode, coat check) has real implementations wired to real services.
 
 **What to do before public launch:**
+
 1. **High:** Create root `middleware.ts` calling `updateSession` — without it, session refresh and the last-floor cookie are broken
 2. **High:** Verify production env vars (`AGNES_API_KEY`/`VERCEL_OIDC_TOKEN`, all 3 Stream vars, Stripe webhook secret)
 3. **Medium:** Delete `styles/main.css` (dead code)

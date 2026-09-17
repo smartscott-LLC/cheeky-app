@@ -77,7 +77,7 @@ export default function Loading() {
       <div className="h-4 w-full bg-gray-200 rounded mb-2" />
       <div className="h-4 w-2/3 bg-gray-200 rounded" />
     </div>
-  )
+  );
 }
 ```
 
@@ -90,7 +90,7 @@ export default function Loading() {
       <div className="h-4 w-full bg-gray-200 rounded mb-2" />
       <div className="h-4 w-2/3 bg-gray-200 rounded" />
     </div>
-  )
+  );
 }
 ```
 
@@ -123,10 +123,10 @@ See the [`loading.js` API reference](/docs/app/api-reference/file-conventions/lo
 When multiple components perform async work (fetching data, reading from a database), wrap each one in its own `<Suspense>` boundary. Each boundary streams independently as its async work completes, in whatever order that happens, without blocking each other:
 
 ```tsx filename="app/dashboard/page.tsx" switcher
-import { Suspense } from 'react'
-import { Revenue } from './revenue'
-import { RecentOrders } from './recent-orders'
-import { Recommendations } from './recommendations'
+import { Suspense } from 'react';
+import { Revenue } from './revenue';
+import { RecentOrders } from './recent-orders';
+import { Recommendations } from './recommendations';
 
 export default function Dashboard() {
   return (
@@ -144,15 +144,15 @@ export default function Dashboard() {
         <Recommendations />
       </Suspense>
     </div>
-  )
+  );
 }
 ```
 
 ```jsx filename="app/dashboard/page.js" switcher
-import { Suspense } from 'react'
-import { Revenue } from './revenue'
-import { RecentOrders } from './recent-orders'
-import { Recommendations } from './recommendations'
+import { Suspense } from 'react';
+import { Revenue } from './revenue';
+import { RecentOrders } from './recent-orders';
+import { Recommendations } from './recommendations';
 
 export default function Dashboard() {
   return (
@@ -170,7 +170,7 @@ export default function Dashboard() {
         <Recommendations />
       </Suspense>
     </div>
-  )
+  );
 }
 ```
 
@@ -181,21 +181,21 @@ In this example, if `Revenue` resolves in 200ms, `RecentOrders` in 1s, and `Reco
 You can nest `<Suspense>` boundaries to create a layered loading experience. For example, a product page might stream the header immediately, the product details next, and the reviews last:
 
 ```tsx filename="app/product/[id]/page.tsx" switcher
-import { Suspense } from 'react'
-import { ProductDetails } from './product-details'
-import { Reviews } from './reviews'
+import { Suspense } from 'react';
+import { ProductDetails } from './product-details';
+import { Reviews } from './reviews';
 
 export async function generateStaticParams() {
-  const products = await getTopProducts()
-  return products.map((product) => ({ id: product.id }))
+  const products = await getTopProducts();
+  return products.map((product) => ({ id: product.id }));
 }
 
 export default async function ProductPage({
-  params,
+  params
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string }>;
 }) {
-  const { id } = await params
+  const { id } = await params;
 
   return (
     <div>
@@ -207,22 +207,22 @@ export default async function ProductPage({
         </Suspense>
       </Suspense>
     </div>
-  )
+  );
 }
 ```
 
 ```jsx filename="app/product/[id]/page.js" switcher
-import { Suspense } from 'react'
-import { ProductDetails } from './product-details'
-import { Reviews } from './reviews'
+import { Suspense } from 'react';
+import { ProductDetails } from './product-details';
+import { Reviews } from './reviews';
 
 export async function generateStaticParams() {
-  const products = await getTopProducts()
-  return products.map((product) => ({ id: product.id }))
+  const products = await getTopProducts();
+  return products.map((product) => ({ id: product.id }));
 }
 
 export default async function ProductPage({ params }) {
-  const { id } = await params
+  const { id } = await params;
 
   return (
     <div>
@@ -234,7 +234,7 @@ export default async function ProductPage({ params }) {
         </Suspense>
       </Suspense>
     </div>
-  )
+  );
 }
 ```
 
@@ -247,17 +247,17 @@ The key to maximizing what streams instantly is to defer dynamic data access to 
 Instead, pass the promise down and let the consuming component resolve it inside a `<Suspense>` boundary:
 
 ```tsx filename="app/dashboard/layout.tsx" switcher
-import { Suspense } from 'react'
-import { Nav } from './nav'
-import { UserMenu } from './user-menu'
-import { cookies } from 'next/headers'
+import { Suspense } from 'react';
+import { Nav } from './nav';
+import { UserMenu } from './user-menu';
+import { cookies } from 'next/headers';
 
 export default function DashboardLayout({
-  children,
+  children
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const cookieStore = cookies() // Start the work, but don't await
+  const cookieStore = cookies(); // Start the work, but don't await
 
   return (
     <div>
@@ -268,18 +268,18 @@ export default function DashboardLayout({
       </Nav>
       {children}
     </div>
-  )
+  );
 }
 ```
 
 ```jsx filename="app/dashboard/layout.js" switcher
-import { Suspense } from 'react'
-import { Nav } from './nav'
-import { UserMenu } from './user-menu'
-import { cookies } from 'next/headers'
+import { Suspense } from 'react';
+import { Nav } from './nav';
+import { UserMenu } from './user-menu';
+import { cookies } from 'next/headers';
 
 export default function DashboardLayout({ children }) {
-  const cookieStore = cookies() // Start the work, but don't await
+  const cookieStore = cookies(); // Start the work, but don't await
 
   return (
     <div>
@@ -290,7 +290,7 @@ export default function DashboardLayout({ children }) {
       </Nav>
       {children}
     </div>
-  )
+  );
 }
 ```
 
@@ -299,19 +299,19 @@ In this example, `<Nav>` and `{children}` render as part of the static shell bec
 The same principle applies to `params` and `searchParams`. Rather than destructuring them at the page level, pass the promise to the component that needs the value:
 
 ```tsx filename="app/shop/[category]/page.tsx" switcher
-import { Suspense } from 'react'
-import { Hero } from './hero'
-import { ProductGrid } from './product-grid'
+import { Suspense } from 'react';
+import { Hero } from './hero';
+import { ProductGrid } from './product-grid';
 
 export async function generateStaticParams() {
-  const categories = await getCategories()
-  return categories.map((c) => ({ category: c.slug }))
+  const categories = await getCategories();
+  return categories.map((c) => ({ category: c.slug }));
 }
 
 export default function ShopPage({
-  params,
+  params
 }: {
-  params: Promise<{ category: string }>
+  params: Promise<{ category: string }>;
 }) {
   return (
     <div>
@@ -320,18 +320,18 @@ export default function ShopPage({
         <ProductGrid paramsPromise={params} />
       </Suspense>
     </div>
-  )
+  );
 }
 ```
 
 ```jsx filename="app/shop/[category]/page.js" switcher
-import { Suspense } from 'react'
-import { Hero } from './hero'
-import { ProductGrid } from './product-grid'
+import { Suspense } from 'react';
+import { Hero } from './hero';
+import { ProductGrid } from './product-grid';
 
 export async function generateStaticParams() {
-  const categories = await getCategories()
-  return categories.map((c) => ({ category: c.slug }))
+  const categories = await getCategories();
+  return categories.map((c) => ({ category: c.slug }));
 }
 
 export default function ShopPage({ params }) {
@@ -342,7 +342,7 @@ export default function ShopPage({ params }) {
         <ProductGrid paramsPromise={params} />
       </Suspense>
     </div>
-  )
+  );
 }
 ```
 
@@ -390,72 +390,72 @@ Because the HTTP status code (`200 OK`) has already been sent with the first chu
 You can start a fetch in a [Server Component](/docs/app/glossary#server-component) and pass the unresolved promise as a prop to a [Client Component](/docs/app/glossary#client-component). The promise can be passed through as many layers as needed. Only the component that calls React's [`use`](https://react.dev/reference/react/use) API to read the value needs a `<Suspense>` boundary around it:
 
 ```tsx filename="app/dashboard/page.tsx" switcher
-import { Suspense } from 'react'
-import { StatsChart } from './stats-chart'
+import { Suspense } from 'react';
+import { StatsChart } from './stats-chart';
 
-type Stats = { revenue: number; orders: number }
+type Stats = { revenue: number; orders: number };
 
 async function getStats(): Promise<Stats> {
-  const res = await fetch('https://api.example.com/stats')
-  return res.json()
+  const res = await fetch('https://api.example.com/stats');
+  return res.json();
 }
 
 export default function Dashboard() {
   // Start the fetch during server render, don't await it
-  const statsPromise = getStats()
+  const statsPromise = getStats();
 
   return (
     <Suspense fallback={<p>Loading chart...</p>}>
       <StatsChart dataPromise={statsPromise} />
     </Suspense>
-  )
+  );
 }
 ```
 
 ```jsx filename="app/dashboard/page.js" switcher
-import { Suspense } from 'react'
-import { StatsChart } from './stats-chart'
+import { Suspense } from 'react';
+import { StatsChart } from './stats-chart';
 
 async function getStats() {
-  const res = await fetch('https://api.example.com/stats')
-  return res.json()
+  const res = await fetch('https://api.example.com/stats');
+  return res.json();
 }
 
 export default function Dashboard() {
   // Start the fetch during server render, don't await it
-  const statsPromise = getStats()
+  const statsPromise = getStats();
 
   return (
     <Suspense fallback={<p>Loading chart...</p>}>
       <StatsChart dataPromise={statsPromise} />
     </Suspense>
-  )
+  );
 }
 ```
 
 ```tsx filename="app/dashboard/stats-chart.tsx" switcher
-'use client'
+'use client';
 
-import { use } from 'react'
+import { use } from 'react';
 
-type Stats = { revenue: number; orders: number }
+type Stats = { revenue: number; orders: number };
 
 export function StatsChart({ dataPromise }: { dataPromise: Promise<Stats> }) {
-  const stats = use(dataPromise)
+  const stats = use(dataPromise);
 
-  return <div>{/* render chart with stats */}</div>
+  return <div>{/* render chart with stats */}</div>;
 }
 ```
 
 ```jsx filename="app/dashboard/stats-chart.js" switcher
-'use client'
+'use client';
 
-import { use } from 'react'
+import { use } from 'react';
 
 export function StatsChart({ dataPromise }) {
-  const stats = use(dataPromise)
+  const stats = use(dataPromise);
 
-  return <div>{/* render chart with stats */}</div>
+  return <div>{/* render chart with stats */}</div>;
 }
 ```
 
@@ -466,14 +466,14 @@ The fallback is sent immediately with the static shell. When the promise resolve
 When multiple components need the same data, start the fetch once and pass the promise through a context provider so any component in the subtree can resolve it with `use()`:
 
 ```tsx filename="app/layout.tsx"
-import { getUser } from '@/lib/data'
+import { getUser } from '@/lib/data';
 // Stores the promise in React context for the subtree
-import { UserProvider } from './user-provider'
+import { UserProvider } from './user-provider';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const userPromise = getUser()
+  const userPromise = getUser();
 
-  return <UserProvider userPromise={userPromise}>{children}</UserProvider>
+  return <UserProvider userPromise={userPromise}>{children}</UserProvider>;
 }
 ```
 
@@ -485,47 +485,47 @@ The patterns above rely on React and Suspense to stream UI. Outside of React ren
 
 ```ts filename="app/api/stream/route.ts" switcher
 export async function GET() {
-  const encoder = new TextEncoder()
+  const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
     async start(controller) {
       for (let i = 0; i < 10; i++) {
-        controller.enqueue(encoder.encode(`Chunk ${i + 1}\n`))
-        await new Promise((resolve) => setTimeout(resolve, 200))
+        controller.enqueue(encoder.encode(`Chunk ${i + 1}\n`));
+        await new Promise((resolve) => setTimeout(resolve, 200));
       }
-      controller.close()
-    },
-  })
+      controller.close();
+    }
+  });
 
   return new Response(stream, {
     headers: {
       'Content-Type': 'text/plain; charset=utf-8',
-      'X-Content-Type-Options': 'nosniff',
-    },
-  })
+      'X-Content-Type-Options': 'nosniff'
+    }
+  });
 }
 ```
 
 ```js filename="app/api/stream/route.js" switcher
 export async function GET() {
-  const encoder = new TextEncoder()
+  const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
     async start(controller) {
       for (let i = 0; i < 10; i++) {
-        controller.enqueue(encoder.encode(`Chunk ${i + 1}\n`))
-        await new Promise((resolve) => setTimeout(resolve, 200))
+        controller.enqueue(encoder.encode(`Chunk ${i + 1}\n`));
+        await new Promise((resolve) => setTimeout(resolve, 200));
       }
-      controller.close()
-    },
-  })
+      controller.close();
+    }
+  });
 
   return new Response(stream, {
     headers: {
       'Content-Type': 'text/plain; charset=utf-8',
-      'X-Content-Type-Options': 'nosniff',
-    },
-  })
+      'X-Content-Type-Options': 'nosniff'
+    }
+  });
 }
 ```
 
@@ -538,32 +538,32 @@ curl http://localhost:3000/api/stream
 You can also stream files without loading them entirely into memory. Use `FileHandle.readableWebStream()` to get a Web `ReadableStream` directly from a file:
 
 ```ts filename="app/api/download/route.ts" switcher
-import { open } from 'node:fs/promises'
+import { open } from 'node:fs/promises';
 
 export async function GET() {
-  const file = await open('/path/to/large-file.csv')
+  const file = await open('/path/to/large-file.csv');
 
   return new Response(file.readableWebStream(), {
     headers: {
       'Content-Type': 'text/csv',
-      'Content-Disposition': 'attachment; filename="data.csv"',
-    },
-  })
+      'Content-Disposition': 'attachment; filename="data.csv"'
+    }
+  });
 }
 ```
 
 ```js filename="app/api/download/route.js" switcher
-import { open } from 'node:fs/promises'
+import { open } from 'node:fs/promises';
 
 export async function GET() {
-  const file = await open('/path/to/large-file.csv')
+  const file = await open('/path/to/large-file.csv');
 
   return new Response(file.readableWebStream(), {
     headers: {
       'Content-Type': 'text/csv',
-      'Content-Disposition': 'attachment; filename="data.csv"',
-    },
-  })
+      'Content-Disposition': 'attachment; filename="data.csv"'
+    }
+  });
 }
 ```
 
@@ -621,52 +621,52 @@ When a `<Suspense>` fallback renders or a component suspends, the server must co
 The response body begins streaming when a Suspense fallback renders (for example, a `loading.tsx`) or when a component suspends under a `<Suspense>` boundary. To get a real HTTP status code for errors, place `notFound()` **before** any `await` or `<Suspense>` boundary:
 
 ```tsx filename="app/post/[slug]/page.tsx" switcher
-import { Suspense } from 'react'
-import { notFound } from 'next/navigation'
-import { PostContent } from './post-content'
+import { Suspense } from 'react';
+import { notFound } from 'next/navigation';
+import { PostContent } from './post-content';
 
 export async function generateStaticParams() {
-  const posts = await getPublishedPosts()
-  return posts.map((post) => ({ slug: post.slug }))
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export default async function PostPage({
-  params,
+  params
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params
-  const exists = await checkSlugExists(slug) // Fast existence check
-  if (!exists) notFound() // Real 404, before any Suspense boundary
+  const { slug } = await params;
+  const exists = await checkSlugExists(slug); // Fast existence check
+  if (!exists) notFound(); // Real 404, before any Suspense boundary
 
   return (
     <Suspense fallback={<p>Loading post...</p>}>
       <PostContent slug={slug} />
     </Suspense>
-  )
+  );
 }
 ```
 
 ```jsx filename="app/post/[slug]/page.js" switcher
-import { Suspense } from 'react'
-import { notFound } from 'next/navigation'
-import { PostContent } from './post-content'
+import { Suspense } from 'react';
+import { notFound } from 'next/navigation';
+import { PostContent } from './post-content';
 
 export async function generateStaticParams() {
-  const posts = await getPublishedPosts()
-  return posts.map((post) => ({ slug: post.slug }))
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export default async function PostPage({ params }) {
-  const { slug } = await params
-  const exists = await checkSlugExists(slug) // Fast existence check
-  if (!exists) notFound() // Real 404, before any Suspense boundary
+  const { slug } = await params;
+  const exists = await checkSlugExists(slug); // Fast existence check
+  if (!exists) notFound(); // Real 404, before any Suspense boundary
 
   return (
     <Suspense fallback={<p>Loading post...</p>}>
       <PostContent slug={slug} />
     </Suspense>
-  )
+  );
 }
 ```
 
@@ -701,13 +701,13 @@ module.exports = {
         headers: [
           {
             key: 'X-Accel-Buffering',
-            value: 'no',
-          },
-        ],
-      },
-    ]
-  },
-}
+            value: 'no'
+          }
+        ]
+      }
+    ];
+  }
+};
 ```
 
 ### CDNs
@@ -740,20 +740,20 @@ This section is about confirming the HTTP response is actually arriving in chunk
 const res = await fetch(
   'https://streaming-demo.labs.vercel.dev/suspense-demo',
   {
-    headers: { 'Accept-Encoding': 'identity' },
+    headers: { 'Accept-Encoding': 'identity' }
   }
-)
+);
 
-const reader = res.body.getReader()
-const decoder = new TextDecoder()
-let i = 0
-const start = Date.now()
+const reader = res.body.getReader();
+const decoder = new TextDecoder();
+let i = 0;
+const start = Date.now();
 
 while (true) {
-  const { done, value } = await reader.read()
-  if (done) break
-  console.log(`\nchunk ${i++} (+${Date.now() - start}ms)\n`)
-  console.log(decoder.decode(value))
+  const { done, value } = await reader.read();
+  if (done) break;
+  console.log(`\nchunk ${i++} (+${Date.now() - start}ms)\n`);
+  console.log(decoder.decode(value));
 }
 ```
 

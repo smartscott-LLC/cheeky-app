@@ -26,11 +26,11 @@ Blind Date and Date Night.
 The matchmaking games that resolve the instant the player acts — no clock,
 no room, no cron. Every one applies a **value to a choice**:
 
-| Game          | The choice                    | The value applied      | Resolved by         |
-| ------------- | ----------------------------- | ---------------------- | ------------------- |
-| Swipes (Spark) | One face                     | Like / skip            | `create_like`       |
-| L³            | Three faces                   | Leave / Like / Love    | `create_l3_pick`    |
-| Matchmaker    | A pair of flips (a round)     | Match / Strike         | `matchmaker_flip`   |
+| Game           | The choice                | The value applied   | Resolved by       |
+| -------------- | ------------------------- | ------------------- | ----------------- |
+| Swipes (Spark) | One face                  | Like / skip         | `create_like`     |
+| L³             | Three faces               | Leave / Like / Love | `create_l3_pick`  |
+| Matchmaker     | A pair of flips (a round) | Match / Strike      | `matchmaker_flip` |
 
 - **Shared machinery (the spine):** `matches`, rewards (`l3_rewards`,
   `gift_inventory`, `matchmaker_unlocks`), the messaging stack

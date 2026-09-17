@@ -16,55 +16,55 @@ Next.js includes its own server with `next start` by default. If you have an exi
 Take a look at the [following example](https://github.com/vercel/next.js/tree/canary/examples/custom-server) of a custom server:
 
 ```ts filename="server.ts" switcher
-import { createServer } from 'http'
-import next from 'next'
+import { createServer } from 'http';
+import next from 'next';
 
-const port = parseInt(process.env.PORT || '3000', 10)
-const dev = process.env.NODE_ENV !== 'production'
-const app = next({ dev })
-const handle = app.getRequestHandler()
+const port = parseInt(process.env.PORT || '3000', 10);
+const dev = process.env.NODE_ENV !== 'production';
+const app = next({ dev });
+const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
   createServer((req, res) => {
-    handle(req, res)
-  }).listen(port)
+    handle(req, res);
+  }).listen(port);
 
   console.log(
     `> Server listening at http://localhost:${port} as ${
       dev ? 'development' : process.env.NODE_ENV
     }`
-  )
-})
+  );
+});
 ```
 
 ```js filename="server.js" switcher
-import { createServer } from 'http'
-import next from 'next'
+import { createServer } from 'http';
+import next from 'next';
 
-const port = parseInt(process.env.PORT || '3000', 10)
-const dev = process.env.NODE_ENV !== 'production'
-const app = next({ dev })
-const handle = app.getRequestHandler()
+const port = parseInt(process.env.PORT || '3000', 10);
+const dev = process.env.NODE_ENV !== 'production';
+const app = next({ dev });
+const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
   createServer((req, res) => {
-    handle(req, res)
-  }).listen(port)
+    handle(req, res);
+  }).listen(port);
 
   console.log(
     `> Server listening at http://localhost:${port} as ${
       dev ? 'development' : process.env.NODE_ENV
     }`
-  )
-})
+  );
+});
 ```
 
 > **Set your own response headers before calling `handle`**: Next.js begins sending the response inside `handle(req, res)`, so by the time its promise resolves `res.headersSent` is already `true` and any later `res.setHeader()` call is silently discarded. Set headers you own, such as `Set-Cookie`, before handing the request to Next.js:
 >
 > ```js
-> res.setHeader('Set-Cookie', 'sessionId=abc123; Max-Age=2592000')
+> res.setHeader('Set-Cookie', 'sessionId=abc123; Max-Age=2592000');
 >
-> await handle(req, res)
+> await handle(req, res);
 > ```
 >
 > The same ordering applies when wrapping Next.js in another framework, for example `reply.raw` in Fastify or `res` in Express.
@@ -86,9 +86,9 @@ To run the custom server, you'll need to update the `scripts` in `package.json` 
 Alternatively, you can set up `nodemon` ([example](https://github.com/vercel/next.js/tree/canary/examples/custom-server)). The custom server uses the following import to connect the server with the Next.js application:
 
 ```js
-import next from 'next'
+import next from 'next';
 
-const app = next({})
+const app = next({});
 ```
 
 The above `next` import is a function that receives an object with the following options:
@@ -117,8 +117,8 @@ To disable this behavior and prevent routing based on files in `pages`, open `ne
 
 ```js filename="next.config.js"
 module.exports = {
-  useFileSystemPublicRoutes: false,
-}
+  useFileSystemPublicRoutes: false
+};
 ```
 
 > Note that `useFileSystemPublicRoutes` disables filename routes from SSR; client-side routing may still access those paths. When using this option, you should guard against navigation to routes you do not want programmatically.

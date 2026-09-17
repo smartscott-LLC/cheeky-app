@@ -1,10 +1,8 @@
-
-
 \`\`\`markdown name=STORY-MODE-IMPLEMENTATION-BLUEPRINT.md  
 \# Club Cheeky Story Mode Implementation Blueprint
 
-\*\*Feature:\*\* The Chase to the Coat Check — An Interactive Story RPG    
-\*\*Status:\*\* Development roadmap    
+\*\*Feature:\*\* The Chase to the Coat Check — An Interactive Story RPG  
+\*\*Status:\*\* Development roadmap  
 \*\*Last updated:\*\* 2026-08-31
 
 \---
@@ -33,13 +31,13 @@ A guided, narrative adventure that onboards new verified users through the Club 
 
 \#\#\# Story Beats (5 beats)
 
-| Beat | Location | Duration | Mechanics | AI/Event Role | Learning Goal |  
-|------|----------|----------|-----------|---------------|---------------|  
-| \*\*1: The Street\*\* | Outside the club | \~2 min | Intro dialogue \+ 1 choice | Chaz or Brutus greets | "Here's what the Club is" |  
-| \*\*2: Silver Floor\*\* | The Lobby/Dance Floor | \~3 min | Meet crew member \+ event participation | DJ (D34D\_B34T) or crew | "How tokens \+ events work" |  
-| \*\*3: Gold Floor\*\* | Gold floor room | \~3 min | Dialogue choices \+ gift mechanic intro | Roxy (mixologist) | "Gifts show interest; buy with tokens" |  
-| \*\*4: Plat/Diamond Gauntlet\*\* | Platinum & Diamond floors | \~4 min | Speed mini-game or decision tree | Trixie \+ Valentina | "The higher floors reveal more" |  
-| \*\*5: Rooftop Finale\*\* | Coat Check / Rooftop | \~3 min | Meet the Coat Check AI \+ final choice | Coat Check AI (new persona) | "The dream date is here; you unlock this" |
+| Beat                             | Location                  | Duration | Mechanics                               | AI/Event Role               | Learning Goal                             |
+| -------------------------------- | ------------------------- | -------- | --------------------------------------- | --------------------------- | ----------------------------------------- |
+| \*\*1: The Street\*\*            | Outside the club          | \~2 min  | Intro dialogue \+ 1 choice              | Chaz or Brutus greets       | "Here's what the Club is"                 |
+| \*\*2: Silver Floor\*\*          | The Lobby/Dance Floor     | \~3 min  | Meet crew member \+ event participation | DJ (D34D\_B34T) or crew     | "How tokens \+ events work"               |
+| \*\*3: Gold Floor\*\*            | Gold floor room           | \~3 min  | Dialogue choices \+ gift mechanic intro | Roxy (mixologist)           | "Gifts show interest; buy with tokens"    |
+| \*\*4: Plat/Diamond Gauntlet\*\* | Platinum & Diamond floors | \~4 min  | Speed mini-game or decision tree        | Trixie \+ Valentina         | "The higher floors reveal more"           |
+| \*\*5: Rooftop Finale\*\*        | Coat Check / Rooftop      | \~3 min  | Meet the Coat Check AI \+ final choice  | Coat Check AI (new persona) | "The dream date is here; you unlock this" |
 
 \*\*Total story time:\*\* \~15–17 minutes for first playthrough (mobile-friendly, not a slog).
 
@@ -53,38 +51,38 @@ Tracks state, score, and rewards for each user's story run(s).
 
 \`\`\`sql  
 CREATE TABLE user\_story\_progress (  
-  id BIGSERIAL PRIMARY KEY,  
-  user\_id UUID NOT NULL UNIQUE REFERENCES auth.users ON DELETE CASCADE,  
-    
-  \-- Current run  
-  current\_beat INT DEFAULT 0,           \-- 0 \= before start, 1–5 \= beat number, 5+ \= complete  
-  choices\_made JSONB DEFAULT '{}'::jsonb, \-- { "beat\_1": "choice\_A", "beat\_3": "choice\_B" }  
-  current\_score INT DEFAULT 0,  
-    
-  \-- Completion & rewards  
-  is\_complete BOOLEAN DEFAULT FALSE,  
-  completion\_date TIMESTAMP WITH TIME ZONE,  
-  final\_score INT,  
-    
-  \-- Reward tracking (one-time per tier, per user)  
-  reward\_tiers\_claimed JSONB DEFAULT '{}'::jsonb, \-- { "silver": true, "gold": true, "platinum": true, "diamond": true, "perfect": true }
-  last\_tier\_earned TEXT,                 \-- 'silver', 'gold', 'platinum', 'diamond', 'perfect'  
-    
-  \-- Metadata  
-  total\_runs INT DEFAULT 1,              \-- increments if user restarts after completion  
-  created\_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),  
-  updated\_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()  
+id BIGSERIAL PRIMARY KEY,  
+user\_id UUID NOT NULL UNIQUE REFERENCES auth.users ON DELETE CASCADE,
+
+\-- Current run  
+current\_beat INT DEFAULT 0, \-- 0 \= before start, 1–5 \= beat number, 5+ \= complete  
+choices\_made JSONB DEFAULT '{}'::jsonb, \-- { "beat\_1": "choice\_A", "beat\_3": "choice\_B" }  
+current\_score INT DEFAULT 0,
+
+\-- Completion & rewards  
+is\_complete BOOLEAN DEFAULT FALSE,  
+completion\_date TIMESTAMP WITH TIME ZONE,  
+final\_score INT,
+
+\-- Reward tracking (one-time per tier, per user)  
+reward\_tiers\_claimed JSONB DEFAULT '{}'::jsonb, \-- { "silver": true, "gold": true, "platinum": true, "diamond": true, "perfect": true }
+last\_tier\_earned TEXT, \-- 'silver', 'gold', 'platinum', 'diamond', 'perfect'
+
+\-- Metadata  
+total\_runs INT DEFAULT 1, \-- increments if user restarts after completion  
+created\_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),  
+updated\_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()  
 );
 
 \-- RLS: users can read/update only their own row  
 ALTER TABLE user\_story\_progress ENABLE ROW LEVEL SECURITY;  
 CREATE POLICY "users\_can\_read\_their\_story\_progress"  
-  ON user\_story\_progress FOR SELECT  
-  USING (auth.uid() \= user\_id);  
+ON user\_story\_progress FOR SELECT  
+USING (auth.uid() \= user\_id);  
 CREATE POLICY "users\_can\_update\_their\_story\_progress"  
-  ON user\_story\_progress FOR UPDATE  
-  USING (auth.uid() \= user\_id)  
-  WITH CHECK (auth.uid() \= user\_id);  
+ON user\_story\_progress FOR UPDATE  
+USING (auth.uid() \= user\_id)  
+WITH CHECK (auth.uid() \= user\_id);  
 \`\`\`
 
 \#\#\# New Table: \`story\_beat\_completion\`
@@ -93,18 +91,18 @@ Tracks which beats users have completed (for replay detection and analytics).
 
 \`\`\`sql  
 CREATE TABLE story\_beat\_completion (  
-  id BIGSERIAL PRIMARY KEY,  
-  user\_id UUID NOT NULL REFERENCES auth.users ON DELETE CASCADE,  
-  beat\_number INT NOT NULL,             \-- 1–5  
-  completed\_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),  
-  choice\_made TEXT,                      \-- the choice the user picked at this beat  
-  score\_earned INT                       \-- points from this beat  
+id BIGSERIAL PRIMARY KEY,  
+user\_id UUID NOT NULL REFERENCES auth.users ON DELETE CASCADE,  
+beat\_number INT NOT NULL, \-- 1–5  
+completed\_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),  
+choice\_made TEXT, \-- the choice the user picked at this beat  
+score\_earned INT \-- points from this beat  
 );
 
 ALTER TABLE story\_beat\_completion ENABLE ROW LEVEL SECURITY;  
 CREATE POLICY "users\_can\_read\_their\_beat\_completions"  
-  ON story\_beat\_completion FOR SELECT  
-  USING (auth.uid() \= user\_id);  
+ON story\_beat\_completion FOR SELECT  
+USING (auth.uid() \= user\_id);  
 \`\`\`
 
 \#\#\# Updated Table: \`collectibles\`
@@ -114,17 +112,17 @@ The story completion unlocks new collectibles and Coat Check vault keepers (6 pe
 \`\`\`sql
 \-- Seed collectibles for each tier
 INSERT INTO collectibles (id, name, description, icon\_url, tier, unlock\_condition) VALUES
-  ('badge-apprentice', 'The Apprentice', 'Your first step into Club Cheeky.', '/cheeky\_icons\_and\_things/badge\_new\_arrival.webp', 'silver', 'story\_tier:silver'),
-  ('badge-dater', 'The Dater', 'You learned the rhythm of the Club.', '/cheeky\_icons\_and\_things/badge\_first\_date.webp', 'gold', 'story\_tier:gold'),
-  ('badge-romantic', 'The Romantic', 'You climbed the floors and found connection.', '/cheeky\_icons\_and\_things/badge\_spark\_finder.webp', 'platinum', 'story\_tier:platinum'),
-  ('badge-dream-keeper', 'The Dream Keeper', 'The Club revealed its secrets to you.', '/cheeky\_icons\_and\_things/badge\_date\_master.webp', 'diamond', 'story\_tier:diamond'),
-  ('badge-legend', 'The Legend', 'Perfect score. You are Club Cheeky.', '/cheeky\_icons\_and\_things/badge\_chat\_champion.webp', 'perfect', 'story\_tier:perfect'),
-  ('coat-check-sasha-blonde', 'Sasha \u2014 Blonde Thai', 'Warm, radiant, the life of every afterparty.', '/coat_check/Sasha v2 \u2013 Blonde Thai.webp', 'diamond', 'story\_mode:platinum\_plus'),
-  ('coat-check-sasha-keeper', 'Sasha \u2014 The Keeper', 'Chic, magnetic, razor-sharp wit. She runs the VIP coat check.', '/coat_check/Sasha \u2013 The Keeper.webp', 'diamond', 'story\_mode:platinum\_plus'),
-  ('coat-check-sasha-edgy', 'Sasha \u2014 Black Hair Edgy', 'Bold, confident, always one step ahead of the crowd.', '/coat_check/Sasha v3 \u2013 Black Hair Edgy.webp', 'diamond', 'story\_mode:platinum\_plus'),
-  ('coat-check-jax-default', 'Jax \u2014 Default', 'Smooth, relaxed, effortlessly cool. He keeps your stash safe.', '/coat_check/jax2.webp', 'diamond', 'story\_mode:platinum\_plus'),
-  ('coat-check-jax-vaultkeeper', 'Jax \u2014 The Vaultkeeper', 'Charismatic heartthrob with a crooked smile and rolled-up sleeves.', '/coat_check/Jax \u2013 The Vaultkeeper.webp', 'diamond', 'story\_mode:platinum\_plus'),
-  ('coat-check-jax-slicked', 'Jax \u2014 Slicked Back', 'Sharp-dressed, confident, the guy everybody wants to chat with.', '/coat_check/Jax v2 \u2013 Slicked Back.webp', 'diamond', 'story\_mode:platinum\_plus');
+('badge-apprentice', 'The Apprentice', 'Your first step into Club Cheeky.', '/cheeky\_icons\_and\_things/badge\_new\_arrival.webp', 'silver', 'story\_tier:silver'),
+('badge-dater', 'The Dater', 'You learned the rhythm of the Club.', '/cheeky\_icons\_and\_things/badge\_first\_date.webp', 'gold', 'story\_tier:gold'),
+('badge-romantic', 'The Romantic', 'You climbed the floors and found connection.', '/cheeky\_icons\_and\_things/badge\_spark\_finder.webp', 'platinum', 'story\_tier:platinum'),
+('badge-dream-keeper', 'The Dream Keeper', 'The Club revealed its secrets to you.', '/cheeky\_icons\_and\_things/badge\_date\_master.webp', 'diamond', 'story\_tier:diamond'),
+('badge-legend', 'The Legend', 'Perfect score. You are Club Cheeky.', '/cheeky\_icons\_and\_things/badge\_chat\_champion.webp', 'perfect', 'story\_tier:perfect'),
+('coat-check-sasha-blonde', 'Sasha \u2014 Blonde Thai', 'Warm, radiant, the life of every afterparty.', '/coat_check/Sasha v2 \u2013 Blonde Thai.webp', 'diamond', 'story\_mode:platinum\_plus'),
+('coat-check-sasha-keeper', 'Sasha \u2014 The Keeper', 'Chic, magnetic, razor-sharp wit. She runs the VIP coat check.', '/coat_check/Sasha \u2013 The Keeper.webp', 'diamond', 'story\_mode:platinum\_plus'),
+('coat-check-sasha-edgy', 'Sasha \u2014 Black Hair Edgy', 'Bold, confident, always one step ahead of the crowd.', '/coat_check/Sasha v3 \u2013 Black Hair Edgy.webp', 'diamond', 'story\_mode:platinum\_plus'),
+('coat-check-jax-default', 'Jax \u2014 Default', 'Smooth, relaxed, effortlessly cool. He keeps your stash safe.', '/coat_check/jax2.webp', 'diamond', 'story\_mode:platinum\_plus'),
+('coat-check-jax-vaultkeeper', 'Jax \u2014 The Vaultkeeper', 'Charismatic heartthrob with a crooked smile and rolled-up sleeves.', '/coat_check/Jax \u2013 The Vaultkeeper.webp', 'diamond', 'story\_mode:platinum\_plus'),
+('coat-check-jax-slicked', 'Jax \u2014 Slicked Back', 'Sharp-dressed, confident, the guy everybody wants to chat with.', '/coat_check/Jax v2 \u2013 Slicked Back.webp', 'diamond', 'story\_mode:platinum\_plus');
 \`\`\`
 
 \---
@@ -141,7 +139,7 @@ Each beat has:
 
 \#\#\# Beat 1: The Street (Chaz or Brutus Intro)
 
-\*\*Opener:\*\*    
+\*\*Opener:\*\*  
 \> "Welcome to Club Cheeky. I'm \*\*Chaz\*\*, the manager. You're here to find someone special — but first, you've gotta get past the bouncer and learn how the Club works. Ready?"
 
 \*\*Choices:\*\*  
@@ -155,7 +153,7 @@ Each beat has:
 
 \#\#\# Beat 2: Silver Floor (DJ – First Event Touch)
 
-\*\*Opener:\*\*    
+\*\*Opener:\*\*  
 \> "Yo\! I'm the DJ. Every hour on the hour, the Dance Floor opens — it's free, it's packed, and it's where the magic happens. Wanna jump in?"
 
 \*\*Mechanic:\*\* User must \*\*actually join a Dance Floor event\*\* (real token hold, real AI partners).
@@ -171,7 +169,7 @@ Each beat has:
 
 \#\#\# Beat 3: Gold Floor (Roxy – Gift Mechanic)
 
-\*\*Opener:\*\*    
+\*\*Opener:\*\*  
 \> "I'm \*\*Roxy\*\*, the mixologist. On this floor, people send each other gifts to show interest. Want to try?"
 
 \*\*Mechanic:\*\* User is given \*\*3 free tokens\*\* (temporary, story-only hold). They can:  
@@ -189,7 +187,7 @@ Each beat has:
 
 \#\#\# Beat 4: Plat/Diamond Gauntlet (Trixie \+ Valentina)
 
-\*\*Opener:\*\*    
+\*\*Opener:\*\*  
 \> "I'm \*\*Trixie\*\*, the waitress on Platinum. You made it this far — most don't. Want to meet \*\*Valentina\*\* upstairs?"
 
 \*\*Mechanic:\*\* A small \*\*choice tree\*\* (2–3 decision points) that flavors the dialogue but doesn't lock progression. Each choice signals user archetype (romantic, bold, cautious).
@@ -246,16 +244,16 @@ Each beat has:
 
 \#\#\# Reward Tiers (One-Time Per User)
 
-| Tier | Score Threshold | Token Reward | Collectible | Badge | Notes |
-|------|-----------------|--------------|-------------|-------|-------|
-| Silver | 0–29 | 10 | `badge-apprentice` | "The Apprentice" | Completing the story earns this |
-| Gold | 30–49 | 50 | `badge-dater` | "The Dater" | First real bonus |
-| Platinum | 50–69 | 100 | `badge-romantic` | "The Romantic" | Coat Check personas unlock here (pick 1 of 6) |
-| Diamond | 70–99 | 150 | `badge-dream-keeper` | "The Dream Keeper" | Max standard reward |
-| Perfect Score | 100 | 250 | `badge-legend` | "The Legend" | Special bonus — only for flawless runs |
+| Tier          | Score Threshold | Token Reward | Collectible          | Badge              | Notes                                         |
+| ------------- | --------------- | ------------ | -------------------- | ------------------ | --------------------------------------------- |
+| Silver        | 0–29            | 10           | `badge-apprentice`   | "The Apprentice"   | Completing the story earns this               |
+| Gold          | 30–49           | 50           | `badge-dater`        | "The Dater"        | First real bonus                              |
+| Platinum      | 50–69           | 100          | `badge-romantic`     | "The Romantic"     | Coat Check personas unlock here (pick 1 of 6) |
+| Diamond       | 70–99           | 150          | `badge-dream-keeper` | "The Dream Keeper" | Max standard reward                           |
+| Perfect Score | 100             | 250          | `badge-legend`       | "The Legend"       | Special bonus — only for flawless runs        |
 
 \*\*Mechanics:\*\*
-\- Rewards are claimed \*\*on completion\*\* (server-side, idempotent). 
+\- Rewards are claimed \*\*on completion\*\* (server-side, idempotent).
 \- If user's score qualifies for Platinum but they already claimed Gold, they upgrade to Platinum and receive the delta (100 \- 50 \= \+50 tokens).
 \- \*\*Coat Check Personas (6 variants):\*\* Unlock your first pick when you hit Platinum+ (50+ pts). The other 5 unlock on replays. All stay unlocked forever once claimed.
 \- \*\*Perfect Score (100pts):\*\* Separate bonus tier. Even if Diamond was already claimed, a perfect run earns the Legend badge + 250 tokens. One-time only.
@@ -267,21 +265,21 @@ Each beat has:
 
 \#\#\# Story Routes
 
-| Route | Method | Purpose | Auth |  
-|-------|--------|---------|------|  
-| \`/api/story/start\` | POST | Initialize story progress for user | Verified user |  
-| \`/api/story/beat/:beat\_number\` | POST | Submit beat completion \+ choices | Verified user |  
-| \`/api/story/complete\` | POST | Mark story as complete, calculate final score, award rewards | Verified user |  
-| \`/api/story/progress\` | GET | Fetch current story state (for resuming) | Verified user |  
-| \`/api/story/reset\` | POST | Reset story for a fresh run (admin only or opt-in) | Verified user \+ flag |
+| Route                             | Method | Purpose                                                      | Auth                  |
+| --------------------------------- | ------ | ------------------------------------------------------------ | --------------------- |
+| \`/api/story/start\`              | POST   | Initialize story progress for user                           | Verified user         |
+| \`/api/story/beat/:beat\_number\` | POST   | Submit beat completion \+ choices                            | Verified user         |
+| \`/api/story/complete\`           | POST   | Mark story as complete, calculate final score, award rewards | Verified user         |
+| \`/api/story/progress\`           | GET    | Fetch current story state (for resuming)                     | Verified user         |
+| \`/api/story/reset\`              | POST   | Reset story for a fresh run (admin only or opt-in)           | Verified user \+ flag |
 
 \#\#\# Client Routes (Next.js Pages)
 
-| Route | Component | Purpose |  
-|-------|-----------|---------|  
-| \`/story\` | \`StoryMode\` | Story container (full-screen mobile experience) |  
-| \`/story/beat/\[number\]\` | \`StoryBeat\` | Individual beat UI (optional: could be a single page with dynamic content) |  
-| \`/story/complete\` | \`StoryComplete\` | Completion screen (score, rewards, Coat Check unlock) |
+| Route                      | Component         | Purpose                                                                    |
+| -------------------------- | ----------------- | -------------------------------------------------------------------------- |
+| \`/story\`                 | \`StoryMode\`     | Story container (full-screen mobile experience)                            |
+| \`/story/beat/\[number\]\` | \`StoryBeat\`     | Individual beat UI (optional: could be a single page with dynamic content) |
+| \`/story/complete\`        | \`StoryComplete\` | Completion screen (score, rewards, Coat Check unlock)                      |
 
 \---
 
@@ -340,9 +338,9 @@ Each beat has:
 \#\#\# Event Integration
 
 \- Story-mode Dance Floor event is identical to normal events, but:  
-  \- Only AI participants (no real humans in story runs).  
-  \- Story context added to event object (\`is\_story\_mode: true\`).  
-  \- Results fed back to story score (via webhook or direct API call).
+\- Only AI participants (no real humans in story runs).  
+\- Story context added to event object (\`is\_story\_mode: true\`).  
+\- Results fed back to story score (via webhook or direct API call).
 
 \#\#\# Coat Check Personas — 6 Vault Keepers
 
@@ -409,8 +407,8 @@ Each beat has:
 
 \---
 
-This blueprint is \*\*locked in, ready to copy to your docs\*\*, and covers every angle: database schema, API design, mobile-first UX, scoring mechanics, reward tiers (with one-time idempotency), AI integration, event hooks, and a clear phase breakdown. 
+This blueprint is \*\*locked in, ready to copy to your docs\*\*, and covers every angle: database schema, API design, mobile-first UX, scoring mechanics, reward tiers (with one-time idempotency), AI integration, event hooks, and a clear phase breakdown.
 
 Print this, paste it into \`docs/STORY-MODE-BLUEPRINT.md\`, and reference it during development. The validation checklist at the end is your merge gate — nothing goes live without it.
 
-\*\*Ready to start Phase 1, or do you want to lock in any of those "Questions to Resolve" first?\*\*  
+\*\*Ready to start Phase 1, or do you want to lock in any of those "Questions to Resolve" first?\*\*

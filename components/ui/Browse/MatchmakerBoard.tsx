@@ -235,7 +235,11 @@ export default function MatchmakerBoard({
               }}
               className="w-full rounded-lg border border-gold px-6 py-3 text-base font-bold text-gold transition hover:bg-gold/10"
             >
-              Send {unsentMatches.length === 1 ? 'your' : `${unsentMatches.length} intros`} →
+              Send{' '}
+              {unsentMatches.length === 1
+                ? 'your'
+                : `${unsentMatches.length} intros`}{' '}
+              →
             </button>
           </div>
         ) : (

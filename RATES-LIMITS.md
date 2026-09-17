@@ -98,12 +98,12 @@ Tracked in: MessageThread (Date Night) when cycling prompts; NOT tracked in Spee
 
 ## Lounge Horn
 
-|                       | All tiers  |
-| --------------------- | ---------- |
-| Cooldown              | 1 per 15 min |
-| Cost (in-lounge chat — full horn) | 10 tokens |
-| Cost (gift shop chat-only) | 5 tokens |
-| Cost (gift shop full horn) | 10 tokens |
+|                                   | All tiers    |
+| --------------------------------- | ------------ |
+| Cooldown                          | 1 per 15 min |
+| Cost (in-lounge chat — full horn) | 10 tokens    |
+| Cost (gift shop chat-only)        | 5 tokens     |
+| Cost (gift shop full horn)        | 10 tokens    |
 
 Keys: `horn:user:{user_id}` (lounge) + `horn:shop:{user_id}` (gift shop, chat-only 5t) + `horn:shop:full:{user_id}` (gift shop full 10t)
 Error name: `horn_cooldown`

@@ -17,6 +17,6 @@ before they reach users.
 
 ## Timeline
 
-| Date | Perf | A11y | Best Practices | SEO | Notes |
-|---|---|---|---|---|---|
-| 2026-08-06 | 98 | 96 | 100 | 100 | Post-regression baseline — the 85–92 perf dip (next/image optimizer era) is fixed with static `<img>` + `fetchPriority="high"` on the LCP. Lighthouse 13.4.0, run 22:57 UTC. |
+| Date       | Perf | A11y | Best Practices | SEO | Notes                                                                                                                                                                        |
+| ---------- | ---- | ---- | -------------- | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-08-06 | 98   | 96   | 100            | 100 | Post-regression baseline — the 85–92 perf dip (next/image optimizer era) is fixed with static `<img>` + `fetchPriority="high"` on the LCP. Lighthouse 13.4.0, run 22:57 UTC. |

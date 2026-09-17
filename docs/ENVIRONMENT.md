@@ -46,11 +46,11 @@ accepts both names, so whatever the dashboard hands out works.
 
 ## Analytics & monitoring
 
-| Variable                            | Public | Used for                                                          |
-| ----------------------------------- | ------ | ----------------------------------------------------------------- |
-| `NEXT_PUBLIC_SENTRY_DSN` | public | Sentry DSN override (public by design; hardcoded fallback exists) |
-| `SENTRY_AUTH_TOKEN`                 | secret | Sentry source-map uploads at build                                |
-| `SENTRY_ORG` / `SENTRY_PROJECT`     | secret | Sentry org/project for uploads                                    |
+| Variable                        | Public | Used for                                                          |
+| ------------------------------- | ------ | ----------------------------------------------------------------- |
+| `NEXT_PUBLIC_SENTRY_DSN`        | public | Sentry DSN override (public by design; hardcoded fallback exists) |
+| `SENTRY_AUTH_TOKEN`             | secret | Sentry source-map uploads at build                                |
+| `SENTRY_ORG` / `SENTRY_PROJECT` | secret | Sentry org/project for uploads                                    |
 
 ## Mail (Resend)
 

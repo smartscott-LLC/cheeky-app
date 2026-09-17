@@ -20,18 +20,18 @@ Use [TanStack Query](https://tanstack.com/query) to fetch data in Client Compone
 Wrap the routes that use TanStack Query in a `QueryClientProvider`. Create a new query client for each server render and reuse one query client in the browser:
 
 ```tsx filename="app/products/providers.tsx"
-'use client'
+'use client';
 
-import type { ReactNode } from 'react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import type { ReactNode } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-let browserQueryClient: QueryClient | undefined
+let browserQueryClient: QueryClient | undefined;
 
 function getQueryClient() {
   // Keep server requests isolated and preserve the browser cache across renders.
-  if (typeof window === 'undefined') return new QueryClient()
-  browserQueryClient ??= new QueryClient()
-  return browserQueryClient
+  if (typeof window === 'undefined') return new QueryClient();
+  browserQueryClient ??= new QueryClient();
+  return browserQueryClient;
 }
 
 export function Providers({ children }: { children: ReactNode }) {
@@ -39,17 +39,17 @@ export function Providers({ children }: { children: ReactNode }) {
     <QueryClientProvider client={getQueryClient()}>
       {children}
     </QueryClientProvider>
-  )
+  );
 }
 ```
 
 Render the provider from the nearest shared layout:
 
 ```tsx filename="app/products/layout.tsx"
-import { Providers } from './providers'
+import { Providers } from './providers';
 
 export default function Layout({ children }: LayoutProps<'/products'>) {
-  return <Providers>{children}</Providers>
+  return <Providers>{children}</Providers>;
 }
 ```
 
@@ -62,34 +62,34 @@ TanStack Query can fetch entirely in the browser when the initial view can wait 
 Use `useQuery` when the component should render its own loading and error states. The `enabled` option delays the request until the interaction provides an input:
 
 ```tsx filename="app/product-autocomplete.tsx"
-'use client'
+'use client';
 
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query';
 
-type Product = { id: string; name: string }
+type Product = { id: string; name: string };
 
 async function searchProducts(query: string): Promise<Product[]> {
   const response = await fetch(
     `/api/products?query=${encodeURIComponent(query)}`
-  )
-  if (!response.ok) throw new Error('Failed to fetch products')
-  return response.json()
+  );
+  if (!response.ok) throw new Error('Failed to fetch products');
+  return response.json();
 }
 
 export function ProductAutocomplete({ query }: { query: string }) {
   const {
     data = [],
     error,
-    isPending,
+    isPending
   } = useQuery({
     queryKey: ['product-search', query],
     queryFn: () => searchProducts(query),
-    enabled: query.length > 0,
-  })
+    enabled: query.length > 0
+  });
 
-  if (!query) return null
-  if (error) return <p>Failed to load products.</p>
-  if (isPending) return <p>Loading products...</p>
+  if (!query) return null;
+  if (error) return <p>Failed to load products.</p>;
+  if (isPending) return <p>Loading products...</p>;
 
   return (
     <ul>
@@ -97,7 +97,7 @@ export function ProductAutocomplete({ query }: { query: string }) {
         <li key={product.id}>{product.name}</li>
       ))}
     </ul>
-  )
+  );
 }
 ```
 
@@ -108,36 +108,36 @@ Learn more: [TanStack Query queries](https://tanstack.com/query/latest/docs/fram
 Use `useSuspenseQuery` when the nearest Suspense boundary should define the loading UI. Keep the interactive shell outside the boundary so it remains available while the results load:
 
 ```tsx filename="app/product-autocomplete.tsx"
-'use client'
+'use client';
 
-import { useSuspenseQuery } from '@tanstack/react-query'
-import { Suspense } from 'react'
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { Suspense } from 'react';
 
-type Product = { id: string; name: string }
+type Product = { id: string; name: string };
 
 async function searchProducts(query: string): Promise<Product[]> {
   const response = await fetch(
     `/api/products?query=${encodeURIComponent(query)}`
-  )
-  if (!response.ok) throw new Error('Failed to fetch products')
-  return response.json()
+  );
+  if (!response.ok) throw new Error('Failed to fetch products');
+  return response.json();
 }
 
 export function ProductAutocomplete({ query }: { query: string }) {
-  if (!query) return null
+  if (!query) return null;
 
   return (
     <Suspense fallback={<p>Loading products...</p>}>
       <ProductResults query={query} />
     </Suspense>
-  )
+  );
 }
 
 function ProductResults({ query }: { query: string }) {
   const { data } = useSuspenseQuery({
     queryKey: ['product-search', query],
-    queryFn: () => searchProducts(query),
-  })
+    queryFn: () => searchProducts(query)
+  });
 
   return (
     <ul>
@@ -145,7 +145,7 @@ function ProductResults({ query }: { query: string }) {
         <li key={product.id}>{product.name}</li>
       ))}
     </ul>
-  )
+  );
 }
 ```
 
@@ -164,16 +164,16 @@ Use the [server-provided data pattern](/docs/app/guides/client-side-data-fetchin
 TanStack Query 5.40.0 or later can dehydrate pending queries. Start `prefetchQuery` without awaiting it, then pass the dehydrated state to `<HydrationBoundary>`. Override `queryFn` on the server because the Route Handler's relative URL only resolves in the browser:
 
 ```tsx filename="app/products/[id]/page.tsx" switcher
-import { Suspense } from 'react'
+import { Suspense } from 'react';
 import {
   defaultShouldDehydrateQuery,
   dehydrate,
   HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query'
-import { getProduct } from './data'
-import { productCache } from './product-cache'
-import { ProductView } from './product-view'
+  QueryClient
+} from '@tanstack/react-query';
+import { getProduct } from './data';
+import { productCache } from './product-cache';
+import { ProductView } from './product-view';
 
 export default function Page({ params }: PageProps<'/products/[id]'>) {
   return (
@@ -182,43 +182,42 @@ export default function Page({ params }: PageProps<'/products/[id]'>) {
         <ProductData id={id} />
       ))}
     </Suspense>
-  )
+  );
 }
 
 function ProductData({ id }: { id: string }) {
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient();
 
   // Not awaited, so rendering is not blocked.
   void queryClient.prefetchQuery({
     ...productCache.options(id),
-    queryFn: () => getProduct(id),
-  })
+    queryFn: () => getProduct(id)
+  });
 
   return (
     <HydrationBoundary
       state={dehydrate(queryClient, {
         shouldDehydrateQuery: (query) =>
-          defaultShouldDehydrateQuery(query) ||
-          query.state.status === 'pending',
+          defaultShouldDehydrateQuery(query) || query.state.status === 'pending'
       })}
     >
       <ProductView id={id} />
     </HydrationBoundary>
-  )
+  );
 }
 ```
 
 ```jsx filename="app/products/[id]/page.js" switcher
-import { Suspense } from 'react'
+import { Suspense } from 'react';
 import {
   defaultShouldDehydrateQuery,
   dehydrate,
   HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query'
-import { getProduct } from './data'
-import { productCache } from './product-cache'
-import { ProductView } from './product-view'
+  QueryClient
+} from '@tanstack/react-query';
+import { getProduct } from './data';
+import { productCache } from './product-cache';
+import { ProductView } from './product-view';
 
 export default function Page({ params }) {
   return (
@@ -227,38 +226,37 @@ export default function Page({ params }) {
         <ProductData id={id} />
       ))}
     </Suspense>
-  )
+  );
 }
 
 function ProductData({ id }) {
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient();
 
   // Not awaited, so rendering is not blocked.
   void queryClient.prefetchQuery({
     ...productCache.options(id),
-    queryFn: () => getProduct(id),
-  })
+    queryFn: () => getProduct(id)
+  });
 
   return (
     <HydrationBoundary
       state={dehydrate(queryClient, {
         shouldDehydrateQuery: (query) =>
-          defaultShouldDehydrateQuery(query) ||
-          query.state.status === 'pending',
+          defaultShouldDehydrateQuery(query) || query.state.status === 'pending'
       })}
     >
       <ProductView id={id} />
     </HydrationBoundary>
-  )
+  );
 }
 ```
 
 The server and Client Component must use the same query key. Keep the key and query options together so both call sites share the same identity:
 
 ```ts filename="app/products/[id]/product-cache.ts" switcher
-import { queryOptions } from '@tanstack/react-query'
+import { queryOptions } from '@tanstack/react-query';
 
-export type Product = { id: string; name: string }
+export type Product = { id: string; name: string };
 
 export const productCache = {
   key: (id: string) => ['product', id] as const,
@@ -266,17 +264,17 @@ export const productCache = {
     queryOptions({
       queryKey: productCache.key(id),
       queryFn: async (): Promise<Product> => {
-        const res = await fetch(`/api/products/${id}`)
-        if (!res.ok) throw new Error('Failed to fetch product')
-        return res.json()
+        const res = await fetch(`/api/products/${id}`);
+        if (!res.ok) throw new Error('Failed to fetch product');
+        return res.json();
       },
-      staleTime: 30_000,
-    }),
-}
+      staleTime: 30_000
+    })
+};
 ```
 
 ```js filename="app/products/[id]/product-cache.js" switcher
-import { queryOptions } from '@tanstack/react-query'
+import { queryOptions } from '@tanstack/react-query';
 
 export const productCache = {
   key: (id) => ['product', id],
@@ -284,13 +282,13 @@ export const productCache = {
     queryOptions({
       queryKey: productCache.key(id),
       queryFn: async () => {
-        const res = await fetch(`/api/products/${id}`)
-        if (!res.ok) throw new Error('Failed to fetch product')
-        return res.json()
+        const res = await fetch(`/api/products/${id}`);
+        if (!res.ok) throw new Error('Failed to fetch product');
+        return res.json();
       },
-      staleTime: 30_000,
-    }),
-}
+      staleTime: 30_000
+    })
+};
 ```
 
 The query function fetches a [Route Handler](/docs/app/api-reference/file-conventions/route) so it can run on the client. The `staleTime` prevents an immediate client refetch by keeping the hydrated data fresh for 30 seconds. Choose a duration based on how quickly the data can change.
@@ -302,28 +300,28 @@ As with SWR, `params.then()` resolves the `id` inside `<Suspense>`, and `Product
 The Client Component reads the same query key with `useSuspenseQuery` (or `useQuery` to render `isPending` and `error` states inline):
 
 ```tsx filename="app/products/[id]/product-view.tsx" switcher
-'use client'
+'use client';
 
-import { useSuspenseQuery } from '@tanstack/react-query'
-import { productCache } from './product-cache'
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { productCache } from './product-cache';
 
 export function ProductView({ id }: { id: string }) {
-  const { data } = useSuspenseQuery(productCache.options(id))
+  const { data } = useSuspenseQuery(productCache.options(id));
 
-  return <h1>{data.name}</h1>
+  return <h1>{data.name}</h1>;
 }
 ```
 
 ```jsx filename="app/products/[id]/product-view.js" switcher
-'use client'
+'use client';
 
-import { useSuspenseQuery } from '@tanstack/react-query'
-import { productCache } from './product-cache'
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { productCache } from './product-cache';
 
 export function ProductView({ id }) {
-  const { data } = useSuspenseQuery(productCache.options(id))
+  const { data } = useSuspenseQuery(productCache.options(id));
 
-  return <h1>{data.name}</h1>
+  return <h1>{data.name}</h1>;
 }
 ```
 
@@ -334,31 +332,31 @@ Learn more: [TanStack Query Advanced SSR](https://tanstack.com/query/latest/docs
 Enable [`cacheComponents`](/docs/app/api-reference/config/next-config-js/cacheComponents) in `next.config.ts` before using this pattern. You can then cache the server data provided to TanStack Query. Add [`use cache`](/docs/app/api-reference/directives/use-cache), choose a [`cacheLife`](/docs/app/api-reference/functions/cacheLife) profile, and apply [`cacheTag`](/docs/app/api-reference/functions/cacheTag) so mutations can invalidate it:
 
 ```ts filename="app/products/[id]/data.ts" switcher
-import { cacheLife, cacheTag } from 'next/cache'
-import type { Product } from './product-cache'
+import { cacheLife, cacheTag } from 'next/cache';
+import type { Product } from './product-cache';
 
 export async function getProduct(id: string): Promise<Product> {
-  'use cache'
-  cacheLife('max')
-  cacheTag(`product:${id}`)
+  'use cache';
+  cacheLife('max');
+  cacheTag(`product:${id}`);
 
-  const product = await db.product.findUnique({ where: { id } })
-  if (!product) throw new Error('Product not found')
-  return product
+  const product = await db.product.findUnique({ where: { id } });
+  if (!product) throw new Error('Product not found');
+  return product;
 }
 ```
 
 ```js filename="app/products/[id]/data.js" switcher
-import { cacheLife, cacheTag } from 'next/cache'
+import { cacheLife, cacheTag } from 'next/cache';
 
 export async function getProduct(id) {
-  'use cache'
-  cacheLife('max')
-  cacheTag(`product:${id}`)
+  'use cache';
+  cacheLife('max');
+  cacheTag(`product:${id}`);
 
-  const product = await db.product.findUnique({ where: { id } })
-  if (!product) throw new Error('Product not found')
-  return product
+  const product = await db.product.findUnique({ where: { id } });
+  if (!product) throw new Error('Product not found');
+  return product;
 }
 ```
 
@@ -397,108 +395,108 @@ Hydration provides the initial client cache value. After hydration, TanStack Que
 ```ts filename="app/activity/activity-cache.ts" switcher
 export const activityCache = {
   key: ['activity', 'unread'] as const,
-  tag: (userId: string) => `activity:${userId}`,
-}
+  tag: (userId: string) => `activity:${userId}`
+};
 ```
 
 ```js filename="app/activity/activity-cache.js" switcher
 export const activityCache = {
   key: ['activity', 'unread'],
-  tag: (userId) => `activity:${userId}`,
-}
+  tag: (userId) => `activity:${userId}`
+};
 ```
 
 On mutation, use `useMutation`'s [`onMutate`](https://tanstack.com/query/latest/docs/framework/react/guides/optimistic-updates) callback to update the cache immediately and restore the previous value in `onError` if the write fails. This example keeps the optimistic value after the action succeeds because the final value is known:
 
 ```tsx filename="app/activity/mark-read-button.tsx" switcher
-'use client'
+'use client';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { markActivityReadAction } from './actions'
-import { activityCache } from './activity-cache'
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { markActivityReadAction } from './actions';
+import { activityCache } from './activity-cache';
 
 export function MarkReadButton() {
-  const queryClient = useQueryClient()
-  const queryKey = activityCache.key
+  const queryClient = useQueryClient();
+  const queryKey = activityCache.key;
 
   const markRead = useMutation({
     mutationFn: markActivityReadAction,
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey })
-      const previous = queryClient.getQueryData(queryKey)
-      queryClient.setQueryData(queryKey, { count: 0 })
-      return { previous }
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData(queryKey, { count: 0 });
+      return { previous };
     },
     onError: (_error, _variables, context) => {
-      queryClient.setQueryData(queryKey, context?.previous)
-    },
-  })
+      queryClient.setQueryData(queryKey, context?.previous);
+    }
+  });
 
-  return <button onClick={() => markRead.mutate()}>Mark read</button>
+  return <button onClick={() => markRead.mutate()}>Mark read</button>;
 }
 ```
 
 ```jsx filename="app/activity/mark-read-button.js" switcher
-'use client'
+'use client';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { markActivityReadAction } from './actions'
-import { activityCache } from './activity-cache'
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { markActivityReadAction } from './actions';
+import { activityCache } from './activity-cache';
 
 export function MarkReadButton() {
-  const queryClient = useQueryClient()
-  const queryKey = activityCache.key
+  const queryClient = useQueryClient();
+  const queryKey = activityCache.key;
 
   const markRead = useMutation({
     mutationFn: markActivityReadAction,
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey })
-      const previous = queryClient.getQueryData(queryKey)
-      queryClient.setQueryData(queryKey, { count: 0 })
-      return { previous }
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData(queryKey, { count: 0 });
+      return { previous };
     },
     onError: (_error, _variables, context) => {
-      queryClient.setQueryData(queryKey, context?.previous)
-    },
-  })
+      queryClient.setQueryData(queryKey, context?.previous);
+    }
+  });
 
-  return <button onClick={() => markRead.mutate()}>Mark read</button>
+  return <button onClick={() => markRead.mutate()}>Mark read</button>;
 }
 ```
 
 The Server Action writes to the database and expires the tagged server data with [`updateTag`](/docs/app/api-reference/functions/updateTag). Tag the cached server query with [`cacheTag`](/docs/app/api-reference/functions/cacheTag) so the tag matches:
 
 ```ts filename="app/activity/actions.ts" switcher
-'use server'
+'use server';
 
-import { updateTag } from 'next/cache'
+import { updateTag } from 'next/cache';
 import {
   getCurrentUserId,
-  markActivityRead as markActivityReadInDatabase,
-} from './data'
-import { activityCache } from './activity-cache'
+  markActivityRead as markActivityReadInDatabase
+} from './data';
+import { activityCache } from './activity-cache';
 
 export async function markActivityReadAction() {
-  const userId = await getCurrentUserId()
-  await markActivityReadInDatabase(userId)
-  updateTag(activityCache.tag(userId))
+  const userId = await getCurrentUserId();
+  await markActivityReadInDatabase(userId);
+  updateTag(activityCache.tag(userId));
 }
 ```
 
 ```js filename="app/activity/actions.js" switcher
-'use server'
+'use server';
 
-import { updateTag } from 'next/cache'
+import { updateTag } from 'next/cache';
 import {
   getCurrentUserId,
-  markActivityRead as markActivityReadInDatabase,
-} from './data'
-import { activityCache } from './activity-cache'
+  markActivityRead as markActivityReadInDatabase
+} from './data';
+import { activityCache } from './activity-cache';
 
 export async function markActivityReadAction() {
-  const userId = await getCurrentUserId()
-  await markActivityReadInDatabase(userId)
-  updateTag(activityCache.tag(userId))
+  const userId = await getCurrentUserId();
+  await markActivityReadInDatabase(userId);
+  updateTag(activityCache.tag(userId));
 }
 ```
 
@@ -513,42 +511,42 @@ The TanStack Query pattern above uses `dehydrate()` to create the hydration stat
 Instead, cache only that timestamp and build the dehydrated state by hand. Wrap the time read in [`use cache`](/docs/app/api-reference/directives/use-cache) with the same tags as the data reads. When a mutation invalidates those tags, the data and its timestamp advance together, so `<HydrationBoundary>` overwrites the client query on the next navigation:
 
 ```tsx filename="app/lib/hydrate.ts" switcher
-import 'server-only'
+import 'server-only';
 
-import { cacheLife, cacheTag } from 'next/cache'
+import { cacheLife, cacheTag } from 'next/cache';
 import {
   defaultShouldDehydrateQuery,
   QueryClient,
   type DehydratedState,
-  type QueryKey,
-} from '@tanstack/react-query'
+  type QueryKey
+} from '@tanstack/react-query';
 
 type HydratedQuery = {
-  queryKey: QueryKey
-  data: unknown
-}
+  queryKey: QueryKey;
+  data: unknown;
+};
 
 type HydrationOptions = {
-  tags: string[]
-}
+  tags: string[];
+};
 
 async function getHydrationUpdatedAt(tags: string[]) {
-  'use cache'
-  cacheTag(...tags)
-  cacheLife('max')
-  return Date.now()
+  'use cache';
+  cacheTag(...tags);
+  cacheLife('max');
+  return Date.now();
 }
 
 export async function dehydrate(
   queries: HydratedQuery[],
   options: HydrationOptions
 ): Promise<DehydratedState> {
-  const updatedAt = await getHydrationUpdatedAt(options.tags)
+  const updatedAt = await getHydrationUpdatedAt(options.tags);
 
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient();
 
   for (const query of queries) {
-    queryClient.setQueryData(query.queryKey, query.data, { updatedAt })
+    queryClient.setQueryData(query.queryKey, query.data, { updatedAt });
   }
 
   return {
@@ -562,32 +560,35 @@ export async function dehydrate(
         queryHash: query.queryHash,
         queryKey: query.queryKey,
         state: query.state,
-        ...(query.meta ? { meta: query.meta } : {}),
-      })),
-  }
+        ...(query.meta ? { meta: query.meta } : {})
+      }))
+  };
 }
 ```
 
 ```js filename="app/lib/hydrate.js" switcher
-import 'server-only'
+import 'server-only';
 
-import { cacheLife, cacheTag } from 'next/cache'
-import { defaultShouldDehydrateQuery, QueryClient } from '@tanstack/react-query'
+import { cacheLife, cacheTag } from 'next/cache';
+import {
+  defaultShouldDehydrateQuery,
+  QueryClient
+} from '@tanstack/react-query';
 
 async function getHydrationUpdatedAt(tags) {
-  'use cache'
-  cacheTag(...tags)
-  cacheLife('max')
-  return Date.now()
+  'use cache';
+  cacheTag(...tags);
+  cacheLife('max');
+  return Date.now();
 }
 
 export async function dehydrate(queries, options) {
-  const updatedAt = await getHydrationUpdatedAt(options.tags)
+  const updatedAt = await getHydrationUpdatedAt(options.tags);
 
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient();
 
   for (const query of queries) {
-    queryClient.setQueryData(query.queryKey, query.data, { updatedAt })
+    queryClient.setQueryData(query.queryKey, query.data, { updatedAt });
   }
 
   return {
@@ -601,55 +602,55 @@ export async function dehydrate(queries, options) {
         queryHash: query.queryHash,
         queryKey: query.queryKey,
         state: query.state,
-        ...(query.meta ? { meta: query.meta } : {}),
-      })),
-  }
+        ...(query.meta ? { meta: query.meta } : {})
+      }))
+  };
 }
 ```
 
 Await the helper in the segment that owns the data, passing the data and the same tags used on the underlying `getProduct` read. Hand the result to `<HydrationBoundary>` inside `ProductData`:
 
 ```tsx filename="app/products/[id]/page.tsx" switcher
-import { HydrationBoundary } from '@tanstack/react-query'
-import { dehydrate } from '@/app/lib/hydrate'
-import { getProduct } from './data'
-import { productCache } from './product-cache'
-import { ProductView } from './product-view'
+import { HydrationBoundary } from '@tanstack/react-query';
+import { dehydrate } from '@/app/lib/hydrate';
+import { getProduct } from './data';
+import { productCache } from './product-cache';
+import { ProductView } from './product-view';
 
 async function ProductData({ id }: { id: string }) {
-  const product = await getProduct(id)
+  const product = await getProduct(id);
   const state = await dehydrate(
     [{ queryKey: productCache.key(id), data: product }],
     { tags: [productCache.tag(id)] }
-  )
+  );
 
   return (
     <HydrationBoundary state={state}>
       <ProductView id={id} />
     </HydrationBoundary>
-  )
+  );
 }
 ```
 
 ```jsx filename="app/products/[id]/page.js" switcher
-import { HydrationBoundary } from '@tanstack/react-query'
-import { dehydrate } from '@/app/lib/hydrate'
-import { getProduct } from './data'
-import { productCache } from './product-cache'
-import { ProductView } from './product-view'
+import { HydrationBoundary } from '@tanstack/react-query';
+import { dehydrate } from '@/app/lib/hydrate';
+import { getProduct } from './data';
+import { productCache } from './product-cache';
+import { ProductView } from './product-view';
 
 async function ProductData({ id }) {
-  const product = await getProduct(id)
+  const product = await getProduct(id);
   const state = await dehydrate(
     [{ queryKey: productCache.key(id), data: product }],
     { tags: [productCache.tag(id)] }
-  )
+  );
 
   return (
     <HydrationBoundary state={state}>
       <ProductView id={id} />
     </HydrationBoundary>
-  )
+  );
 }
 ```
 

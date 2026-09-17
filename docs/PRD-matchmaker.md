@@ -16,7 +16,7 @@ the generosity engine applied to the most-gated thing in dating.
 
 **"Always a winner."** The 6 random faces are wildcards, so the two unlocked
 pairs may not be the two people the user staked — but any match is a win:
-an unlocked message to *someone*. The user may send it or keep it; the
+an unlocked message to _someone_. The user may send it or keep it; the
 recipient may accept or decline **silently**. Wins are messages; losses are
 quiet.
 
@@ -59,18 +59,18 @@ flowchart TD
 ## 4. Floor rules
 
 - **Drafts (the swipe phase): your floor or beneath.** (Amended during
-  build: the founder opened drafts to your floor *and below* — the paid
+  build: the founder opened drafts to your floor _and below_ — the paid
   floors keep their exclusivity above you, but the downstairs is fair
   game.) No free-tier peeks at paid-floor faces.
 - **Randoms (the board): any floor, from the compatible pool.**
-  Random *within* the same `compatible()` filter the board uses (no
+  Random _within_ the same `compatible()` filter the board uses (no
   guy-on-guy boards), verified-only is moot (you can't get in the club
   unverified — the pool is the whole club). All random for now;
   floor-weighting (same-floor common, upper-floor rarer) is a later tune.
 - **Cross-floor unlocks are earned + consented.** Matching an upper-floor
   face earns one intro; the recipient accepts or declines silently.
 - **Game swipes are draft picks, not real likes.** No accidental matches
-  from the swipe phase. If a draft pick has already liked *you* — that's a
+  from the swipe phase. If a draft pick has already liked _you_ — that's a
   real mutual: it surfaces as a normal match and leaves the board.
 
 ## 5. Limits & economy
@@ -78,20 +78,21 @@ flowchart TD
 - **Plays per day scale with the floor (2/3/4/5)** — every paid floor steps
   up, mirroring the messaging ladder (75/15 → unlimited/40 → unlimited/100):
 
-  | Floor | Plays/day |
-  |---|---|
-  | Silver (free) | 2 |
-  | Gold | 3 |
-  | Platinum | 4 |
-  | Diamond | 5 |
+  | Floor         | Plays/day |
+  | ------------- | --------- |
+  | Silver (free) | 2         |
+  | Gold          | 3         |
+  | Platinum      | 4         |
+  | Diamond       | 5         |
 
   The dial is server-side (same `current_tier` case pattern as the message
   caps) so a one-line change rebalances the whole ladder. Each play is one
   full board. **5 is the absolute ceiling** — it caps recipient noise and
   keeps upper-floor randoms rare, so a Diamond board still feels special.
   Rewards spenders; never shrinks the free tier.
+
 - **Unlock messages ride their own allowance** — they never eat the free
-  tier's 5-new-conversations cap and never shrink it. The game *is* the
+  tier's 5-new-conversations cap and never shrink it. The game _is_ the
   gate; no double-penalty.
 - **No tokens, no purchases, no boosts.** The intro is earned by play.
 - The daily plays cap is server-side (same `bump_rate_limit` pattern) so it
@@ -100,9 +101,9 @@ flowchart TD
 ## 6. Guardrails (binding)
 
 - **Silent loss, public win — with the rebound amendment (founder).** A
-  declined unlock ends *contact* with no follow-up, no nudge, no "they'd
-  love to hear from you." The recipient stays silent. But the *sender is
-  told* the outcome — wrapped in the win: "they declined, but you still
+  declined unlock ends _contact_ with no follow-up, no nudge, no "they'd
+  love to hear from you." The recipient stays silent. But the _sender is
+  told_ the outcome — wrapped in the win: "they declined, but you still
   won the game — your [Matchmaker-exclusive gift] is in your inventory."
   The brain anchors on the gift; the decline becomes the next shot, not a
   bruise (the rebound engine, §9a).
@@ -119,10 +120,10 @@ flowchart TD
 - **Four exclusive gifts, one per floor**, never for sale: The First Spark
   (silver) 🔥, The Golden Ticket (gold) 🎫, The Platinum Pass (platinum) 💠,
   The Diamond Key (diamond) 🗝️. `buy_gift` refuses them (`gift_not_purchasable`).
-- **Accept** → the *recipient* earns the **sender's-floor** variant. The
+- **Accept** → the _recipient_ earns the **sender's-floor** variant. The
   collectible pull: accept from a Gold face → the Gold gift; a Diamond
   face → the Diamond gift — "Dang, I need that one for the set."
-- **Decline** → the *sender* earns their **own floor's** variant as the
+- **Decline** → the _sender_ earns their **own floor's** variant as the
   consolation. It lands in inventory (`available`), re-giftable through
   the normal gift flow (silent mini-kind gesture), and is linked to the
   unlock so history shows exactly what was earned.

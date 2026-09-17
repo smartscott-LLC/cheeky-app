@@ -32,7 +32,7 @@ and meaningful instead of being hoarded or diluted.
   per 3 profiles instead of ~0–1 per 10, both sides match more and the network
   warms up — men get matched, so men stay.
 - **It's ownable.** "L³" is a name and a brand, not a swipe clone. It becomes
-  *the* Club Cheeky way to meet, and it feeds the same matches table the events
+  _the_ Club Cheeky way to meet, and it feeds the same matches table the events
   already use.
 
 ## 3. The mechanic
@@ -51,16 +51,16 @@ and meaningful instead of being hoarded or diluted.
 The reward ladder is set by the strength of the mutual signal. Leave kills it
 at any level — zero and zero, or zero and one, generates a plain nothing.
 
-| Your pick | Their pick   | Tier                 | Result                                            |
-| --------- | ------------ | -------------------- | ------------------------------------------------- |
-| Leave     | anything     | — (no match)         | **Nothing. Silent.** No follow-up, no nudge.       |
-| Like      | Like         | **T1**               | Match + 5 free messages each in that match        |
-| Like      | Love         | **T1**               | Match + 5 free messages each (the Like pulls it   |
-|           |              |                      | down — same T1 as two Likes)                       |
-| Love      | Love         | **T2 — the super match** | Match + 5 free messages each + a gift from the |
-|           |              |                      | catalog (the club pops the cork)                  |
+| Your pick | Their pick | Tier                     | Result                                          |
+| --------- | ---------- | ------------------------ | ----------------------------------------------- |
+| Leave     | anything   | — (no match)             | **Nothing. Silent.** No follow-up, no nudge.    |
+| Like      | Like       | **T1**                   | Match + 5 free messages each in that match      |
+| Like      | Love       | **T1**                   | Match + 5 free messages each (the Like pulls it |
+|           |            |                          | down — same T1 as two Likes)                    |
+| Love      | Love       | **T2 — the super match** | Match + 5 free messages each + a gift from the  |
+|           |            |                          | catalog (the club pops the cork)                |
 
-- **T1 = “we match, and the club gives us a line.”** 5 free messages *each*
+- **T1 = “we match, and the club gives us a line.”** 5 free messages _each_
   (10 total) scoped to that match — they count against nothing; they're an
   earned allowance, not a purchase. Never shrinks the free tier.
 - **T2 = “boom, super match.”** Everything in T1 plus a **gift** granted to
@@ -73,7 +73,7 @@ at any level — zero and zero, or zero and one, generates a plain nothing.
 ## 5. Why Love pays — the tier rewards
 
 Pick Love and you've made the strongest move in the club. The tier rewards
-make Love the *fun* pick, not the risky one:
+make Love the _fun_ pick, not the risky one:
 
 1. **T1 — the free line.** A match plus **5 free messages each** scoped to
    that conversation — even if a free tier is at the daily cap, this match's
@@ -121,9 +121,11 @@ affordance (never inlined into the flow). Future modes slot in here — the
 same weekly cadence as icebreakers and events, but for matchmaking.
 
 **Mode 1 — Spark (the 1-for-1, existing browse):**
+
 > One face at a time. Say yes or skip — a mutual yes is an instant spark.
 
 **Mode 2 — L³:**
+
 > Three faces at once. Rank them — Leave, Like, Love — then the next trio.
 > Mutual Love is a super match.
 
@@ -155,7 +157,7 @@ same weekly cadence as icebreakers and events, but for matchmaking.
 3. **Trio source**: random verified members vs. preference-weighted (floors,
    distance, the Spark List's existing signals)? Start random, weight later.
 4. **How the match conversation counts** against the existing rate limits —
-   confirm the T1/T2 message allowance bypasses the *cap* (not the *table*),
+   confirm the T1/T2 message allowance bypasses the _cap_ (not the _table_),
    so abuse is still rate-limited at the database.
 5. **The T2 gift** — **decided: floor-tiered.** A Silver super-match grants a
    Silver-tier gift; a Diamond one gets the top shelf. The gift pool follows

@@ -21,17 +21,17 @@ microfrontends.json
 
 \`\`\`  
 {  
-  "$schema": "https://openapi.vercel.sh/microfrontends.json",  
-  "applications": {  
-    "web": {},  
-    "docs": {  
-      "routing": \[  
-        {  
-          "paths": \["/docs/:path\*", "/new-path-to-route"\]  
-        }  
-      \]  
-    }  
-  }  
+"$schema": "https://openapi.vercel.sh/microfrontends.json",  
+"applications": {  
+"web": {},  
+"docs": {  
+"routing": \[  
+{  
+"paths": \["/docs/:path\*", "/new-path-to-route"\]  
+}  
+\]  
+}  
+}  
 }  
 \`\`\`
 
@@ -82,8 +82,8 @@ microfrontends.json
 
 \`\`\`  
 "your-application": {  
-  "assetPrefix": "marketing-assets",  
-  "routing": \[...\]  
+"assetPrefix": "marketing-assets",  
+"routing": \[...\]  
 }  
 \`\`\`
 
@@ -123,26 +123,25 @@ This is compatible with the \[Flags SDK\](https://flags-sdk.dev) or it can be us
 
 If using this with the Flags SDK, make sure to share the same value of the \`FLAGS\_SECRET\` environment between all microfrontends in the same group.
 
-1\. \#\#\# Specify a flag name  
-     
-   In your \`microfrontends.json\` file, add a name in the \`flag\` field for the group of paths:  
-     
-   microfrontends.json  
-     
-   \`\`\`  
-   {  
-     "$schema": "https://openapi.vercel.sh/microfrontends.json",  
-     "applications": {  
-       "web": {},  
-       "docs": {  
-         "routing": \[{              "flag": "name-of-feature-flag",              "paths": \["/flagged-path"\]            }          \]        }      }    }    \`\`\`        Instead of being automatically routed to the \`docs\` microfrontend, requests to \`/flagged-path\` will now be routed to the default application to make the decision about routing.     2\. \#\#\# Add microfrontends middleware        The \`@vercel/microfrontends\` package uses middleware to route requests to the correct location for flagged paths and based on what microfrontends were deployed for your commit. Only the default application needs microfrontends middleware.        You can add it to your Next.js application with the following code:        middleware.ts        \`\`\`    import type { NextRequest } from 'next/server';    import { runMicrofrontendsMiddleware } from '@vercel/microfrontends/next/middleware';         export async function middleware(request: NextRequest) {      const response \= await runMicrofrontendsMiddleware({        request,        flagValues: {          'name-of-feature-flag': async () \=\> { ... },        }      });      if (response) {        return response;      }    }         // Define routes or paths where this middleware should apply    export const config \= {      matcher: \[        '/.well-known/vercel/microfrontends/client-config', // For prefetch optimizations for flagged paths        '/flagged/path',      \],    };    \`\`\`        Your middleware matcher should include \`/.well-known/vercel/microfrontends/client-config\`. This endpoint is used by the client to know which application the path is being routed to for prefetch optimizations. The client will make a request to this well known endpoint to fetch the result of the path routing decision for this session.        Make sure that any flagged paths are also configured in the \[middleware matcher\](https://nextjs.org/docs/app/building-your-application/routing/middleware\#matcher) so that middleware runs for these paths.  
-     
-   Any function that returns \`Promise\<boolean\>\` can be used as the implementation of the flag. This also works directly with \[feature flags\](/docs/flags) on Vercel.  
-     
-   If the flag returns true, the microfrontends middleware will route the path to the microfrontend specified in \`microfrontends.json\`. If it returns false, the request will continue to be handled by the default application.  
-     
-   We recommend setting up \[\`validateMiddlewareConfig\`\](/docs/microfrontends/troubleshooting\#validatemiddlewareconfig) and \[\`validateMiddlewareOnFlaggedPaths\`\](/docs/microfrontends/troubleshooting\#validatemiddlewareonflaggedpaths) tests to prevent many common middleware misconfigurations.  
-   
+1\. \#\#\# Specify a flag name
+
+In your \`microfrontends.json\` file, add a name in the \`flag\` field for the group of paths:
+
+microfrontends.json
+
+\`\`\`  
+{  
+"$schema": "https://openapi.vercel.sh/microfrontends.json",  
+"applications": {  
+"web": {},  
+"docs": {  
+"routing": \[{ "flag": "name-of-feature-flag", "paths": \["/flagged-path"\] } \] } } } \`\`\` Instead of being automatically routed to the \`docs\` microfrontend, requests to \`/flagged-path\` will now be routed to the default application to make the decision about routing. 2\. \#\#\# Add microfrontends middleware The \`@vercel/microfrontends\` package uses middleware to route requests to the correct location for flagged paths and based on what microfrontends were deployed for your commit. Only the default application needs microfrontends middleware. You can add it to your Next.js application with the following code: middleware.ts \`\`\` import type { NextRequest } from 'next/server'; import { runMicrofrontendsMiddleware } from '@vercel/microfrontends/next/middleware'; export async function middleware(request: NextRequest) { const response \= await runMicrofrontendsMiddleware({ request, flagValues: { 'name-of-feature-flag': async () \=\> { ... }, } }); if (response) { return response; } } // Define routes or paths where this middleware should apply export const config \= { matcher: \[ '/.well-known/vercel/microfrontends/client-config', // For prefetch optimizations for flagged paths '/flagged/path', \], }; \`\`\` Your middleware matcher should include \`/.well-known/vercel/microfrontends/client-config\`. This endpoint is used by the client to know which application the path is being routed to for prefetch optimizations. The client will make a request to this well known endpoint to fetch the result of the path routing decision for this session. Make sure that any flagged paths are also configured in the \[middleware matcher\](https://nextjs.org/docs/app/building-your-application/routing/middleware\#matcher) so that middleware runs for these paths.
+
+Any function that returns \`Promise\<boolean\>\` can be used as the implementation of the flag. This also works directly with \[feature flags\](/docs/flags) on Vercel.
+
+If the flag returns true, the microfrontends middleware will route the path to the microfrontend specified in \`microfrontends.json\`. If it returns false, the request will continue to be handled by the default application.
+
+We recommend setting up \[\`validateMiddlewareConfig\`\](/docs/microfrontends/troubleshooting\#validatemiddlewareconfig) and \[\`validateMiddlewareOnFlaggedPaths\`\](/docs/microfrontends/troubleshooting\#validatemiddlewareonflaggedpaths) tests to prevent many common middleware misconfigurations.
 
 \#\# How deployment routing works
 
@@ -156,12 +155,12 @@ The M icon on the deployment page indicates that the domain has microfrontends r
 
 Vercel sets microfrontends routing for a domain when the domain is created or updated, such as when a deployment is built, promoted, or rolled back. For each project in the microfrontends group, the domain or URL type determines which deployment Vercel selects:
 
-| Domain or URL                                                                                                     | Routing order for each microfrontend                                                                                                                                                                            | When routing changes                                                                |  
+| Domain or URL | Routing order for each microfrontend | When routing changes |  
 | \----------------------------------------------------------------------------------------------------------------- | \--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | \----------------------------------------------------------------------------------- |  
-| Production domain                                                                                                 | The project's current production deployment.                                                                                                                                                                    | When you promote or roll back the project's production deployment.                  |  
-| Custom environment domain                                                                                         | A deployment in the custom environment with the same name. If one is unavailable, Vercel uses the group's configured \[fallback environment\](/docs/microfrontends/managing-microfrontends\#fallback-environment). | When the matching custom environment or fallback environment receives a deployment. |  
-| Branch URL or \[domain assigned to a Git branch\](/docs/domains/working-with-domains/assign-domain-to-a-git-branch) | The latest deployment for the matching Git branch. If one is unavailable, Vercel uses the group's configured fallback environment.                                                                              | When the branch or fallback environment receives a deployment.                      |  
-| Deployment URL                                                                                                    | A deployment from the same commit. If one is unavailable, Vercel uses the branch deployment captured when the URL was created, followed by the fallback deployment captured at the same time.                   | The routing targets remain fixed to the point in time when Vercel created the URL.  |
+| Production domain | The project's current production deployment. | When you promote or roll back the project's production deployment. |  
+| Custom environment domain | A deployment in the custom environment with the same name. If one is unavailable, Vercel uses the group's configured \[fallback environment\](/docs/microfrontends/managing-microfrontends\#fallback-environment). | When the matching custom environment or fallback environment receives a deployment. |  
+| Branch URL or \[domain assigned to a Git branch\](/docs/domains/working-with-domains/assign-domain-to-a-git-branch) | The latest deployment for the matching Git branch. If one is unavailable, Vercel uses the group's configured fallback environment. | When the branch or fallback environment receives a deployment. |  
+| Deployment URL | A deployment from the same commit. If one is unavailable, Vercel uses the branch deployment captured when the URL was created, followed by the fallback deployment captured at the same time. | The routing targets remain fixed to the point in time when Vercel created the URL. |
 
 \#\#\# Custom domain routing
 
@@ -222,85 +221,79 @@ The \`microfrontends.json\` file is used to configure your microfrontends. If th
 
 \#\#\# Config
 
-| Property       | Type                                      | Description                                                            | Required |  
+| Property | Type | Description | Required |  
 | \-------------- | \----------------------------------------- | \---------------------------------------------------------------------- | \-------- |  
-| \`$schema\`      | \`string\`                                  | See https://openapi.vercel.sh/microfrontends.json.                     |          |  
-| \`version\`      | \`string\`                                  | The version of the microfrontends config schema.                       |          |  
+| \`$schema\` | \`string\` | See https://openapi.vercel.sh/microfrontends.json. | |  
+| \`version\` | \`string\` | The version of the microfrontends config schema. | |  
 | \`applications\` | \[ApplicationRouting\](\#applicationrouting) | Mapping of Vercel project names to their microfrontend configurations. | Required |  
-| \`options\`      | \[Options\](\#options)                       | Optional configuration options for the microfrontend.                  |          |
+| \`options\` | \[Options\](\#options) | Optional configuration options for the microfrontend. | |
 
 \#\#\# ApplicationRouting
 
 \\\[key: string\\\]: \[Application\](\#application)
 
-  
-
 Mapping of Vercel project names to their microfrontend configurations.
-
-  
 
 key: The Vercel project name of the microfrontend application. Note: If this name does not also match the name \\\`name\\\` from the \\\`package.json\\\`, set \\\`packageName\\\` with the name used in \\\`package.json\\\`. See. \[application naming\](/docs/microfrontends/configuration\#application-naming).
 
 \#\#\# Application
 
-\[DefaultApplication\](\#defaultapplication) or \[ChildApplication\](\#childapplication).    
-    
+\[DefaultApplication\](\#defaultapplication) or \[ChildApplication\](\#childapplication).
+
 The configuration for a microfrontend application. There must always be one default application.
 
 \#\#\# DefaultApplication
 
-| Property      | Type                                      | Description                                                                                                                                                                                                                                                                                                                                                               | Required |  
+| Property | Type | Description | Required |  
 | \------------- | \----------------------------------------- | \------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | \-------- |  
-| \`packageName\` | \`string\`                                  | The name used to run the application, e.g. the \\\`name\\\` field in the \\\`package.json\\\`. This is used by the local proxy to map the application config to the locally running app. This is only necessary when the application name does not match the \\\`name\\\` used in \\\`package.json\\\`. See. \[application naming\](/docs/microfrontends/configuration\#application-naming). |          |  
-| \`development\` | \[DefaultDevelopment\](\#defaultdevelopment) | Development configuration for the default application.                                                                                                                                                                                                                                                                                                                    | Required |
+| \`packageName\` | \`string\` | The name used to run the application, e.g. the \\\`name\\\` field in the \\\`package.json\\\`. This is used by the local proxy to map the application config to the locally running app. This is only necessary when the application name does not match the \\\`name\\\` used in \\\`package.json\\\`. See. \[application naming\](/docs/microfrontends/configuration\#application-naming). | |  
+| \`development\` | \[DefaultDevelopment\](\#defaultdevelopment) | Development configuration for the default application. | Required |
 
 \#\#\# DefaultDevelopment
 
-| Property   | Type               | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Required |  
+| Property | Type | Description | Required |  
 | \---------- | \------------------ | \----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | \-------- |  
-| \`local\`    | \`number \\| string\` | A local port number or host that this application runs on when it is running locally. If passing a string, include the protocol (optional), host (required) and port (optional). Examples of valid values: 8080, my.localhost.me, my.localhost.me:8080, https://my.localhost.me, https://my.localhost.me:8080. The default value is http://localhost:\<port\> where port is a stable, unique port number (based on the application name). See. \[local development\](/docs/microfrontends/local-development).                     |          |  
-| \`task\`     | \`string\`           | The task to run when starting the development server. Should reference a script in the package.json of the application. The default value is "dev". See. \[local development\](/docs/microfrontends/local-development).                                                                                                                                                                                                                                                                                                         |          |  
-| \`fallback\` | \`string\`           | Fallback for local development, could point to any environment. This is required for the default app. This value is used as the fallback for child apps as well if they do not have a fallback. If passing a string, include the protocol (optional), host (required) and port (optional). For example: \\\`https://this.ismyhost:8080\\\`. If omitted, the protocol defaults to HTTPS. If omitted, the port defaults to \\\`80\\\` for HTTP and \\\`443\\\` for HTTPS. See. \[local development\](/docs/microfrontends/local-development). | Required |
+| \`local\` | \`number \\| string\` | A local port number or host that this application runs on when it is running locally. If passing a string, include the protocol (optional), host (required) and port (optional). Examples of valid values: 8080, my.localhost.me, my.localhost.me:8080, https://my.localhost.me, https://my.localhost.me:8080. The default value is http://localhost:\<port\> where port is a stable, unique port number (based on the application name). See. \[local development\](/docs/microfrontends/local-development). | |  
+| \`task\` | \`string\` | The task to run when starting the development server. Should reference a script in the package.json of the application. The default value is "dev". See. \[local development\](/docs/microfrontends/local-development). | |  
+| \`fallback\` | \`string\` | Fallback for local development, could point to any environment. This is required for the default app. This value is used as the fallback for child apps as well if they do not have a fallback. If passing a string, include the protocol (optional), host (required) and port (optional). For example: \\\`https://this.ismyhost:8080\\\`. If omitted, the protocol defaults to HTTPS. If omitted, the port defaults to \\\`80\\\` for HTTP and \\\`443\\\` for HTTPS. See. \[local development\](/docs/microfrontends/local-development). | Required |
 
 \#\#\# ChildApplication
 
-| Property      | Type                                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Required |  
+| Property | Type | Description | Required |  
 | \------------- | \------------------------------------- | \--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | \-------- |  
-| \`packageName\` | \`string\`                              | The name used to run the application, e.g. the \\\`name\\\` field in the \\\`package.json\\\`. This is used by the local proxy to map the application config to the locally running app. This is only necessary when the application name does not match the \\\`name\\\` used in \\\`package.json\\\`. See. \[application naming\](/docs/microfrontends/configuration\#application-naming).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |          |  
-| \`development\` | \[ChildDevelopment\](\#childdevelopment) | Development configuration for the child application.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |          |  
-| \`routing\`     | \[Routing\](\#routing)                   | Groups of path expressions that are routed to this application. See. \[path routing\](/docs/microfrontends/path-routing).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Required |  
-| \`assetPrefix\` | \`string\`                              | The name of the asset prefix to use instead of the auto-generated name. The asset prefix is used to prefix all paths to static assets, such as JS, CSS, or images that are served by a specific application. It is necessary to ensure there are no conflicts with other applications on the same domain. An auto-generated asset prefix of the form \\\`vc-ap-\<hash\>\\\` is used when this field is not provided. When this field is provided, \\\`/${assetPrefix}/:path\\\*\\\` must also be added to the list of paths in the \\\`routing\\\` field. Changing the asset prefix after a microfrontend application has already been deployed is not a forwards and backwards compatible change, and the asset prefix should be added to the \\\`routing\\\` field and deployed before setting the \\\`assetPrefix\\\` field. The default value is the auto-generated asset prefix of the form \\\`vc-ap-\<hash\>\\\`. See. \[asset prefix\](/docs/microfrontends/path-routing\#asset-prefix). |          |
+| \`packageName\` | \`string\` | The name used to run the application, e.g. the \\\`name\\\` field in the \\\`package.json\\\`. This is used by the local proxy to map the application config to the locally running app. This is only necessary when the application name does not match the \\\`name\\\` used in \\\`package.json\\\`. See. \[application naming\](/docs/microfrontends/configuration\#application-naming). | |  
+| \`development\` | \[ChildDevelopment\](\#childdevelopment) | Development configuration for the child application. | |  
+| \`routing\` | \[Routing\](\#routing) | Groups of path expressions that are routed to this application. See. \[path routing\](/docs/microfrontends/path-routing). | Required |  
+| \`assetPrefix\` | \`string\` | The name of the asset prefix to use instead of the auto-generated name. The asset prefix is used to prefix all paths to static assets, such as JS, CSS, or images that are served by a specific application. It is necessary to ensure there are no conflicts with other applications on the same domain. An auto-generated asset prefix of the form \\\`vc-ap-\<hash\>\\\` is used when this field is not provided. When this field is provided, \\\`/${assetPrefix}/:path\\\*\\\` must also be added to the list of paths in the \\\`routing\\\` field. Changing the asset prefix after a microfrontend application has already been deployed is not a forwards and backwards compatible change, and the asset prefix should be added to the \\\`routing\\\` field and deployed before setting the \\\`assetPrefix\\\` field. The default value is the auto-generated asset prefix of the form \\\`vc-ap-\<hash\>\\\`. See. \[asset prefix\](/docs/microfrontends/path-routing\#asset-prefix). | |
 
 \#\#\# ChildDevelopment
 
-| Property   | Type               | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | Required |  
+| Property | Type | Description | Required |  
 | \---------- | \------------------ | \--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | \-------- |  
-| \`local\`    | \`number \\| string\` | A local port number or host that this application runs on when it is running locally. If passing a string, include the protocol (optional), host (required) and port (optional). Examples of valid values: 8080, my.localhost.me, my.localhost.me:8080, https://my.localhost.me, https://my.localhost.me:8080. The default value is http://localhost:\<port\> where port is a stable, unique port number (based on the application name). See. \[local development\](/docs/microfrontends/local-development). |          |  
-| \`task\`     | \`string\`           | The task to run when starting the development server. Should reference a script in the package.json of the application. The default value is "dev". See. \[local development\](/docs/microfrontends/local-development).                                                                                                                                                                                                                                                                                     |          |  
-| \`fallback\` | \`string\`           | Fallback for local development, could point to any environment. If not provided for child apps, the fallback of the default app will be used. If passing a string, include the protocol (optional), host (required) and port (optional). For example: \\\`https://this.ismyhost:8080\\\`. If omitted, the protocol defaults to HTTPS. If omitted, the port defaults to \\\`80\\\` for HTTP and \\\`443\\\` for HTTPS. See. \[local development\](/docs/microfrontends/local-development).                               |          |
+| \`local\` | \`number \\| string\` | A local port number or host that this application runs on when it is running locally. If passing a string, include the protocol (optional), host (required) and port (optional). Examples of valid values: 8080, my.localhost.me, my.localhost.me:8080, https://my.localhost.me, https://my.localhost.me:8080. The default value is http://localhost:\<port\> where port is a stable, unique port number (based on the application name). See. \[local development\](/docs/microfrontends/local-development). | |  
+| \`task\` | \`string\` | The task to run when starting the development server. Should reference a script in the package.json of the application. The default value is "dev". See. \[local development\](/docs/microfrontends/local-development). | |  
+| \`fallback\` | \`string\` | Fallback for local development, could point to any environment. If not provided for child apps, the fallback of the default app will be used. If passing a string, include the protocol (optional), host (required) and port (optional). For example: \\\`https://this.ismyhost:8080\\\`. If omitted, the protocol defaults to HTTPS. If omitted, the port defaults to \\\`80\\\` for HTTP and \\\`443\\\` for HTTPS. See. \[local development\](/docs/microfrontends/local-development). | |
 
 \#\#\# Routing
 
 \[PathGroup\\\[\\\]\](\#pathgroup)
 
-  
-
 A list of path groups that are routed to this application.
 
 \#\#\# PathGroup
 
-| Property | Type       | Description                                                                                                                                                                                | Required |  
+| Property | Type | Description | Required |  
 | \-------- | \---------- | \------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | \-------- |  
-| \`group\`  | \`string\`   | Group name for the paths.                                                                                                                                                                  |          |  
-| \`flag\`   | \`string\`   | The name of the feature flag that controls routing for this group of paths. See. \[routing changes safely with flags\](/docs/microfrontends/path-routing\#routing-changes-safely-with-flags). |          |  
-| \`paths\`  | \`string\[\]\` | A list of path expressions that are routed to this application. See. \[supported path expressions\](/docs/microfrontends/path-routing\#supported-path-expressions).                           | Required |
+| \`group\` | \`string\` | Group name for the paths. | |  
+| \`flag\` | \`string\` | The name of the feature flag that controls routing for this group of paths. See. \[routing changes safely with flags\](/docs/microfrontends/path-routing\#routing-changes-safely-with-flags). | |  
+| \`paths\` | \`string\[\]\` | A list of path expressions that are routed to this application. See. \[supported path expressions\](/docs/microfrontends/path-routing\#supported-path-expressions). | Required |
 
 \#\#\# Options
 
-| Property           | Type      | Description                                                                                                                                                                                                                                                                                                              | Required |  
+| Property | Type | Description | Required |  
 | \------------------ | \--------- | \------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | \-------- |  
-| \`disableOverrides\` | \`boolean\` | If you want to disable the overrides for the site. For example, if you are managing rewrites between applications externally, you may wish to disable the overrides on the toolbar as they will have no effect. See. \[routing overrides\](/docs/microfrontends/managing-microfrontends/vercel-toolbar\#routing-overrides). |          |  
-| \`localProxyPort\`   | \`number\`  | The port number used by the local proxy server. The default value is 3024\. See. \[local development\](/docs/microfrontends/local-development).                                                                                                                                                                             |          |
+| \`disableOverrides\` | \`boolean\` | If you want to disable the overrides for the site. For example, if you are managing rewrites between applications externally, you may wish to disable the overrides on the toolbar as they will have no effect. See. \[routing overrides\](/docs/microfrontends/managing-microfrontends/vercel-toolbar\#routing-overrides). | |  
+| \`localProxyPort\` | \`number\` | The port number used by the local proxy server. The default value is 3024\. See. \[local development\](/docs/microfrontends/local-development). | |
 
 \#\# Example
 
@@ -308,25 +301,25 @@ microfrontends.json
 
 \`\`\`  
 {  
-  "$schema": "https://openapi.vercel.sh/microfrontends.json",  
-  "applications": {  
-    "nextjs-pages-dashboard": {  
-      "development": {  
-        "fallback": "nextjs-pages-dashboard.vercel.app"  
-      }  
-    },  
-    "nextjs-pages-blog": {  
-      "routing": \[  
-        {  
-          "paths": \["/blog/:path\*"\]  
-        },  
-        {  
-          "flag": "enable-flagged-blog-page",  
-          "paths": \["/flagged/blog"\]  
-        }  
-      \]  
-    }  
-  }  
+"$schema": "https://openapi.vercel.sh/microfrontends.json",  
+"applications": {  
+"nextjs-pages-dashboard": {  
+"development": {  
+"fallback": "nextjs-pages-dashboard.vercel.app"  
+}  
+},  
+"nextjs-pages-blog": {  
+"routing": \[  
+{  
+"paths": \["/blog/:path\*"\]  
+},  
+{  
+"flag": "enable-flagged-blog-page",  
+"paths": \["/flagged/blog"\]  
+}  
+\]  
+}  
+}  
 }  
 \`\`\`
 
@@ -337,15 +330,15 @@ If the application name differs from the \`name\` field in \`package.json\` for 
 microfrontends.json
 
 \`\`\`  
-    "docs": {  
-      "packageName": "name-from-package-json",  
-      "routing": \[  
-        {  
-          "group": "docs",  
-          "paths": \["/docs/:path\*"\]  
-        }  
-      \]  
-    }  
+"docs": {  
+"packageName": "name-from-package-json",  
+"routing": \[  
+{  
+"group": "docs",  
+"paths": \["/docs/:path\*"\]  
+}  
+\]  
+}  
 \`\`\`
 
 \#\# File Naming
@@ -362,4 +355,4 @@ If you're using Turborepo, define the environment variable outside of the Turbo 
 
 \`\`\`  
 VC\_MICROFRONTENDS\_CONFIG\_FILE\_NAME="microfrontends-dev.json" turbo dev  
-\`\`\`  
+\`\`\`
