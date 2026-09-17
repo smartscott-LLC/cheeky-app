@@ -47,7 +47,7 @@ export async function POST(request: Request) {
 
     // Update manifest
     await setAvatar(userId, 'image', savedImageUrl);
-    await setAvatarMeta(userId, { name, rpgClass, generationType, config });
+    await setAvatarMeta(userId, { name, rpgClass, generationType: generationType as 'manual' | 'ai', config });
 
     // Also save to avatars table for queryability
     const id = crypto.randomUUID();

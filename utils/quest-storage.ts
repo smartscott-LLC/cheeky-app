@@ -17,11 +17,20 @@ export interface QuestAsset {
 
 export interface QuestManifest {
   userId: string;
-  
-  // Profile
+
+  // Profile basics
   name?: string;
   bio?: string;
   gender?: 'male' | 'female' | 'other';
+  
+  // Dating profile details
+  age?: number;
+  height?: string;
+  hometown?: string;
+  state?: string;
+  smoker?: boolean;
+  drinker?: boolean;
+  interests?: string[];
   
   // Photos (profile pics, etc.)
   photos: Record<string, QuestAsset>;
