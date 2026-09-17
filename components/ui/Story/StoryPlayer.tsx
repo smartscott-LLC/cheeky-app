@@ -329,7 +329,7 @@ export default function StoryPlayer({
 
         {/* Character dialogue */}
         <div className="mt-6 rounded-2xl border border-club/30 bg-zinc-900/70 p-6">
-          <p className="font-header text-cyan text-sm uppercase tracking-[0.1em]">
+          <p className="font-header text-cyan text-sm uppercase tracking-widest">
             {beat.characterName}
           </p>
           <p className="font-body text-club mt-3 leading-relaxed">
@@ -340,7 +340,7 @@ export default function StoryPlayer({
         {/* Response after choice */}
         {showResponse && lastResponse && (
           <div className="mt-6 rounded-2xl border border-club/40 bg-club/5 p-6">
-            <p className="font-header text-cyan text-sm uppercase tracking-[0.1em]">
+            <p className="font-header text-cyan text-sm uppercase tracking-widest">
               {beat.characterName} responds
             </p>
             <p className="font-body text-club mt-3 leading-relaxed">
@@ -368,7 +368,7 @@ export default function StoryPlayer({
         {/* Choices */}
         {!showResponse && (
           <div className="mt-8 space-y-3">
-            <p className="font-header text-cyan text-sm uppercase tracking-[0.1em]">
+            <p className="font-header text-cyan text-sm uppercase tracking-widest">
               What do you do?
             </p>
             {beat.choices.map((choice) => (

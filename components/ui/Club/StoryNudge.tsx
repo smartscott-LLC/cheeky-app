@@ -64,7 +64,7 @@ export default function StoryNudge({
               : 'Your journey into the club starts here. Meet the crew, learn the rules, and earn your place — it only takes a few minutes.'}
           </p>
           <Link
-            href="/coat-check"
+            href="/story"
             className="mt-4 inline-flex items-center gap-2 rounded-lg bg-gold px-4 py-2 text-sm font-bold text-black transition hover:bg-gold/80"
           >
             {isComplete ? 'Pick your persona' : 'Begin the story →'}
