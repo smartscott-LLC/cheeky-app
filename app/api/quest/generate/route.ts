@@ -122,7 +122,7 @@ async function withRetry<T>(fn: () => Promise<T>, maxRetries = 5): Promise<T> {
       lastError = err;
       const isQueueFull = err?.message?.includes('queue') || err?.status === 503;
       if (!isQueueFull || i === maxRetries - 1) throw err;
-      const delay = Math.min(2000 * Math.pow(2, i), 30000);
+      const delay = 3000 + i * 1000; // 3s, 4s, 5s, 6s, 7s
       console.log(`[Generate] Queue full, retry ${i+1}/${maxRetries} in ${delay}ms`);
       await new Promise(r => setTimeout(r, delay));
     }

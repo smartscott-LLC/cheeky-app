@@ -1030,7 +1030,7 @@ export default function App() {
           // Queue-full error — retry with backoff
           if (res.status === 503 && (errText.includes('queue') || errText.includes('full'))) {
             lastError = new Error(errText.slice(0, 200));
-            const delay = Math.min(2000 * Math.pow(2, i), 30000);
+            const delay = Math.min(3000 + i * 1000, 10000); // 3s, 4s, 5s, 6s, 7s
             console.log(`[Quest] Queue full, retry ${i+1}/${maxRetries} in ${delay}ms`);
             setQueueStatus(`Queue busy, waiting... (${i+1}/${maxRetries})`);
             await new Promise(r => setTimeout(r, delay));
