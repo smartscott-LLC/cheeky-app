@@ -386,7 +386,8 @@
       "Bash(.run)",
       "Bash(.expect)",
       "Bash(pub *)",
-      "Bash(lib)"
+      "Bash(lib)",
+      "Bash(diff *)"
     ]
   },
   "$version": 4
