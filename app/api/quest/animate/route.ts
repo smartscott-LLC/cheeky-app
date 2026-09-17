@@ -10,7 +10,7 @@ async function withRetry<T>(fn: () => Promise<T>, maxRetries = 5): Promise<T> {
       lastError = err;
       const isQueueFull = err?.message?.includes('queue') || err?.code === 'video_queue_full' || err?.status === 503;
       if (!isQueueFull || i === maxRetries - 1) throw err;
-      const delay = 3000 + i * 1000; // 3s, 4s, 5s, 6s, 7s
+      const delay = Math.min(8000 + i * 8000, 50000); // 8s, 16s, 24s, 32s, 40s
       console.log(`[Animate] Queue full, retry ${i+1}/${maxRetries} in ${delay}ms`);
       await new Promise(r => setTimeout(r, delay));
     }
