@@ -1,75 +1,101 @@
 import { NextResponse } from 'next/server';
 
-const AGNES_ENTERPRISE = process.env.AGNES_ENTERPRISE_KEY || '';
-const AGNES_TOKEN = process.env.AGNES_TOKEN_MODEL_API_KEY || '';
+// ===== API Keys — priority order: FREE → ENTERPRISE → TOKEN =====
+const AGNES_FREE_KEY = process.env.AGNES_FREE_API_KEY || '';
+const AGNES_ENTERPRISE_KEY = process.env.AGNES_ENTERPRISE_KEY || '';
+const AGNES_TOKEN_KEY = process.env.AGNES_TOKEN_MODEL_API_KEY || '';
+
+// OpenRouter fallback
 const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY || '';
 const VIDEO_MODEL = process.env.OPENROUTER_VIDEO_MODEL || 'bytedance/seedance-2.0-mini';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { imageUrl, prompt, duration = 4, resolution = '720p' } = body as {
-      imageUrl: string; prompt?: string; duration?: number; resolution?: string;
+    const { imageUrl, prompt, duration = 4 } = body as {
+      imageUrl: string; prompt?: string; duration?: number;
     };
 
     if (!imageUrl) {
       return NextResponse.json({ error: 'imageUrl is required' }, { status: 400 });
     }
 
-    const videoPrompt = prompt || `A 3D animated character portrait spinning slowly in a full 360-degree circle, Pixar/Disney style, cinematic lighting, pure dark background, smooth rotation showing all angles`;
+    const videoPrompt = prompt
+      || `A Pixar/Disney style 3D animated character portrait spinning slowly in a full 360-degree circle for two complete rotations over approximately 4 seconds. The character turns smoothly showing all angles — front, left side, back, right side, front again. Cinematic lighting, pure dark background, smooth rotation, Pixar-quality animation, character identity stays consistent throughout the spin.`;
 
-    let videoResult: { id?: string; url?: string; status?: string } | null = null;
+    // Agnes key priority: FREE → ENTERPRISE → TOKEN
+    const agnesKeys = [
+      { key: AGNES_FREE_KEY, label: 'free' },
+      { key: AGNES_ENTERPRISE_KEY, label: 'enterprise' },
+      { key: AGNES_TOKEN_KEY, label: 'token' },
+    ].filter(k => k.key);
+
+    let videoResult: any = null;
     let usedProvider = 'none';
 
-    // Try Agnes first
-    const apiKey = AGNES_ENTERPRISE || AGNES_TOKEN;
-    if (apiKey) {
+    // Try each Agnes key in priority order
+    for (const { key, label } of agnesKeys) {
       try {
-        const agnesResp = await fetch('https://apihub.agnes-ai.com/v1/videos', {
+        const createResp = await fetch('https://apihub.agnes-ai.com/v1/videos', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${apiKey}`,
+            'Authorization': `Bearer ${key}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             model: 'agnes-video-v2.0',
             prompt: videoPrompt,
             image: imageUrl,
-            duration,
+            num_frames: 97,   // ~4s at 24fps (97/24 ≈ 4.04s)
+            frame_rate: 24,
           }),
         });
 
-        if (agnesResp.ok) {
-          const result = await agnesResp.json();
-          if (result.id) {
-            for (let i = 0; i < 30; i++) {
-              await new Promise(r => setTimeout(r, 2000));
-              const statusResp = await fetch(`https://apihub.agnes-ai.com/agnesapi?video_id=${result.id}`, {
-                headers: { 'Authorization': `Bearer ${apiKey}` },
-              });
-              if (statusResp.ok) {
-                const status = await statusResp.json();
-                if (status.status === 'completed' || status.url) {
-                  videoResult = status;
-                  usedProvider = 'Agnes';
-                  break;
-                }
-                if (status.status === 'failed' || status.error) {
-                  throw new Error(status.error?.message || 'Video generation failed');
-                }
-              }
-            }
-          }
+        if (!createResp.ok) {
+          const errText = await createResp.text().catch(() => '');
+          console.log(`[Video] Agnes ${label} create failed (${createResp.status}): ${errText.slice(0, 200)}`);
+          continue;
         }
+
+        const createData = await createResp.json();
+        const videoId = createData.video_id || createData.id;
+        if (!videoId) continue;
+
+        // Poll for completion via /agnesapi?video_id=...
+        for (let i = 0; i < 30; i++) {
+          await new Promise(r => setTimeout(r, 2000));
+          const statusResp = await fetch(`https://apihub.agnes-ai.com/agnesapi?video_id=${videoId}`, {
+            headers: { 'Authorization': `Bearer ${key}` },
+          });
+
+          if (!statusResp.ok) {
+            console.log(`[Video] Agnes ${label} poll failed (${statusResp.status})`);
+            break;
+          }
+
+          const status = await statusResp.json();
+
+          if (status.status === 'completed') {
+            videoResult = status;
+            usedProvider = `Agnes(${label})`;
+            break;
+          }
+          if (status.status === 'failed') {
+            throw new Error(status.error?.message || 'Video generation failed');
+          }
+          // queued / in_progress — keep polling
+        }
+
+        if (videoResult) break;
       } catch (agnesErr) {
-        console.log('[Video] Agnes failed:', agnesErr);
+        console.log(`[Video] Agnes ${label} exception:`, agnesErr);
       }
     }
 
-    // Fall back to OpenRouter
+    // Fall back to OpenRouter if Agnes exhausted all keys
     if (!videoResult && OPENROUTER_KEY) {
       try {
-        const createResponse = await fetch('https://openrouter.ai/api/v1/videos', {
+        const createResp = await fetch('https://openrouter.ai/api/v1/videos', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${OPENROUTER_KEY}`,
@@ -82,12 +108,11 @@ export async function POST(request: Request) {
             prompt: videoPrompt,
             image: imageUrl,
             duration,
-            resolution,
           }),
         });
 
-        if (createResponse.ok) {
-          const result = await createResponse.json();
+        if (createResp.ok) {
+          const result = await createResp.json();
           if (result.id) {
             const pollingUrl = result.polling_url || `https://openrouter.ai/api/v1/videos/${result.id}`;
             for (let i = 0; i < 30; i++) {
@@ -118,10 +143,15 @@ export async function POST(request: Request) {
       throw new Error('Video generation failed with all providers');
     }
 
-    const videoUrl = (videoResult as any).url || ((videoResult as any).data?.[0]?.url as string | undefined);
+    // Agnes v2.0 returns url under metadata.url
+    const videoUrl = (videoResult as any).metadata?.url
+      || (videoResult as any).url
+      || ((videoResult as any).data?.[0] as any)?.url;
+    const videoId = (videoResult as any).id || (videoResult as any).video_id || null;
+
     if (!videoUrl) throw new Error('No video URL in response');
 
-    return NextResponse.json({ success: true, videoUrl, videoId: videoResult.id, provider: usedProvider });
+    return NextResponse.json({ success: true, videoUrl, videoId, provider: usedProvider });
   } catch (error) {
     console.error('Animation generation error:', error);
     return NextResponse.json(

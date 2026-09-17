@@ -1,21 +1,21 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-const openai = process.env.OPENROUTER_API_KEY
-  ? new OpenAI({
-      apiKey: process.env.OPENROUTER_API_KEY,
-      baseURL: process.env.OPENROUTER_URL || 'https://openrouter.ai/api/v1',
-    })
-  : null;
+// ===== API Keys — priority order: FREE → ENTERPRISE → TOKEN → OpenRouter =====
+const AGNES_FREE_KEY = process.env.AGNES_FREE_API_KEY || '';
+const AGNES_ENTERPRISE_KEY = process.env.AGNES_ENTERPRISE_KEY || '';
+const AGNES_TOKEN_KEY = process.env.AGNES_TOKEN_MODEL_API_KEY || '';
+const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY || '';
 
 const AI_MODEL = process.env.OPENROUTER_AI_MODEL || 'bytedance-seed/seedream-5-0-lite';
-const AGNES_ENTERPRISE = process.env.AGNES_ENTERPRISE_KEY || '';
-const AGNES_TOKEN = process.env.AGNES_TOKEN_MODEL_API_KEY || '';
-const AGNES_IMAGE_MODEL = process.env.AGNES_IMAGE_MODEL || 'agnes-image-2.5-flash';
+
+const openai = OPENROUTER_KEY
+  ? new OpenAI({ apiKey: OPENROUTER_KEY, baseURL: process.env.OPENROUTER_URL || 'https://openrouter.ai/api/v1' })
+  : null;
 
 // ===== Prompt Builders =====
 function buildManualPrompt(config: Record<string, unknown>) {
-  const { gender, skinTone, hairStyle, hairColor, eyeColor, build, outfit, personality, name, top, bottom, shoes, accessories, tattoos, hat } = config as typeof config & Record<string, unknown>;
+  const { gender, skinTone, hairStyle, hairColor, eyeColor, build, outfit, personality, name, top, bottom, shoes, accessories, tattoos, hat } = config as Record<string, unknown>;
 
   const hairLabels: Record<string, string> = {
     short_crop: 'short crop', fade: 'stylish high fade', curly: 'curly natural hair',
@@ -86,7 +86,8 @@ Art direction (CRITICAL):
 - Deep purple/navy bokeh background with floating magical particles
 - Rich jewel-tone colors, ultra high detail
 - Warm confident inviting expression — this hero is on a quest for love
-- No text, no watermarks, no logos, single character only, 4K quality`;
+- No text, no watermarks, no logos, single character only, 4K quality
+- UNIQUE CHARACTER: this portrait must be one-of-a-kind, never seen before`;
 }
 
 function buildAIPrompt(description: string) {
@@ -101,15 +102,68 @@ Art direction (CRITICAL):
 - Deep purple bokeh background with magical floating particles
 - Rich jewel-tone colors, ultra high detail, vibrant
 - Warm confident charming expression — a hero seeking love
-- No text, no watermarks, no logos, single character, 4K quality`;
+- No text, no watermarks, no logos, single character, 4K quality
+- UNIQUE CHARACTER: this portrait must be one-of-a-kind, never seen before`;
+}
+
+// Agnes image API call with fallback chain
+async function tryAgnesImage(prompt: string, photoFile: File | null, freeKey: string, enterpriseKey: string, tokenKey: string) {
+  const keys = [
+    { key: freeKey, label: 'free' },
+    { key: enterpriseKey, label: 'enterprise' },
+    { key: tokenKey, label: 'token' },
+  ].filter(k => k.key);
+
+  for (const { key, label } of keys) {
+    try {
+      const body: Record<string, unknown> = {
+        model: 'agnes-image-2.5-flash',
+        prompt,
+        size: '1K',
+        ratio: '1:1',
+        return_base64: true,
+      };
+
+      if (photoFile) {
+        const photoBuffer = await photoFile.arrayBuffer();
+        const photoBase64 = Buffer.from(photoBuffer).toString('base64');
+        body.extra_body = {
+          image: [`data:${photoFile.type};base64,${photoBase64}`],
+          response_format: 'b64_json',
+        };
+      }
+
+      const resp = await fetch('https://apihub.agnes-ai.com/v1/images/generations', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${key}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!resp.ok) {
+        const errText = await resp.text().catch(() => '');
+        console.log(`[Avatar] Agnes ${label} key failed (${resp.status}): ${errText.slice(0, 200)}`);
+        continue;
+      }
+
+      const data = await resp.json();
+      if (data.data?.[0]?.b64_json) {
+        return { data: [{ b64_json: data.data[0].b64_json }], provider: `Agnes(${label})` };
+      }
+      if (data.data?.[0]?.url) {
+        return { data: [{ url: data.data[0].url }], provider: `Agnes(${label})` };
+      }
+    } catch (err) {
+      console.log(`[Avatar] Agnes ${label} exception:`, err);
+    }
+  }
+  return null;
 }
 
 // ===== Route Handler =====
 export async function POST(request: Request) {
-  const agnesEnterpriseKey = AGNES_ENTERPRISE;
-  const agnesTokenKey = AGNES_TOKEN;
-  const provider = agnesEnterpriseKey ? 'Agnes' : 'OpenRouter';
-
   try {
     const contentType = request.headers.get('content-type') || '';
     let config: Record<string, unknown> | null = null;
@@ -120,7 +174,7 @@ export async function POST(request: Request) {
       const formData = await request.formData();
       const type = formData.get('type');
       if (type === 'ai') {
-        description = (formData.get('description') as string) || '';
+        description = formData.get('description') as string || '';
         const photo = formData.get('photo');
         if (photo && photo instanceof File && photo.size > 0) photoFile = photo;
       } else {
@@ -137,71 +191,35 @@ export async function POST(request: Request) {
       ? buildManualPrompt(config)
       : buildAIPrompt(description || 'A charming, attractive person ready for adventure');
 
-    let result: { data: Array<{ b64_json?: string; url?: string }> } | null = null;
-    let usedProvider = provider;
-
-    // Try Agnes first
-    try {
-      const agnesKey = agnesEnterpriseKey || agnesTokenKey;
-      if (agnesKey) {
-        let agnesBody: Record<string, unknown> = { model: AGNES_IMAGE_MODEL, prompt, n: 1 };
-        if (photoFile) {
-          const photoBuffer = await photoFile.arrayBuffer();
-          const photoBase64 = Buffer.from(photoBuffer).toString('base64');
-          agnesBody.image = `data:${photoFile.type};base64,${photoBase64}`;
-        }
-
-        const agnesImgResp = await fetch('https://apihub.agnes-ai.com/v1/images/generations', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${agnesKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(agnesBody),
-        });
-
-        if (agnesImgResp.ok) {
-          const agnesImgResult = await agnesImgResp.json();
-          if (agnesImgResult.data?.[0]) {
-            result = { data: [agnesImgResult.data[0]] };
-            usedProvider = 'Agnes';
-          }
-        }
-      }
-    } catch (agnesErr) {
-      console.log('[Avatar] Agnes failed:', agnesErr);
+    // Try Agnes first (FREE → ENTERPRISE → TOKEN)
+    const agnesResult = await tryAgnesImage(prompt, photoFile, AGNES_FREE_KEY, AGNES_ENTERPRISE_KEY, AGNES_TOKEN_KEY);
+    if (agnesResult) {
+      const imageData = agnesResult.data[0] as any;
+      const imageUrl = imageData.b64_json
+        ? `data:image/png;base64,${imageData.b64_json}`
+        : imageData.url;
+      return NextResponse.json({ success: true, imageUrl, provider: agnesResult.provider });
     }
 
     // Fall back to OpenRouter
-    if (!result || !(result as any).data?.[0]) {
-      if (!openai) throw new Error('No image generation provider configured');
-      try {
-        let openResult: any;
-        if (photoFile) {
-          openResult = await openai.images.edit({
-            model: AI_MODEL, image: photoFile, prompt, n: 1, quality: 'medium',
-          });
-        } else {
-          openResult = await openai.images.generate({ model: AI_MODEL, prompt, n: 1, quality: 'high' });
-        }
-        result = openResult;
-        usedProvider = 'OpenRouter';
-      } catch (openaiErr) {
-        throw new Error(`Both providers failed: Agnes(early error), OpenRouter(${openaiErr})`);
+    if (!openai) throw new Error('No image generation provider configured');
+    try {
+      let openResult: any;
+      if (photoFile) {
+        openResult = await openai.images.edit({ model: AI_MODEL, image: photoFile, prompt, n: 1, quality: 'medium' });
+      } else {
+        openResult = await openai.images.generate({ model: AI_MODEL, prompt, n: 1, quality: 'high' });
       }
+      const imageData = openResult?.data?.[0];
+      if (!imageData) throw new Error('No image data in OpenRouter response');
+      const imageUrl = imageData.b64_json
+        ? `data:image/png;base64,${imageData.b64_json}`
+        : (imageData as any).url;
+      if (!imageUrl) throw new Error('No image URL returned from OpenRouter');
+      return NextResponse.json({ success: true, imageUrl, provider: 'OpenRouter' });
+    } catch (orErr) {
+      throw new Error(`Both providers failed: Agnes(free+enterprise+token exhausted), OpenRouter(${orErr})`);
     }
-
-    const imageData = result?.data?.[0];
-    if (!imageData) throw new Error('No image data in response');
-
-    const imageUrl = imageData.b64_json
-      ? `data:image/png;base64,${imageData.b64_json}`
-      : imageData.url;
-
-    if (!imageUrl) throw new Error('No image URL returned');
-
-    return NextResponse.json({ success: true, imageUrl, provider: usedProvider });
-
   } catch (error) {
     console.error('Avatar generation error:', error);
     return NextResponse.json(
