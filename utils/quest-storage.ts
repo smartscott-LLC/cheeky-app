@@ -114,7 +114,7 @@ export async function loadUserManifest(userId: string): Promise<QuestManifest> {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
-  await writeJsonToStorage(userId, newManifest);
+  await writeJsonToStorage(userId, newManifest as any);
   return newManifest;
 }
 
