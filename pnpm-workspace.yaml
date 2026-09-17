@@ -2,3 +2,8 @@ allowBuilds:
   stream-chat: true
   stream-chat-react: true
   supabase: true
+minimumReleaseAgeExclude:
+  - '@tanstack/query-core@5.103.1'
+  - '@tanstack/react-query@5.103.1'
+  - framer-motion@13.4.0
+  - openai@7.17.0
