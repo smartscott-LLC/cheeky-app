@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/avatars`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+        'apikey': SUPABASE_SERVICE_KEY,
         'Content-Type': 'application/json',
         'Prefer': 'return=minimal',
       },
