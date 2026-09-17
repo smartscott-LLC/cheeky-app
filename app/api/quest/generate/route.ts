@@ -68,6 +68,8 @@ function buildManualPrompt(config: Record<string, unknown>) {
   const personalityStr = String(personality);
   const classVibe = classVibes[personalityStr] || 'warm, charming, confident';
   const topDesc = String(top || 'stylish fitted tee');
+  const bottomDesc = String(_bottom || 'fitted dark jeans');
+  const shoesDesc = String(_shoes || 'clean white sneakers');
   const accessoriesArr = Array.isArray(accessories) ? (accessories as string[]) : [];
   const tattooArr = Array.isArray(tattoos) ? (tattoos as string[]) : [];
   const accessoryStr = accessoriesArr?.length
