@@ -37,7 +37,8 @@ export async function searchMemories(userId: string, query: string) {
   
   try {
     const client = getMem0Client();
-    const results = await client.search(query, { user_id: userId });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const results = await (client as any).search(query, { user_id: userId });
     return results;
   } catch (err) {
     console.error('mem0 search failed:', err);
