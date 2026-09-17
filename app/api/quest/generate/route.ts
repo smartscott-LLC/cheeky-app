@@ -104,7 +104,6 @@ Art direction (CRITICAL):
 - Warm confident charming expression — a hero seeking love
 - No text, no watermarks, no logos, single character, 4K quality
 - UNIQUE CHARACTER: this portrait must be one-of-a-kind, never seen before`;
-- UNIQUE CHARACTER: this portrait must be one-of-a-kind, never seen before`;
 }
 
 // Agnes image API call with fallback chain
