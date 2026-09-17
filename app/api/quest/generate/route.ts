@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import { uploadToSupabase } from '@/utils/supabase/storage';
 
-// ===== API Keys — priority order: FREE → ENTERPRISE → TOKEN → OpenRouter =====
-const AGNES_FREE_KEY = process.env.AGNES_FREE_API_KEY || '';
-const AGNES_ENTERPRISE_KEY = process.env.AGNES_ENTERPRISE_KEY || '';
+// ===== API Keys — priority order: TOKEN → ENTERPRISE → FREE → OpenRouter =====
 const AGNES_TOKEN_KEY = process.env.AGNES_TOKEN_MODEL_API_KEY || '';
+const AGNES_ENTERPRISE_KEY = process.env.AGNES_ENTERPRISE_KEY || '';
+const AGNES_FREE_KEY = process.env.AGNES_FREE_API_KEY || '';
 const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY || '';
 
 const AI_MODEL = process.env.OPENROUTER_AI_MODEL || 'bytedance-seed/seedream-5-0-lite';
@@ -207,16 +206,13 @@ export async function POST(request: Request) {
       ? buildManualPrompt(config)
       : buildAIPrompt(description || 'A charming, attractive person ready for adventure');
 
-    // Try Agnes first (FREE → ENTERPRISE → TOKEN)
-    const agnesResult = await tryAgnesImage(prompt, photoFile, AGNES_FREE_KEY, AGNES_ENTERPRISE_KEY, AGNES_TOKEN_KEY);
+    // Try Agnes first (TOKEN → ENTERPRISE → FREE)
+    const agnesResult = await tryAgnesImage(prompt, photoFile, AGNES_TOKEN_KEY, AGNES_ENTERPRISE_KEY, AGNES_FREE_KEY);
     if (agnesResult) {
       const imageData = agnesResult.data[0] as any;
       const externalUrl = imageData.url;
       if (!externalUrl) throw new Error('No image URL in Agnes response');
-      // Upload to Supabase Storage
-      const fileId = crypto.randomUUID();
-      const supabaseUrl = await uploadToSupabase(externalUrl, `${fileId}.webp`);
-      return NextResponse.json({ success: true, imageUrl: supabaseUrl, provider: agnesResult.provider });
+      return NextResponse.json({ success: true, imageUrl: externalUrl, provider: agnesResult.provider });
     }
 
     // Fall back to OpenRouter
@@ -234,10 +230,7 @@ export async function POST(request: Request) {
         ? `data:image/png;base64,${imageData.b64_json}`
         : (imageData as any).url;
       if (!externalUrl) throw new Error('No image URL returned from OpenRouter');
-      // Upload to Supabase Storage
-      const fileId = crypto.randomUUID();
-      const supabaseUrl = await uploadToSupabase(externalUrl, `${fileId}.webp`);
-      return NextResponse.json({ success: true, imageUrl: supabaseUrl, provider: 'OpenRouter' });
+      return NextResponse.json({ success: true, imageUrl: externalUrl, provider: 'OpenRouter' });
     } catch (orErr) {
       throw new Error(`Both providers failed: Agnes(free+enterprise+token exhausted), OpenRouter(${orErr})`);
     }

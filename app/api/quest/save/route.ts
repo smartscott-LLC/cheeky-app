@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { updateManifestField, uploadToUserFolder } from '@/utils/quest-storage';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -27,6 +28,27 @@ export async function POST(request: Request) {
       }
     } catch {}
 
+    if (!userId) {
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+    }
+
+    // Download image and upload to user's folder
+    const imgRes = await fetch(imageUrl);
+    if (!imgRes.ok) throw new Error('Failed to download image');
+    const imgBuffer = await imgRes.arrayBuffer();
+    const imgMimeType = imgRes.headers.get('content-type') || 'image/png';
+    
+    const savedImageUrl = await uploadToUserFolder(
+      userId,
+      'avatar.png',
+      imgBuffer,
+      imgMimeType
+    );
+
+    // Update user manifest
+    await updateManifestField(userId, 'avatar', savedImageUrl);
+
+    // Save to DB
     const id = crypto.randomUUID();
     const avatarDoc = {
       id,
@@ -35,7 +57,7 @@ export async function POST(request: Request) {
       rpg_class: rpgClass || 'adventurer',
       generation_type: generationType || 'manual',
       config: config || {},
-      image_url: imageUrl || null,
+      image_url: savedImageUrl,
     };
 
     const res = await fetch(`${SUPABASE_URL}/rest/v1/avatars`, {
@@ -54,7 +76,7 @@ export async function POST(request: Request) {
       throw new Error(`Supabase save failed: ${err}`);
     }
 
-    return NextResponse.json({ success: true, id, name: avatarDoc.name, userId });
+    return NextResponse.json({ success: true, id, name: avatarDoc.name, imageUrl: savedImageUrl });
   } catch (error) {
     console.error('Save avatar error:', error);
     return NextResponse.json(
