@@ -997,6 +997,7 @@ export default function App() {
   const [savedId, setSavedId] = useState(null);
   const [error, setError] = useState(null);
   const [queueStatus, setQueueStatus] = useState(null);
+  const [showRetry, setShowRetry] = useState(false);
 
   const updateConfig = useCallback((updates) => setConfig(p=>({...p,...updates})), []);
 
@@ -1087,7 +1088,13 @@ export default function App() {
     } catch (err) {
       console.error('Generation error:', err);
       setQueueStatus(null);
-      setError(err.message);
+      // If queue full after all retries, offer retry instead of error
+      if (err.message?.includes('queue') || err.message?.includes('exhausted')) {
+        setShowRetry(true);
+        setError(null);
+      } else {
+        setError(err.message);
+      }
       setStepName(path==='ai' ? 'ai' : 'style');
     } finally {
       setIsGenerating(false);
@@ -1174,6 +1181,27 @@ export default function App() {
                 <p className="font-bold text-red-400">Generation failed</p>
                 <p className="text-xs mt-0.5 text-red-300/70">{error}</p>
                 <button onClick={()=>setError(null)} className="text-xs underline mt-1 hover:text-red-300">Dismiss</button>
+              </div>
+            </div>
+          )}
+
+          {showRetry && (
+            <div className="mx-4 mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm">
+              <p className="font-bold mb-2">⏳ Queue still busy</p>
+              <p className="text-xs text-amber-300/70 mb-3">The AI queue is currently full. Try again when it clears.</p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => { setShowRetry(false); generatePortrait(); }}
+                  className="flex-1 py-2 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-sm font-damion transition-colors"
+                >
+                  🔄 Try Again
+                </button>
+                <button
+                  onClick={() => setShowRetry(false)}
+                  className="px-4 py-2 rounded-lg border border-white/20 text-gray-400 hover:text-white text-sm transition-colors"
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           )}
