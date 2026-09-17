@@ -2,11 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useCallback } from 'react';
-import {
-  STORY_BEATS,
-  PERSONAS,
-  getTierForScore
-} from '@/utils/story/beats';
+import { STORY_BEATS, PERSONAS, getTierForScore } from '@/utils/story/beats';
 import type { StoryBeat } from '@/utils/story/beats';
 
 interface StoryPlayerProps {

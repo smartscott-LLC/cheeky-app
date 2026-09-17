@@ -1,6 +1,9 @@
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || '';
+const SUPABASE_SERVICE_KEY =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  process.env.SUPABASE_SECRET_KEY ||
+  '';
 const BUCKET = 'quest-avatars';
 
 /**
@@ -22,7 +25,7 @@ export interface QuestManifest {
   name?: string;
   bio?: string;
   gender?: 'male' | 'female' | 'other';
-  
+
   // Dating profile details
   age?: number;
   height?: string;
@@ -31,25 +34,25 @@ export interface QuestManifest {
   smoker?: boolean;
   drinker?: boolean;
   interests?: string[];
-  
+
   // Photos (profile pics, etc.)
   photos: Record<string, QuestAsset>;
-  
+
   // Quest avatar pipeline
-  avatarPhoto?: QuestAsset;      // uploaded reference photo
-  avatarImage?: QuestAsset;      // generated portrait
-  avatarVideo?: QuestAsset;      // 360° spin video
-  avatarModel?: QuestAsset;      // 3D model (.glb)
+  avatarPhoto?: QuestAsset; // uploaded reference photo
+  avatarImage?: QuestAsset; // generated portrait
+  avatarVideo?: QuestAsset; // 360° spin video
+  avatarModel?: QuestAsset; // 3D model (.glb)
   avatarMeta?: {
     name?: string;
     rpgClass?: string;
     generationType?: 'manual' | 'ai';
     config?: Record<string, unknown>;
   };
-  
+
   // Inventory & collectibles
   inventory: Record<string, QuestAsset>;
-  
+
   // Metadata
   createdAt: string;
   updatedAt: string;
@@ -84,12 +87,12 @@ export async function uploadAsset(
     {
       method: 'POST',
       headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
         'Content-Type': mimeType,
-        'x-upsert': 'true',
+        'x-upsert': 'true'
       },
-      body: buffer,
+      body: buffer
     }
   );
   if (!res.ok) {
@@ -104,11 +107,11 @@ export async function loadManifest(userId: string): Promise<QuestManifest> {
   try {
     const res = await fetch(manifestUrl(userId));
     if (res.ok) {
-      const data = await res.json() as QuestManifest;
+      const data = (await res.json()) as QuestManifest;
       if (data.userId) return data;
     }
   } catch {}
-  
+
   // Create fresh manifest
   const now = new Date().toISOString();
   const fresh: QuestManifest = {
@@ -116,28 +119,31 @@ export async function loadManifest(userId: string): Promise<QuestManifest> {
     photos: {},
     inventory: {},
     createdAt: now,
-    updatedAt: now,
+    updatedAt: now
   };
   await saveManifest(userId, fresh);
   return fresh;
 }
 
 /** Write the full manifest back to storage. */
-export async function saveManifest(userId: string, manifest: QuestManifest): Promise<void> {
+export async function saveManifest(
+  userId: string,
+  manifest: QuestManifest
+): Promise<void> {
   manifest.updatedAt = new Date().toISOString();
   const buffer = new TextEncoder().encode(JSON.stringify(manifest, null, 2));
-  
+
   const res = await fetch(
     `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${userId}/manifest.json`,
     {
       method: 'POST',
       headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
         'Content-Type': 'application/json',
-        'x-upsert': 'true',
+        'x-upsert': 'true'
       },
-      body: buffer,
+      body: buffer
     }
   );
   if (!res.ok) {
@@ -147,7 +153,10 @@ export async function saveManifest(userId: string, manifest: QuestManifest): Pro
 }
 
 /** Get a single asset from the manifest. */
-export async function getAsset(userId: string, key: string): Promise<QuestAsset | null> {
+export async function getAsset(
+  userId: string,
+  key: string
+): Promise<QuestAsset | null> {
   const manifest = await loadManifest(userId);
   return manifest.photos[key] || manifest.inventory[key] || null;
 }
@@ -163,7 +172,7 @@ export async function setPhoto(
   manifest.photos[key] = {
     url,
     uploadedAt: new Date().toISOString(),
-    ...meta,
+    ...meta
   };
   await saveManifest(userId, manifest);
   return manifest;
@@ -180,7 +189,7 @@ export async function setInventory(
   manifest.inventory[key] = {
     url,
     uploadedAt: new Date().toISOString(),
-    ...meta,
+    ...meta
   };
   await saveManifest(userId, manifest);
   return manifest;
@@ -194,15 +203,19 @@ export async function setAvatar(
   meta?: Partial<QuestAsset>
 ): Promise<QuestManifest> {
   const manifest = await loadManifest(userId);
-  const field = stage === 'photo' ? 'avatarPhoto'
-              : stage === 'image' ? 'avatarImage'
-              : stage === 'video' ? 'avatarVideo'
-              : 'avatarModel';
+  const field =
+    stage === 'photo'
+      ? 'avatarPhoto'
+      : stage === 'image'
+        ? 'avatarImage'
+        : stage === 'video'
+          ? 'avatarVideo'
+          : 'avatarModel';
   (manifest as any)[field] = {
     url,
     mimeType: meta?.mimeType,
     uploadedAt: new Date().toISOString(),
-    tags: meta?.tags,
+    tags: meta?.tags
   };
   await saveManifest(userId, manifest);
   return manifest;

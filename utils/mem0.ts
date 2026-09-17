@@ -13,7 +13,7 @@ export function getMem0Client(): MemoryClient {
       apiKey: MEM0_API_KEY,
       ...(MEM0_ORG_ID ? { org_id: MEM0_ORG_ID } : {}),
       ...(MEM0_PROJECT_ID ? { project_id: MEM0_PROJECT_ID } : {}),
-      ...(MEM0_BASE_URL ? { base_url: MEM0_BASE_URL } : {}),
+      ...(MEM0_BASE_URL ? { base_url: MEM0_BASE_URL } : {})
     } as any);
   }
   return _client;
@@ -25,13 +25,10 @@ export function getMem0Client(): MemoryClient {
  */
 export async function addChatMemory(userId: string, message: string) {
   if (!MEM0_API_KEY || !userId) return;
-  
+
   try {
     const client = getMem0Client();
-    await client.add(
-      [{ role: 'user', content: message }],
-      { user_id: userId }
-    );
+    await client.add([{ role: 'user', content: message }], { user_id: userId });
   } catch (err) {
     console.error('mem0 add failed:', err);
   }
@@ -42,7 +39,7 @@ export async function addChatMemory(userId: string, message: string) {
  */
 export async function searchMemories(userId: string, query: string) {
   if (!MEM0_API_KEY || !userId) return [];
-  
+
   try {
     const client = getMem0Client();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

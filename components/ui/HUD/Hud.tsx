@@ -444,7 +444,7 @@ export default function Hud() {
                 onChange={(e) => setDeleteInput(e.target.value)}
                 className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-white placeholder-zinc-600 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 transition"
                 placeholder="Type DELETE here"
-                autoFocus
+                
               />
               {deleteError && (
                 <p className="mt-2 text-sm text-red-400">{deleteError}</p>
@@ -648,14 +648,18 @@ function ProfileTab() {
           {avatar?.rpgClass && (
             <div
               className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full border-2 border-zinc-950 flex items-center justify-center"
-              style={{ backgroundColor: classColors[avatar.rpgClass] || '#FFD700' }}
+              style={{
+                backgroundColor: classColors[avatar.rpgClass] || '#FFD700'
+              }}
             >
               <span className="text-sm">✨</span>
             </div>
           )}
         </div>
         <div className="text-center">
-          <p className="font-body text-white text-lg">{avatar?.name || 'Your Avatar'}</p>
+          <p className="font-body text-white text-lg">
+            {avatar?.name || 'Your Avatar'}
+          </p>
           <p className="font-body text-club text-sm mt-1">
             {avatar?.rpgClass
               ? `The ${avatar.rpgClass.charAt(0).toUpperCase() + avatar.rpgClass.slice(1)}`

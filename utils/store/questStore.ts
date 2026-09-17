@@ -37,7 +37,14 @@ export const useQuestStore = create<QuestState>()(
           const data = await res.json();
           if (data.avatars?.[0]) {
             const av = data.avatars[0];
-            set({ avatar: { id: av.id, imageUrl: av.image_url, name: av.name, rpgClass: av.rpg_class } });
+            set({
+              avatar: {
+                id: av.id,
+                imageUrl: av.image_url,
+                name: av.name,
+                rpgClass: av.rpg_class
+              }
+            });
           }
         } catch (e) {
           console.error('syncQuestAvatar failed:', e);

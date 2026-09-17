@@ -8,11 +8,16 @@ async function withRetry<T>(fn: () => Promise<T>, maxRetries = 5): Promise<T> {
       return await fn();
     } catch (err: any) {
       lastError = err;
-      const isQueueFull = err?.message?.includes('queue') || err?.code === 'video_queue_full' || err?.status === 503;
+      const isQueueFull =
+        err?.message?.includes('queue') ||
+        err?.code === 'video_queue_full' ||
+        err?.status === 503;
       if (!isQueueFull || i === maxRetries - 1) throw err;
       const delay = Math.min(8000 + i * 8000, 50000); // 8s, 16s, 24s, 32s, 40s
-      console.log(`[Animate] Queue full, retry ${i+1}/${maxRetries} in ${delay}ms`);
-      await new Promise(r => setTimeout(r, delay));
+      console.log(
+        `[Animate] Queue full, retry ${i + 1}/${maxRetries} in ${delay}ms`
+      );
+      await new Promise((r) => setTimeout(r, delay));
     }
   }
   throw lastError;
@@ -26,23 +31,33 @@ const AGNES_FREE_KEY = process.env.AGNES_FREE_API_KEY || '';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { imageUrl, prompt, duration = 4 } = body as {
-      imageUrl: string; prompt?: string; duration?: number;
+    const {
+      imageUrl,
+      prompt,
+      duration = 4
+    } = body as {
+      imageUrl: string;
+      prompt?: string;
+      duration?: number;
     };
 
     if (!imageUrl) {
-      return NextResponse.json({ error: 'imageUrl is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'imageUrl is required' },
+        { status: 400 }
+      );
     }
 
-    const videoPrompt = prompt
-      || `A Pixar/Disney style 3D animated character portrait spinning slowly in a full 360-degree circle for two complete rotations over approximately 4 seconds. The character turns smoothly showing all angles — front, left side, back, right side, front again. Cinematic lighting, pure dark background, smooth rotation, Pixar-quality animation, character identity stays consistent throughout the spin.`;
+    const videoPrompt =
+      prompt ||
+      `A Pixar/Disney style 3D animated character portrait spinning slowly in a full 360-degree circle for two complete rotations over approximately 4 seconds. The character turns smoothly showing all angles — front, left side, back, right side, front again. Cinematic lighting, pure dark background, smooth rotation, Pixar-quality animation, character identity stays consistent throughout the spin.`;
 
     // Agnes key priority: TOKEN → ENTERPRISE → FREE
     const agnesKeys = [
       { key: AGNES_TOKEN_KEY, label: 'token' },
       { key: AGNES_ENTERPRISE_KEY, label: 'enterprise' },
-      { key: AGNES_FREE_KEY, label: 'free' },
-    ].filter(k => k.key);
+      { key: AGNES_FREE_KEY, label: 'free' }
+    ].filter((k) => k.key);
 
     let videoResult: any = null;
     let usedProvider = 'none';
@@ -51,35 +66,46 @@ export async function POST(request: Request) {
     for (const { key, label } of agnesKeys) {
       try {
         const createData = await withRetry(async () => {
-          const createResp = await fetch('https://apihub.agnes-ai.com/v1/videos', {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${key}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              model: 'agnes-video-2.5-flash',
-              prompt: videoPrompt,
-              image: imageUrl,
-              seconds: duration,
-              mode: 'keyframe',
-              size: '720P',
-              aspect_ratio: '16:9',
-            }),
-          });
+          const createResp = await fetch(
+            'https://apihub.agnes-ai.com/v1/videos',
+            {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${key}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                model: 'agnes-video-2.5-flash',
+                prompt: videoPrompt,
+                image: imageUrl,
+                seconds: duration,
+                mode: 'keyframe',
+                size: '720P',
+                aspect_ratio: '16:9'
+              })
+            }
+          );
 
           if (!createResp.ok) {
             const errText = await createResp.text().catch(() => '');
             // Re-throw queue-full errors
             if (createResp.status === 503 && errText.includes('queue')) {
-              throw Object.assign(new Error(`Agnes ${label} video queue full`), { code: 'video_queue_full' });
+              throw Object.assign(
+                new Error(`Agnes ${label} video queue full`),
+                { code: 'video_queue_full' }
+              );
             }
-            console.log(`[Video] Agnes ${label} create failed (${createResp.status}): ${errText.slice(0, 200)}`);
-            throw new Error(`Agnes ${label} create failed: ${createResp.status}`);
+            console.log(
+              `[Video] Agnes ${label} create failed (${createResp.status}): ${errText.slice(0, 200)}`
+            );
+            throw new Error(
+              `Agnes ${label} create failed: ${createResp.status}`
+            );
           }
 
           const data = await createResp.json();
-          if (!data.video_id && !data.id) throw new Error('No video_id in response');
+          if (!data.video_id && !data.id)
+            throw new Error('No video_id in response');
           return data;
         }, 5);
 
@@ -88,14 +114,16 @@ export async function POST(request: Request) {
 
         // Poll for completion via /agnesapi?video_id=...
         for (let i = 0; i < 30; i++) {
-          await new Promise(r => setTimeout(r, 2000));
+          await new Promise((r) => setTimeout(r, 2000));
           const statusResp = await fetch(
             `https://apihub.agnes-ai.com/agnesapi?video_id=${videoId}&model_name=agnes-video-2.5-flash`,
-            { headers: { 'Authorization': `Bearer ${key}` } }
+            { headers: { Authorization: `Bearer ${key}` } }
           );
 
           if (!statusResp.ok) {
-            console.log(`[Video] Agnes ${label} poll failed (${statusResp.status})`);
+            console.log(
+              `[Video] Agnes ${label} poll failed (${statusResp.status})`
+            );
             break;
           }
 
@@ -114,27 +142,42 @@ export async function POST(request: Request) {
 
         if (videoResult) break;
       } catch (agnesErr) {
-        console.log(`[Video] Agnes ${label} exception after retries:`, agnesErr);
+        console.log(
+          `[Video] Agnes ${label} exception after retries:`,
+          agnesErr
+        );
       }
     }
 
     if (!videoResult) {
-      throw new Error('Video generation failed — all Agnes keys exhausted or queued');
+      throw new Error(
+        'Video generation failed — all Agnes keys exhausted or queued'
+      );
     }
 
     // Agnes v2.0 returns url under metadata.url
-    const videoUrl = (videoResult as any).metadata?.url
-      || (videoResult as any).url
-      || ((videoResult as any).data?.[0] as any)?.url;
-    const videoId = (videoResult as any).id || (videoResult as any).video_id || null;
+    const videoUrl =
+      (videoResult as any).metadata?.url ||
+      (videoResult as any).url ||
+      ((videoResult as any).data?.[0] as any)?.url;
+    const videoId =
+      (videoResult as any).id || (videoResult as any).video_id || null;
 
     if (!videoUrl) throw new Error('No video URL in response');
 
-    return NextResponse.json({ success: true, videoUrl, videoId, provider: usedProvider });
+    return NextResponse.json({
+      success: true,
+      videoUrl,
+      videoId,
+      provider: usedProvider
+    });
   } catch (error) {
     console.error('Animation generation error:', error);
     return NextResponse.json(
-      { error: 'Animation failed', message: error instanceof Error ? error.message : String(error) },
+      {
+        error: 'Animation failed',
+        message: error instanceof Error ? error.message : String(error)
+      },
       { status: 500 }
     );
   }

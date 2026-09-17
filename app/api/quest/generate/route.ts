@@ -24,12 +24,20 @@ function buildManualPrompt(config: Record<string, unknown>) {
   const hat = config.hat as string;
 
   const hairLabels: Record<string, string> = {
-    short_crop: 'short crop', fade: 'stylish high fade', curly: 'curly natural hair',
-    waves: 'flowing wave hairstyle', mohawk: 'bold mohawk', bald: 'shaved bald head',
-    messy: 'tousled messy hair', locs: 'beautiful dreadlocks',
-    long_straight: 'long flowing straight hair', wavy_bob: 'wavy bob cut',
-    high_ponytail: 'high ponytail', braids: 'intricately braided hair',
-    pixie: 'chic pixie cut', updo: 'elegant updo hairstyle',
+    short_crop: 'short crop',
+    fade: 'stylish high fade',
+    curly: 'curly natural hair',
+    waves: 'flowing wave hairstyle',
+    mohawk: 'bold mohawk',
+    bald: 'shaved bald head',
+    messy: 'tousled messy hair',
+    locs: 'beautiful dreadlocks',
+    long_straight: 'long flowing straight hair',
+    wavy_bob: 'wavy bob cut',
+    high_ponytail: 'high ponytail',
+    braids: 'intricately braided hair',
+    pixie: 'chic pixie cut',
+    updo: 'elegant updo hairstyle'
   };
 
   const outfitLabels: Record<string, string> = {
@@ -37,15 +45,17 @@ function buildManualPrompt(config: Record<string, unknown>) {
     smart: 'smart business casual attire with crisp collar',
     athletic: 'sporty athletic wear, dynamic and energetic',
     elegant: 'elegant sophisticated evening wear',
-    fantasy: 'heroic fantasy RPG armor with magical golden accents',
+    fantasy: 'heroic fantasy RPG armor with magical golden accents'
   };
 
   const classVibes: Record<string, string> = {
-    romantic: 'warm radiant smile, charming romantic aura with soft golden light',
-    adventurer: 'bold confident expression, determined eyes of a fearless explorer',
+    romantic:
+      'warm radiant smile, charming romantic aura with soft golden light',
+    adventurer:
+      'bold confident expression, determined eyes of a fearless explorer',
     scholar: 'intelligent thoughtful look, intellectual curiosity in the eyes',
     mystic: 'mysterious ethereal presence, knowing gaze with magical energy',
-    champion: 'strong noble bearing, heroic presence and protective confidence',
+    champion: 'strong noble bearing, heroic presence and protective confidence'
   };
 
   const genderLabel = gender === 'male' ? 'Young man' : 'Young woman';
@@ -62,14 +72,17 @@ function buildManualPrompt(config: Record<string, unknown>) {
   const topDesc = String(top || 'stylish fitted tee');
   const bottomDesc = String(_bottom || 'fitted dark jeans');
   const shoesDesc = String(_shoes || 'clean white sneakers');
-  const accessoriesArr = Array.isArray(accessories) ? (accessories as string[]) : [];
+  const accessoriesArr = Array.isArray(accessories)
+    ? (accessories as string[])
+    : [];
   const tattooArr = Array.isArray(tattoos) ? (tattoos as string[]) : [];
   const accessoryStr = accessoriesArr?.length
     ? `Wearing ${accessoriesArr.join(', ')}.`
     : 'No visible accessories.';
-  const tattooDesc = tattooArr?.[0] && tattooArr?.[0] !== 'none'
-    ? `Adorned with a tasteful ${tattooArr[0]} tattoo.`
-    : 'Smooth, unmarked skin.';
+  const tattooDesc =
+    tattooArr?.[0] && tattooArr?.[0] !== 'none'
+      ? `Adorned with a tasteful ${tattooArr[0]} tattoo.`
+      : 'Smooth, unmarked skin.';
   const hatDesc = hat ? `Wearing a ${String(hat)}.` : '';
   const nameStr = String(name || '');
 
@@ -120,23 +133,32 @@ async function withRetry<T>(fn: () => Promise<T>, maxRetries = 5): Promise<T> {
       return await fn();
     } catch (err: any) {
       lastError = err;
-      const isQueueFull = err?.message?.includes('queue') || err?.status === 503;
+      const isQueueFull =
+        err?.message?.includes('queue') || err?.status === 503;
       if (!isQueueFull || i === maxRetries - 1) throw err;
       const delay = Math.min(8000 + i * 8000, 50000); // 8s, 16s, 24s, 32s, 40s
-      console.log(`[Generate] Queue full, retry ${i+1}/${maxRetries} in ${delay}ms`);
-      await new Promise(r => setTimeout(r, delay));
+      console.log(
+        `[Generate] Queue full, retry ${i + 1}/${maxRetries} in ${delay}ms`
+      );
+      await new Promise((r) => setTimeout(r, delay));
     }
   }
   throw lastError;
 }
 
 // Agnes image API call with fallback chain and queue retry
-async function tryAgnesImage(prompt: string, photoFile: File | null, freeKey: string, enterpriseKey: string, tokenKey: string) {
+async function tryAgnesImage(
+  prompt: string,
+  photoFile: File | null,
+  freeKey: string,
+  enterpriseKey: string,
+  tokenKey: string
+) {
   const keys = [
     { key: tokenKey, label: 'token' },
     { key: enterpriseKey, label: 'enterprise' },
-    { key: freeKey, label: 'free' },
-  ].filter(k => k.key);
+    { key: freeKey, label: 'free' }
+  ].filter((k) => k.key);
 
   for (const { key, label } of keys) {
     try {
@@ -145,7 +167,7 @@ async function tryAgnesImage(prompt: string, photoFile: File | null, freeKey: st
           model: 'agnes-image-2.5-flash',
           prompt,
           size: '1K',
-          ratio: '1:1',
+          ratio: '1:1'
         };
 
         if (photoFile) {
@@ -153,37 +175,50 @@ async function tryAgnesImage(prompt: string, photoFile: File | null, freeKey: st
           const photoBase64 = Buffer.from(photoBuffer).toString('base64');
           body.extra_body = {
             image: [`data:${photoFile.type};base64,${photoBase64}`],
-            response_format: 'url',
+            response_format: 'url'
           };
         } else {
           body.extra_body = { response_format: 'url' };
         }
 
-        const resp = await fetch('https://apihub.agnes-ai.com/v1/images/generations', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${key}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(body),
-        });
+        const resp = await fetch(
+          'https://apihub.agnes-ai.com/v1/images/generations',
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${key}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+          }
+        );
 
         if (!resp.ok) {
           const errText = await resp.text().catch(() => '');
           // Re-throw queue-full errors so retry logic handles them
           if (resp.status === 503 && errText.includes('queue')) {
-            throw Object.assign(new Error(`Agnes ${label} queue full`), { status: 503 });
+            throw Object.assign(new Error(`Agnes ${label} queue full`), {
+              status: 503
+            });
           }
-          console.log(`[Avatar] Agnes ${label} failed (${resp.status}): ${errText.slice(0, 200)}`);
+          console.log(
+            `[Avatar] Agnes ${label} failed (${resp.status}): ${errText.slice(0, 200)}`
+          );
           throw new Error(`Agnes ${label} failed: ${resp.status}`);
         }
 
         const data = await resp.json();
         if (data.data?.[0]?.b64_json) {
-          return { data: [{ b64_json: data.data[0].b64_json }], provider: `Agnes(${label})` };
+          return {
+            data: [{ b64_json: data.data[0].b64_json }],
+            provider: `Agnes(${label})`
+          };
         }
         if (data.data?.[0]?.url) {
-          return { data: [{ url: data.data[0].url }], provider: `Agnes(${label})` };
+          return {
+            data: [{ url: data.data[0].url }],
+            provider: `Agnes(${label})`
+          };
         }
       }, 5);
 
@@ -207,7 +242,7 @@ export async function POST(request: Request) {
       const formData = await request.formData();
       const type = formData.get('type');
       if (type === 'ai') {
-        description = formData.get('description') as string || '';
+        description = (formData.get('description') as string) || '';
         const photo = formData.get('photo');
         if (photo && photo instanceof File && photo.size > 0) photoFile = photo;
       } else {
@@ -216,25 +251,41 @@ export async function POST(request: Request) {
       }
     } else {
       const body = await request.json();
-      config = body.config as Record<string, unknown> || null;
+      config = (body.config as Record<string, unknown>) || null;
       description = body.description as string | null;
     }
 
     const prompt = config
       ? buildManualPrompt(config)
-      : buildAIPrompt(description || 'A charming, attractive person ready for adventure');
+      : buildAIPrompt(
+          description || 'A charming, attractive person ready for adventure'
+        );
 
     // Try Agnes (TOKEN → ENTERPRISE → FREE) with queue retry
-    const agnesResult = await tryAgnesImage(prompt, photoFile, AGNES_TOKEN_KEY, AGNES_ENTERPRISE_KEY, AGNES_FREE_KEY);
-    if (!agnesResult) throw new Error('Agnes generation failed — all keys exhausted or queued');
+    const agnesResult = await tryAgnesImage(
+      prompt,
+      photoFile,
+      AGNES_TOKEN_KEY,
+      AGNES_ENTERPRISE_KEY,
+      AGNES_FREE_KEY
+    );
+    if (!agnesResult)
+      throw new Error('Agnes generation failed — all keys exhausted or queued');
     const imageData = agnesResult.data[0] as any;
     const externalUrl = imageData.url;
     if (!externalUrl) throw new Error('No image URL in Agnes response');
-    return NextResponse.json({ success: true, imageUrl: externalUrl, provider: agnesResult.provider });
+    return NextResponse.json({
+      success: true,
+      imageUrl: externalUrl,
+      provider: agnesResult.provider
+    });
   } catch (error) {
     console.error('Avatar generation error:', error);
     return NextResponse.json(
-      { error: 'Generation failed', message: error instanceof Error ? error.message : String(error) },
+      {
+        error: 'Generation failed',
+        message: error instanceof Error ? error.message : String(error)
+      },
       { status: 500 }
     );
   }

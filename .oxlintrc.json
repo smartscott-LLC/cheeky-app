@@ -11,7 +11,11 @@
   "env": {
     "builtin": true
   },
-  "ignorePatterns": ["docs/lighthouse/**", "docs/archives/**", "cheeky_quest/**"],
+  "ignorePatterns": [
+    "docs/lighthouse/**",
+    "docs/archives/**",
+    "cheeky_quest/**"
+  ],
   "overrides": [
     {
       "files": ["types_db.ts"],

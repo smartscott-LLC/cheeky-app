@@ -29,18 +29,25 @@ async function initGenies(token) {
     naf = await initialize({
       canvas: nacCanvas,
       initScene: () => ({
-        renderer: new THREE.WebGLRenderer({ canvas: nacCanvas, antialias: true, alpha: true }),
+        renderer: new THREE.WebGLRenderer({
+          canvas: nacCanvas,
+          antialias: true,
+          alpha: true
+        }),
         scene: new THREE.Scene(),
-        camera: new THREE.PerspectiveCamera(45, 1, 0.1, 100),
+        camera: new THREE.PerspectiveCamera(45, 1, 0.1, 100)
       }),
       environment: 'prod',
-      bearerToken: token,
+      bearerToken: token
     });
     nafReady = true;
     return true;
   } catch (e) {
     // SDK not available yet — fall through to placeholder renderer
-    console.warn('[Genies] SDK not loaded, using placeholder renderer:', e.message);
+    console.warn(
+      '[Genies] SDK not loaded, using placeholder renderer:',
+      e.message
+    );
     return false;
   }
 }
@@ -67,7 +74,11 @@ function PlaceholderAvatar({ config, isGenerating }) {
       {/* Body */}
       <mesh castShadow receiveShadow position={[0, -0.2, 0]}>
         <capsuleGeometry args={[0.3, 0.9, 8, 16]} />
-        <meshStandardMaterial color={classColor} roughness={0.6} metalness={0.1} />
+        <meshStandardMaterial
+          color={classColor}
+          roughness={0.6}
+          metalness={0.1}
+        />
       </mesh>
       {/* Head */}
       <mesh castShadow position={[0, 0.65, 0]}>
@@ -76,7 +87,9 @@ function PlaceholderAvatar({ config, isGenerating }) {
       </mesh>
       {/* Hair */}
       <mesh position={[0, 0.82, 0]}>
-        <sphereGeometry args={[0.3, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.55]} />
+        <sphereGeometry
+          args={[0.3, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.55]}
+        />
         <meshStandardMaterial color={hairColor} roughness={0.9} />
       </mesh>
       {/* Eyes */}
@@ -92,7 +105,12 @@ function PlaceholderAvatar({ config, isGenerating }) {
       {isGenerating && (
         <mesh position={[0, 0.1, 0]}>
           <torusGeometry args={[0.5, 0.02, 8, 32]} />
-          <meshStandardMaterial color={classColor} emissive={classColor} emissiveIntensity={2} toneMapped={false} />
+          <meshStandardMaterial
+            color={classColor}
+            emissive={classColor}
+            emissiveIntensity={2}
+            toneMapped={false}
+          />
         </mesh>
       )}
     </group>
@@ -125,14 +143,14 @@ function GeniesAvatar({ avatarId, _config, _isGenerating, onReady }) {
 
         // Try to load the avatar from Genies CAMP
         const avatarDef = {
-          assets: [{ id: avatarId, version: '1' }],
+          assets: [{ id: avatarId, version: '1' }]
         };
 
         const handle = await naf.loadAvatarProgressive(avatarDef, {
           renderer: rendererRef.current,
           scene: naf.getScene ? naf.getScene() : undefined,
           lod: [2, 0],
-          idle: { id: 'idle_neutral', version: '1' },
+          idle: { id: 'idle_neutral', version: '1' }
         });
 
         if (!mounted) {
@@ -195,7 +213,11 @@ function QuestScene({ config, isGenerating, avatarId, showGenies }) {
     <>
       <ambientLight intensity={0.5} />
       <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
-      <directionalLight position={[-3, 2, -1]} intensity={0.3} color="#66FFFF" />
+      <directionalLight
+        position={[-3, 2, -1]}
+        intensity={0.3}
+        color="#66FFFF"
+      />
       <pointLight position={[0, 3, 2]} intensity={0.5} color="#FFD700" />
       <fog attach="fog" args={['#080B1A', 8, 20]} />
 
@@ -211,7 +233,11 @@ function QuestScene({ config, isGenerating, avatarId, showGenies }) {
       )}
 
       {/* Ground */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.3, 0]} receiveShadow>
+      <mesh
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, -1.3, 0]}
+        receiveShadow
+      >
         <circleGeometry args={[3, 32]} />
         <meshStandardMaterial color="#0a0a1a" roughness={0.9} />
       </mesh>
@@ -232,7 +258,12 @@ function QuestScene({ config, isGenerating, avatarId, showGenies }) {
 }
 
 // ===== EXPORTED COMPONENT =====
-export default function Avatar3D({ config, isGenerating, avatarId, className = '' }) {
+export default function Avatar3D({
+  config,
+  isGenerating,
+  avatarId,
+  className = ''
+}) {
   const [showGenies, setShowGenies] = useState(false);
   const [sdkError, setSdkError] = useState(null);
 
@@ -240,10 +271,14 @@ export default function Avatar3D({ config, isGenerating, avatarId, className = '
     // Attempt to init SDK on mount (non-blocking)
     const token = process.env.GENIES_API_KEY || '';
     if (token) {
-      initGenies(token).then((ready) => {
-        if (ready) setShowGenies(true);
-        else setSdkError('Genies SDK unavailable — showing 3D preview');
-      }).catch(() => setSdkError('Genies SDK unavailable — showing 3D preview'));
+      initGenies(token)
+        .then((ready) => {
+          if (ready) setShowGenies(true);
+          else setSdkError('Genies SDK unavailable — showing 3D preview');
+        })
+        .catch(() =>
+          setSdkError('Genies SDK unavailable — showing 3D preview')
+        );
     }
   }, []);
 
@@ -264,12 +299,16 @@ export default function Avatar3D({ config, isGenerating, avatarId, className = '
       </Canvas>
       {!showGenies && !avatarId && (
         <div className="absolute bottom-2 left-0 right-0 text-center">
-          <span className="text-[10px] text-white/30 font-mono">3D Preview</span>
+          <span className="text-[10px] text-white/30 font-mono">
+            3D Preview
+          </span>
         </div>
       )}
       {sdkError && (
         <div className="absolute bottom-2 left-0 right-0 text-center">
-          <span className="text-[10px] text-white/30 font-mono">⚡ {sdkError}</span>
+          <span className="text-[10px] text-white/30 font-mono">
+            ⚡ {sdkError}
+          </span>
         </div>
       )}
     </div>
@@ -282,7 +321,7 @@ const RPG_CLASS_COLORS = {
   adventurer: '#FFD700',
   scholar: '#00E5FF',
   mystic: '#9B59B6',
-  champion: '#E74C3C',
+  champion: '#E74C3C'
 };
 
 const SKIN_TONES = [
@@ -292,7 +331,7 @@ const SKIN_TONES = [
   { name: 'Warm', hex: '#C68642' },
   { name: 'Olive', hex: '#8D5524' },
   { name: 'Deep', hex: '#5D3A1A' },
-  { name: 'Dark', hex: '#3B2210' },
+  { name: 'Dark', hex: '#3B2210' }
 ];
 
 const HAIR_COLORS = [
@@ -305,13 +344,13 @@ const HAIR_COLORS = [
   { name: 'Platinum', hex: '#E5D4B0' },
   { name: 'Silver', hex: '#C0C0C0' },
   { name: 'Blue', hex: '#1E3A5F' },
-  { name: 'Purple', hex: '#4A148C' },
+  { name: 'Purple', hex: '#4A148C' }
 ];
 
 function getSkinHex(name) {
-  return SKIN_TONES.find(s => s.name === name)?.hex || '#DBA27A';
+  return SKIN_TONES.find((s) => s.name === name)?.hex || '#DBA27A';
 }
 
 function getHairHex(name) {
-  return HAIR_COLORS.find(h => h.name === name)?.hex || '#1C1209';
+  return HAIR_COLORS.find((h) => h.name === name)?.hex || '#1C1209';
 }

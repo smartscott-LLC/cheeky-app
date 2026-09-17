@@ -1,6 +1,9 @@
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || '';
+const SUPABASE_SERVICE_KEY =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  process.env.SUPABASE_SECRET_KEY ||
+  '';
 const BUCKET = 'quest-avatars';
 
 /**
@@ -14,7 +17,7 @@ export async function uploadToSupabase(
   // Download the image
   const res = await fetch(remoteUrl);
   if (!res.ok) throw new Error(`Failed to download image: ${res.status}`);
-  
+
   const buffer = await res.arrayBuffer();
   const mimeType = res.headers.get('content-type') || 'image/png';
 
@@ -24,12 +27,12 @@ export async function uploadToSupabase(
     {
       method: 'POST',
       headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
         'Content-Type': mimeType,
-        'x-upsert': 'true',
+        'x-upsert': 'true'
       },
-      body: buffer,
+      body: buffer
     }
   );
 
