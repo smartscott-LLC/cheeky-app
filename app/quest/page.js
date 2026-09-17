@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import Avatar3D from '@/components/ui/Quest/Avatar3D';
 
 // ===== CONSTANTS =====
@@ -887,9 +888,14 @@ function FinalReviewScreen({ config, imageUrl, videoUrl, rpgClassOverride, nameO
           <video src={videoUrl} autoPlay loop muted playsInline className="w-52 h-52 rounded-2xl object-cover mb-2 border-2 border-[#FFD700]/50"
                style={{boxShadow:'0 0 30px rgba(255,215,0,0.3)'}}/>
         ) : imageUrl ? (
-          // oxlint-disable-next-line next/no-img-element
-          <img src={imageUrl} alt="Your avatar" className="w-52 h-52 rounded-2xl object-cover mb-4 border-2 border-[#FFD700]/50"
-               style={{boxShadow:'0 0 30px rgba(255,215,0,0.3)'}}/>
+          <Image
+            src={imageUrl}
+            alt="Your avatar"
+            width={208}
+            height={208}
+            className="rounded-2xl object-cover mb-4 border-2 border-[#FFD700]/50"
+            style={{boxShadow:'0 0 30px rgba(255,215,0,0.3)'}}
+          />
         ) : null}
         <p className="text-gray-600 text-xs mb-6">Avatar saved · ID: {savedId}</p>
         <button onClick={onReset}
@@ -910,9 +916,14 @@ function FinalReviewScreen({ config, imageUrl, videoUrl, rpgClassOverride, nameO
               <video src={videoUrl} autoPlay loop muted playsInline className="w-full rounded-2xl"
                 style={{boxShadow:'0 0 50px rgba(255,215,0,0.3), 0 20px 40px rgba(0,0,0,0.5)'}}/>
             ) : (
-              // oxlint-disable-next-line next/no-img-element
-              <img src={imageUrl} alt="Generated avatar" className="w-full rounded-2xl"
-                style={{boxShadow:'0 0 50px rgba(255,215,0,0.3), 0 20px 40px rgba(0,0,0,0.5)'}}/>
+              <Image
+                src={imageUrl}
+                alt="Generated avatar"
+                width={208}
+                height={208}
+                className="rounded-2xl"
+                style={{boxShadow:'0 0 50px rgba(255,215,0,0.3), 0 20px 40px rgba(0,0,0,0.5)'}}
+              />
             )}
             {classInfo && (
               <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-full text-xs font-bold"
@@ -1161,8 +1172,14 @@ export default function App() {
                   <video src={generatedVideo} autoPlay loop muted playsInline className="w-full rounded-xl" style={{boxShadow:'0 0 30px rgba(255,215,0,0.25)'}}/>
                 ) : stepName==='final' && generatedImage ? (
                   <motion.div initial={{opacity:0}} animate={{opacity:1}}>
-                    {/* oxlint-disable-next-line next/no-img-element */}
-                    <img src={generatedImage} alt="Generated" className="w-full rounded-xl" style={{boxShadow:'0 0 30px rgba(255,215,0,0.25)'}}/>
+                    <Image
+                      src={generatedImage}
+                      alt="Generated"
+                      width={256}
+                      height={256}
+                      className="w-full rounded-xl"
+                      style={{boxShadow:'0 0 30px rgba(255,215,0,0.25)'}}
+                    />
                   </motion.div>
                 ) : (
                   <Avatar3D config={config} isGenerating={isGenerating} className="w-full aspect-square" />
