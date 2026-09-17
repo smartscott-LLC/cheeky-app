@@ -131,6 +131,9 @@ export async function sendMessage(
   body: string
 ): Promise<{ error?: string }> {
   const supabase = await createClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
   const { error } = await supabase.rpc('send_message', {
     p_conversation_id: conversationId,
     p_body: body
@@ -140,6 +143,17 @@ export async function sendMessage(
     console.error('sendMessage failed:', error.message);
     return { error: error.message };
   }
+
+  // Extract user memories for dating insights
+  if (user) {
+    void (async () => {
+      try {
+        const { addChatMemory } = await import('@/utils/mem0');
+        await addChatMemory(user.id, body);
+      } catch {}
+    })();
+  }
+
   return {};
 }
 
