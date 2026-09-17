@@ -73,7 +73,7 @@ export default async function LandingPage() {
       <section className="relative overflow-hidden">
         {/* Pink + gold glow behind the entrance */}
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-40 left-1/2 h-96 w-[42rem] -translate-x-1/2 rounded-full bg-club/10 blur-3xl" />
+          <div className="absolute -top-40 left-1/2 h-96 w-42rem -translate-x-1/2 rounded-full bg-club/10 blur-3xl" />
           <div className="absolute top-24 left-1/2 h-72 w-96 -translate-x-1/2 rounded-full bg-gold/10 blur-3xl" />
         </div>
         <FloatingHearts />
@@ -228,7 +228,7 @@ export default async function LandingPage() {
                   className="aspect-video w-full object-cover"
                 />
                 <div
-                  className={`h-1.5 w-full bg-gradient-to-r ${floor.gradient}`}
+                  className={`h-1.5 w-full bg-linear-to-r ${floor.gradient}`}
                 />
                 <div className="p-6">
                   <div className={`h-3 w-3 rounded-full ${floor.color}`} />

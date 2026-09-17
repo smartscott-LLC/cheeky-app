@@ -77,7 +77,7 @@ export default function Hud() {
       {/* ─── Trigger Button ─────────────────────────────────────────── */}
       <button
         onClick={cycleViewMode}
-        className={`fixed bottom-5 right-5 z-[9999] flex items-center gap-3 rounded-full border transition-all duration-300 ${
+        className={`fixed bottom-5 right-5 z-9999 flex items-center gap-3 rounded-full border transition-all duration-300 ${
           viewMode === 'hud'
             ? 'border-gold bg-zinc-900/95 text-gold shadow-[0_0_30px_rgba(255,215,0,0.4)]'
             : hasActivity
@@ -119,12 +119,12 @@ export default function Hud() {
       {/* ─── Full HUD Panel ─────────────────────────────────────────── */}
       {viewMode === 'hud' && (
         <div
-          className="fixed z-[9999] rounded-2xl border-2 border-gold bg-zinc-950/98 shadow-[0_0_60px_rgba(255,215,0,0.3)] backdrop-blur-xl flex flex-col overflow-hidden"
+          className="fixed z-9999 rounded-2xl border-2 border-gold bg-zinc-950/98 shadow-[0_0_60px_rgba(255,215,0,0.3)] backdrop-blur-xl flex flex-col overflow-hidden"
           style={{ bottom: '76px', right: '24px', width: '520px', maxHeight: '640px' }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* ── Top Bar ── */}
-          <div className="px-5 py-3 border-b border-gold/30 bg-gradient-to-r from-zinc-900/80 to-zinc-950/80">
+          <div className="px-5 py-3 border-b border-gold/30 bg-linear-to-r from-zinc-900/80 to-zinc-950/80">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <img src={ASSETS.icons.neonHeart} alt="" className="w-5 h-5 opacity-90" />
@@ -223,7 +223,7 @@ export default function Hud() {
           </div>
 
           {/* ── Footer ── */}
-          <div className="border-t border-gold/20 bg-zinc-900/50 px-5 py-3 flex-shrink-0 flex items-center justify-between">
+          <div className="border-t border-gold/20 bg-zinc-900/50 px-5 py-3 shrink-0 flex items-center justify-between">
             <button
               onClick={() => setShowDeleteModal(true)}
               className="flex items-center gap-1 rounded border border-red-500/20 bg-red-500/5 px-1.5 py-0.5 text-[10px] font-bold text-red-400/60 transition hover:bg-red-500/15 hover:border-red-500/40"
@@ -240,7 +240,7 @@ export default function Hud() {
 
       {/* ── Delete Modal ── */}
       {showDeleteModal && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm">
+        <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm">
           <div className="w-full max-w-sm rounded-2xl border-2 border-red-500 bg-zinc-950 p-6 shadow-[0_0_60px_rgba(239,68,68,0.3)]">
             <div className="flex items-center gap-3 mb-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500/20 border border-red-500/50">
@@ -372,7 +372,7 @@ function ProfileTab() {
       <h3 className="font-header text-gold text-lg mb-5">Your Profile</h3>
       <div className="flex flex-col items-center gap-4 py-3">
         <div className="relative">
-          <div className="h-28 w-28 rounded-full bg-gradient-to-br from-zinc-800 to-zinc-900 border-2 border-gold/60 flex items-center justify-center shadow-[0_0_30px_rgba(255,215,0,0.2)]">
+          <div className="h-28 w-28 rounded-full bg-linear-to-br from-zinc-800 to-zinc-900 border-2 border-gold/60 flex items-center justify-center shadow-[0_0_30px_rgba(255,215,0,0.2)]">
             <span className="text-5xl">👤</span>
           </div>
           <div className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full bg-club border-2 border-zinc-950 flex items-center justify-center">
@@ -409,7 +409,7 @@ function WalletTab({ wallet, inventory }: {
   return (
     <div className="p-5">
       <h3 className="font-header text-gold text-lg mb-5">Your Wallet</h3>
-      <div className="rounded-xl border border-gold/40 bg-gradient-to-br from-gold/10 to-transparent p-5 text-center mb-5">
+      <div className="rounded-xl border border-gold/40 bg-linear-to-br from-gold/10 to-transparent p-5 text-center mb-5">
         <p className="font-body text-club text-sm mb-1">Available Tokens</p>
         <p className="font-hero text-gold text-5xl">{wallet.tokens}</p>
         <p className="font-body text-zinc-500 text-sm mt-3">Lifetime spent: {wallet.lifetimeSpent}</p>
@@ -444,7 +444,7 @@ function HelpTab() {
   return (
     <div className="p-5">
       <h3 className="font-header text-gold text-lg mb-5">Help & Support</h3>
-      <div className="rounded-xl border border-club/30 bg-gradient-to-br from-club/10 to-transparent p-4 mb-5">
+      <div className="rounded-xl border border-club/30 bg-linear-to-br from-club/10 to-transparent p-4 mb-5">
         <div className="flex items-center gap-3 mb-4">
           <img src="/personas/chaz/portrait.webp" alt="Chaz" className="h-14 w-14 rounded-full border-2 border-club/60 object-cover" />
           <div>
