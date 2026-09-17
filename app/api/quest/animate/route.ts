@@ -18,14 +18,10 @@ async function withRetry<T>(fn: () => Promise<T>, maxRetries = 5): Promise<T> {
   throw lastError;
 }
 
-// ===== API Keys — priority order: FREE → ENTERPRISE → TOKEN =====
-const AGNES_FREE_KEY = process.env.AGNES_FREE_API_KEY || '';
-const AGNES_ENTERPRISE_KEY = process.env.AGNES_ENTERPRISE_KEY || '';
+// ===== API Keys — priority order: TOKEN → ENTERPRISE → FREE =====
 const AGNES_TOKEN_KEY = process.env.AGNES_TOKEN_MODEL_API_KEY || '';
-
-// OpenRouter fallback
-const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY || '';
-const VIDEO_MODEL = process.env.OPENROUTER_VIDEO_MODEL || 'bytedance/seedance-2.0-mini';
+const AGNES_ENTERPRISE_KEY = process.env.AGNES_ENTERPRISE_KEY || '';
+const AGNES_FREE_KEY = process.env.AGNES_FREE_API_KEY || '';
 
 export async function POST(request: Request) {
   try {
@@ -122,55 +118,8 @@ export async function POST(request: Request) {
       }
     }
 
-    // Fall back to OpenRouter if Agnes exhausted all keys
-    if (!videoResult && OPENROUTER_KEY) {
-      try {
-        const createResp = await fetch('https://openrouter.ai/api/v1/videos', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${OPENROUTER_KEY}`,
-            'Content-Type': 'application/json',
-            'HTTP-Referer': 'http://localhost:3000',
-            'X-Title': 'Cheeky Quest',
-          },
-          body: JSON.stringify({
-            model: VIDEO_MODEL,
-            prompt: videoPrompt,
-            image: imageUrl,
-            duration,
-          }),
-        });
-
-        if (createResp.ok) {
-          const result = await createResp.json();
-          if (result.id) {
-            const pollingUrl = result.polling_url || `https://openrouter.ai/api/v1/videos/${result.id}`;
-            for (let i = 0; i < 30; i++) {
-              await new Promise(r => setTimeout(r, 2000));
-              const statusResp = await fetch(pollingUrl, {
-                headers: { 'Authorization': `Bearer ${OPENROUTER_KEY}` },
-              });
-              if (statusResp.ok) {
-                const status = await statusResp.json();
-                if (status.status === 'completed' || status.status === 'succeeded') {
-                  videoResult = status;
-                  usedProvider = 'OpenRouter';
-                  break;
-                }
-                if (status.status === 'failed' || status.status === 'error') {
-                  throw new Error(status.error?.message || 'Video generation failed');
-                }
-              }
-            }
-          }
-        }
-      } catch (orErr) {
-        console.log('[Video] OpenRouter failed:', orErr);
-      }
-    }
-
     if (!videoResult) {
-      throw new Error('Video generation failed with all providers');
+      throw new Error('Video generation failed — all Agnes keys exhausted or queued');
     }
 
     // Agnes v2.0 returns url under metadata.url
