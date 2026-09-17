@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -15,9 +16,21 @@ export async function POST(request: Request) {
       config: Record<string, unknown>; imageUrl: string; name: string; rpgClass: string; generationType: string;
     };
 
+    // Extract user ID from Supabase auth cookie
+    let userId: string | null = null;
+    try {
+      const cookieStore = await cookies();
+      const supabaseKey = cookieStore.get('sb-ioqeddpgdilyyajsygmz-auth-token')?.value;
+      if (supabaseKey) {
+        const payload = JSON.parse(atob(supabaseKey.split('.')[1]));
+        userId = payload.sub || null;
+      }
+    } catch {}
+
     const id = crypto.randomUUID();
     const avatarDoc = {
       id,
+      user_id: userId,
       name: name || 'Unnamed Hero',
       rpg_class: rpgClass || 'adventurer',
       generation_type: generationType || 'manual',
@@ -41,7 +54,7 @@ export async function POST(request: Request) {
       throw new Error(`Supabase save failed: ${err}`);
     }
 
-    return NextResponse.json({ success: true, id, name: avatarDoc.name });
+    return NextResponse.json({ success: true, id, name: avatarDoc.name, userId });
   } catch (error) {
     console.error('Save avatar error:', error);
     return NextResponse.json(
