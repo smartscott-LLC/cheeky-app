@@ -109,9 +109,9 @@ Art direction (CRITICAL):
 // Agnes image API call with fallback chain
 async function tryAgnesImage(prompt: string, photoFile: File | null, freeKey: string, enterpriseKey: string, tokenKey: string) {
   const keys = [
-    { key: freeKey, label: 'free' },
-    { key: enterpriseKey, label: 'enterprise' },
     { key: tokenKey, label: 'token' },
+    { key: enterpriseKey, label: 'enterprise' },
+    { key: freeKey, label: 'free' },
   ].filter(k => k.key);
 
   for (const { key, label } of keys) {

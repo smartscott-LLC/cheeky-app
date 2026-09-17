@@ -23,11 +23,11 @@ export async function POST(request: Request) {
     const videoPrompt = prompt
       || `A Pixar/Disney style 3D animated character portrait spinning slowly in a full 360-degree circle for two complete rotations over approximately 4 seconds. The character turns smoothly showing all angles — front, left side, back, right side, front again. Cinematic lighting, pure dark background, smooth rotation, Pixar-quality animation, character identity stays consistent throughout the spin.`;
 
-    // Agnes key priority: FREE → ENTERPRISE → TOKEN
+    // Agnes key priority: TOKEN → ENTERPRISE → FREE
     const agnesKeys = [
-      { key: AGNES_FREE_KEY, label: 'free' },
-      { key: AGNES_ENTERPRISE_KEY, label: 'enterprise' },
       { key: AGNES_TOKEN_KEY, label: 'token' },
+      { key: AGNES_ENTERPRISE_KEY, label: 'enterprise' },
+      { key: AGNES_FREE_KEY, label: 'free' },
     ].filter(k => k.key);
 
     let videoResult: any = null;
