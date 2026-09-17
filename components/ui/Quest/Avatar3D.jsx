@@ -113,7 +113,7 @@ function GeniesAvatar({ avatarId, _config, _isGenerating, onReady }) {
     const token = process.env.GENIES_API_KEY || '';
     let mounted = true;
 
-    (async () => {
+    void (async () => {
       try {
         const ok = await initGenies(token);
         if (!mounted || !ok) return;

@@ -3,6 +3,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import {
   useHudStore,
   TabId,
@@ -186,6 +187,7 @@ export default function Hud() {
           <div className="px-5 py-3 border-b border-gold/30 bg-linear-to-r from-zinc-900/80 to-zinc-950/80">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
+                {/* oxlint-disable-next-line next/no-img-element */}
                 <img
                   src={ASSETS.icons.neonHeart}
                   alt=""
@@ -202,6 +204,7 @@ export default function Hud() {
                 </span>
                 {cheekyChatUnread > 0 && (
                   <span className="flex items-center gap-1.5 text-club">
+                    {/* oxlint-disable-next-line next/no-img-element */}
                     <img
                       src={ASSETS.icons.cheekyChats}
                       alt=""
@@ -264,12 +267,13 @@ export default function Hud() {
             </p>
             <div className="flex gap-2">
               {SPARK_MODES.map((mode) => (
-                <a
+                <Link
                   key={mode.slug}
                   href={`/browse#${mode.slug}`}
                   onClick={toggleExpand}
                   className="flex-1 flex flex-col items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900/60 py-2.5 text-center transition hover:border-gold/40 hover:bg-gold/5 group"
                 >
+                  {/* oxlint-disable-next-line next/no-img-element */}
                   <img
                     src={mode.icon}
                     alt={mode.label}
@@ -278,9 +282,9 @@ export default function Hud() {
                   <span className="font-body text-sm text-zinc-400 group-hover:text-gold transition">
                     {mode.label}
                   </span>
-                </a>
+                </Link>
               ))}
-              <a
+              <Link
                 href="/events"
                 onClick={toggleExpand}
                 className="flex-1 flex flex-col items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900/60 py-2.5 text-center transition hover:border-gold/40 hover:bg-gold/5 group"
@@ -289,12 +293,13 @@ export default function Hud() {
                 <span className="font-body text-sm text-zinc-400 group-hover:text-gold transition">
                   Events
                 </span>
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/gifts"
                 onClick={toggleExpand}
                 className="flex-1 flex flex-col items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900/60 py-2.5 text-center transition hover:border-gold/40 hover:bg-gold/5 group"
               >
+                {/* oxlint-disable-next-line next/no-img-element */}
                 <img
                   src={ASSETS.icons.gift}
                   alt="Gifts"
@@ -303,8 +308,8 @@ export default function Hud() {
                 <span className="font-body text-sm text-zinc-400 group-hover:text-gold transition">
                   Gifts
                 </span>
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/quest"
                 onClick={toggleExpand}
                 className="flex-1 flex flex-col items-center gap-1.5 rounded-lg border border-gold/30 bg-gold/5 py-2.5 text-center transition hover:border-gold hover:bg-gold/10 group"
@@ -313,7 +318,7 @@ export default function Hud() {
                 <span className="font-body text-sm text-zinc-400 group-hover:text-gold transition">
                   Quest
                 </span>
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -624,6 +629,7 @@ function ProfileTab() {
       <div className="flex flex-col items-center gap-4 py-3">
         <div className="relative">
           {avatar?.imageUrl ? (
+            // oxlint-disable-next-line next/no-img-element
             <img
               src={avatar.imageUrl}
               alt="Quest avatar"
@@ -651,6 +657,7 @@ function ProfileTab() {
               : 'Coming soon — forge your look'}
           </p>
           {!avatar && (
+            // oxlint-disable-next-line next/no-html-link-for-pages
             <a
               href="/quest"
               onClick={() => {
@@ -764,6 +771,7 @@ function HelpTab() {
       <h3 className="font-header text-gold text-lg mb-5">Help & Support</h3>
       <div className="rounded-xl border border-club/30 bg-linear-to-br from-club/10 to-transparent p-4 mb-5">
         <div className="flex items-center gap-3 mb-4">
+          {/* oxlint-disable-next-line next/no-img-element */}
           <img
             src="/personas/chaz/portrait.webp"
             alt="Chaz"

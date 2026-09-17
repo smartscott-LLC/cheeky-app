@@ -15,7 +15,21 @@ const openai = OPENROUTER_KEY
 
 // ===== Prompt Builders =====
 function buildManualPrompt(config: Record<string, unknown>) {
-  const { gender, skinTone, hairStyle, hairColor, eyeColor, build, outfit, personality, name, top, bottom, shoes, accessories, tattoos, hat } = config as Record<string, unknown>;
+  const gender = config.gender as string;
+  const skinTone = config.skinTone as string;
+  const hairStyle = config.hairStyle as string;
+  const hairColor = config.hairColor as string;
+  const eyeColor = config.eyeColor as string;
+  const build = config.build as string;
+  const outfit = config.outfit as string;
+  const personality = config.personality as string;
+  const name = config.name as string;
+  const top = config.top as string;
+  const _bottom = config.bottom as string;
+  const _shoes = config.shoes as string;
+  const accessories = config.accessories as string[];
+  const tattoos = config.tattoos as string[];
+  const hat = config.hat as string;
 
   const hairLabels: Record<string, string> = {
     short_crop: 'short crop', fade: 'stylish high fade', curly: 'curly natural hair',
@@ -43,29 +57,27 @@ function buildManualPrompt(config: Record<string, unknown>) {
   };
 
   const genderLabel = gender === 'male' ? 'Young man' : 'Young woman';
-  const skinToneStr = skinTone || 'medium';
-  const hairStyleStr = hairStyle as string;
+  const skinToneStr = String(skinTone || 'medium');
+  const hairStyleStr = String(hairStyle);
   const hairStyleLabel = hairLabels[hairStyleStr] || hairStyleStr || 'short';
-  const hairColorStr = hairColor || 'dark';
-  const eyeColorStr = eyeColor || 'brown';
-  const buildStr = build || 'athletic';
-  const outfitStr = outfit as string;
+  const hairColorStr = String(hairColor || 'dark');
+  const eyeColorStr = String(eyeColor || 'brown');
+  const buildStr = String(build || 'athletic');
+  const outfitStr = String(outfit);
   const outfitLabel = outfitLabels[outfitStr] || 'casual stylish outfit';
-  const personalityStr = personality as string;
+  const personalityStr = String(personality);
   const classVibe = classVibes[personalityStr] || 'warm, charming, confident';
-  const topDesc = top || 'stylish fitted tee';
-  const bottomDesc = bottom || 'fitted dark jeans';
-  const shoesDesc = shoes || 'clean white sneakers';
-  const accessoriesArr = accessories as string[];
-  const tattooArr = tattoos as string[];
+  const topDesc = String(top || 'stylish fitted tee');
+  const accessoriesArr = Array.isArray(accessories) ? (accessories as string[]) : [];
+  const tattooArr = Array.isArray(tattoos) ? (tattoos as string[]) : [];
   const accessoryStr = accessoriesArr?.length
     ? `Wearing ${accessoriesArr.join(', ')}.`
     : 'No visible accessories.';
   const tattooDesc = tattooArr?.[0] && tattooArr?.[0] !== 'none'
     ? `Adorned with a tasteful ${tattooArr[0]} tattoo.`
     : 'Smooth, unmarked skin.';
-  const hatDesc = hat ? `Wearing a ${hat}.` : '';
-  const nameStr = name;
+  const hatDesc = hat ? `Wearing a ${String(hat)}.` : '';
+  const nameStr = String(name || '');
 
   return `Create a breathtaking Pixar/Disney animated movie quality 3D character portrait for a fantasy RPG dating adventure game called "Quest for Love."
 

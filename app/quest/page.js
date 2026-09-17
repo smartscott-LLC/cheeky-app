@@ -734,6 +734,7 @@ function AIInputStep({ onGenerate, onBack, isGenerating }) {
         <h3 className="text-sm font-bold mb-2 uppercase tracking-widest" style={{color:'#00E5FF',fontFamily:'var(--font-damion)',fontSize:'1rem'}}>Reference Photo <span className="text-gray-500 font-normal normal-case text-xs ml-1">(optional)</span></h3>
         {photoPreview ? (
           <div className="relative">
+            {/* oxlint-disable-next-line next/no-img-element */}
             <img src={photoPreview} alt="Preview" className="w-full max-w-xs rounded-xl border border-[#00E5FF]/30 object-cover" style={{maxHeight:'180px'}}/>
             <button onClick={()=>{setPhoto(null);setPhotoPreview(null);}} className="absolute top-2 right-2 bg-red-500/80 text-white text-xs px-2 py-1 rounded-lg">Remove</button>
           </div>
@@ -886,6 +887,7 @@ function FinalReviewScreen({ config, imageUrl, videoUrl, rpgClassOverride, nameO
           <video src={videoUrl} autoPlay loop muted playsInline className="w-52 h-52 rounded-2xl object-cover mb-2 border-2 border-[#FFD700]/50"
                style={{boxShadow:'0 0 30px rgba(255,215,0,0.3)'}}/>
         ) : imageUrl ? (
+          // oxlint-disable-next-line next/no-img-element
           <img src={imageUrl} alt="Your avatar" className="w-52 h-52 rounded-2xl object-cover mb-4 border-2 border-[#FFD700]/50"
                style={{boxShadow:'0 0 30px rgba(255,215,0,0.3)'}}/>
         ) : null}
@@ -908,6 +910,7 @@ function FinalReviewScreen({ config, imageUrl, videoUrl, rpgClassOverride, nameO
               <video src={videoUrl} autoPlay loop muted playsInline className="w-full rounded-2xl"
                 style={{boxShadow:'0 0 50px rgba(255,215,0,0.3), 0 20px 40px rgba(0,0,0,0.5)'}}/>
             ) : (
+              // oxlint-disable-next-line next/no-img-element
               <img src={imageUrl} alt="Generated avatar" className="w-full rounded-2xl"
                 style={{boxShadow:'0 0 50px rgba(255,215,0,0.3), 0 20px 40px rgba(0,0,0,0.5)'}}/>
             )}
@@ -1045,14 +1048,28 @@ export default function App() {
     try {
       const name = aiGenData?.name || config.name;
       const rpgClass = aiGenData?.rpgClass || config.personality;
+      // Get userId from localStorage if authenticated
+      let userId = null;
+      try {
+        const weave = localStorage.getItem('cheeky-weave');
+        if (weave) {
+          const weaveData = JSON.parse(weave);
+          userId = weaveData.state?.userId || null;
+        }
+      } catch {}
       const res = await fetch('/api/quest/save', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({config, imageUrl:generatedImage, name:name||'Unnamed Hero', rpgClass:rpgClass||'adventurer', generationType:path}),
+        body: JSON.stringify({config, imageUrl:generatedImage, name:name||'Unnamed Hero', rpgClass:rpgClass||'adventurer', generationType:path, userId}),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setSavedId(data.id);
+      // Update HUD store with new avatar
+      try {
+        const { setAvatar } = useQuestStore.getState();
+        setAvatar({ id: data.id, imageUrl: generatedImage, name: name||'Unnamed Hero', rpgClass: rpgClass||'adventurer' });
+      } catch {}
     } catch (err) {
       setError(err.message);
     } finally {
@@ -1144,6 +1161,7 @@ export default function App() {
                   <video src={generatedVideo} autoPlay loop muted playsInline className="w-full rounded-xl" style={{boxShadow:'0 0 30px rgba(255,215,0,0.25)'}}/>
                 ) : stepName==='final' && generatedImage ? (
                   <motion.div initial={{opacity:0}} animate={{opacity:1}}>
+                    {/* oxlint-disable-next-line next/no-img-element */}
                     <img src={generatedImage} alt="Generated" className="w-full rounded-xl" style={{boxShadow:'0 0 30px rgba(255,215,0,0.25)'}}/>
                   </motion.div>
                 ) : (
