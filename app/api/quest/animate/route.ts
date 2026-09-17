@@ -43,11 +43,13 @@ export async function POST(request: Request) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: 'agnes-video-v2.0',
+            model: 'agnes-video-2.5-flash',
             prompt: videoPrompt,
             image: imageUrl,
-            num_frames: 97,   // ~4s at 24fps (97/24 ≈ 4.04s)
-            frame_rate: 24,
+            seconds: duration,
+            mode: 'keyframe',
+            size: '720P',
+            aspect_ratio: '16:9',
           }),
         });
 
@@ -64,9 +66,10 @@ export async function POST(request: Request) {
         // Poll for completion via /agnesapi?video_id=...
         for (let i = 0; i < 30; i++) {
           await new Promise(r => setTimeout(r, 2000));
-          const statusResp = await fetch(`https://apihub.agnes-ai.com/agnesapi?video_id=${videoId}`, {
-            headers: { 'Authorization': `Bearer ${key}` },
-          });
+          const statusResp = await fetch(
+            `https://apihub.agnes-ai.com/agnesapi?video_id=${videoId}&model_name=agnes-video-2.5-flash`,
+            { headers: { 'Authorization': `Bearer ${key}` } }
+          );
 
           if (!statusResp.ok) {
             console.log(`[Video] Agnes ${label} poll failed (${statusResp.status})`);

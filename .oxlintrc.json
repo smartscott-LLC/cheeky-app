@@ -20,7 +20,7 @@
       }
     },
     {
-      "files": ["app/(quest)/page.js"],
+      "files": ["app/quest/page.js"],
       "rules": {
         "react/set-state-in-effect": "off"
       }

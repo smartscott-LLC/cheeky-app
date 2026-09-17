@@ -121,7 +121,6 @@ async function tryAgnesImage(prompt: string, photoFile: File | null, freeKey: st
         prompt,
         size: '1K',
         ratio: '1:1',
-        return_base64: true,
       };
 
       if (photoFile) {
@@ -129,8 +128,10 @@ async function tryAgnesImage(prompt: string, photoFile: File | null, freeKey: st
         const photoBase64 = Buffer.from(photoBuffer).toString('base64');
         body.extra_body = {
           image: [`data:${photoFile.type};base64,${photoBase64}`],
-          response_format: 'b64_json',
+          response_format: 'url',
         };
+      } else {
+        body.extra_body = { response_format: 'url' };
       }
 
       const resp = await fetch('https://apihub.agnes-ai.com/v1/images/generations', {
@@ -195,9 +196,8 @@ export async function POST(request: Request) {
     const agnesResult = await tryAgnesImage(prompt, photoFile, AGNES_FREE_KEY, AGNES_ENTERPRISE_KEY, AGNES_TOKEN_KEY);
     if (agnesResult) {
       const imageData = agnesResult.data[0] as any;
-      const imageUrl = imageData.b64_json
-        ? `data:image/png;base64,${imageData.b64_json}`
-        : imageData.url;
+      const imageUrl = imageData.url;
+      if (!imageUrl) throw new Error('No image URL in Agnes response');
       return NextResponse.json({ success: true, imageUrl, provider: agnesResult.provider });
     }
 
