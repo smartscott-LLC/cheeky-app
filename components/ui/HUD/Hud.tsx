@@ -3,6 +3,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import {
   useHudStore,
@@ -187,11 +188,12 @@ export default function Hud() {
           <div className="px-5 py-3 border-b border-gold/30 bg-linear-to-r from-zinc-900/80 to-zinc-950/80">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                {/* oxlint-disable-next-line next/no-img-element */}
-                <img
+                <Image
                   src={ASSETS.icons.neonHeart}
                   alt=""
-                  className="w-5 h-5 opacity-90"
+                  width={20}
+                  height={20}
+                  className="opacity-90"
                 />
                 <span className="font-hero text-gold text-sm tracking-widest">
                   CLUB CHEEKY
@@ -204,11 +206,11 @@ export default function Hud() {
                 </span>
                 {cheekyChatUnread > 0 && (
                   <span className="flex items-center gap-1.5 text-club">
-                    {/* oxlint-disable-next-line next/no-img-element */}
-                    <img
+                    <Image
                       src={ASSETS.icons.cheekyChats}
                       alt=""
-                      className="w-4 h-4"
+                      width={16}
+                      height={16}
                     />
                     <span className="font-header text-club">
                       {cheekyChatUnread}
@@ -273,11 +275,12 @@ export default function Hud() {
                   onClick={toggleExpand}
                   className="flex-1 flex flex-col items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900/60 py-2.5 text-center transition hover:border-gold/40 hover:bg-gold/5 group"
                 >
-                  {/* oxlint-disable-next-line next/no-img-element */}
-                  <img
+                  <Image
                     src={mode.icon}
                     alt={mode.label}
-                    className="w-7 h-7 opacity-75 group-hover:opacity-100 transition"
+                    width={28}
+                    height={28}
+                    className="opacity-75 group-hover:opacity-100 transition"
                   />
                   <span className="font-body text-sm text-zinc-400 group-hover:text-gold transition">
                     {mode.label}
@@ -299,11 +302,12 @@ export default function Hud() {
                 onClick={toggleExpand}
                 className="flex-1 flex flex-col items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900/60 py-2.5 text-center transition hover:border-gold/40 hover:bg-gold/5 group"
               >
-                {/* oxlint-disable-next-line next/no-img-element */}
-                <img
+                <Image
                   src={ASSETS.icons.gift}
                   alt="Gifts"
-                  className="w-7 h-7 opacity-75 group-hover:opacity-100 transition"
+                  width={28}
+                  height={28}
+                  className="opacity-75 group-hover:opacity-100 transition"
                 />
                 <span className="font-body text-sm text-zinc-400 group-hover:text-gold transition">
                   Gifts
@@ -629,11 +633,12 @@ function ProfileTab() {
       <div className="flex flex-col items-center gap-4 py-3">
         <div className="relative">
           {avatar?.imageUrl ? (
-            // oxlint-disable-next-line next/no-img-element
-            <img
+            <Image
               src={avatar.imageUrl}
               alt="Quest avatar"
-              className="h-28 w-28 rounded-full object-cover border-2 border-gold/60 shadow-[0_0_30px_rgba(255,215,0,0.3)]"
+              width={112}
+              height={112}
+              className="rounded-full object-cover border-2 border-gold/60 shadow-[0_0_30px_rgba(255,215,0,0.3)]"
             />
           ) : (
             <div className="h-28 w-28 rounded-full bg-linear-to-br from-zinc-800 to-zinc-900 border-2 border-gold/60 flex items-center justify-center shadow-[0_0_30px_rgba(255,215,0,0.2)]">
@@ -771,11 +776,12 @@ function HelpTab() {
       <h3 className="font-header text-gold text-lg mb-5">Help & Support</h3>
       <div className="rounded-xl border border-club/30 bg-linear-to-br from-club/10 to-transparent p-4 mb-5">
         <div className="flex items-center gap-3 mb-4">
-          {/* oxlint-disable-next-line next/no-img-element */}
-          <img
+          <Image
             src="/personas/chaz/portrait.webp"
             alt="Chaz"
-            className="h-14 w-14 rounded-full border-2 border-club/60 object-cover"
+            width={56}
+            height={56}
+            className="rounded-full border-2 border-club/60 object-cover"
           />
           <div>
             <p className="font-header text-club text-lg">Chaz</p>
