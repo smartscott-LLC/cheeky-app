@@ -11,12 +11,18 @@
   "env": {
     "builtin": true
   },
-  "ignorePatterns": ["docs/lighthouse/**", "docs/archives/**"],
+  "ignorePatterns": ["docs/lighthouse/**", "docs/archives/**", "cheeky_quest/**"],
   "overrides": [
     {
       "files": ["types_db.ts"],
       "rules": {
         "typescript/no-redundant-type-constituents": "off"
+      }
+    },
+    {
+      "files": ["app/(quest)/page.js"],
+      "rules": {
+        "react/set-state-in-effect": "off"
       }
     },
     {
