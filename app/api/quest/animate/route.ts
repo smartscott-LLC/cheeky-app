@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-// Retry helper with exponential backoff for queue-full errors
+// Retry helper with 10s flat backoff for queue-full errors
 async function withRetry<T>(fn: () => Promise<T>, maxRetries = 5): Promise<T> {
   let lastError: any;
   for (let i = 0; i < maxRetries; i++) {
@@ -13,7 +13,7 @@ async function withRetry<T>(fn: () => Promise<T>, maxRetries = 5): Promise<T> {
         err?.code === 'video_queue_full' ||
         err?.status === 503;
       if (!isQueueFull || i === maxRetries - 1) throw err;
-      const delay = Math.min(8000 + i * 8000, 50000); // 8s, 16s, 24s, 32s, 40s
+      const delay = 10000; // 10s flat retry
       console.log(
         `[Animate] Queue full, retry ${i + 1}/${maxRetries} in ${delay}ms`
       );
