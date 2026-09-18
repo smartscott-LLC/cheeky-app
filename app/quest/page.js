@@ -2223,13 +2223,13 @@ export default function App() {
             const res = await fetch(url, options);
             if (res.ok) return res;
             const errText = await res.text().catch(() => '');
-            // Queue-full error — retry with backoff
+            // Queue-full error — retry with 10s flat backoff
             if (
               res.status === 503 &&
               (errText.includes('queue') || errText.includes('full'))
             ) {
               lastError = new Error(errText.slice(0, 200));
-              const delay = Math.min(8000 + i * 8000, 50000); // 8s, 16s, 24s, 32s, 40s
+              const delay = 10000; // 10s flat retry
               console.log(
                 `[Quest] Queue full, retry ${i + 1}/${maxRetries} in ${delay}ms`
               );
@@ -2242,7 +2242,7 @@ export default function App() {
             lastError = err;
             if (!err.message?.includes('queue') || i === maxRetries - 1)
               throw err;
-            const delay = Math.min(2000 * Math.pow(2, i), 30000);
+            const delay = 10000; // 10s flat retry
             console.log(
               `[Quest] Queue full, retry ${i + 1}/${maxRetries} in ${delay}ms`
             );
