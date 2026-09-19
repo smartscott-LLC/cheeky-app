@@ -7,10 +7,10 @@ import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 
 
-function Viewer({ asset }: { asset: AssetInfo | null }) {
+function Viewer({ asset }) {
   const url = asset ? `/api/quest/assets/${encodeURIComponent(asset.path)}` : null;
-  const [model, setModel] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [model, setModel] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!url) { setModel(null); setError(null); return; }
