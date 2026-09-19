@@ -33,7 +33,7 @@ export default function AssetBrowser({ initialCatalog }) {
   const totalSizeMB = Object.values(catalog).reduce((s, c) => s + (c.totalSizeKB || 0), 0) / 1024;
 
   // Compute thumbnail URL for an asset
-  const thumbUrl = (cat, name) => `/pictures/avatar/thumbnails/${cat}/${name.replace('.glb', '.png')}`;
+  const thumbUrl = (cat, name) => `/pictures/avatar/thumbnails/${cat}/${'thumb.jpg'}`;
 
   return (
     <div style={{ background: '#0a0a0f', color: '#FFB5FF', minHeight: '100vh', fontFamily: 'Rancho, cursive' }}>
