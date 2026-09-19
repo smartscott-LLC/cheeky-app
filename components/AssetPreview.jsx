@@ -47,9 +47,9 @@ export default function AssetPreviewPage() {
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState('all');
 
-  const allAssets: AssetInfo[] = [];
-  Object.entries(catalog).forEach(([cat, data]: [string, any]) => {
-    (data.assets || []).forEach((a: AssetInfo) => allAssets.push({ ...a, path: `${cat}/${a.name}` }));
+  const allAssets = [];
+  Object.entries(catalog).forEach(([cat, data]) => {
+    (data.assets || []).forEach((a) => allAssets.push({ ...a, path: `${cat}/${a.name}` }));
   });
 
   const filtered = allAssets.filter(a => {
