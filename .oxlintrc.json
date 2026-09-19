@@ -14,7 +14,8 @@
   "ignorePatterns": [
     "docs/lighthouse/**",
     "docs/archives/**",
-    "cheeky_quest/**"
+    "cheeky_quest/**",
+    "image_to_video_pipe/**"
   ],
   "overrides": [
     {
