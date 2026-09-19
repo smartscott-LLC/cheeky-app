@@ -1,34 +1,45 @@
-'use client';
+import fs from 'fs';
+import path from 'path';
 
-import { useState, useEffect } from 'react';
+const CATALOG_PATH = path.join(process.cwd(), 'public', 'asset-catalog.json');
 
-const CATALOG_PATH = '/api/quest/assets';
+export default function AssetBrowserPage() {
+  let catalog = {};
+  if (fs.existsSync(CATALOG_PATH)) {
+    catalog = JSON.parse(fs.readFileSync(CATALOG_PATH, 'utf8'));
+  }
 
-export default function AssetBrowser() {
-  const [catalog, setCatalog] = useState({});
-  const [tiers, setTiers] = useState({});
+  const catalogJSON = JSON.stringify(catalog);
+
+  return (
+    <div suppressHydrationWarning>
+      <script dangerouslySetInnerHTML={{ __html: `window.ASSET_CATALOG=${catalogJSON}` }} />
+      <AssetBrowser />
+    </div>
+  );
+}
+
+function AssetBrowser() {
+  const catalog = window.ASSET_CATALOG;
+  const [tiers, setTiers] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('quest-asset-tiers') || '{}');
+    } catch { return {}; }
+  });
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState('all');
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(CATALOG_PATH)
-      .then(r => r.json())
-      .then(data => {
-        setCatalog(data.catalog || {});
-        setTiers(data.tiers || {});
-        setLoading(false);
-      });
-  }, []);
+    localStorage.setItem('quest-asset-tiers', JSON.stringify(tiers));
+  }, [tiers]);
 
   const cycleTier = (path) => {
-    const current = tiers[path];
-    const cycle = { undefined: 'free', free: 'token', token: 'prize', prize: 'future', future: 'none' };
-    const newTier = cycle[current];
-    const newTiers = { ...tiers, [path]: newTier };
-    setTiers(newTiers);
-    fetch(CATALOG_PATH, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newTiers) }).catch(() => {});
+    setTiers(prev => {
+      const current = prev[path];
+      const cycle = { undefined: 'free', free: 'token', token: 'prize', prize: 'future', future: 'none' };
+      return { ...prev, [path]: cycle[current] };
+    });
   };
 
   const categorizedCount = Object.values(tiers).filter(t => t !== 'none').length;
@@ -40,11 +51,9 @@ export default function AssetBrowser() {
   const totalAssets = Object.values(catalog).reduce((s, c) => s + (c.count || 0), 0);
   const totalSizeMB = Object.values(catalog).reduce((s, c) => s + (c.totalSizeKB || 0), 0) / 1024;
 
-  if (loading) return <div style={{ color: '#FFB5FF', textAlign: 'center', padding: 40, fontFamily: 'Rancho, cursive' }}>Loading assets...</div>;
-
   return (
     <div style={{ background: '#0a0a0f', color: '#FFB5FF', minHeight: '100vh', fontFamily: 'Rancho, cursive' }}>
-      <h1 style={{ color: '#FFD800', fontFamily: 'Fascinate, cursive', fontSize: 32, textAlign: 'center', padding: '20px 0' }}>
+      <h1 style={{ color: '#FFD800', fontFamily: 'Fascinate', cursive, fontSize: 32, textAlign: 'center', padding: '20px 0' }}>
         ⚔️ Quest Asset Browser
       </h1>
       <div style={{ textAlign: 'center', color: '#66FFFF', fontSize: 14, marginBottom: 20 }}>
@@ -77,18 +86,18 @@ export default function AssetBrowser() {
             const catToken = data.assets.filter(a => tiers[a.path] === 'token').length;
             const catPrize = data.assets.filter(a => tiers[a.path] === 'prize').length;
             const catFuture = data.assets.filter(a => tiers[a.path] === 'future').length;
-            
+
             const filtered = data.assets.filter(a => {
               const matchesSearch = !search || a.name.toLowerCase().includes(search.toLowerCase()) || a.path.toLowerCase().includes(search.toLowerCase());
               const matchesTier = filter === 'all' || tiers[a.path] === filter;
               return matchesSearch && matchesTier;
             });
-            
+
             if (filtered.length === 0) return null;
 
             return (
               <div key={category} style={{ marginBottom: 20 }}>
-                <h2 style={{ color: '#FFD800', fontFamily: 'Fascinate, cursive', fontSize: 24, borderBottom: '2px solid #FFD800', padding: '10px 0' }}>
+                <h2 style={{ color: '#FFD800', fontFamily: "Fascinate, cursive", fontSize: 24, borderBottom: '2px solid #FFD800', padding: '10px 0' }}>
                   {category} <span style={{ color: '#66FFFF', fontFamily: 'Rancho', fontSize: 14 }}>{data.count} assets · {catFree} free · {catToken} token · {catPrize} prize · {catFuture} future</span>
                 </h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12, padding: '15px 0' }}>
@@ -123,7 +132,7 @@ export default function AssetBrowser() {
           const a = document.createElement('a');
           a.href = url; a.download = 'asset-tiers.json'; a.click();
           URL.revokeObjectURL(url);
-        }} style={{ background: '#FFD800', color: '#0a0a0f', border: 'none', padding: '10px 24px', borderRadius: 8, fontFamily: 'Fascinate, cursive', fontSize: 16, cursor: 'pointer' }}>
+        }} style={{ background: '#FFD800', color: '#0a0a0f', border: 'none', padding: '10px 24px', borderRadius: 8, fontFamily: 'Fascinate', cursive, fontSize: 16, cursor: 'pointer' }}>
           Export Selection
         </button>
       </div>
