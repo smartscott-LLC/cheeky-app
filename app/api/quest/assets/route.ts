@@ -2,25 +2,15 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-const ASSET_DIR = '/home/server/Pictures/avatar/split_assets';
+// Catalog baked into public/ at build time (assets are local-only, not deployable)
+const CATALOG_PATH = path.join(process.cwd(), 'public', 'asset-catalog.json');
 const TIER_FILE = '/tmp/asset_tiers.json';
 
 export async function GET() {
   try {
-    const categories = fs.readdirSync(ASSET_DIR);
-    const catalog: Record<string, any> = {};
-
-    for (const cat of categories) {
-      const catPath = path.join(ASSET_DIR, cat);
-      if (!fs.statSync(catPath).isDirectory()) continue;
-
-      const files = fs.readdirSync(catPath).filter(f => f.endsWith('.glb'));
-      const assets = files.map((f: string) => {
-        const fullPath = path.join(catPath, f);
-        const stat = fs.statSync(fullPath);
-        return { name: f, path: `${cat}/${f}`, sizeKB: Math.round(stat.size / 1024) };
-      });
-      catalog[cat] = { count: assets.length, totalSizeKB: assets.reduce((s: number, a: any) => s + a.sizeKB, 0), assets };
+    let catalog: Record<string, any> = {};
+    if (fs.existsSync(CATALOG_PATH)) {
+      catalog = JSON.parse(fs.readFileSync(CATALOG_PATH, 'utf8'));
     }
 
     let tiers: Record<string, string> = {};
