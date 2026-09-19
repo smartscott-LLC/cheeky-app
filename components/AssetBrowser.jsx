@@ -33,7 +33,7 @@ export default function AssetBrowser({ initialCatalog }) {
   const totalSizeMB = Object.values(catalog).reduce((s, c) => s + (c.totalSizeKB || 0), 0) / 1024;
 
   // Compute thumbnail URL for an asset
-  const thumbUrl = (cat, name) => `/pictures/avatar/thumbnails/${cat}/${'thumb.jpg'}`;
+  const thumbUrl = (cat) => `/pictures/avatar/thumbnails/${cat}/${'thumb.jpg'}`;
 
   return (
     <div style={{ background: '#0a0a0f', color: '#FFB5FF', minHeight: '100vh', fontFamily: 'Rancho, cursive' }}>
@@ -89,7 +89,7 @@ export default function AssetBrowser({ initialCatalog }) {
                     const tier = tiers[a.path];
                     const tierColors = { free: '#4ade80', token: '#f59e0b', prize: '#a855f7', future: '#64748b' };
                     const tierLabels = { free: 'FREE', token: 'TOKEN', prize: 'PRIZE', future: 'FUTURE' };
-                    const thumb = thumbUrl(category, a.name);
+                    const thumb = thumbUrl(category);
                     return (
                       <div key={a.path} onClick={() => cycleTier(a.path)} style={{
                         background: '#1a1a2e', border: `2px solid ${tier ? tierColors[tier] : '#333'}`,
