@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
-function GLBViewer({ url }: { url: string | null }) {
-  const { scene } = useGLTF(url || '/placeholder.glb');
-  const group = useRef<THREE.Group>(null);
+function GLBViewer({ url }) {
+  const { scene } = useGLTF(url || '');
+  const group = useRef(null);
   
   useEffect(() => {
     if (scene) {
@@ -26,7 +26,7 @@ function GLBViewer({ url }: { url: string | null }) {
     }
   });
 
-  if (!url) {
+  if (!url || url === '') {
     return (
       <group ref={group}>
         <mesh>
@@ -40,7 +40,7 @@ function GLBViewer({ url }: { url: string | null }) {
   return <primitive object={scene} scale={[0.8, 0.8, 0.8]} />;
 }
 
-export default function AssetViewer({ asset }: { asset: { path: string; name: string; sizeKB: number } | null }) {
+export default function AssetViewer({ asset }) {
   const url = asset ? `/api/quest/assets/${encodeURIComponent(asset.path)}` : null;
 
   return (
