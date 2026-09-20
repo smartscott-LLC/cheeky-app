@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-
-const PREVIEW_DIR = '/home/server/Pictures/avatar';
+const PREVIEW_DIR = path.join(process.cwd(), 'public', 'pictures', 'previews');
 
 // Map category names to preview image filenames
 const CATEGORY_PREVIEWS: Record<string, string> = {
@@ -74,22 +73,22 @@ const CATEGORY_PREVIEWS: Record<string, string> = {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const category = searchParams.get('cat');
-  
+
   if (!category || !CATEGORY_PREVIEWS[category]) {
     return NextResponse.json({ error: 'Category not found' }, { status: 404 });
   }
-  
+
   const filename = CATEGORY_PREVIEWS[category];
   const ext = filename.split('.').pop() || 'jpeg';
   const filePath = path.join(PREVIEW_DIR, filename);
-  
+
   if (!fs.existsSync(filePath)) {
     return NextResponse.json({ error: 'Preview not found' }, { status: 404 });
   }
-  
+
   const buffer = fs.readFileSync(filePath);
   const contentType = `image/${ext}`;
-  
+
   return new NextResponse(buffer, {
     headers: {
       'Content-Type': contentType,
