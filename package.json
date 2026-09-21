@@ -36,7 +36,7 @@
     "@tanstack/react-query": "^5.103.1",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
-    "ai": "^7.0.102",
+    "ai": "^7.0.106",
     "chub": "link:../chub",
     "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
