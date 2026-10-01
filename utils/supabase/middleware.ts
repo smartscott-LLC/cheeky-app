@@ -11,6 +11,12 @@ export const createClient = (request: NextRequest) => {
   });
 
   const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+    // Cross-subdomain sessions (maker, future apps): set NEXT_PUBLIC_COOKIE_DOMAIN
+    // (e.g. ".smartscott.online") in the Vercel project env ONLY. Unset locally,
+    // where a real domain would make the browser drop the cookie.
+    cookieOptions: process.env.NEXT_PUBLIC_COOKIE_DOMAIN
+      ? { domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN }
+      : undefined,
     cookies: {
       get(name: string) {
         return request.cookies.get(name)?.value;

@@ -13,8 +13,14 @@ export const createClient = async () => {
     supabaseUrl,
     supabaseAnonKey,
 
-    // Define a cookies object with methods for interacting with the cookie store and pass it to the client
     {
+      // Must match utils/supabase/middleware.ts — session cookies have to be
+      // written with ONE consistent domain (see note there).
+      cookieOptions: process.env.NEXT_PUBLIC_COOKIE_DOMAIN
+        ? { domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN }
+        : undefined,
+
+      // Define a cookies object with methods for interacting with the cookie store and pass it to the client
       cookies: {
         // The get method is used to retrieve a cookie by its name
         get(name: string) {
