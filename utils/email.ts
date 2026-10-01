@@ -5,8 +5,6 @@ import { Resend } from 'resend';
 // verified on smartscott.online). Best-effort everywhere: mail must never
 // fail the webhook or a report action.
 
-const resend = new Resend(process.env.RESEND_API_KEY || '');
-
 const FROM = `Club Cheeky <no-reply@${process.env.REGISTERED_DOMAIN ?? 'smartscott.online'}>`;
 
 export async function sendClubMail(opts: {
@@ -15,6 +13,9 @@ export async function sendClubMail(opts: {
   text: string;
 }): Promise<{ ok: boolean }> {
   if (!process.env.RESEND_API_KEY) return { ok: false };
+  // Constructed at request time — a module-level client throws during the
+  // build when RESEND_API_KEY is absent (page-data collection for /api/webhooks).
+  const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     await resend.emails.send({
       from: FROM,

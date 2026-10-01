@@ -71,6 +71,7 @@ void test('tier caps mirror the enforcement ladder + the plays dial + blind-date
   assert.deepEqual(TIER_CAPS.silver, {
     messages: 30,
     people: 5,
+    swipes: 15,
     l3: 4,
     plays: 3,
     blindDate: 0,
@@ -80,6 +81,7 @@ void test('tier caps mirror the enforcement ladder + the plays dial + blind-date
   assert.deepEqual(TIER_CAPS.gold, {
     messages: 75,
     people: 15,
+    swipes: 30,
     l3: 8,
     plays: 5,
     blindDate: 2,
@@ -89,6 +91,7 @@ void test('tier caps mirror the enforcement ladder + the plays dial + blind-date
   assert.deepEqual(TIER_CAPS.platinum, {
     messages: null,
     people: 40,
+    swipes: 50,
     l3: 12,
     plays: 8,
     blindDate: 2,
@@ -98,6 +101,7 @@ void test('tier caps mirror the enforcement ladder + the plays dial + blind-date
   assert.deepEqual(TIER_CAPS.diamond, {
     messages: null,
     people: 100,
+    swipes: 100,
     l3: 20,
     plays: 12,
     blindDate: 2,

@@ -11,14 +11,12 @@ import {
   TIER_CAPS,
   TIER_LABELS
 } from '@/utils/store/hudStore';
-import { useQuestStore } from '@/utils/store/questStore';
 import { usePathname } from 'next/navigation';
 import { ASSETS } from '@/utils/assets';
 import TikiTaskbar from '@/components/ui/Taskbar/TikiTaskbar';
 
 const TABS: { id: TabId; icon: string; label: string }[] = [
   { id: 'daily', icon: '💓', label: 'Daily' },
-  { id: 'profile', icon: '👤', label: 'Profile' },
   { id: 'wallet', icon: '🪙', label: 'Wallet' },
   { id: 'help', icon: '🎭', label: 'Help' }
 ];
@@ -313,16 +311,6 @@ export default function Hud() {
                   Gifts
                 </span>
               </Link>
-              <Link
-                href="/quest"
-                onClick={toggleExpand}
-                className="flex-1 flex flex-col items-center gap-1.5 rounded-lg border border-gold/30 bg-gold/5 py-2.5 text-center transition hover:border-gold hover:bg-gold/10 group"
-              >
-                <span className="text-2xl">⚔️</span>
-                <span className="font-body text-sm text-zinc-400 group-hover:text-gold transition">
-                  Quest
-                </span>
-              </Link>
             </div>
           </div>
 
@@ -363,7 +351,6 @@ export default function Hud() {
             {activeTab === 'daily' && (
               <DailyTab dailyLimits={dailyLimits} caps={caps} />
             )}
-            {activeTab === 'profile' && <ProfileTab />}
             {activeTab === 'wallet' && (
               <WalletTab wallet={wallet} inventory={inventory} />
             )}
@@ -613,100 +600,6 @@ function EventPill({ label, remaining }: { label: string; remaining: number }) {
       >
         {empty ? '—' : remaining}
       </p>
-    </div>
-  );
-}
-
-function ProfileTab() {
-  const { avatar } = useQuestStore();
-  const classColors: Record<string, string> = {
-    romantic: '#FF69B4',
-    adventurer: '#FFD700',
-    scholar: '#00E5FF',
-    mystic: '#9B59B6',
-    champion: '#E74C3C'
-  };
-
-  return (
-    <div className="p-5">
-      <h3 className="font-header text-gold text-lg mb-5">Your Avatar</h3>
-      <div className="flex flex-col items-center gap-4 py-3">
-        <div className="relative">
-          {avatar?.imageUrl ? (
-            <Image
-              src={avatar.imageUrl}
-              alt="Quest avatar"
-              width={112}
-              height={112}
-              className="rounded-full object-cover border-2 border-gold/60 shadow-[0_0_30px_rgba(255,215,0,0.3)]"
-            />
-          ) : (
-            <div className="h-28 w-28 rounded-full bg-linear-to-br from-zinc-800 to-zinc-900 border-2 border-gold/60 flex items-center justify-center shadow-[0_0_30px_rgba(255,215,0,0.2)]">
-              <span className="text-5xl">👤</span>
-            </div>
-          )}
-          {avatar?.rpgClass && (
-            <div
-              className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full border-2 border-zinc-950 flex items-center justify-center"
-              style={{
-                backgroundColor: classColors[avatar.rpgClass] || '#FFD700'
-              }}
-            >
-              <span className="text-sm">✨</span>
-            </div>
-          )}
-        </div>
-        <div className="text-center">
-          <p className="font-body text-white text-lg">
-            {avatar?.name || 'Your Avatar'}
-          </p>
-          <p className="font-body text-club text-sm mt-1">
-            {avatar?.rpgClass
-              ? `The ${avatar.rpgClass.charAt(0).toUpperCase() + avatar.rpgClass.slice(1)}`
-              : 'Coming soon — forge your look'}
-          </p>
-          {!avatar && (
-            // oxlint-disable-next-line next/no-html-link-for-pages
-            <a
-              href="/quest"
-              onClick={() => {
-                const { toggleExpand } = useHudStore.getState();
-                toggleExpand();
-              }}
-              className="mt-3 inline-block rounded-lg border border-gold/50 bg-gold/10 px-4 py-2 text-sm font-bold text-gold transition hover:bg-gold/20"
-            >
-              ⚔️ Forge Your Hero
-            </a>
-          )}
-        </div>
-      </div>
-      <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-4 mb-5">
-        <p className="font-header text-cyan text-sm mb-3">Quick Stats</p>
-        <div className="grid grid-cols-3 gap-3 text-center">
-          <div>
-            <p className="font-hero text-gold text-xl">0</p>
-            <p className="font-body text-zinc-500 text-sm">Matches</p>
-          </div>
-          <div>
-            <p className="font-hero text-gold text-xl">0</p>
-            <p className="font-body text-zinc-500 text-sm">Messages</p>
-          </div>
-          <div>
-            <p className="font-hero text-gold text-xl">—</p>
-            <p className="font-body text-zinc-500 text-sm">Streak</p>
-          </div>
-        </div>
-      </div>
-      <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-5 text-center">
-        <p className="text-4xl mb-3">🎮</p>
-        <h4 className="font-header text-gold text-base mb-2">RPG Story Mode</h4>
-        <p className="font-body text-zinc-500 text-sm mb-4">
-          Build your character and start your story.
-        </p>
-        <button className="rounded-lg border border-gold/50 bg-gold/10 px-5 py-2.5 text-sm font-bold text-gold transition hover:bg-gold/20">
-          Coming Soon
-        </button>
-      </div>
     </div>
   );
 }

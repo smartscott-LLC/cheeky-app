@@ -579,27 +579,6 @@ export type Database = {
         }
         Relationships: []
       }
-      club_announcements: {
-        Row: {
-          body: string
-          created_at: string
-          id: number
-          kind: string
-        }
-        Insert: {
-          body: string
-          created_at?: string
-          id?: never
-          kind?: string
-        }
-        Update: {
-          body?: string
-          created_at?: string
-          id?: never
-          kind?: string
-        }
-        Relationships: []
-      }
       club_chat_bans: {
         Row: {
           banned_until: string
@@ -1325,6 +1304,27 @@ export type Database = {
         }
         Relationships: []
       }
+      icebreaker_usage: {
+        Row: {
+          day: string
+          id: string
+          used: number
+          user_id: string
+        }
+        Insert: {
+          day?: string
+          id?: string
+          used?: number
+          user_id: string
+        }
+        Update: {
+          day?: string
+          id?: string
+          used?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       l3_picks: {
         Row: {
           choice: string
@@ -1897,11 +1897,17 @@ export type Database = {
           chat_messages_sent: number
           created_at: string
           display_name: string
+          drinking: string | null
           gender: string | null
+          has_kids: boolean | null
+          hobbies: string[] | null
           id: string
           interested_in: string
+          living_arrangement: string | null
           message_retention_days: number
           one_liner: string | null
+          religion: string | null
+          smoking: string | null
           test_member: boolean
           updated_at: string
           verified_at: string | null
@@ -1914,11 +1920,17 @@ export type Database = {
           chat_messages_sent?: number
           created_at?: string
           display_name?: string
+          drinking?: string | null
           gender?: string | null
+          has_kids?: boolean | null
+          hobbies?: string[] | null
           id: string
           interested_in?: string
+          living_arrangement?: string | null
           message_retention_days?: number
           one_liner?: string | null
+          religion?: string | null
+          smoking?: string | null
           test_member?: boolean
           updated_at?: string
           verified_at?: string | null
@@ -1931,11 +1943,17 @@ export type Database = {
           chat_messages_sent?: number
           created_at?: string
           display_name?: string
+          drinking?: string | null
           gender?: string | null
+          has_kids?: boolean | null
+          hobbies?: string[] | null
           id?: string
           interested_in?: string
+          living_arrangement?: string | null
           message_retention_days?: number
           one_liner?: string | null
+          religion?: string | null
+          smoking?: string | null
           test_member?: boolean
           updated_at?: string
           verified_at?: string | null
@@ -1957,24 +1975,6 @@ export type Database = {
           engine_enabled?: boolean
           id?: boolean
           updated_at?: string
-        }
-        Relationships: []
-      }
-      rate_limits: {
-        Row: {
-          bucket_start: string
-          calls: number
-          key: string
-        }
-        Insert: {
-          bucket_start?: string
-          calls?: number
-          key: string
-        }
-        Update: {
-          bucket_start?: string
-          calls?: number
-          key?: string
         }
         Relationships: []
       }
@@ -2924,7 +2924,6 @@ export type Database = {
         }[]
       }
       matchmaker_pick_draft: { Args: { p_target: string }; Returns: undefined }
-      matchmaker_unpick_draft: { Args: { p_target: string }; Returns: undefined }
       matchmaker_respond_unlock: {
         Args: { p_accept: boolean; p_unlock_id: string }
         Returns: undefined
@@ -2947,6 +2946,10 @@ export type Database = {
         }[]
       }
       matchmaker_start_draft: { Args: never; Returns: string }
+      matchmaker_unpick_draft: {
+        Args: { p_target: string }
+        Returns: undefined
+      }
       next_event_minutes: { Args: { p_kind: string }; Returns: number }
       owner_grant: {
         Args: {
@@ -3048,23 +3051,28 @@ export type Database = {
         Returns: undefined
       }
       taskbar_state: {
-        Args: never
+        Args: { p_user?: string }
         Returns: {
           blind_date_joins_today: number
+          blind_free_remaining: number
           checked_in_today: boolean
+          dance_free_remaining: number
           gift_ready: boolean
           gift_ready_in_minutes: number
           icebreakers_used_today: number
+          l3_trios_used_today: number
           matchmaker_plays_left: number
           messages_sent_today: number
           new_people_today: number
-          tier: string
+          rooftop_free_remaining: number
+          speed_free_remaining: number
           swipes_today: number
+          tier: string
         }[]
       }
-      use_icebreaker: { Args: never; Returns: undefined }
       tick_rooftop_events: { Args: never; Returns: undefined }
       tier_rank: { Args: { p_tier: string }; Returns: number }
+      use_icebreaker: { Args: never; Returns: undefined }
     }
     Enums: {
       consent_type: "terms" | "privacy" | "verification" | "best_practices"

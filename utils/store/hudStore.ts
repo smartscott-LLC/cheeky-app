@@ -9,7 +9,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type ActiveModule = 'main' | 'chub' | 'creator' | 'game';
 export type Tier = 'guest' | 'silver' | 'gold' | 'platinum' | 'diamond';
-export type TabId = 'daily' | 'profile' | 'wallet' | 'help';
+export type TabId = 'daily' | 'wallet' | 'help';
 export type ViewMode = 'button' | 'taskbar' | 'hud';
 
 export const TIER_LABELS: Record<Tier, string> = {

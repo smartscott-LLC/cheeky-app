@@ -8,10 +8,26 @@ import { supabaseAdmin } from '@/utils/supabase/admin';
 // a verdict the human process confirms. Not the floor AI — this one never
 // chats with members. (Spec: docs/Governance/takedown-appeals.md)
 
-const client = new OpenAI({
-  baseURL: 'https://openrouter.ai/api/v1',
-  apiKey: process.env.OPENROUTER_API_KEY || ''
-});
+// Built on first use, not at module load — `next build` evaluates this
+// module during page-data collection, when OPENROUTER_API_KEY may be
+// absent; the OpenAI constructor throws on an empty key.
+let client: OpenAI | null = null;
+
+function getClient(): OpenAI {
+  if (!client) {
+    const key = process.env.OPENROUTER_API_KEY;
+    if (!key) {
+      throw new Error(
+        'DateSafe: OPENROUTER_API_KEY is required to review reports'
+      );
+    }
+    client = new OpenAI({
+      baseURL: 'https://openrouter.ai/api/v1',
+      apiKey: key
+    });
+  }
+  return client;
+}
 
 /**
  * The watchdog model comes from the Lions Den (model_config) so a down or
@@ -63,7 +79,7 @@ async function complete(
 ) {
   // `reasoning` is an OpenRouter extension (deep-thinking pass); the SDK
   // types don't know it yet, hence the assertion.
-  return client.chat.completions.create({
+  return getClient().chat.completions.create({
     model: await getWatchdogModel(),
     messages,
     reasoning: REASONING

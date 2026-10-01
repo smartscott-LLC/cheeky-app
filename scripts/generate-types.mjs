@@ -6,11 +6,11 @@ import { config } from 'dotenv';
 import { spawnSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 
-config({ path: 'env.new' });
+config({ path: '.env.new' });
 
 const url = process.env.POSTGRES_URL_NON_POOLING;
 if (!url) {
-  console.error('POSTGRES_URL_NON_POOLING not found in .env.local');
+  console.error('POSTGRES_URL_NON_POOLING not found in .env.new');
   process.exit(1);
 }
 

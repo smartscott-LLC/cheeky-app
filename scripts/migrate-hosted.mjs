@@ -22,8 +22,9 @@ if (!url) {
 const sql = postgres(url, { max: 1, ssl: 'require' });
 
 try {
-  // Load already-applied versions from tracking table
-  const applied = await sql`select version from public.supabase_migrations`;
+  // Load already-applied versions from tracking table — failures (success=false)
+  // stay pending so a fixed migration re-runs instead of being skipped forever.
+  const applied = await sql`select version from public.supabase_migrations where success`;
   const appliedSet = new Set(applied.map((r) => r.version));
 
   const dir = join(process.cwd(), 'supabase', 'migrations');

@@ -1,7 +1,7 @@
 import 'server-only';
 import { toDateTime } from '@/utils/helpers';
 import { getStripe } from '@/utils/stripe/config';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 import type { Database, Tables, TablesInsert } from '@/types_db';
 import { supabaseUrl, supabaseServiceKey } from '@/utils/supabase/keys';
@@ -21,7 +21,31 @@ const TRIAL_PERIOD_DAYS = 0;
 
 // Note: supabaseAdmin uses the SERVICE_ROLE_KEY which you must only use in a secure server-side context
 // as it has admin privileges and overwrites RLS policies!
-const supabaseAdmin = createClient<Database>(supabaseUrl, supabaseServiceKey);
+// The client is built on first use, not at module load: `next build`
+// evaluates route modules during page-data collection, where the service
+// key may legitimately be absent (fresh clone). Real runtime calls still
+// get a clear error if the env is missing.
+let adminClient: SupabaseClient<Database> | null = null;
+
+function getAdminClient(): SupabaseClient<Database> {
+  if (!adminClient) {
+    if (!supabaseUrl || !supabaseServiceKey) {
+      throw new Error(
+        'supabaseAdmin: NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY (or SUPABASE_SERVICE_ROLE_KEY) are required'
+      );
+    }
+    adminClient = createClient<Database>(supabaseUrl, supabaseServiceKey);
+  }
+  return adminClient;
+}
+
+const supabaseAdmin = new Proxy({} as SupabaseClient<Database>, {
+  get(_target, prop, receiver) {
+    const client = getAdminClient();
+    const value = Reflect.get(client, prop, receiver);
+    return typeof value === 'function' ? value.bind(client) : value;
+  }
+});
 
 export { supabaseAdmin };
 

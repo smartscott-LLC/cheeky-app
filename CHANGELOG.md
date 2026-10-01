@@ -7,6 +7,10 @@ points — every push to `main` is production.
 
 ## [Unreleased]
 
+### Removed
+
+- **Quest-engine debris purged from Supabase + app** — the 2026-09 avatar attempt is fully retired ahead of the mini_model_maker integration (which brings its own manifest-per-user design). **Storage** (via Storage API — Supabase guards `storage.objects`/`storage.buckets` against SQL): `quest-assets` purged (845 GLBs + `test-upload.txt`) and dropped, `quest-avatars` purged (4 test renders) and dropped, empty `ui-assets` dropped. Keepers verified untouched: `user-manifests`, `profiles` (incl. `test-members` for game testing), `cheeky-assets` (icons/personas/brand). **Schema**: migration `20261001000001_scrap_quest_debris.sql` drops `avatars` (2 null-user test rows with inline base64), `asset_catalog` (~1,730 `.vrm` rows, `url` never set), `quest_catalog`, `ui_catalog`, plus RPCs `add_asset_to_catalog`/`lookup_asset`/`get_assets_by_category`. **Code**: removed `app/quest/`, `app/api/quest/*` (8 routes), `components/ui/Quest/`, `AssetViewer/AssetPreview`, `utils/asset-catalog.js` (the baked 1.5 MB JSON), `utils/quest-storage.ts`, `utils/store/questStore.ts`, `utils/supabase/storage.ts`, `scripts/upload-glbs.mjs`; HUD lost the Quest quick-link and the dead Profile tab (`TabId` narrowed to daily/wallet/help). **Tooling bugs found in the rubble**: `migrate-hosted.mjs` treated failed migrations as applied forever (skip-set now respects the `success` flag) and `generate-types.mjs` loaded `env.new` instead of `.env.new` (silent no-env). `types_db.ts` regenerated; lint 0/0 (227 files), build green, `pnpm test` 38 pass.
+
 ### Added
 
 - **Swipe daily limits** — Swipes (Likes) now have daily caps: silver=15, gold=30, platinum=50, diamond=100. Enforced via `bump_rate_limit` RPC with key format `swipes:{user_id}:cst`. Taskbar shows remaining swipes in the ⚡ tile.
@@ -41,6 +45,7 @@ points — every push to `main` is production.
 
 ### Fixed
 
+- **`next build` without runtime secrets** — module-level SDK construction threw during page-data collection on a fresh clone (no `.env.new`): `utils/supabase/admin.ts`, `lib/stripe.ts`, and `utils/datesafe.ts` now build their clients lazily on first use with clear missing-env errors, and `utils/email.ts` defers `new Resend()` to send time (matching the entry below, which had regressed). `Avatar3D`'s not-yet-published Genies SDK import gets `turbopackIgnore`/`webpackIgnore` so it no longer warns. `pnpm-workspace.yaml` had a literal `set this to true or false` placeholder for `better-sqlite3` — set to `true` so installs stop failing with `ERR_PNPM_IGNORED_BUILDS`. Also fixed `AssetPreview.jsx` (missing `useEffect` import, invalid TS generics in `.jsx`, stale-state-on-url-change instead of synchronous setState in effect, and reading a nonexistent `window.ASSET_CATALOG` when the catalog arrives as a prop) and removed dead code in `scripts/upload-glbs.mjs`. `pnpm lint` and `pnpm build` now pass with zero warnings.
 - **instrumentation.ts Edge warning** — Replaced `path.resolve(__dirname, ...)` with `import.meta.url` string ops to avoid Turbopack Edge Runtime warning.
 - **Resend env handling** — Deferred `new Resend()` instantiation to request time in `utils/email.ts` to prevent build failures when `RESEND_API_KEY` is absent.
 - **Lobby back button** — Added gold-bordered "Back to Lobby" button with cursive icon to lounge entrance and chat header. Glow animation on hover, scale on tap.
