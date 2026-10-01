@@ -579,6 +579,27 @@ export type Database = {
         }
         Relationships: []
       }
+      club_announcements: {
+        Row: {
+          body: string
+          created_at: string
+          id: number
+          kind: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: never
+          kind?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: never
+          kind?: string
+        }
+        Relationships: []
+      }
       club_chat_bans: {
         Row: {
           banned_until: string
@@ -1975,6 +1996,24 @@ export type Database = {
           engine_enabled?: boolean
           id?: boolean
           updated_at?: string
+        }
+        Relationships: []
+      }
+      rate_limits: {
+        Row: {
+          bucket_start: string
+          calls: number
+          key: string
+        }
+        Insert: {
+          bucket_start?: string
+          calls?: number
+          key: string
+        }
+        Update: {
+          bucket_start?: string
+          calls?: number
+          key?: string
         }
         Relationships: []
       }
