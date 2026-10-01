@@ -15,7 +15,7 @@ import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import postgres from 'postgres';
 
-config({ path: 'env.new' });
+config({ path: '.env.new' });
 
 const sql = postgres(process.env.POSTGRES_URL_NON_POOLING, {
   max: 1,
