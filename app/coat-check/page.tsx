@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import BioCard, { type BioCardPerson } from '@/components/ui/Cards/BioCard';
+import { readManifest } from '@/utils/user-manifest';
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
 import { getReturnFloor } from '@/utils/return-floor';
@@ -8,6 +10,13 @@ const RARITY_STYLE: Record<string, string> = {
   rare: 'font-body font-body text-club border-club/40',
   legendary: 'text-amber-400 border-amber-400/50'
 };
+
+// Server-side data composition — module scope so the component render stays
+// pure (react/purity). Birthday is self-readable under RLS (own card only).
+function ageFrom(birthday: string | null | undefined): number | null {
+  if (!birthday) return null;
+  return Math.floor((Date.now() - Date.parse(birthday)) / 3.15576e10);
+}
 
 export default async function CoatCheckPage() {
   const supabase = await createClient();
@@ -29,7 +38,11 @@ export default async function CoatCheckPage() {
     { data: certRows },
     { data: interestRows },
     { data: cast },
-    { data: relations }
+    { data: relations },
+    { data: profile },
+    { data: photoRows },
+    { data: priv },
+    { data: tierRow }
   ] = await Promise.all([
     supabase.from('gem_catalog').select('*').eq('active', true).order('rarity'),
     supabase.from('member_gems').select('gem_id, earned_at'),
@@ -54,11 +67,67 @@ export default async function CoatCheckPage() {
       .select('id, slug, name, role, portrait_path, tagline')
       .eq('active', true)
       .order('created_at'),
-    supabase.from('character_relations').select('character_id, level, points')
+    supabase.from('character_relations').select('character_id, level, points'),
+    supabase
+      .from('profiles')
+      .select('display_name, one_liner, bio, gender, verified_at')
+      .eq('id', user.id)
+      .maybeSingle(),
+    supabase
+      .from('photos')
+      .select('storage_path')
+      .eq('user_id', user.id)
+      .eq('is_primary', true)
+      .maybeSingle(),
+    supabase
+      .from('profile_private')
+      .select('birthday')
+      .eq('id', user.id)
+      .maybeSingle(),
+    supabase.rpc('current_tier', { p_user: user.id })
   ]);
 
   const ownedGems = new Set((myGems ?? []).map((g) => g.gem_id));
   const ownedBadges = new Set((myBadges ?? []).map((b) => b.badge_id));
+
+  // ── Bio Card (PRD-avatar-maker): profile + primary photo + tier +
+  //    earned badges + own manifest → the card the club will see ──
+  const manifest = await readManifest(user.id);
+  const tier = tierRow === 'standard' ? 'silver' : (tierRow ?? 'silver');
+  const age = ageFrom(priv?.birthday);
+  const badgeRows = badges ?? [];
+  const chosenSlug = manifest?.card.displayBadge ?? null;
+  const chosenBadge = chosenSlug
+    ? badgeRows.find((b) => b.slug === chosenSlug && ownedBadges.has(b.id))
+    : undefined;
+  const latestEarned = (myBadges ?? [])
+    .slice()
+    .sort((a, b) => (b.earned_at ?? '').localeCompare(a.earned_at ?? ''))[0];
+  const displayBadgeRow =
+    chosenBadge ??
+    badgeRows.find((b) => latestEarned && b.id === latestEarned.badge_id);
+  const cardPerson: BioCardPerson = {
+    displayName:
+      profile?.display_name ?? user.email?.split('@')[0] ?? 'Member',
+    oneLiner: profile?.one_liner ?? null,
+    bio: profile?.bio ?? null,
+    photoUrl: photoRows?.storage_path
+      ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/${photoRows.storage_path}`
+      : null,
+    gender: profile?.gender ?? null,
+    tier,
+    verified: Boolean(profile?.verified_at),
+    age,
+    displayBadge: displayBadgeRow
+      ? { name: displayBadgeRow.name, emoji: displayBadgeRow.emoji }
+      : null,
+    avatar: manifest
+      ? {
+          snapshotUrl: manifest.card.snapshotUrl ?? null,
+          modelUrl: manifest.model?.url ?? null
+        }
+      : null
+  };
   const gemDate = (id: string) =>
     (myGems ?? []).find((g) => g.gem_id === id)?.earned_at ?? null;
   const badgeDate = (id: string) =>
@@ -110,6 +179,15 @@ export default async function CoatCheckPage() {
               : ''}
           </p>
         )}
+
+        {/* ── Your Bio Card ── */}
+        <div className="mt-12 flex flex-col items-center gap-3">
+          <h2 className="font-header text-cyan text-2xl">🎴 Your Bio Card</h2>
+          <p className="font-body text-club text-base">
+            Tap it to see the back. This is what the club sees.
+          </p>
+          <BioCard person={cardPerson} />
+        </div>
 
         {/* Gems */}
         <div className="mt-10">
