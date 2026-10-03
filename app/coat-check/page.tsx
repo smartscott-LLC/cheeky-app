@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import BioCard, { type BioCardPerson } from '@/components/ui/Cards/BioCard';
-import { readManifest } from '@/utils/user-manifest';
+import { readFull } from '@/utils/top';
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
 import { getReturnFloor } from '@/utils/return-floor';
@@ -90,13 +90,13 @@ export default async function CoatCheckPage() {
   const ownedGems = new Set((myGems ?? []).map((g) => g.gem_id));
   const ownedBadges = new Set((myBadges ?? []).map((b) => b.badge_id));
 
-  // ── Bio Card (PRD-avatar-maker): profile + primary photo + tier +
+  // ── Bio Card (PRD-user-manifest): profile + primary photo + tier +
   //    earned badges + own manifest → the card the club will see ──
-  const manifest = await readManifest(user.id);
+  const manifest = await readFull(user.id);
   const tier = tierRow === 'standard' ? 'silver' : (tierRow ?? 'silver');
   const age = ageFrom(priv?.birthday);
   const badgeRows = badges ?? [];
-  const chosenSlug = manifest?.card.displayBadge ?? null;
+  const chosenSlug = manifest?.assets?.displayBadge ?? null;
   const chosenBadge = chosenSlug
     ? badgeRows.find((b) => b.slug === chosenSlug && ownedBadges.has(b.id))
     : undefined;
@@ -107,8 +107,7 @@ export default async function CoatCheckPage() {
     chosenBadge ??
     badgeRows.find((b) => latestEarned && b.id === latestEarned.badge_id);
   const cardPerson: BioCardPerson = {
-    displayName:
-      profile?.display_name ?? user.email?.split('@')[0] ?? 'Member',
+    displayName: profile?.display_name ?? user.email?.split('@')[0] ?? 'Member',
     oneLiner: profile?.one_liner ?? null,
     bio: profile?.bio ?? null,
     photoUrl: photoRows?.storage_path
@@ -121,10 +120,10 @@ export default async function CoatCheckPage() {
     displayBadge: displayBadgeRow
       ? { name: displayBadgeRow.name, emoji: displayBadgeRow.emoji }
       : null,
-    avatar: manifest
+    avatar: manifest?.model
       ? {
-          snapshotUrl: manifest.card.snapshotUrl ?? null,
-          modelUrl: manifest.model?.url ?? null
+          snapshotUrl: manifest.model.snapshotUrl,
+          modelUrl: manifest.model.url || null
         }
       : null
   };
