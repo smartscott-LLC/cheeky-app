@@ -136,9 +136,9 @@ export default function BioCard({ person }: { person: BioCardPerson }) {
             />
           )}
 
-          {/* membership badge — top-left, floating above photo + border */}
+          {/* membership badge — top-left, 6px off the edges */}
           <span
-            className="absolute -top-2 -left-2 z-30 drop-shadow-[0_6px_18px_rgba(0,0,0,0.75)]"
+            className="absolute top-1.5 left-1.5 z-30 drop-shadow-[0_6px_18px_rgba(0,0,0,0.75)]"
             title={`${person.tier}${person.verified ? ' · verified' : ''}`}
           >
             <Image
@@ -151,11 +151,11 @@ export default function BioCard({ person }: { person: BioCardPerson }) {
             />
           </span>
 
-          {/* earned badge — top-right, same float; custom art, emoji fallback */}
+          {/* earned badge — top-right, same 6px inset; custom art, emoji fallback */}
           {person.displayBadge &&
             (badgeArtUrl(person.displayBadge.slug) ? (
               <span
-                className="absolute -top-2 -right-2 z-30 drop-shadow-[0_6px_18px_rgba(0,0,0,0.75)]"
+                className="absolute top-1.5 right-1.5 z-30 drop-shadow-[0_6px_18px_rgba(0,0,0,0.75)]"
                 title={person.displayBadge.name}
               >
                 <Image
@@ -168,7 +168,7 @@ export default function BioCard({ person }: { person: BioCardPerson }) {
                 />
               </span>
             ) : (
-              <span className="font-header text-club absolute -top-1 -right-1 z-30 rounded-full border border-club/60 bg-zinc-950 px-2.5 py-1 text-xs shadow-[0_6px_18px_rgba(0,0,0,0.7)]">
+              <span className="font-header text-club absolute top-1.5 right-1.5 z-30 rounded-full border border-club/60 bg-zinc-950 px-2.5 py-1 text-xs shadow-[0_6px_18px_rgba(0,0,0,0.7)]">
                 {person.displayBadge.emoji} {person.displayBadge.name}
               </span>
             ))}
