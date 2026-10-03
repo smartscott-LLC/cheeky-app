@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { assetUrl } from '@/utils/assets';
+import { TIER_BADGE_ART, badgeArtUrl } from '@/utils/badge-icons';
 
 /**
  * The Bio Card — Club Cheeky's baseball-card identity surface
@@ -29,16 +30,9 @@ export interface BioCardPerson {
   age?: number | null;
   height?: string | null;
   location?: string | null;
-  displayBadge?: { name: string; emoji: string } | null;
+  displayBadge?: { slug: string; name: string; emoji: string } | null;
   avatar?: { snapshotUrl: string | null; modelUrl: string | null } | null;
 }
-
-const TIER_BADGE: Record<string, string> = {
-  silver: '🥈',
-  gold: '🥇',
-  platinum: '💠',
-  diamond: '💎'
-};
 
 const CARD_BACK = (gender: string | null) =>
   gender === 'female'
@@ -56,10 +50,13 @@ export default function BioCard({ person }: { person: BioCardPerson }) {
   ].filter(Boolean) as string[];
 
   return (
-    <div className="w-full max-w-xs select-none" style={{ perspective: '1200px' }}>
+    <div
+      className="w-full max-w-xs select-none"
+      style={{ perspective: '1200px' }}
+    >
       <button
         type="button"
-        onClick={() => setFlipped(f => !f)}
+        onClick={() => setFlipped((f) => !f)}
         aria-label={flipped ? 'Show card face' : 'Show card back'}
         className="relative block w-full transition-transform duration-500"
         style={{
@@ -112,9 +109,9 @@ export default function BioCard({ person }: { person: BioCardPerson }) {
             {person.bio && person.bio.length > 90 && (
               <button
                 type="button"
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
-                  setExpanded(x => !x);
+                  setExpanded((x) => !x);
                 }}
                 className="font-header text-gold text-sm hover:underline"
               >
@@ -140,17 +137,41 @@ export default function BioCard({ person }: { person: BioCardPerson }) {
           )}
 
           {/* membership badge — top-left, floating above photo + border */}
-          <span className="absolute -top-1 -left-1 z-30 rounded-full border border-gold/60 bg-zinc-950 px-2.5 py-1 font-header text-cyan text-xs shadow-[0_6px_18px_rgba(0,0,0,0.7)]">
-            {TIER_BADGE[person.tier] ?? '🎟️'} {person.tier}
-            {person.verified ? ' ✓' : ''}
+          <span
+            className="absolute -top-2 -left-2 z-30 drop-shadow-[0_6px_18px_rgba(0,0,0,0.75)]"
+            title={`${person.tier}${person.verified ? ' · verified' : ''}`}
+          >
+            <Image
+              src={TIER_BADGE_ART[person.tier] ?? TIER_BADGE_ART.silver}
+              alt={`${person.tier} card`}
+              width={48}
+              height={48}
+              className="h-12 w-12 object-contain"
+              unoptimized
+            />
           </span>
 
-          {/* earned badge — top-right, same float */}
-          {person.displayBadge && (
-            <span className="absolute -top-1 -right-1 z-30 rounded-full border border-club/60 bg-zinc-950 px-2.5 py-1 font-header text-club text-xs shadow-[0_6px_18px_rgba(0,0,0,0.7)]">
-              {person.displayBadge.emoji} {person.displayBadge.name}
-            </span>
-          )}
+          {/* earned badge — top-right, same float; custom art, emoji fallback */}
+          {person.displayBadge &&
+            (badgeArtUrl(person.displayBadge.slug) ? (
+              <span
+                className="absolute -top-2 -right-2 z-30 drop-shadow-[0_6px_18px_rgba(0,0,0,0.75)]"
+                title={person.displayBadge.name}
+              >
+                <Image
+                  src={badgeArtUrl(person.displayBadge.slug) ?? ''}
+                  alt={person.displayBadge.name}
+                  width={44}
+                  height={44}
+                  className="h-11 w-11 object-contain"
+                  unoptimized
+                />
+              </span>
+            ) : (
+              <span className="font-header text-club absolute -top-1 -right-1 z-30 rounded-full border border-club/60 bg-zinc-950 px-2.5 py-1 text-xs shadow-[0_6px_18px_rgba(0,0,0,0.7)]">
+                {person.displayBadge.emoji} {person.displayBadge.name}
+              </span>
+            ))}
         </div>
 
         {/* ── BACK ─ */}

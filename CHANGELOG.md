@@ -9,6 +9,10 @@ points — every push to `main` is production.
 
 ### Added
 
+- **Bio Card wears real club art** — the 162 custom icons, not emoji. `utils/badge-icons.ts`: badge_catalog slug → badge-art mapping (verified→new_arrival, first_match→spark_finder, streak_7→vip_lounge, chat_1000→chat_champion, chat_hour→cocktail_bar) with honest emoji fallback where no art fits (pearl ≠ opal — no fake stand-ins), single source of truth for founder review. Membership corner now renders the tier badge icons (silver/gold/platinum/diamond_badge) floating above the frame; earned corner uses mapped art with the emoji chip as fallback. Display-badge slug flows through the coat-check card props.
+
+### Added
+
 - **Manifest profile section — the TOP's first living domino** — `utils/profile-manifest.ts` mirrors a member's profile + photos into `manifest.profile` after every write (updateProfile, upload, delete, set-primary — four seams, one best-effort helper; a failed sync never fails the member's save). The pure `profileToSection` mapping lives in `utils/top-schema.ts` (shared by live sync + backfill — one truth) with primary-first photo order and privacy-first defaults (show-flags OFF, no invented age). `scripts/backfill-manifest-profile.mjs` seeds every member (merge-safe: existing manifests keep their other sections; `--user <prefix>` for single runs). Coat-check card now reads manifest-first with table fallback (strangler pattern: tables keep feeding queries/joins while the manifest becomes the canonical member view). +2 mapping tests (one caught the docstring/impl drift and the implementation was fixed to match the spec). lint 0/0 → pretty → lint 0/0 → 51/51 tests → build green.
 
 ### Added

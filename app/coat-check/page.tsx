@@ -129,7 +129,11 @@ export default async function CoatCheckPage() {
     verified: Boolean(profile?.verified_at),
     age,
     displayBadge: displayBadgeRow
-      ? { name: displayBadgeRow.name, emoji: displayBadgeRow.emoji }
+      ? {
+          slug: displayBadgeRow.slug,
+          name: displayBadgeRow.name,
+          emoji: displayBadgeRow.emoji
+        }
       : null,
     avatar: manifest?.model
       ? {
