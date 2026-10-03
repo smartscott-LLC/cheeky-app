@@ -4,6 +4,7 @@ import sharp from 'sharp';
 import { createClient } from '@/utils/supabase/server';
 import { supabaseAdmin } from '@/utils/supabase/admin';
 import { recordMoment } from '@/utils/character-moments';
+import { syncProfileToManifest } from '@/utils/profile-manifest';
 
 export async function updateProfile(
   displayName: string,
@@ -79,6 +80,10 @@ export async function updateProfile(
     console.error('updateProfile failed:', error.message);
     return { error: error.message };
   }
+
+  // Mirror to the member's manifest (best-effort — see utils/profile-manifest)
+  const synced = await syncProfileToManifest(user.id);
+  if (!synced.ok) console.error('profile manifest sync failed:', synced.error);
   return {};
 }
 
@@ -173,6 +178,9 @@ export async function uploadProfilePhoto(
       return { error: insErr.message };
     }
 
+    const synced = await syncProfileToManifest(user.id);
+    if (!synced.ok)
+      console.error('profile manifest sync failed:', synced.error);
     return { id: data.id, storagePath };
   } catch (err) {
     console.error('uploadProfilePhoto threw:', err);
@@ -189,8 +197,16 @@ export async function deleteProfilePhoto(
 ): Promise<{ error?: string }> {
   try {
     const supabase = await createClient();
+    const {
+      data: { user }
+    } = await supabase.auth.getUser();
     await supabase.from('photos').delete().eq('id', photoId);
     await supabase.storage.from('profiles').remove([storagePath]);
+    if (user) {
+      const synced = await syncProfileToManifest(user.id);
+      if (!synced.ok)
+        console.error('profile manifest sync failed:', synced.error);
+    }
     return {};
   } catch (err) {
     console.error('deleteProfilePhoto threw:', err);
@@ -218,6 +234,9 @@ export async function setPrimaryPhoto(
       .from('photos')
       .update({ is_primary: true })
       .eq('id', photoId);
+    const synced = await syncProfileToManifest(user.id);
+    if (!synced.ok)
+      console.error('profile manifest sync failed:', synced.error);
     return {};
   } catch (err) {
     console.error('setPrimaryPhoto threw:', err);

@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import {
   buildMasterEntry,
   emptyManifest,
+  profileToSection,
   projectFields,
   resolveSubaddress,
   trimEvents,
@@ -198,4 +199,50 @@ void test('palette is hex or nothing', () => {
     validateSection('model', { ...base, palette: { skin: 'tan' } }).ok,
     false
   );
+});
+
+void test('profileToSection: table rows → legal manifest section', () => {
+  const section = profileToSection(
+    {
+      display_name: 'Scott',
+      one_liner: 'mischief',
+      bio: 'inventor',
+      gender: 'gentleman',
+      interested_in: 'everyone',
+      hobbies: ['hiking']
+    },
+    [
+      { storage_path: 'u/b.webp', is_primary: null },
+      { storage_path: 'u/a.webp', is_primary: true }
+    ]
+  );
+  assert.equal(validateSection('profile', section).ok, true);
+  assert.equal(section.displayName, 'Scott');
+  assert.equal(
+    section.photos[0].path,
+    'u/a.webp',
+    'primary kept first as given'
+  );
+  assert.equal(section.showAge, false, 'privacy defaults off');
+  assert.equal(section.age, null, 'no invented age');
+});
+
+void test('profileToSection: null name → Member; pathless dropped; first becomes primary', () => {
+  const section = profileToSection(
+    {
+      display_name: null,
+      one_liner: null,
+      bio: null,
+      gender: null,
+      interested_in: null,
+      hobbies: null
+    },
+    [
+      { storage_path: null, is_primary: null },
+      { storage_path: 'u/only.webp', is_primary: null }
+    ]
+  );
+  assert.equal(section.displayName, 'Member');
+  assert.equal(section.photos.length, 1, 'pathless row dropped');
+  assert.equal(section.photos[0].primary, true, 'first survivor is primary');
 });

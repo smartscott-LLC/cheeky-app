@@ -93,6 +93,7 @@ export default async function CoatCheckPage() {
   // ── Bio Card (PRD-user-manifest): profile + primary photo + tier +
   //    earned badges + own manifest → the card the club will see ──
   const manifest = await readFull(user.id);
+  const mp = manifest?.profile ?? null;
   const tier = tierRow === 'standard' ? 'silver' : (tierRow ?? 'silver');
   const age = ageFrom(priv?.birthday);
   const badgeRows = badges ?? [];
@@ -107,13 +108,23 @@ export default async function CoatCheckPage() {
     chosenBadge ??
     badgeRows.find((b) => latestEarned && b.id === latestEarned.badge_id);
   const cardPerson: BioCardPerson = {
-    displayName: profile?.display_name ?? user.email?.split('@')[0] ?? 'Member',
-    oneLiner: profile?.one_liner ?? null,
-    bio: profile?.bio ?? null,
-    photoUrl: photoRows?.storage_path
-      ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/${photoRows.storage_path}`
-      : null,
-    gender: profile?.gender ?? null,
+    displayName:
+      mp?.displayName ??
+      profile?.display_name ??
+      user.email?.split('@')[0] ??
+      'Member',
+    oneLiner: mp ? mp.oneLiner : (profile?.one_liner ?? null),
+    bio: mp ? mp.bio : (profile?.bio ?? null),
+    photoUrl: (() => {
+      const path =
+        mp?.photos.find((p) => p.primary)?.path ??
+        photoRows?.storage_path ??
+        null;
+      return path
+        ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/${path}`
+        : null;
+    })(),
+    gender: mp?.gender ?? profile?.gender ?? null,
     tier,
     verified: Boolean(profile?.verified_at),
     age,

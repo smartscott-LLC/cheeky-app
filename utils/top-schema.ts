@@ -470,6 +470,67 @@ export function sizeCheck(
   return { ok: true, manifest: m };
 }
 
+// ── profile mapping (pure — shared by the live sync and the backfill) ──
+
+export interface ProfileRowLike {
+  display_name: string | null;
+  one_liner: string | null;
+  bio: string | null;
+  gender: string | null;
+  interested_in: string | null;
+  hobbies: string[] | null;
+}
+
+export interface PhotoRowLike {
+  storage_path: string | null;
+  is_primary: boolean | null;
+}
+
+/**
+ * Table rows → manifest profile section. The show-flags default OFF (privacy
+ * first — a member opts in when the form grows those fields); age/height/
+ * location stay null until then. Photos: primary first, ≤8, pathless rows
+ * dropped.
+ */
+export function profileToSection(
+  profile: ProfileRowLike,
+  photos: PhotoRowLike[]
+): ProfileSection {
+  const mapped = photos
+    .filter(
+      (p) => typeof p.storage_path === 'string' && p.storage_path.length > 0
+    )
+    .slice(0, 8)
+    .map((p) => ({
+      path: p.storage_path as string,
+      primary: p.is_primary === true
+    }));
+  const flagged = mapped.some((p) => p.primary)
+    ? mapped
+    : mapped.map((p, i) => (i === 0 ? { ...p, primary: true } : p));
+  // primary first, remaining photos keep their position order
+  const sorted = [
+    ...flagged.filter((p) => p.primary),
+    ...flagged.filter((p) => !p.primary)
+  ];
+
+  return {
+    displayName: profile.display_name ?? 'Member',
+    oneLiner: profile.one_liner ?? '',
+    bio: profile.bio ?? '',
+    gender: profile.gender ?? 'unspecified',
+    interestedIn: profile.interested_in ?? 'everyone',
+    hobbies: (profile.hobbies ?? []).slice(0, 12),
+    photos: sorted,
+    showAge: false,
+    showHeight: false,
+    showLocation: false,
+    age: null,
+    height: null,
+    location: null
+  };
+}
+
 // ── window/cap trimming (callers pass `now` — pure, testable) ────
 
 const DAY_MS = 86_400_000;
