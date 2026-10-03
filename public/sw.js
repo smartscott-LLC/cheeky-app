@@ -1,15 +1,32 @@
 // Club Cheeky service worker — the PWA hook that makes the site
 // installable and powers the Android Trusted Web Activity wrapper.
-// Network-first with cache fallback: the live club always wins, but a
-// dead signal still shows the last good page instead of a blank wall.
-const CACHE = 'club-cheeky-v1';
+//
+// Split strategy (fixes the boot-flicker: a cached HTML shell from an old
+// build pointing at chunks a new build no longer serves):
+//   • hashed /_next/static chunks are immutable → cache-first, they never change
+//   • every page (HTML) is network-only → the live club always wins, and a
+//     stale shell can never be served across deploys
+//   • everything else same-origin: network-first with cache fallback, so a
+//     dead signal still shows the last good asset instead of a blank wall
+const CACHE = 'club-cheeky-v2';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(clients.claim());
+  // Drop every cache not on the current version — old shells and their
+  // orphaned chunk copies leave with the deploy that made them stale.
+  event.waitUntil(
+    caches
+      .keys()
+      .then((keys) =>
+        Promise.all(
+          keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))
+        )
+      )
+      .then(() => self.clients.claim())
+  );
 });
 
 self.addEventListener('fetch', (event) => {
@@ -22,28 +39,35 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  const isNavigate = request.mode === 'navigate';
+  // Immutable build chunks: cache wins (a hit for the same URL is the same bytes).
+  if (url.pathname.startsWith('/_next/static/')) {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(CACHE);
+        const hit = await cache.match(request);
+        if (hit) return hit;
+        const fresh = await fetch(request);
+        if (fresh.ok) void cache.put(request, fresh.clone());
+        return fresh;
+      })()
+    );
+    return;
+  }
 
+  // HTML navigations: network only. Never serve a cached shell across deploys.
+  if (request.mode === 'navigate') return;
+
+  // Everything else (public assets, images): network-first, cache fallback.
   event.respondWith(
     (async () => {
       const cache = await caches.open(CACHE);
       try {
         const fresh = await fetch(request);
-        if (fresh.ok) {
-          void cache.put(request, fresh.clone());
-        }
+        if (fresh.ok) void cache.put(request, fresh.clone());
         return fresh;
       } catch {
-        // Network gone (or an auth-redirect the fetch can't follow). Serve
-        // the last good copy — and never reject: a failed fetch event must
-        // resolve to a response, not an uncaught promise rejection.
-        const cached = await cache.match(request, { ignoreSearch: true });
-        if (cached) return cached;
-        if (isNavigate) {
-          const home = await cache.match('/');
-          if (home) return home;
-        }
-        return Response.error();
+        const cached = await cache.match(request);
+        return cached ?? Response.error();
       }
     })()
   );

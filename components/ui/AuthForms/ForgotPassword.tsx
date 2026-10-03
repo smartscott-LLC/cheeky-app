@@ -36,6 +36,7 @@ export default function ForgotPassword({
     <div className="my-8">
       <form
         noValidate={true}
+        method="post"
         className="mb-4"
         onSubmit={(e) => handleSubmit(e)}
       >
