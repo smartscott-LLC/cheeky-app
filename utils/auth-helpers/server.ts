@@ -165,8 +165,13 @@ export async function requestPasswordUpdate(formData: FormData) {
 
 export async function signInWithPassword(formData: FormData) {
   const cookieStore = await cookies();
-  const email = String(formData.get('email') ?? '').trim();
-  const password = String(formData.get('password') ?? '').trim();
+  // FormData values are string | File | null — a File in a text field is
+  // not a credential, it's a broken client. Extract strings only (no
+  // String() coercion, which would stringify a File to "[object Object]").
+  const emailRaw = formData.get('email');
+  const passwordRaw = formData.get('password');
+  const email = (typeof emailRaw === 'string' ? emailRaw : '').trim();
+  const password = (typeof passwordRaw === 'string' ? passwordRaw : '').trim();
   let redirectPath: string;
 
   if (await bannedCheck(email)) return BANNED_REDIRECT();
