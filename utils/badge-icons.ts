@@ -9,6 +9,10 @@ import { iconUrl } from '@/utils/assets';
  *
  * Founder review pass: these five assignments are judgment calls —
  * flip any line, it's the single source of truth.
+ *
+ * All lookups are LAZY functions — URL builders must never run at module
+ * evaluation time (SSR bundles can otherwise hand this module a
+ * not-yet-initialized assets namespace; see the iconUrl TypeError).
  */
 const BADGE_ART: Record<string, string | null> = {
   verified: 'badge_new_arrival', // In the Club — you've just arrived
@@ -30,9 +34,13 @@ export function badgeArtUrl(slug: string): string | null {
 }
 
 /** Membership tier badge art (top-left corner of the bio card). */
-export const TIER_BADGE_ART: Record<string, string> = {
-  silver: iconUrl('silver_badge'),
-  gold: iconUrl('gold_badge'),
-  platinum: iconUrl('platinum_badge'),
-  diamond: iconUrl('diamond_badge')
+const TIER_ART: Record<string, string> = {
+  silver: 'silver_badge',
+  gold: 'gold_badge',
+  platinum: 'platinum_badge',
+  diamond: 'diamond_badge'
 };
+
+export function tierBadgeUrl(tier: string): string {
+  return iconUrl(TIER_ART[tier] ?? TIER_ART.silver);
+}

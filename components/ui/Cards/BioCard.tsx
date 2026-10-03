@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { assetUrl } from '@/utils/assets';
-import { TIER_BADGE_ART, badgeArtUrl } from '@/utils/badge-icons';
+import { badgeArtUrl, tierBadgeUrl } from '@/utils/badge-icons';
 
 /**
  * The Bio Card — Club Cheeky's baseball-card identity surface
@@ -142,7 +142,7 @@ export default function BioCard({ person }: { person: BioCardPerson }) {
             title={`${person.tier}${person.verified ? ' · verified' : ''}`}
           >
             <Image
-              src={TIER_BADGE_ART[person.tier] ?? TIER_BADGE_ART.silver}
+              src={tierBadgeUrl(person.tier)}
               alt={`${person.tier} card`}
               width={48}
               height={48}
