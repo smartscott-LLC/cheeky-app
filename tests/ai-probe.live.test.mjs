@@ -12,7 +12,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { config } from 'dotenv';
 
-config({ path: 'env.new' });
+config({ path: '.env.new' });
 
 const RUN_LIVE = process.env.RUN_LIVE_TESTS === '1';
 const KEY = process.env.MODEL_API_KEY;

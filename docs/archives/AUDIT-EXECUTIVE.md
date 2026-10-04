@@ -44,7 +44,7 @@ repo · 11 service-role touchpoints, all server-side.
   policies — service-role or RPC only.
 - **Service role is server-only.** All 11 usages are `'use server'` actions, API
   routes, or `server-only` modules. Client code uses the anon key.
-- **No secrets in the repo.** `env.new` and all `.env*` are gitignored; nothing
+- **No secrets in the repo.** `.env.new` and all `.env*` are gitignored; nothing
   tracked contains a live key (verified by grep). Stripe live keys, Supabase
   service key, DeepSeek/OpenRouter keys live in env only.
 - **Money is server-side.** `token_ledger` writes go through a SECURITY DEFINER

@@ -11,10 +11,7 @@
   "env": {
     "builtin": true
   },
-  "ignorePatterns": [
-    "docs/lighthouse/**",
-    "docs/archives/**"
-  ],
+  "ignorePatterns": ["docs/lighthouse/**", "docs/archives/**"],
   "overrides": [
     {
       "files": ["types_db.ts"],

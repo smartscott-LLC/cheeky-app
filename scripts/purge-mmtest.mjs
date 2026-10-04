@@ -3,7 +3,7 @@
 import { config } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 
-config({ path: 'env.new' });
+config({ path: '.env.new' });
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SERVICE_KEY =

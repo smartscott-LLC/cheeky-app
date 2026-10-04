@@ -746,9 +746,9 @@ Characters are stored in the `characters` table with:
 
 ### 14.3 Security Rules
 
-- **Never commit secrets** — all vars set in Vercel dashboard or `env.new` (gitignored)
+- **Never commit secrets** — all vars set in Vercel dashboard or `.env.new` (gitignored)
 - **Only `NEXT_PUBLIC_*`** keys may appear in tracked files or CI
-- **`env.new`** is the master vault — `scripts/sync-env.mjs` copies to `.env.local`
+- **`.env.new`** is the master vault — `scripts/sync-env.mjs` copies to `.env.local`
 - **Two apps, two env files** — cheeky-app + In-gameChatUI each have their own `.env.local`
 
 ---

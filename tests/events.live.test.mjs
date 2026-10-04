@@ -5,7 +5,7 @@
 //
 //   RUN_LIVE_TESTS=1 STRESS_N=120 node --test tests/events.live.test.mjs
 //
-// Requires Supabase env + POSTGRES_URL (pooler) in env.new.
+// Requires Supabase env + POSTGRES_URL (pooler) in .env.new.
 //
 // Two subtests assert PRD-intended settlement (speed dating "pay for the
 // opportunity", Date Night mutual lock) — the rework migrations make them
@@ -18,7 +18,7 @@ import { config } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import postgres from 'postgres';
 
-config({ path: 'env.new' });
+config({ path: '.env.new' });
 
 const RUN_LIVE = process.env.RUN_LIVE_TESTS === '1';
 const URL = process.env.NEXT_PUBLIC_SUPABASE_URL;

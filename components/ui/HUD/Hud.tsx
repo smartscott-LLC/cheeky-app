@@ -431,7 +431,6 @@ export default function Hud() {
                 onChange={(e) => setDeleteInput(e.target.value)}
                 className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-white placeholder-zinc-600 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 transition"
                 placeholder="Type DELETE here"
-                
               />
               {deleteError && (
                 <p className="mt-2 text-sm text-red-400">{deleteError}</p>

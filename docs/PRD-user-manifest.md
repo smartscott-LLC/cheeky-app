@@ -19,20 +19,20 @@ THE TOP          directory + router + uuid validation  (utils/top.ts + _master.j
          └─ DATA    unique to each sub-address
 ```
 
-- Each layer governs the one beneath it; the TOP is governed *inherently* by
+- Each layer governs the one beneath it; the TOP is governed _inherently_ by
   the uuid cross-check: token/ledger queries take the regular DB avenue,
   member-data queries take the TOP avenue, both carry the uuid, and a single
   `must be the same` assertion catches misdelivery for free — integrity by
   channel separation (EIDOLON's gated-lane pattern, applied to identity).
 - **Sub-addresses are the API.** Uniform schema = uniform address space:
   requests affix sub-addresses (`?fields=profile.photos,membership.tier,
-  model.snapshotUrl`), responses return exactly those subtrees, and the
+model.snapshotUrl`), responses return exactly those subtrees, and the
   requesting module feeds them straight in. Cards request their sub-addresses
   in one call.
 - **Implementation:** `utils/top.ts` exposes `top.get(userId, subaddresses[])`
   and `top.post(userId, subaddress, data)`; `_master.json` is its directory
   behind the interface. If the directory ever gets hot, it graduates to an
-  RPC/KV *without any consumer noticing* — the seam is the design.
+  RPC/KV _without any consumer noticing_ — the seam is the design.
 - **Two planes:** the TOP is the per-member plane (point address → truth).
   Cross-member queries (browse search, analytics, future vector sweep) are
   the search plane — tables today, vectors later — and they share only the
@@ -40,12 +40,12 @@ THE TOP          directory + router + uuid validation  (utils/top.ts + _master.j
 
 ## Adjacent systems — recorded elsewhere by design (founder-stated)
 
-| System | Home | Why not the manifest |
-|---|---|---|
-| Token ledger | Postgres, one avenue only | "I don't broadcast my financials to the neighborhood" — and the separation IS the cross-validation |
-| Messages | **GetStream** — real-time, moderated there | the record exists, just not where one expects; Stream lifts a chunk of moderation for us |
-| Matches | separate module (block/report/ban/illicit-charge checks, pair-keyed treap structure) | needs constant checks; fast, efficient, quiet — the manifest only mirrors the member's *view* of it |
-| Honeypot finds | separate dossier family with a `source_id` spine | records sources and actors under investigation — a different subject than the member; when the faucet is found, the plumbing to trace it already exists |
+| System         | Home                                                                                 | Why not the manifest                                                                                                                                    |
+| -------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Token ledger   | Postgres, one avenue only                                                            | "I don't broadcast my financials to the neighborhood" — and the separation IS the cross-validation                                                      |
+| Messages       | **GetStream** — real-time, moderated there                                           | the record exists, just not where one expects; Stream lifts a chunk of moderation for us                                                                |
+| Matches        | separate module (block/report/ban/illicit-charge checks, pair-keyed treap structure) | needs constant checks; fast, efficient, quiet — the manifest only mirrors the member's _view_ of it                                                     |
+| Honeypot finds | separate dossier family with a `source_id` spine                                     | records sources and actors under investigation — a different subject than the member; when the faucet is found, the plumbing to trace it already exists |
 
 ## Where it lives
 
@@ -62,7 +62,15 @@ THE TOP          directory + router + uuid validation  (utils/top.ts + _master.j
   "version": 1,
   "userId": "uuid",
   "updatedAt": "ISO-8601",
-  "sections": ["profile","membership","assets","model","matches","events","meta"],
+  "sections": [
+    "profile",
+    "membership",
+    "assets",
+    "model",
+    "matches",
+    "events",
+    "meta"
+  ],
 
   "profile": {
     "displayName": "≤80",
@@ -72,14 +80,20 @@ THE TOP          directory + router + uuid validation  (utils/top.ts + _master.j
     "interestedIn": "…",
     "hobbies": ["≤12 slugs"],
     "photos": [{ "path": "profiles bucket path", "primary": true }],
-    "showAge": false, "showHeight": false, "showLocation": false,
-    "age": null, "height": null, "location": null
+    "showAge": false,
+    "showHeight": false,
+    "showLocation": false,
+    "age": null,
+    "height": null,
+    "location": null
   },
 
   "membership": {
     "tier": "silver|gold|platinum|diamond",
-    "verified": true, "verifiedAt": "ISO|null",
-    "since": "ISO", "guestPassUntil": null
+    "verified": true,
+    "verifiedAt": "ISO|null",
+    "since": "ISO",
+    "guestPassUntil": null
   },
 
   "assets": {
@@ -94,8 +108,19 @@ THE TOP          directory + router + uuid validation  (utils/top.ts + _master.j
     "name": "Violet",
     "url": "https://…/avatar-library/….glb",
     "rig": "mixamo",
-    "segments": { "hair": "…", "top": "…", "bottom": "…", "shoes": "…", "accessories": [] },
-    "palette": { "skin": "#rrggbb", "hair": "#rrggbb", "eyes": "#rrggbb", "clothing": "#rrggbb" },
+    "segments": {
+      "hair": "…",
+      "top": "…",
+      "bottom": "…",
+      "shoes": "…",
+      "accessories": []
+    },
+    "palette": {
+      "skin": "#rrggbb",
+      "hair": "#rrggbb",
+      "eyes": "#rrggbb",
+      "clothing": "#rrggbb"
+    },
     "stage": "magenta-cyan-cinematic-studio-2k",
     "snapshotUrl": "https://…/…png"
   },
@@ -103,12 +128,26 @@ THE TOP          directory + router + uuid validation  (utils/top.ts + _master.j
   "matches": {
     "windowDays": 30,
     "cap": 60,
-    "history": [{ "with": "userId", "withName": "…", "at": "ISO", "channel": "swipe|dance|matchmaker|blind|l3" }]
+    "history": [
+      {
+        "with": "userId",
+        "withName": "…",
+        "at": "ISO",
+        "channel": "swipe|dance|matchmaker|blind|l3"
+      }
+    ]
   },
 
   "events": {
     "windowDays": 30,
-    "history": [{ "kind": "dance_floor", "at": "ISO", "result": "matched|no-match|watched", "spent": 3 }]
+    "history": [
+      {
+        "kind": "dance_floor",
+        "at": "ISO",
+        "result": "matched|no-match|watched",
+        "spent": 3
+      }
+    ]
   },
 
   "meta": {
@@ -123,31 +162,31 @@ THE TOP          directory + router + uuid validation  (utils/top.ts + _master.j
 
 ## Authority — who is the source of truth for what
 
-| Data | Authoritative home | Manifest role | Why |
-|---|---|---|---|
-| profile, model, settings | **manifest** | source | pure user document, single-writer |
-| badges/gems/gifts/certs | tables (award RPCs) | **mirror** (append on award) | awarding is server logic; manifest is the read view |
-| membership tier/verified | subscriptions + profiles | **mirror** (refresh on webhook/verify) | Stripe + verification are the truth |
-| matches | matches table | **mirror** (append ≤50, both users' docs) | two-sided integrity can't live in two documents |
-| events | event_entries + events | **mirror** (append, 30d window) | clock-driven engine owns it |
-| tokens | **token_ledger ONLY** | **absent** | AGENTS.md: atomic server-side ledger; never in a document, never client-visible |
-| messages | messages table | **absent** | real-time, two-sided, volume |
+| Data                     | Authoritative home       | Manifest role                             | Why                                                                             |
+| ------------------------ | ------------------------ | ----------------------------------------- | ------------------------------------------------------------------------------- |
+| profile, model, settings | **manifest**             | source                                    | pure user document, single-writer                                               |
+| badges/gems/gifts/certs  | tables (award RPCs)      | **mirror** (append on award)              | awarding is server logic; manifest is the read view                             |
+| membership tier/verified | subscriptions + profiles | **mirror** (refresh on webhook/verify)    | Stripe + verification are the truth                                             |
+| matches                  | matches table            | **mirror** (append ≤50, both users' docs) | two-sided integrity can't live in two documents                                 |
+| events                   | event_entries + events   | **mirror** (append, 30d window)           | clock-driven engine owns it                                                     |
+| tokens                   | **token_ledger ONLY**    | **absent**                                | AGENTS.md: atomic server-side ledger; never in a document, never client-visible |
+| messages                 | messages table           | **absent**                                | real-time, two-sided, volume                                                    |
 
-Rule of thumb: the manifest never *governs* — it *is the member's view*.
+Rule of thumb: the manifest never _governs_ — it _is the member's view_.
 Anything that could lie if two writers touch it at once stays out or enters
 as an appended mirror written by the server door that already owns the event.
 
 ## Write doors (every mirror append is a server action)
 
-| Event | Door | Section touched |
-|---|---|---|
-| profile save (account form) | existing action → `updateSection(userId,'profile')` | profile |
-| membership webhook / verification | admin.ts handlers → `updateSection(…,'membership')` | membership |
-| badge/gem/gift award (RPCs) | award paths → `appendAsset()` | assets |
-| avatar save | `POST /api/avatar/save` | model |
-| match created | match-creation actions (both users) → `appendMatch()` | matches |
-| event entry settled | events engine → `appendEvent()` (30d trim) | events |
-| checkin / story | existing RPCs → `updateMeta()` | meta |
+| Event                             | Door                                                  | Section touched |
+| --------------------------------- | ----------------------------------------------------- | --------------- |
+| profile save (account form)       | existing action → `updateSection(userId,'profile')`   | profile         |
+| membership webhook / verification | admin.ts handlers → `updateSection(…,'membership')`   | membership      |
+| badge/gem/gift award (RPCs)       | award paths → `appendAsset()`                         | assets          |
+| avatar save                       | `POST /api/avatar/save`                               | model           |
+| match created                     | match-creation actions (both users) → `appendMatch()` | matches         |
+| event entry settled               | events engine → `appendEvent()` (30d trim)            | events          |
+| checkin / story                   | existing RPCs → `updateMeta()`                        | meta            |
 
 Every door: validate section, bump `updatedAt` + `sectionFlags`, write user
 object, update `_master.json`, invalidate TTL cache. One implementation in
@@ -194,5 +233,5 @@ matches 50×~120 B ≈ 6 KB · events 30d×~150 B ≈ 5 KB · meta 1 KB →
 ## Non-goals
 
 - No client writes, ever. No token data in documents. No resurrecting
-  columns-for-user-data (the doctrine *is* the document).
+  columns-for-user-data (the doctrine _is_ the document).
 - Vector search: later phase; the master index keeps that door open.

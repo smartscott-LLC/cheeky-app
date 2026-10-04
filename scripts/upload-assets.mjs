@@ -13,14 +13,14 @@ import { join, relative, parse } from 'node:path';
 import { config } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 
-config({ path: 'env.new' });
+config({ path: '.env.new' });
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SERVICE_KEY =
   process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
 
 if (!SUPABASE_URL || !SERVICE_KEY) {
-  console.error('Missing SUPABASE_URL or SERVICE_KEY in env.new');
+  console.error('Missing SUPABASE_URL or SERVICE_KEY in .env.new');
   process.exit(1);
 }
 

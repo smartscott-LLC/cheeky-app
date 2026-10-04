@@ -12,14 +12,14 @@
 //
 //   RUN_LIVE_TESTS=1 node --test tests/matchmaker.live.test.mjs
 //
-// Requires Supabase env in env.new (anon + service role).
+// Requires Supabase env in .env.new (anon + service role).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { randomBytes } from 'node:crypto';
 import { config } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 
-config({ path: 'env.new' });
+config({ path: '.env.new' });
 
 const RUN_LIVE = process.env.RUN_LIVE_TESTS === '1';
 const URL = process.env.NEXT_PUBLIC_SUPABASE_URL;

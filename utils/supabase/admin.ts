@@ -207,7 +207,8 @@ Head to the club when you're ready — the DJ spins every hour, and the crew is 
   // Silver card earned — mirror membership into the manifest (best-effort:
   // the verification itself already succeeded; the backfill repairs a miss).
   const synced = await syncMembershipToManifest(supabaseAdmin, userId);
-  if (!synced.ok) console.error('membership manifest sync failed:', synced.error);
+  if (!synced.ok)
+    console.error('membership manifest sync failed:', synced.error);
 };
 
 /**
@@ -495,7 +496,8 @@ const manageSubscriptionStatusChange = async (
   // Floor changed (up/down/renew/cancel) — mirror membership into the
   // manifest. Best-effort; current_tier() remains the enforcement vote.
   const synced = await syncMembershipToManifest(supabaseAdmin, uuid);
-  if (!synced.ok) console.error('membership manifest sync failed:', synced.error);
+  if (!synced.ok)
+    console.error('membership manifest sync failed:', synced.error);
 };
 
 /**

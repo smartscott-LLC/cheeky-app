@@ -1,7 +1,7 @@
 # Environment Variables
 
 Every variable the app or its scripts read, what it does, and whether it's public.
-Source of truth for values: `env.new` (the founder's gitignored vault) and Vercel.
+Source of truth for values: `.env.new` (the founder's gitignored vault) and Vercel.
 
 Legend: **public** = ships in the client bundle (safe to commit / put in CI) ·
 **secret** = server-only, never commit.
@@ -67,18 +67,18 @@ accepts both names, so whatever the dashboard hands out works.
 
 ## Where the values live
 
-- **`env.new`** — THE master vault (gitignored). Every script and live test reads it directly
-  (`config({ path: 'env.new' })`). Edit here, never anywhere else.
+- **`.env.new`** — THE master vault (gitignored). Every script and live test reads it directly
+  (`config({ path: '.env.new' })`). Edit here, never anywhere else.
 - **`.env.local`** — exists only because Next.js auto-loads it for `pnpm dev`/`pnpm build`
-  locally. It is a generated copy — `node scripts/sync-env.mjs` refreshes it from `env.new`.
+  locally. It is a generated copy — `node scripts/sync-env.mjs` refreshes it from `.env.new`.
   **Never hand-edit `.env.local`**; if it looks stale, re-run sync-env.
 - **`.env.local.example`** — the tracked scaffold (blank values, comments); update it when
   adding a variable.
 - **Vercel** — production. `NEXT_PUBLIC_*` vars are inlined at build; changing them requires a
-  redeploy. Secrets are runtime env on the serverless functions. Keep it in sync with `env.new`.
+  redeploy. Secrets are runtime env on the serverless functions. Keep it in sync with `.env.new`.
 - **CI** — only public keys (`NEXT_PUBLIC_SITE_URL`, Supabase URL + anon + publishable). No
   secrets ever enter `.github/workflows/ci.yml`.
 
 > History: the original `.env.local` carried pre-wipe keys (old project refs, old PostHog
-> project) after the founder deleted every integration and started fresh with `env.new`. That
-> hybrid is exactly the drift this discipline kills — scripts read `env.new`, period.
+> project) after the founder deleted every integration and started fresh with `.env.new`. That
+> hybrid is exactly the drift this discipline kills — scripts read `.env.new`, period.
