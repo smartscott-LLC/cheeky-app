@@ -5,6 +5,7 @@ import { createClient } from '@/utils/supabase/server';
 import { supabaseAdmin } from '@/utils/supabase/admin';
 import { recordMoment } from '@/utils/character-moments';
 import { syncProfileToManifest } from '@/utils/profile-manifest';
+import { syncMembershipToManifest } from '@/utils/membership-manifest';
 
 export async function updateProfile(
   displayName: string,
@@ -284,6 +285,9 @@ export async function grantComplimentaryMembership(input: {
 
   // Personal milestone — the host(ess)/bouncer greets them on their floor.
   await recordMoment(target.id, 'membership');
+  const synced = await syncMembershipToManifest(supabaseAdmin, target.id);
+  if (!synced.ok)
+    console.error('membership manifest sync failed:', synced.error);
   return {};
 }
 
@@ -319,5 +323,8 @@ export async function sendGuestPassByEmail(
     console.error('guest pass failed:', error.message);
     return { error: error.message };
   }
+  const synced = await syncMembershipToManifest(supabaseAdmin, target.id);
+  if (!synced.ok)
+    console.error('membership manifest sync failed:', synced.error);
   return {};
 }

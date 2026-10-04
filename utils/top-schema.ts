@@ -531,6 +531,30 @@ export function profileToSection(
   };
 }
 
+/**
+ * Table/RPC truth → manifest membership section. Pure.
+ * current_tier() answers 'standard' for the free floor — normalized to
+ * 'silver' here so the manifest speaks the UI's vocabulary. Anything
+ * unrecognized falls to 'silver' (the door every member starts behind).
+ */
+export function membershipToSection(input: {
+  tier: string;
+  verifiedAt: string | null;
+  since: string;
+  guestPassUntil: string | null;
+}): MembershipSection {
+  const tier = input.tier === 'standard' ? 'silver' : input.tier;
+  return {
+    tier: (TIERS as readonly string[]).includes(tier)
+      ? (tier as Tier)
+      : 'silver',
+    verified: input.verifiedAt !== null,
+    verifiedAt: input.verifiedAt,
+    since: input.since,
+    guestPassUntil: input.guestPassUntil
+  };
+}
+
 // ── window/cap trimming (callers pass `now` — pure, testable) ────
 
 const DAY_MS = 86_400_000;

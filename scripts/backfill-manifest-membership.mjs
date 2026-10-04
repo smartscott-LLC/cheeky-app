@@ -1,25 +1,24 @@
 #!/usr/bin/env node
 /**
- * Backfill: mirror profiles + photos into every member's manifest
- * profile section (docs/PRD-user-manifest.md — the profile domino).
+ * Backfill: mirror every member's live membership state into their manifest
+ * (docs/PRD-user-manifest.md — the membership domino). current_tier() is the
+ * authority; this script just asks it, per member, merge-safe.
  *
  * Usage:
- *   node --experimental-strip-types scripts/backfill-manifest-profile.mjs
- *   node --experimental-strip-types scripts/backfill-manifest-profile.mjs --user <email-prefix>
- *
- * Merge-safe: existing manifests keep their other sections; only the
- * profile section + sections list + updatedAt change. Shares the pure
- * profileToSection mapping with the live sync (utils/top-schema.ts) —
- * one source of truth, no drift.
+ *   node --experimental-strip-types scripts/backfill-manifest-membership.mjs
+ *   node --experimental-strip-types scripts/backfill-manifest-membership.mjs --user <email-prefix>
  */
 import { config } from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
-import { buildMasterEntry, profileToSection } from '../utils/top-schema.ts';
+import { buildMasterEntry, membershipToSection } from '../utils/top-schema.ts';
 
 config({ path: '.env.new' });
+const admin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY
+);
 const adminKey =
   process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
-const admin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, adminKey);
 
 const flagIdx = process.argv.indexOf('--user');
 const emailPrefix = flagIdx > -1 ? process.argv[flagIdx + 1] : null;
@@ -41,9 +40,7 @@ if (emailPrefix) {
   console.log(`targeting ${targets.length} member(s) by email prefix`);
 }
 
-let q = admin
-  .from('profiles')
-  .select('id, display_name, one_liner, bio, gender, interested_in, hobbies');
+let q = admin.from('profiles').select('id, created_at, verified_at');
 if (targets) q = q.in('id', targets);
 const { data: profiles, error: pErr } = await q;
 if (pErr) {
@@ -58,14 +55,16 @@ const masterRes = await admin.storage
   .catch(() => ({ version: 1, updatedAt: '', users: {} }));
 
 let ok = 0,
-  fail = 0,
-  merged = 0;
+  fail = 0;
 for (const p of profiles) {
-  const { data: photos } = await admin
-    .from('photos')
-    .select('storage_path, is_primary')
-    .eq('user_id', p.id)
-    .order('position', { ascending: true });
+  const { data: tierRow } = await admin.rpc('current_tier', { p_user: p.id });
+  const { data: pass } = await admin
+    .from('guest_passes')
+    .select('expires_at')
+    .eq('guest_id', p.id)
+    .gt('expires_at', new Date().toISOString())
+    .order('created_at', { ascending: false })
+    .maybeSingle();
 
   // Distinguish "no manifest yet" (404 → fresh skeleton) from a transient
   // failure (→ SKIP this member; never overwrite a document we couldn't read).
@@ -90,10 +89,15 @@ for (const p of profiles) {
           updatedAt: now,
           sections: []
         };
-  manifest.profile = profileToSection(p, photos ?? []);
-  if (!manifest.sections.includes('profile')) manifest.sections.push('profile');
+  manifest.membership = membershipToSection({
+    tier: String(tierRow ?? 'silver'),
+    verifiedAt: p.verified_at,
+    since: p.created_at,
+    guestPassUntil: pass?.expires_at ?? null
+  });
+  if (!manifest.sections.includes('membership'))
+    manifest.sections.push('membership');
   manifest.updatedAt = now;
-  if (existing) merged++;
 
   const up = await admin.storage
     .from('user-manifests')
@@ -122,5 +126,5 @@ if (mUp.error) {
   process.exit(1);
 }
 console.log(
-  `backfilled ${ok}/${profiles.length} manifests (${merged} merged into existing, ${fail} failed)`
+  `membership-mirrored ${ok}/${profiles.length} manifests (${fail} failed)`
 );

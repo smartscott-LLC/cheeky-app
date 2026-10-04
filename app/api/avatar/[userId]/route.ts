@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { readFull } from '@/utils/top';
+import { supabaseAdmin } from '@/utils/supabase/admin';
 
 /**
  * THE TOP's public read door for bio-card surfaces: sub-address projections
@@ -81,6 +82,21 @@ export async function GET(
       Record<string, unknown> | undefined;
     if (data == null) continue;
     out[f] = key ? data[key] : data;
+  }
+
+  // Guest passes expire silently (no webhook), so the mirrored tier can lag.
+  // Any membership display surface gets the LIVE vote overlaid — one cheap
+  // RPC, edge-cached with the response. The mirror is the view;
+  // current_tier() is the truth.
+  if ('membership.tier' in out || 'membership' in out) {
+    const { data: liveTier } = await supabaseAdmin.rpc('current_tier', {
+      p_user: userId
+    });
+    const norm = liveTier === 'standard' ? 'silver' : (liveTier ?? 'silver');
+    if ('membership.tier' in out) out['membership.tier'] = norm;
+    const whole = out['membership'];
+    if (whole && typeof whole === 'object')
+      (whole as Record<string, unknown>).tier = norm;
   }
 
   return NextResponse.json(

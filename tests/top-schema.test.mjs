@@ -10,6 +10,7 @@ import {
   resolveSubaddress,
   trimEvents,
   trimMatches,
+  membershipToSection,
   upgradeV0,
   validateManifest,
   validateSection
@@ -245,4 +246,44 @@ void test('profileToSection: null name → Member; pathless dropped; first becom
   assert.equal(section.displayName, 'Member');
   assert.equal(section.photos.length, 1, 'pathless row dropped');
   assert.equal(section.photos[0].primary, true, 'first survivor is primary');
+});
+
+void test('membershipToSection: standard→silver, unknown→silver, verified from date', () => {
+  const std = membershipToSection({
+    tier: 'standard',
+    verifiedAt: iso(1),
+    since: iso(30),
+    guestPassUntil: null
+  });
+  assert.equal(std.tier, 'silver');
+  assert.equal(std.verified, true);
+  const wild = membershipToSection({
+    tier: 'platinum-celestial',
+    verifiedAt: null,
+    since: iso(2),
+    guestPassUntil: null
+  });
+  assert.equal(
+    wild.tier,
+    'silver',
+    'unrecognized floors fall to the door tier'
+  );
+  assert.equal(wild.verified, false);
+  const dia = membershipToSection({
+    tier: 'diamond',
+    verifiedAt: iso(1),
+    since: iso(60),
+    guestPassUntil: iso(-1)
+  });
+  assert.equal(dia.tier, 'diamond');
+  assert.equal(
+    dia.guestPassUntil,
+    iso(-1),
+    'future pass expiry passes through'
+  );
+  assert.equal(
+    validateSection('membership', std).ok,
+    true,
+    'output is a legal section'
+  );
 });
