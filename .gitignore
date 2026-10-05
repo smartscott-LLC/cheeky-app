@@ -62,3 +62,6 @@ certificates
 
 /In-gamwChatUI
 /In-gameChatUI/*
+
+# LibreOffice editor locks
+.~lock.*#

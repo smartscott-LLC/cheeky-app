@@ -2279,6 +2279,51 @@ export type Database = {
           },
         ]
       }
+      store_purchases: {
+        Row: {
+          amount_cents: number
+          days: number | null
+          fulfilled: boolean
+          id: string
+          item_name: string
+          kind: string
+          order_id: string
+          purchased_at: string
+          sku: string
+          tier: string | null
+          tokens: number
+          user_id: string
+        }
+        Insert: {
+          amount_cents: number
+          days?: number | null
+          fulfilled?: boolean
+          id?: string
+          item_name: string
+          kind: string
+          order_id: string
+          purchased_at?: string
+          sku: string
+          tier?: string | null
+          tokens?: number
+          user_id: string
+        }
+        Update: {
+          amount_cents?: number
+          days?: number | null
+          fulfilled?: boolean
+          id?: string
+          item_name?: string
+          kind?: string
+          order_id?: string
+          purchased_at?: string
+          sku?: string
+          tier?: string | null
+          tokens?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       story_beat_completion: {
         Row: {
           beat_number: number
@@ -2881,7 +2926,6 @@ export type Database = {
         }
         Returns: undefined
       }
-      is_test_member: { Args: never; Returns: boolean }
       join_blind_date: { Args: { p_event_id: string }; Returns: string }
       join_event: { Args: { p_event_id: string }; Returns: string }
       l3_trio: {
@@ -3089,26 +3133,41 @@ export type Database = {
         Args: { p_game: string; p_index: number; p_pick: number }
         Returns: undefined
       }
-      taskbar_state: {
-        Args: { p_user?: string }
-        Returns: {
-          blind_date_joins_today: number
-          blind_free_remaining: number
-          checked_in_today: boolean
-          dance_free_remaining: number
-          gift_ready: boolean
-          gift_ready_in_minutes: number
-          icebreakers_used_today: number
-          l3_trios_used_today: number
-          matchmaker_plays_left: number
-          messages_sent_today: number
-          new_people_today: number
-          rooftop_free_remaining: number
-          speed_free_remaining: number
-          swipes_today: number
-          tier: string
-        }[]
-      }
+      taskbar_state:
+        | {
+            Args: never
+            Returns: {
+              blind_date_joins_today: number
+              checked_in_today: boolean
+              gift_ready: boolean
+              gift_ready_in_minutes: number
+              matchmaker_plays_left: number
+              messages_sent_today: number
+              new_people_today: number
+              swipes_today: number
+              tier: string
+            }[]
+          }
+        | {
+            Args: { p_user?: string }
+            Returns: {
+              blind_date_joins_today: number
+              blind_free_remaining: number
+              checked_in_today: boolean
+              dance_free_remaining: number
+              gift_ready: boolean
+              gift_ready_in_minutes: number
+              icebreakers_used_today: number
+              l3_trios_used_today: number
+              matchmaker_plays_left: number
+              messages_sent_today: number
+              new_people_today: number
+              rooftop_free_remaining: number
+              speed_free_remaining: number
+              swipes_today: number
+              tier: string
+            }[]
+          }
       tick_rooftop_events: { Args: never; Returns: undefined }
       tier_rank: { Args: { p_tier: string }; Returns: number }
       use_icebreaker: { Args: never; Returns: undefined }
