@@ -4,18 +4,17 @@ import 'server-only';
  * Didit session creation (docs/PRD-onboarding.md — the door check).
  * Server-side only; the API key never touches the browser.
  *
- * WORKFLOW_ID is per-session CONFIG, not a secret (Didit's own guidance):
- * "Compliance workflow" — OCR + passive liveness + face match, the ID +
- * face-scan flow the founder configured. The truth of the outcome arrives
- * ONLY via the signed webhook — the callback redirect is signage.
+ * WORKFLOW_ID is per-session CONFIG, not a secret (Didit's own guidance).
+ * The truth of the verification outcome arrives ONLY via the signed
+ * webhook — the callback redirect is signage.
  */
 const DIDIT_API = 'https://verification.didit.me/v3/session/';
-// Verified against GET /v3/workflows/ on 2026-10-05: "Compliance workflow"
-// (kyc) is 75dba526-… — the integration prompt's a816e112 id was a stale
-// template placeholder and does not exist on the account. Env wins so the
-// founder can retune without a redeploy; the verified id is the fallback.
+// 2026-10-06: "Fast ID check" (e53ce2d4) — the founder rebuilt the flow for
+// two-state compliance + the 50% ruling; the earlier "Compliance workflow"
+// (75dba526) and the prompt's phantom id (a816e112) are both retired.
+// Env wins so retuning needs no redeploy; the verified id is the fallback.
 const WORKFLOW_ID =
-  process.env.DIDIT_WORKFLOW_ID || '75dba526-b2a1-4cc4-8a04-34faa174a005';
+  process.env.DIDIT_WORKFLOW_ID || 'e53ce2d4-42e5-48da-a6ad-61c44897c4e0';
 
 export async function createDiditSession(
   userId: string

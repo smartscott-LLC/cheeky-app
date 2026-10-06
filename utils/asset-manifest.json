@@ -2,7 +2,7 @@
   "generatedAt": "2026-09-12T19:49:45.294Z",
   "bucket": "cheeky-assets",
   "baseUrl": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets",
-  "total": 159,
+  "total": 160,
   "assets": [
     {
       "slug": "above-the-clouds",
@@ -1275,6 +1275,14 @@
       "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/personas/trixie",
       "sizeBytes": 0,
       "mimeType": "image/trixie"
+    },
+    {
+      "slug": "entrance-v2",
+      "category": "video",
+      "filename": "entrance_v2.mp4",
+      "url": "https://ioqeddpgdilyyajsygmz.supabase.co/storage/v1/object/public/cheeky-assets/video/entrance_v2.mp4",
+      "sizeBytes": 2916325,
+      "mimeType": "video/mp4"
     }
   ]
 }

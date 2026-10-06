@@ -17,7 +17,14 @@
 import manifest from '@/utils/asset-manifest.json';
 
 export type AssetCategory =
-  'icons' | 'brand' | 'personas' | 'coat-check' | 'floors' | 'audio' | 'misc';
+  | 'icons'
+  | 'brand'
+  | 'personas'
+  | 'coat-check'
+  | 'floors'
+  | 'audio'
+  | 'video'
+  | 'misc';
 
 export interface AssetEntry {
   slug: string;
@@ -162,6 +169,9 @@ export const ASSETS = {
     floorGold: brandUrl('floor-gold'),
     floorPlatinum: brandUrl('floor-platinum'),
     floorDiamond: brandUrl('floor-diamond')
+  },
+  video: {
+    entrance: assetUrl('video', 'entrance_v2.mp4')
   },
   floors: {
     silver: floorCardUrl('silver'),

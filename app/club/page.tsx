@@ -5,9 +5,15 @@ import { redirect } from 'next/navigation';
 import FloorPageLayout from '@/components/ui/Club/FloorPageLayout';
 import { ASSETS } from '@/utils/assets';
 import StoryNudge from '@/components/ui/Club/StoryNudge';
+import EntranceOverlay from '@/components/ui/Club/EntranceOverlay';
 import { getStoryProgress } from '@/utils/story/server';
 
-export default async function ClubPage() {
+export default async function ClubPage({
+  searchParams
+}: {
+  searchParams: Promise<{ enter?: string }>;
+}) {
+  const { enter } = await searchParams;
   const supabase = await createClient();
   const user = await getUser(supabase);
   if (!user) {
@@ -48,6 +54,8 @@ export default async function ClubPage() {
 
   return (
     <div className="relative min-h-screen bg-black">
+      {/* The grand entrance — once per session, on arrival via ?enter=1 */}
+      {enter === '1' && <EntranceOverlay />}
       {/* Story mode nudge for verified members — left-bottom, above the speaker */}
       {!storyProgress?.is_complete && (
         <div className="pointer-events-none fixed bottom-2 left-22 z-50 max-w-xs">
