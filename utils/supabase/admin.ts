@@ -118,6 +118,93 @@ const deleteProductRecord = async (product: Stripe.Product) => {
 };
 
 /**
+ * Applies a successful DIDIT verification (ID + face + liveness): same
+ * grant chain as the Stripe-era path — idempotent +20 bonus, badge,
+ * moment, welcome mail, verified_at, private record — but the decision
+ * arrives SIGNED on the webhook, so the birthday is handed to us directly
+ * instead of fetched from a provider report.
+ */
+const applyDiditVerification = async (
+  userId: string,
+  sessionId: string,
+  birthday: string | null
+) => {
+  const { data: existing } = await supabaseAdmin
+    .from('token_ledger')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('reason', 'verification_bonus')
+    .maybeSingle();
+
+  if (!existing) {
+    const { error: grantError } = await supabaseAdmin
+      .from('token_ledger')
+      .insert({
+        user_id: userId,
+        delta: 20,
+        reason: 'verification_bonus',
+        ref: sessionId
+      });
+    if (grantError)
+      throw new Error(`Verification token grant failed: ${grantError.message}`);
+
+    const { error: momentError } = await supabaseAdmin.rpc(
+      'record_common_moment',
+      { p_user: userId, p_milestone: 'verification' }
+    );
+    if (momentError)
+      console.error('Verification moment failed:', momentError.message);
+
+    await supabaseAdmin.rpc('award_badge', {
+      p_user: userId,
+      p_slug: 'verified'
+    });
+
+    try {
+      const { data: authUser } =
+        await supabaseAdmin.auth.admin.getUserById(userId);
+      const email = authUser?.user?.email;
+      if (email && process.env.RESEND_API_KEY) {
+        await sendClubMail({
+          to: email,
+          subject: 'Welcome to Club Cheeky',
+          text: `You're through the door. Your Silver card is live, and 20 tokens are already on your tab for the Dance Floor.
+
+Head to the club when you're ready — the DJ spins every hour, and the crew is around to say hi.
+
+— The club`
+        });
+      }
+    } catch (mailErr) {
+      console.error(
+        'Welcome mail failed:',
+        mailErr instanceof Error ? mailErr.message : mailErr
+      );
+    }
+  }
+
+  const { error: profileError } = await supabaseAdmin
+    .from('profiles')
+    .update({ verified_at: new Date().toISOString() })
+    .eq('id', userId);
+  if (profileError)
+    throw new Error(
+      `Profile verification update failed: ${profileError.message}`
+    );
+
+  const { error: privateError } = await supabaseAdmin
+    .from('profile_private')
+    .upsert({
+      id: userId,
+      verification_provider: 'didit',
+      verification_ref: sessionId,
+      ...(birthday ? { birthday } : {})
+    });
+  if (privateError)
+    throw new Error(`Verification record failed: ${privateError.message}`);
+};
+
+/**
  * Applies a successful Stripe Identity verification:
  * marks the profile verified, records the provider reference, and grants
  * the one-time +20 token bonus (idempotent). Service-role only.
@@ -620,6 +707,7 @@ export {
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
   applyVerificationResult,
+  applyDiditVerification,
   handleVerificationFailure,
   creditTokenPurchase
 };

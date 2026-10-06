@@ -59,16 +59,23 @@ arrives.)
 
 ## Needs from founder to build without guessing
 
-1. `DIDIT_WEBHOOK_SECRET` (Business Console → destination `secret_shared_key`)
-   → `.env.new` + Vercel
+1. ~~`DIDIT_WEBHOOK_SECRET`~~ ✓ in `.env.new` + Vercel
 2. Didit flow's **success redirect URL** — set it to
    `https://smartscott.square.site/collections/memberships` (verify → store,
-   no app round-trip needed) or tell me the intended landing
-3. The exact Square item NAMES for memberships (grant chain parses them:
-   "Silver Membership", "Gold Membership", "7-Day Gold Membership"…) —
-   screenshot shows them; confirm they're the canonical strings
-4. CF WAF exception for Didit's IP (or confirm you want me to script it via
-   the CF dashboard with your session)
+   no app round-trip needed) or tell me the intended landing. **Still needed:**
+   confirm the Didit console's per-flow success URL points at the store (the
+   in-app callback is `/verify?checked=1`; the post-verify jump to the store
+   is the flow's own redirect).
+3. ~~Square item names~~ ✓ ITEM_LIBRARY.csv is the contract (11 SKUs wired)
+4. **CF WAF exception** for the webhook paths — see below (Didit egress IP
+   `18.203.201.92` + Square's delivery, or a blanket skip on `/api/webhooks/*`)
+
+## STATUS 2026-10-05: Didit wired end-to-end (`a572178`)
+Gate function ✓ · `/verify` → Didit session create ✓ · `/api/webhooks/didit`
+signature+idempotency+grant chain ✓ · secrets in Vercel ✓ · workflow-id
+landmine caught (real id `75dba526`, not the prompt's placeholder).
+Remaining: CF webhook WAF exception (founder), then ONE live verification to
+confirm the loop (founder triggers — per-verification cost, not a test-spam).
 
 ## Launch-Friday fit
 
