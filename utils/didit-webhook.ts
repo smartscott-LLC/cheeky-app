@@ -25,19 +25,42 @@ export interface DiditHeaders {
 export type VerifyResult =
   { ok: true; mode: 'v2' | 'raw' } | { ok: false; error: string };
 
-/** Canonical JSON: sort keys recursively, stringify compact, keep Unicode. */
-export function canonicalJson(value: unknown): string {
-  if (value === null || typeof value !== 'object') return JSON.stringify(value);
-  if (Array.isArray(value))
-    return `[${value.map((v) => canonicalJson(v)).join(',')}]`;
-  const keys = Object.keys(value as Record<string, unknown>).sort();
-  const parts = keys
-    .filter((k) => (value as Record<string, unknown>)[k] !== undefined)
-    .map(
-      (k) =>
-        `${JSON.stringify(k)}:${canonicalJson((value as Record<string, unknown>)[k])}`
+/**
+ * Didit canonicalisation, matching their server exactly:
+ * shortenFloats (whole-number floats → ints: 1.0 → 1) THEN recursive
+ * lexicographic key sort (array order preserved) THEN compact stringify
+ * with unescaped Unicode (the JS default).
+ */
+function shortenFloats(v: unknown): unknown {
+  if (Array.isArray(v)) return v.map(shortenFloats);
+  if (v && typeof v === 'object') {
+    return Object.fromEntries(
+      Object.entries(v as Record<string, unknown>).map(([k, x]) => [
+        k,
+        shortenFloats(x)
+      ])
     );
-  return `{${parts.join(',')}}`;
+  }
+  if (typeof v === 'number' && !Number.isInteger(v) && v % 1 === 0)
+    return Math.trunc(v);
+  return v;
+}
+
+function sortKeys(v: unknown): unknown {
+  if (Array.isArray(v)) return v.map(sortKeys);
+  if (v && typeof v === 'object') {
+    return Object.keys(v as object)
+      .sort()
+      .reduce<Record<string, unknown>>((acc, k) => {
+        acc[k] = sortKeys((v as Record<string, unknown>)[k]);
+        return acc;
+      }, {});
+  }
+  return v;
+}
+
+export function canonicalJson(value: unknown): string {
+  return JSON.stringify(sortKeys(shortenFloats(value)));
 }
 
 function hmac(secret: string, payload: string): string {

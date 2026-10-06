@@ -136,3 +136,17 @@ void test('stale timestamps and missing signatures never pass', () => {
     false
   );
 });
+
+void test('didit canonicalisation shortens whole-number floats (1.0 → 1)', () => {
+  // Didit's server canonicalises floats before sorting; a payload with
+  // 1.0 must HMAC the same as 1.
+  assert.equal(
+    canonicalJson({ a: 1.0, b: [2.0, { c: 3.0 }] }),
+    '{"a":1,"b":[2,{"c":3}]}'
+  );
+  assert.equal(
+    canonicalJson({ real: 1.5 }),
+    '{"real":1.5}',
+    'true fractions untouched'
+  );
+});

@@ -2,7 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server';
 import { supabaseAdmin } from '@/utils/supabase/admin';
-import { createVerificationSession } from '@/utils/stripe/verification';
+import { createDiditSession } from '@/utils/didit';
 import { getURL, getFormString } from '@/utils/helpers';
 import { redirect } from 'next/navigation';
 
@@ -100,8 +100,9 @@ export async function checkInAtTheDoor(formData: FormData) {
   }
 
   // Straight into the ID check — email verification comes after.
-  const session = await createVerificationSession(userId);
-  return redirect(session.url!);
+  const session = await createDiditSession(userId);
+  if (!session.url) return redirect('/verify?error=verification');
+  return redirect(session.url);
 }
 
 /**
@@ -163,6 +164,7 @@ export async function startVerification(formData: FormData) {
     }
   }
 
-  const session = await createVerificationSession(user.id);
-  return redirect(session.url!);
+  const session = await createDiditSession(user.id);
+  if (!session.url) return redirect('/verify?error=verification');
+  return redirect(session.url);
 }

@@ -108,6 +108,12 @@ export default function VerificationPanel({
         </p>
       )}
 
+      {error === 'verification' && (
+        <p className="mt-4 rounded-md border border-club/50 bg-club/10 px-3 py-2 text-sm font-body text-club">
+          The ID check is briefly unavailable — give it a moment and try again.
+        </p>
+      )}
+
       {verificationAttempts > 0 && (
         <p className="mt-4 text-xs font-body text-club">
           Attempts so far: {verificationAttempts} of 3. After three, a human

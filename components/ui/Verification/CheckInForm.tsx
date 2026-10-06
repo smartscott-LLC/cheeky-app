@@ -10,7 +10,9 @@ const ERRORS: Record<string, string> = {
   form: 'Check your email and password and try again.',
   taken:
     'That email is already in the club. Sign in instead — or use a different address.',
-  signup: 'Something went wrong at the door. Please try again.'
+  signup: 'Something went wrong at the door. Please try again.',
+  verification:
+    'The ID check is briefly unavailable — give it a moment and try again.'
 };
 
 /**
