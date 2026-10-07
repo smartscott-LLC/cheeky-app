@@ -1,14 +1,27 @@
 #!/usr/bin/env bash
-# ivy-push — copy files TO Ivy, leaving originals in place (rsync, no delete)
-# Usage: scripts/ivy-push <local-path> [more-paths...] <remote-dest-dir>
-# Config: .ivy.env (gitignored) must define IVY_USER and IVY_IP
+# ivy-push — copy files/dirs TO Ivy, originals untouched, via tar-over-ssh.
+# Why not scp/rsync: Ivy's Ubuntu ships snap-shimmed transfer tools with a
+# confined filesystem view that can't see real home paths (verified 2026-10-06).
+# Files land FLAT in the remote dir (basenames only).
+# Usage: scripts/ivy-push <local-path>... <remote-dir>   (remote dir must exist)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 # shellcheck disable=SC1091
 source .ivy.env
 if [ $# -lt 2 ]; then
-  echo "usage: $0 <local-path>... <remote-dest-dir>" >&2
+  echo "usage: $0 <local-path>... <remote-dir>" >&2
   exit 1
 fi
-SSH="ssh -i $HOME/.ssh/id_ed25519 -o IdentitiesOnly=yes"
-exec rsync -av --progress -e "$SSH" "$@"
+DEST="${@: -1}"
+SRCS=("${@:1:$#-1}")
+
+# all sources must share a parent dir (we tar from there with bare basenames)
+PARENT="$(dirname "${SRCS[0]}")"
+for s in "${SRCS[@]}"; do
+  [ "$(dirname "$s")" = "$PARENT" ] || { echo "all sources must be in the same directory" >&2; exit 1; }
+done
+
+(cd "$PARENT" && tar czf - "${SRCS[@]##*/}") \
+  | ssh -i "$HOME/.ssh/id_ed25519" -o IdentitiesOnly=yes \
+      "$IVY_USER@$IVY_IP" "tar xzf - -C '$DEST'"
+echo "pushed: ${SRCS[*]} -> $IVY_IP:$DEST (flat)"
