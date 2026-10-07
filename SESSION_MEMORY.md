@@ -22,6 +22,14 @@ club + MinIO + Dragonfly + backups + costume pipeline; Oct 24-30 = dress
 rehearsal on the new roof; Oct 31 = doors open. Founder's call, fully
 supported — "stubborn mule, want it all working."
 
+**TUNNEL PROVEN 2026-10-07:** browser-verified end-to-end —
+`whoami.smartscott.online` → Cloudflare edge → `ivy_k8s` connector
+(dashboard-token mode; public hostnames managed in dashboard, ONE dumb
+pipe to localhost:80) → Traefik → pod. k8s Ingress = the routing source
+of truth, versioned in `platform/`. Ivy service facts: Traefik on node
+:80/:443 (svclb), Portainer :30000 LAN-only, connector runs ON Ivy so
+its "localhost" IS the cluster's front door.
+
 ## Handoff note for the next agent session. Delete or commit at founder's
 > discretion. Secrets are NOT here — they live in `.env.new` / `.env.local`
 > files and the dashboards.
