@@ -58,7 +58,7 @@ spec:
           readinessProbe:
             exec:
               # POSTGRES_USER renames the superuser role — probe as that user.
-              command: [sh, -c, pg_isready -U "$POSTGRES_USER"]
+              command: [sh, -c, 'pg_isready -U "$POSTGRES_USER"']
             initialDelaySeconds: 8
             periodSeconds: 10
       volumes:
@@ -138,9 +138,19 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    # Dormant until the forms.smartscott.online hostname moves from the old
-    # laptop tunnel to ivy_k8s (founder dashboard edit: HTTP http://localhost:80).
+    # Both faces of the engine. Dormant until the founder dashboard edits move
+    # them from the old laptop tunnel to ivy_k8s (HTTP http://localhost:80).
     - host: forms.smartscott.online
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: formsapp
+                port:
+                  number: 5000
+    - host: formdata.smartscott.online
       http:
         paths:
           - path: /
