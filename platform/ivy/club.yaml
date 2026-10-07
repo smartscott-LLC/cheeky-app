@@ -1,0 +1,78 @@
+# Club Cheeky on Ivy. The env secret is NOT stored here — it is created
+# on-box from ~/club.env (gitignored, never committed):
+#   kubectl -n club create secret generic club-env --from-env-file=$HOME/club.env
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: club
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: club
+  namespace: club
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: club
+  template:
+    metadata:
+      labels:
+        app: club
+    spec:
+      containers:
+        - name: club
+          image: smartscott/club:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - secretRef:
+                name: club-env
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '200m'
+            limits:
+              memory: '1Gi'
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: club
+  namespace: club
+spec:
+  selector:
+    app: club
+  ports:
+    - port: 3000
+      targetPort: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: club
+  namespace: club
+spec:
+  ingressClassName: traefik
+  rules:
+    # Dormant until cutover: www.smartscott.online currently resolves to
+    # Vercel. The moment its DNS/hostname flips to the tunnel, Traefik is
+    # already wired and the club answers with no further changes.
+    - host: www.smartscott.online
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: club
+                port:
+                  number: 3000

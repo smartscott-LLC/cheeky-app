@@ -1,0 +1,25 @@
+# Container build context for Ivy — code and served assets only.
+node_modules
+.next
+.git
+.env
+.env.*
+!.env.example
+*.pem
+ivy_*
+docs
+tests
+scripts
+supabase
+platform
+fixtures
+config
+coverage
+*.md
+pnpm-lock.yaml.bak
+.DS_Store
+.eslintcache
+next-env.d.ts
+tsconfig.tsbuildinfo
+out
+dist

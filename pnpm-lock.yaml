@@ -44,9 +44,6 @@ importers:
       ai:
         specifier: ^7.0.102
         version: 7.0.102(zod@4.6.5)
-      chub:
-        specifier: link:../chub
-        version: link:../chub
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1

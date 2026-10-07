@@ -6,6 +6,8 @@ import { config } from 'dotenv';
 config({ path: `${process.cwd()}/.env.new` });
 
 const nextConfig: NextConfig = {
+  // Ivy container builds need a self-contained server; Vercel ignores this.
+  output: 'standalone',
   reactStrictMode: true
 };
 

@@ -1,0 +1,152 @@
+# Smartforms engine on Ivy — the form-field autodetection server (server.js
+# runs untouched) + its pgvector database. The stack's own traefik container
+# and the (already-commented-out) metabase analytics stay behind on the old
+# docker-compose: the cluster's Traefik + Cloudflare tunnel front everything,
+# so no ACME and no cert rate limits ever.
+# Secrets are NOT stored here — created on-box:
+#   kubectl -n forms create secret generic forms-env --from-env-file=$HOME/forms.env
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: forms
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: forms-pg
+  namespace: forms
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: forms-pg
+  namespace: forms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: forms-pg
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: forms-pg
+    spec:
+      containers:
+        - name: pgvector
+          image: pgvector/pgvector:pg16
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: forms-env
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+              subPath: pgdata
+          resources:
+            requests:
+              memory: '256Mi'
+            limits:
+              memory: '1Gi'
+          readinessProbe:
+            exec:
+              # POSTGRES_USER renames the superuser role — probe as that user.
+              command: [sh, -c, pg_isready -U "$POSTGRES_USER"]
+            initialDelaySeconds: 8
+            periodSeconds: 10
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: forms-pg
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: formspg
+  namespace: forms
+spec:
+  selector:
+    app: forms-pg
+  ports:
+    - port: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: forms-app
+  namespace: forms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: forms-app
+  template:
+    metadata:
+      labels:
+        app: forms-app
+    spec:
+      containers:
+        - name: forms-app
+          image: clubcheeky/smartforms:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - secretRef:
+                name: forms-env
+          env:
+            # server.js defaults DB_HOST to 'postgres' (compose networking);
+            # in the cluster it's the formspg service instead.
+            - name: DB_HOST
+              value: formspg
+          resources:
+            requests:
+              memory: '64Mi'
+            limits:
+              memory: '256Mi'
+          readinessProbe:
+            httpGet:
+              path: /__health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: formsapp
+  namespace: forms
+spec:
+  selector:
+    app: forms-app
+  ports:
+    - port: 5000
+      targetPort: 5000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: forms
+  namespace: forms
+spec:
+  ingressClassName: traefik
+  rules:
+    # Dormant until the forms.smartscott.online hostname moves from the old
+    # laptop tunnel to ivy_k8s (founder dashboard edit: HTTP http://localhost:80).
+    - host: forms.smartscott.online
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: formsapp
+                port:
+                  number: 5000

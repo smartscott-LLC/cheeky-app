@@ -22,15 +22,68 @@ club + MinIO + Dragonfly + backups + costume pipeline; Oct 24-30 = dress
 rehearsal on the new roof; Oct 31 = doors open. Founder's call, fully
 supported — "stubborn mule, want it all working."
 
-**TUNNEL PROVEN 2026-10-07:** browser-verified end-to-end —
-`whoami.smartscott.online` → Cloudflare edge → `ivy_k8s` connector
-(dashboard-token mode; public hostnames managed in dashboard, ONE dumb
-pipe to localhost:80) → Traefik → pod. k8s Ingress = the routing source
-of truth, versioned in `platform/`. Ivy service facts: Traefik on node
-:80/:443 (svclb), Portainer :30000 LAN-only, connector runs ON Ivy so
-its "localhost" IS the cluster's front door.
+**TUNNEL PROVEN 2026-10-07 (corrected same day):** public-curl-verified
+end-to-end — `maker.smartscott.online` → 307 (Cloudflare edge → `ivy_k8s`
+connector → Traefik → pod auth gate) and apex → 302 → www. The `whoami`
+pod was MY plumbing canary — the earlier "browser-verified by founder"
+attribution was faulty (founder never created or routed it; teardown
+queued). Ivy service facts: Traefik (v3.7) on node :80/:443 (svclb),
+Portainer :30000 LAN-only, connector runs ON Ivy so its "localhost" IS the
+cluster front door. **Tunnel public hostnames must be `http://localhost:80`
+— the dashboard can save `https://` and silently 502 the route (TLS
+knocking on Traefik's cleartext port). Lesson recorded: check the artifact
+(connector log shows the exact pushed config) before theorizing.**
+
+**IVY ESTATE LIVE 2026-10-07 (all internal-Host-verified):**
+
+- `club` ns — `smartscott/club:latest` (Dockerfile, standalone output; 77MB).
+  Ingress on www.smartscott.online (dormant until DNS cutover). 200 landing,
+  307 gates, webhook door 405-on-GET.
+- `lounge` ns — `clubcheeky/lounge:latest`. Serves the SAME URL shape as
+  Vercel (`www…/lounge/*`) via Traefik IngressRoute on host www +
+  PathPrefix(/lounge) priority 100. **Traefik v3.7 renamed the IngressRoute
+  `rule` field to `match`, and its PathPrefix is segment-strict for the bare
+  path — include `|| Path(/lounge)` when matching prefixes.**
+- `forms` ns — smartforms engine (server.js UNTOUCHED, per founder law) as
+  `clubcheeky/smartforms:latest` (pnpm-built) + `pgvector/pgvector:pg16`
+  (k3s pulls it itself; don't air-ferry registry images) on PVC `forms-pg`.
+  Data restored (form_submissions); `/__health` = discovered_forms
+  [cheeky,index]. Ingress host forms.smartscott.online (dormant until founder
+  moves that hostname from the old laptop tunnel to ivy_k8s).
+- `maker` ns — rebuilt clean; its FIRST deploy had NO runtime env at all
+  (307 gate masked it — redirects never touch Supabase). Secret `maker-env`
+  now wired via `platform/maker.yaml` envFrom.
+- Cookie bridge: `NEXT_PUBLIC_COOKIE_DOMAIN=.smartscott.online` in club
+  `.env.new` + chub `.env.local`, BAKED into all images (Next inlines
+  NEXT_PUBLIC_* at build time — runtime-only would silently no-op) and in the
+  Secrets. E2E login round-trip test at cutover.
+- **Env-file doctrine:** `.env.new`/`.env.local` pastes carry literal quotes
+  — sanitize at every boundary (`sed -E 's/^KEY="?([^"]*)"$/KEY=\1/'`);
+  docker `--env-file`, kubectl `--from-env-file`, and Next build-args all
+  pass quotes through as VALUE. Ivy holds `~/club.env` (600, the sanitized
+  union) for secret refreshes: `kubectl create secret ... --dry-run -o yaml |
+kubectl apply -f -` then rollout restart.
+- **Branch reality: the club repo's default is `master`** (GitHub HEAD + what
+  Vercel deploys — proven: features pushed to master went live). `origin/main`
+  is a zombie at the purged quest build, 64 behind / 0 ahead — recommend
+  founder delete it. AGENTS.md "main" is documentation drift, don't chase.
+- **Founder law (stated 2026-10-07):** pnpm ONLY (everywhere; the smartforms
+  npm-installer was containerized with pnpm and its package-lock deleted —
+  engine code untouched), no eslint anywhere (oxlint/biome only — the
+  wizard-era `.eslintrc.json` and all `"npm":{}` blocks purged), no stubs
+  (dead deps get deleted properly: `chub: link:../chub` removed from club's
+  package.json + lock), fix-found-now on all tech debt.
+- **Entrance video PULLED** (founder call 2026-10-07 — "the video doesnt
+  work anyway, we have enough to worry about"): `EntranceOverlay.tsx` + its
+  wiring deleted; bucket asset + `ASSETS.video.entrance` registry entry stay.
+  Square button URL `…/club?enter=1` still lands fine (param ignored).
+- **Caught mid-move: stray prose rendered in production** — literal sentence
+  "I'm just going to position it on the same area." sat in club `app/club/page.tsx`
+  JSX (commit 81345e2 era) and shipped to every member's lobby. Removed.
+  Manual eyeball of affected flows is not optional.
 
 ## Handoff note for the next agent session. Delete or commit at founder's
+
 > discretion. Secrets are NOT here — they live in `.env.new` / `.env.local`
 > files and the dashboards.
 
@@ -139,10 +192,10 @@ scripts/audit-definers.mjs` after every upgrade — it diffs the live
    all female; the male set is still the founder's to build in Blender
    (segment → T-pose → Mixamo rig). Do not let him forget. The store, cards,
    and manifest all gender-agnostic already — only the roster awaits.
-0b. **Square "Enter Club Cheeky" button URL** (founder, store console +
+   0b. **Square "Enter Club Cheeky" button URL** (DONE — entrance PULLED 2026-10-07, param now inert):
    confirmation email): `https://www.smartscott.online/club?enter=1` — that
    param fires the entrance video (once per browser session).
-0c. **Didit workflow is now `e53ce2d4…` ("Fast ID check")** — rebuilt for
+   0c. **Didit workflow is now `e53ce2d4…` ("Fast ID check")** — rebuilt for
    two-state compliance + the 50% ruling (2026-10-06). Env-driven; code
    fallback updated.
 

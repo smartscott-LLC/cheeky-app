@@ -37,7 +37,6 @@
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "ai": "^7.0.102",
-    "chub": "link:../chub",
     "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
@@ -78,11 +77,5 @@
     "prettier-plugin-tailwindcss": "^0.8.1",
     "supabase": "^2.117.0",
     "typescript": "^7.0.2"
-  },
-  "npm": {
-    "onlyBuiltDependencies": [
-      "stream-chat",
-      "stream-chat-react"
-    ]
   }
 }
