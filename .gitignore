@@ -65,3 +65,7 @@ certificates
 
 # LibreOffice editor locks
 .~lock.*#
+
+# Ivy connection config + any ssh env drops (never commit)
+.ivy.env
+.ssh.env

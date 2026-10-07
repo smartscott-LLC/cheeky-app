@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# ivy — run a command on the Ivy Bridge server (key-auth only, no passwords)
+# Usage: scripts/ivy "uname -a"   |   scripts/ivy (no args = interactive shell)
+# Config: .ivy.env (gitignored) must define IVY_USER and IVY_IP
+set -euo pipefail
+cd "$(dirname "$0")/.."
+# shellcheck disable=SC1091
+source .ivy.env
+if [ $# -eq 0 ]; then
+  exec ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -o ConnectTimeout=8 "$IVY_USER@$IVY_IP"
+fi
+exec ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -o ConnectTimeout=8 "$IVY_USER@$IVY_IP" -- "$@"

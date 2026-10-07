@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# ivy-push — copy files TO Ivy, leaving originals in place (rsync, no delete)
+# Usage: scripts/ivy-push <local-path> [more-paths...] <remote-dest-dir>
+# Config: .ivy.env (gitignored) must define IVY_USER and IVY_IP
+set -euo pipefail
+cd "$(dirname "$0")/.."
+# shellcheck disable=SC1091
+source .ivy.env
+if [ $# -lt 2 ]; then
+  echo "usage: $0 <local-path>... <remote-dest-dir>" >&2
+  exit 1
+fi
+SSH="ssh -i $HOME/.ssh/id_ed25519 -o IdentitiesOnly=yes"
+exec rsync -av --progress -e "$SSH" "$@"

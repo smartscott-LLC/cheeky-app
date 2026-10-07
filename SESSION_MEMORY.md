@@ -1,6 +1,28 @@
-# SESSION MEMORY — Club Cheeky estate · 2026-10-02 (evening)
+# SESSION MEMORY — Club Cheeky estate · 2026-10-06 (evening)
 
-> Handoff note for the next agent session. Delete or commit at founder's
+## 🏛️ THE PLATFORM DECISION — LOCKED 2026-10-06
+
+**The club's new home is "Ivy"** — the founder's Ivy Bridge desktop (8-core,
+16GB, 500GB SSD — the flea-market machine that taught him to code), fresh
+Ubuntu Server 24.04 LTS + LUKS, behind **Cloudflare Tunnel** (no inbound
+ports, no IP dependency, ISP-proof). k3s single node + Portainer + Traefik +
+cert-manager; MinIO for assets/GLBs (Cloudflare edge-caches them); Dragonfly
+for dynamic caching (manifests, tiers, rate counters). Supabase KEEPS auth +
+RLS + user photos (personal data stays inside the identity fortress —
+founder doctrine; Supabase Pro $25 is the insurance premium). Backblaze B2
+nightly encrypted backups (non-negotiable). **Failover: the laptop runs the
+SAME TUNNEL TOKEN — instant origin swap, zero DNS changes.** Vultr/$300
+credit = insurance unspent until earned. Vercel stays warm as the safety net
+through the whole migration; cancel only after the last DNS flip.
+
+**LAUNCH MOVED: Friday bet → HALLOWEEN (Oct 31) — a deliberate premiere.**
+Nightclub dating app opening Halloween night with avatar COSTUMES in the
+Square store. Timeline: wk1 = Ivy + cluster + maker canary; wk2 = lounge +
+club + MinIO + Dragonfly + backups + costume pipeline; Oct 24-30 = dress
+rehearsal on the new roof; Oct 31 = doors open. Founder's call, fully
+supported — "stubborn mule, want it all working."
+
+## Handoff note for the next agent session. Delete or commit at founder's
 > discretion. Secrets are NOT here — they live in `.env.new` / `.env.local`
 > files and the dashboards.
 
@@ -104,6 +126,17 @@ scripts/audit-definers.mjs` after every upgrade — it diffs the live
 - Deploy order when microfrontends change: **chub first, then cheeky-app**. `microfrontends.json` = extreme care.
 
 ## The queue (next up, in order)
+
+0. **MALE AVATARS — founder reminder 2026-10-06**: the 22 ready models are
+   all female; the male set is still the founder's to build in Blender
+   (segment → T-pose → Mixamo rig). Do not let him forget. The store, cards,
+   and manifest all gender-agnostic already — only the roster awaits.
+0b. **Square "Enter Club Cheeky" button URL** (founder, store console +
+   confirmation email): `https://www.smartscott.online/club?enter=1` — that
+   param fires the entrance video (once per browser session).
+0c. **Didit workflow is now `e53ce2d4…` ("Fast ID check")** — rebuilt for
+   two-state compliance + the 50% ruling (2026-10-06). Env-driven; code
+   fallback updated.
 
 1. **`avatar-library` bucket** — create (public, MIME `model/gltf-binary` + octet-stream), move GLBs out of maker repo (punk's 13 MB is committed in git history — repo slim later), maker loads models by URL. Also segment library (22 female models ready, males later).
 2. **Segment naming** — founder's python segmentation left `tripo_part_*` names; manifest `segments` map needs readable keys (body/hair/top/bottom/shoes/accessories).
