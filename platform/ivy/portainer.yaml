@@ -1,40 +1,15 @@
-# Portainer CE on k3s (Ivy) — LAN-only admin dashboard.
-# NodePort 30000 (web UI, self-signed HTTPS) / 30776 (edge).
-# Deliberately NOT tunneled: the cluster's control panel never faces the internet.
+# Portainer CE on Ivy — LAN-only ops UI.
+# Login is deterministic: --admin-password-file creates the admin at boot
+# (the 5-minute first-run window is what caused the 403 dance). The agent
+# RBAC below is what the "Add environment > Kubernetes > Agent" wizard
+# expects, pre-applied so its one-paste manifest lands clean.
+# Password secret created on-box, NEVER committed:
+#   kubectl -n portainer create secret generic portainer-admin \
+#     --from-file=admin.txt=$HOME/portainer-admin.txt
 apiVersion: v1
 kind: Namespace
 metadata:
   name: portainer
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: portainer-admin
-  namespace: portainer
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: portainer-cluster-admin
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: portainer-admin
-    namespace: portainer
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: portainer-data
-  namespace: portainer
-spec:
-  accessModes: ["ReadWriteOnce"]
-  resources:
-    requests:
-      storage: 2Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -51,22 +26,46 @@ spec:
       labels:
         app: portainer
     spec:
-      serviceAccountName: portainer-admin
       containers:
         - name: portainer
           image: portainer/portainer-ce:latest
+          # Stock listeners (HTTP :9000 + tunnel :8000) + deterministic admin:
+          # no 5-minute creation window, restart-proof (that was the 403).
+          args:
+            - --admin-password-file
+            - /run/admin/admin.txt
           ports:
-            - containerPort: 9443
-              name: https
+            - containerPort: 9000
             - containerPort: 8000
-              name: edge
           volumeMounts:
             - name: data
               mountPath: /data
+            - name: admin-pass
+              mountPath: /run/admin
+              readOnly: true
+          resources:
+            requests:
+              memory: "128Mi"
+            limits:
+              memory: "512Mi"
       volumes:
+        - name: admin-pass
+          secret:
+            secretName: portainer-admin
         - name: data
           persistentVolumeClaim:
             claimName: portainer-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: portainer-data
+  namespace: portainer
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 2Gi
 ---
 apiVersion: v1
 kind: Service
@@ -78,11 +77,33 @@ spec:
   selector:
     app: portainer
   ports:
-    - name: https
-      port: 9443
-      targetPort: 9443
+    # Plain HTTP on LAN :30000 (--bind :9000) — no self-signed prompt for a
+    # LAN-only UI. (Binary lesson: --bind = listen, --host = env to manage,
+    # --admin-password-file = hashed password in the file.)
+    - name: http
+      port: 9000
+      targetPort: 9000
       nodePort: 30000
     - name: edge
       port: 8000
       targetPort: 8000
       nodePort: 30776
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: portainer-agent-sa
+  namespace: portainer
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: portainer-agent-sa
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: portainer-agent-sa
+    namespace: portainer

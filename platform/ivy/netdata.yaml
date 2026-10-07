@@ -1,0 +1,61 @@
+# Netdata — node vitals for the OBS wall (RAM/CPU/disk/net/containers).
+# hostNetwork on :19999, LAN-only (never routed through the tunnel).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: netdata
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: netdata
+  template:
+    metadata:
+      labels:
+        app: netdata
+    spec:
+      hostNetwork: true
+      hostPID: true
+      containers:
+        - name: netdata
+          image: netdata/netdata:latest
+          securityContext:
+            capabilities:
+              add: [SYS_ADMIN]
+            privileged: false
+          env:
+            - name: NETDATA_HOST_PREFIX
+              value: /host
+            - name: NETDATA_CONTAINER_DETECTION_OVERRIDE
+              value: auto
+            - name: NETDATA_ML_ENABLED
+              value: 'true'
+          ports:
+            - containerPort: 19999
+          volumeMounts:
+            - { name: proc, mountPath: /host/proc, readOnly: true }
+            - { name: sys, mountPath: /host/sys, readOnly: true }
+            - { name: run, mountPath: /host/run, readOnly: true }
+            - {
+                name: osrelease,
+                mountPath: /host/etc/os-release,
+                readOnly: true
+              }
+            - { name: passwd, mountPath: /host/etc/passwd, readOnly: true }
+            - { name: group, mountPath: /host/etc/group, readOnly: true }
+            - { name: log, mountPath: /host/var/log, readOnly: true }
+            - { name: cache, mountPath: /var/cache/netdata }
+      volumes:
+        - { name: proc, hostPath: { path: /proc } }
+        - { name: sys, hostPath: { path: /sys } }
+        - { name: run, hostPath: { path: /run } }
+        - { name: osrelease, hostPath: { path: /etc/os-release } }
+        - { name: passwd, hostPath: { path: /etc/passwd } }
+        - { name: group, hostPath: { path: /etc/group } }
+        - { name: log, hostPath: { path: /var/log } }
+        - { name: cache, emptyDir: {} }

@@ -63,6 +63,9 @@ knocking on Traefik's cleartext port). Lesson recorded: check the artifact
   pass quotes through as VALUE. Ivy holds `~/club.env` (600, the sanitized
   union) for secret refreshes: `kubectl create secret ... --dry-run -o yaml |
 kubectl apply -f -` then rollout restart.
+- **Portainer 403 root cause & cure:** the CE first-run admin-creation window is 5 minutes after boot; every expiry = 403 forever until restart. Killed deterministically: `--admin-password-file` (secret from ~/portainer-admin.txt on Ivy, chmod 600) seeds admin at boot, restart-proof. Login verified via API (JWT). UI now plain HTTP `http://192.168.86.23:30000` (--bind :9000 default; note: `--host` = env-to-manage, NOT a listen flag — learned the hard way, --help is ground truth). The Add-environment endpoint API rejects every payload shape (CE quirk) — founder's one wizard click instead; portainer-agent-sa SA + cluster-admin CRB pre-applied for it.
+- **Netdata on the OBS wall:** `monitoring` ns DaemonSet, hostNetwork :19999 LAN — `http://192.168.86.23:19999` = RAM/CPU/disk/net/containers, ML anomaly on. k8s gotcha: mounting /dev into the container breaks runc's termination-log — dropped it, netdata degrades gracefully.
+- **www CUTOVER HAPPENED 2026-10-07 (founder click):** public www serves the Ivy club NOW (verified: 200 landing, 307 gates, 405 webhook door, zero x-vercel headers). Vercel club+chub pause = whenever founder gets steady; rollback still one hostname delete.
 - **Branch reality: the club repo's default is `master`** (GitHub HEAD + what
   Vercel deploys — proven: features pushed to master went live). `origin/main`
   is a zombie at the purged quest build, 64 behind / 0 ahead — recommend
