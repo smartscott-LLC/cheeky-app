@@ -69,3 +69,4 @@ certificates
 # Ivy connection config + any ssh env drops (never commit)
 .ivy.env
 .ssh.env
+.env.ssh
