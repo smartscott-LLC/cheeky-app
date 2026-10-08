@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# ivy-mirror — push complete, self-contained copies of the estate source to
+# Ivy at ~/src/ — source, git history, .env secrets and all. This is the
+# "own copy" law: Ivy can rebuild the whole world with zero dependency on
+# the laptop or GitHub. Ivy-local builds pull from these trees.
+#
+# Usage: scripts/ivy-mirror                       (all apps)
+#        scripts/ivy-mirror cheeky-app smartforms_server
+#
+# Per app: extract to a fresh staging dir, swap it in atomically, drop the
+# old tier. Pure mirror semantics — Ivy's copy always equals the laptop's
+# last push; git history inside each tree is the rollback, not stale copies.
+# node_modules / .next / image tarballs excluded — regenerable junk.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+source .ivy.env
+SSH="ssh -i $HOME/.ssh/id_ed25519 -o IdentitiesOnly=yes -o ConnectTimeout=8 $IVY_USER@$IVY_IP"
+
+DIRS=(cheeky-app chub mini_model_maker smartforms_server)
+if [ $# -gt 0 ]; then DIRS=("$@"); fi
+
+for dir in "${DIRS[@]}"; do
+  case "$dir" in
+    smartforms_server) SRC=/home/server/smartforms_server ;;
+    *)                 SRC=/home/server/Downloads/cheeks/"$dir" ;;
+  esac
+  [ -d "$SRC" ] || { echo "skip $dir (not found)"; continue; }
+  echo "── mirroring $dir"
+  tar -C "$(dirname "$SRC")" \
+      --exclude='*/node_modules' --exclude='*/.next' --exclude='*.tar' \
+      --exclude='*.tar.gz' --exclude='*/postgres-data' \
+      -cf - "$(basename "$SRC")" \
+  | $SSH "set -e
+      rm -rf ~/src/.stage-$dir
+      mkdir -p ~/src/.stage-$dir
+      tar -C ~/src/.stage-$dir -xf -
+      rm -rf ~/src/$dir.old
+      [ -d ~/src/$dir ] && mv ~/src/$dir ~/src/$dir.old || true
+      mv ~/src/.stage-$dir/$dir ~/src/$dir
+      rmdir ~/src/.stage-$dir
+      rm -rf ~/src/$dir.old"
+  echo "   ok"
+done
+
+echo "── verify (on Ivy)"
+$SSH 'du -sh ~/src/* 2>/dev/null
+echo
+for a in cheeky-app chub mini_model_maker; do
+  [ -f ~/src/$a/package.json ] && echo "$a: source ✓ | git $([ -d ~/src/$a/.git ] && echo ✓ || echo MISSING) | $(find ~/src/$a -name node_modules -prune -o -name "*.tsx" -print 2>/dev/null | wc -l) tsx files"
+done
+[ -f ~/src/smartforms_server/form-backend/server.js ] && [ -f ~/src/smartforms_server/.env ] && echo "smartforms_server: engine + env ✓"
+[ -f ~/src/cheeky-app/.env.new ] && echo "secrets (.env.new) on Ivy ✓"'
