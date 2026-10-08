@@ -1,0 +1,5 @@
+project_id = "ioqeddpgdilyyajsygmz"
+
+[auth]
+site_url = "https://www.smartscott.online"
+additional_redirect_urls = ["https://www.smartscott.online/**", "https://smartscott.online/**", "https://maker.smartscott.online/**", "https://lounge.smartscott.online/**", "http://localhost:3000/**"]
