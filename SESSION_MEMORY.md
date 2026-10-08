@@ -211,6 +211,17 @@ scripts/audit-definers.mjs` after every upgrade — it diffs the live
 7. Founder TODO: enable **leaked-password protection** toggle (Supabase dashboard → Auth) — one click, last advisor warning.
 8. punk_girl re-rig (T-pose) — founder's Blender task.
 
+## The "own copy" law (founder, 2026-10-07)
+
+Ivy holds a complete, self-contained source copy of the estate at `~/src/`
+— source, git history, AND the `.env` secrets git never carries. Any Ivy
+rebuild must work with zero dependency on the laptop or GitHub (he breaks
+that laptop on bare-metal/hardware experiments regularly — single-copy is a
+disaster waiting to happen). Refresh with `scripts/ivy-mirror` [app...] —
+atomic staging swap, node_modules/.next/tarballs excluded (regenerable junk,
+not source). Verified md5-equal at creation. GitHub remains the *remote*
+backup, never the restore path for Ivy.
+
 ## Gotchas for whoever picks this up
 
 - **Cloudflare sits IN FRONT of Vercel** for www.smartscott.online
