@@ -211,6 +211,24 @@ export default function FloorPageLayout({
                   AI Chat
                 </span>
               </Link>
+              {/* Coat Check — your card, your badges (owner-review: was
+                  only reachable from the lobby's bottom-right slot) */}
+              <Link
+                href="/coat-check"
+                className="group flex flex-col items-right gap-1"
+              >
+                <div className="flex h-14 w-14 items-right justify-center overflow-hidden rounded-full bg-black/70 transition group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(255,215,0,0.3)]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={ASSETS.icons.coatCheck}
+                    alt="Coat Check"
+                    className="h-14 w-14 object-contain"
+                  />
+                </div>
+                <span className="font-body text-center text-club text-md">
+                  Coat Check
+                </span>
+              </Link>
               {/* Gift Store */}
               <Link
                 href="/gifts"
