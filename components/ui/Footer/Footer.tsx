@@ -67,10 +67,10 @@ export default function Footer() {
             </li>
             <li className="font-body text-club py-3 md:py-0 md:pb-4">
               <Link
-                href="/coat-check"
+                href="/store"
                 className="font-body text-club transition duration-150 ease-in-out hover:text-cyan"
               >
-                Coat Check
+                The Exchange
               </Link>
             </li>
           </ul>

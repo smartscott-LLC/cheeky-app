@@ -33,7 +33,9 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
       >
         <div className="grid gap-2">
           <div className="grid gap-1">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email" className="font-header text-cyan text-base">
+              Email
+            </label>
             <input
               id="email"
               placeholder="name@example.com"
@@ -42,44 +44,61 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              className="w-full p-3 rounded-md bg-zinc-800"
+              className="w-full p-3 rounded-md bg-zinc-800 text-club placeholder:text-club/50 border border-club/20"
             />
-            <label htmlFor="full_name">Your name</label>
+            <label
+              htmlFor="full_name"
+              className="font-header text-cyan text-base"
+            >
+              Your name
+            </label>
             <input
               id="full_name"
               placeholder="How the club will know you"
               type="text"
               name="full_name"
               autoComplete="name"
-              className="w-full p-3 rounded-md bg-zinc-800"
+              className="w-full p-3 rounded-md bg-zinc-800 text-club placeholder:text-club/50 border border-club/20"
             />
-            <label htmlFor="password">Password</label>
+            <label
+              htmlFor="password"
+              className="font-header text-cyan text-base"
+            >
+              Password
+            </label>
             <input
               id="password"
               placeholder="Password"
               type="password"
               name="password"
               autoComplete="current-password"
-              className="w-full p-3 rounded-md bg-zinc-800"
+              className="w-full p-3 rounded-md bg-zinc-800 text-club placeholder:text-club/50 border border-club/20"
             />
-            <label htmlFor="birthday">Date of birth</label>
+            <label
+              htmlFor="birthday"
+              className="font-header text-cyan text-base"
+            >
+              Date of birth
+            </label>
             <input
               id="birthday"
               type="date"
               name="birthday"
               required
-              className="w-full p-3 rounded-md bg-zinc-800 [color-scheme:dark]"
+              className="w-full p-3 rounded-md bg-zinc-800 text-club placeholder:text-club/50 border border-club/20 [color-scheme:dark]"
             />
             <p className="text-xs font-body text-club">
               You must be 18 or older. Brutus double-checks it at the door.
             </p>
-            <label htmlFor="gender">What are you?</label>
+            <label htmlFor="gender" className="font-header text-cyan text-base">
+              What are you?
+            </label>
             <select
               id="gender"
               name="gender"
               required
               defaultValue=""
-              className="w-full p-3 rounded-md bg-zinc-800"
+              className="w-full p-3 rounded-md bg-zinc-800 text-club placeholder:text-club/50 border border-club/20"
             >
               <option value="" disabled>
                 Choose one
@@ -91,12 +110,17 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               The club pairs real gentlemen and real ladies — no surprises. This
               tells the floor who you are.
             </p>
-            <label htmlFor="interestedIn">Dating preference</label>
+            <label
+              htmlFor="interestedIn"
+              className="font-header text-cyan text-base"
+            >
+              Dating preference
+            </label>
             <select
               id="interestedIn"
               name="interestedIn"
               defaultValue="everyone"
-              className="w-full p-3 rounded-md bg-zinc-800"
+              className="w-full p-3 rounded-md bg-zinc-800 text-club placeholder:text-club/50 border border-club/20"
             >
               <option value="everyone">Both</option>
               <option value="women">Ladies</option>
@@ -105,13 +129,16 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
             <p className="text-xs font-body text-club">
               Who you&apos;re here to meet. Personal, and never shown publicly.
             </p>
-            <label htmlFor="messageRetentionDays">
+            <label
+              htmlFor="messageRetentionDays"
+              className="font-header text-cyan text-base"
+            >
               How long should we keep your conversations?
             </label>
             <select
               id="messageRetentionDays"
               name="messageRetentionDays"
-              className="w-full p-3 rounded-md bg-zinc-800"
+              className="w-full p-3 rounded-md bg-zinc-800 text-club placeholder:text-club/50 border border-club/20"
               defaultValue="90"
             >
               <option value="7">7 days</option>

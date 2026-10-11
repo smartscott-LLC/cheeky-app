@@ -77,7 +77,7 @@ export default async function StoryPage({
             <form action="/api/story/start" method="POST">
               <button
                 type="submit"
-                className="rounded-lg bg-club px-10 py-4 font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
+                className="rounded-lg border-2 border-club bg-black px-10 py-4 font-extrabold uppercase tracking-[0.12em] text-club transition hover:bg-club hover:text-black"
               >
                 Start the Chase
               </button>

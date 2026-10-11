@@ -5,7 +5,7 @@ import { SignOut } from '@/utils/auth-helpers/server';
 import { handleRequest } from '@/utils/auth-helpers/client';
 import { usePathname, useRouter } from 'next/navigation';
 import { getRedirectMethod } from '@/utils/auth-helpers/settings';
-import { type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import s from './Navbar.module.css';
 import { ASSETS } from '@/utils/assets';
 
@@ -25,6 +25,7 @@ interface NavlinksProps {
 export default function Navlinks({ user }: NavlinksProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const [confirmingSignOut, setConfirmingSignOut] = useState(false);
 
   const handleSignOut = async (e: FormEvent<HTMLFormElement>) => {
     const result = await handleRequest(
@@ -33,6 +34,15 @@ export default function Navlinks({ user }: NavlinksProps) {
       getRedirectMethod() === 'client' ? router : null
     );
     return result;
+  };
+
+  // Two-step exit (owner review 2026-10-11): a tap on Sign out asks first —
+  // no accidental eviction mid-conversation.
+  const askSignOut = () => setConfirmingSignOut(true);
+  const cancelSignOut = () => setConfirmingSignOut(false);
+  const realSignOut = async (e: FormEvent<HTMLFormElement>) => {
+    setConfirmingSignOut(false);
+    return handleSignOut(e);
   };
 
   // The marquee button switches: on the street it's the door, inside the
@@ -94,16 +104,37 @@ export default function Navlinks({ user }: NavlinksProps) {
             )}
             <Link
               href="/club"
-              className="rounded-lg bg-club px-5 py-2 text-sm font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
+              className="rounded-lg border-2 border-club bg-black px-5 py-2 text-sm font-extrabold uppercase tracking-[0.12em] text-club transition hover:bg-club hover:text-black"
             >
               {onTheStreet ? 'Enter the club' : 'Lobby'}
             </Link>
-            <form onSubmit={handleSignOut}>
-              <input type="hidden" name="pathName" value={pathname} />
-              <button type="submit" className={s.link}>
+            {confirmingSignOut ? (
+              <div className="flex items-center gap-2">
+                <span className="font-header text-cyan text-sm">
+                  Leave the club?
+                </span>
+                <form onSubmit={realSignOut}>
+                  <input type="hidden" name="pathName" value={pathname} />
+                  <button
+                    type="submit"
+                    className="font-body text-xs rounded-md border-2 border-club bg-black px-3 py-1 font-bold text-club transition hover:bg-club hover:text-black"
+                  >
+                    Yes, sign out
+                  </button>
+                </form>
+                <button
+                  type="button"
+                  onClick={cancelSignOut}
+                  className="font-body text-xs rounded-md border border-zinc-600 px-3 py-1 text-cyan transition hover:border-cyan"
+                >
+                  Stay
+                </button>
+              </div>
+            ) : (
+              <button type="button" onClick={askSignOut} className={s.link}>
                 Sign out
               </button>
-            </form>
+            )}
             <Link href="/swag" className={s.link} title="Swag Shop">
               <span className="lg:hidden">🎟️</span>
               <span className="hidden lg:inline">🎟️ Swag Shop</span>

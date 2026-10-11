@@ -97,7 +97,7 @@ export default function BlindDateLobby({
                   <button
                     onClick={() => join(room.id)}
                     disabled={busy || room.seated >= room.maxSeats}
-                    className="rounded-lg bg-club px-5 py-2 text-sm font-bold text-white transition hover:bg-club-cotton disabled:cursor-not-allowed disabled:opacity-40"
+                    className="rounded-lg border-2 border-club bg-black px-5 py-2 text-sm font-bold text-club transition hover:bg-club hover:text-black disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     {room.seated >= room.maxSeats ? 'Full' : 'Take a seat →'}
                   </button>

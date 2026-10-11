@@ -89,7 +89,7 @@ export default function PrivacyPage() {
             href="https://forms.smartscott.online/forms/cheeky"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-body text-club underline hover:font-body text-club-cotton"
+            className="font-body text-club underline text-club-cotton"
           >
             Reach us through our contact form
           </a>

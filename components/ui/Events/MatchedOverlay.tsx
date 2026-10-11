@@ -96,7 +96,7 @@ export default function MatchedOverlay({ onDone }: MatchedOverlayProps) {
         </button>
         <button
           onClick={skip}
-          className="rounded-full border border-zinc-700 px-4 py-2 text-sm text-cyan hover:border-club hover:font-body text-club"
+          className="rounded-full border border-zinc-700 px-4 py-2 text-sm text-cyan hover:border-club text-club"
         >
           Skip →
         </button>

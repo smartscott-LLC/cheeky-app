@@ -36,23 +36,33 @@ export default function UpdatePassword({
       >
         <div className="grid gap-2">
           <div className="grid gap-1">
-            <label htmlFor="password">New Password</label>
+            <label
+              htmlFor="password"
+              className="font-header text-cyan text-base"
+            >
+              New Password
+            </label>
             <input
               id="password"
               placeholder="Password"
               type="password"
               name="password"
               autoComplete="current-password"
-              className="w-full p-3 rounded-md bg-zinc-800"
+              className="w-full p-3 rounded-md bg-zinc-800 text-club placeholder:text-club/50 border border-club/20"
             />
-            <label htmlFor="passwordConfirm">Confirm New Password</label>
+            <label
+              htmlFor="passwordConfirm"
+              className="font-header text-cyan text-base"
+            >
+              Confirm New Password
+            </label>
             <input
               id="passwordConfirm"
               placeholder="Password"
               type="password"
               name="passwordConfirm"
               autoComplete="current-password"
-              className="w-full p-3 rounded-md bg-zinc-800"
+              className="w-full p-3 rounded-md bg-zinc-800 text-club placeholder:text-club/50 border border-club/20"
             />
           </div>
           <Button

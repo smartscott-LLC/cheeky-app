@@ -186,7 +186,7 @@ export default function MatchmakerHistory() {
                       </p>
                       <button
                         onClick={() => openConversation(unlock.recipient_id)}
-                        className="mt-2 rounded-lg bg-club px-3 py-1.5 text-sm font-bold text-white transition hover:bg-club-cotton"
+                        className="mt-2 rounded-lg border-2 border-club bg-black px-3 py-1.5 text-sm font-bold text-club transition hover:bg-club hover:text-black"
                       >
                         Open chat →
                       </button>
@@ -279,7 +279,7 @@ export default function MatchmakerHistory() {
                                 onClick={() =>
                                   openConversation(unlock.recipient_id)
                                 }
-                                className="mt-3 w-full rounded-lg bg-club px-4 py-2 text-sm font-bold text-white transition hover:bg-club-cotton"
+                                className="mt-3 w-full rounded-lg border-2 border-club bg-black px-4 py-2 text-sm font-bold text-club transition hover:bg-club hover:text-black"
                               >
                                 You&apos;re talking — open the chat →
                               </button>

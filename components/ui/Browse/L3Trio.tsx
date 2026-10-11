@@ -150,7 +150,7 @@ export default function L3Trio() {
         </p>
         <button
           onClick={loadTrio}
-          className="mt-6 rounded-lg bg-club px-6 py-2.5 text-base font-bold text-white transition hover:bg-club-cotton"
+          className="mt-6 rounded-lg border-2 border-club bg-black px-6 py-2.5 text-base font-bold text-club transition hover:bg-club hover:text-black"
         >
           Check again
         </button>
@@ -237,7 +237,7 @@ export default function L3Trio() {
                 {person.display_name || 'Member'}
               </h3>
               {person.one_liner && (
-                <p className="mt-0.5 truncate text-[10px] font-body text-club">
+                <p className="mt-0.5 truncate text-xs font-body text-club">
                   {person.one_liner}
                 </p>
               )}
@@ -255,7 +255,7 @@ export default function L3Trio() {
                           [person.id]: slot.choice
                         }))
                       }
-                      className={`rounded px-1 py-1 text-[10px] font-bold uppercase tracking-wide transition ${
+                      className={`rounded px-1 py-1 text-xs font-bold uppercase tracking-wide transition ${
                         selected ? slot.active : slot.cls
                       }`}
                     >
@@ -271,7 +271,7 @@ export default function L3Trio() {
       <button
         onClick={submit}
         disabled={!allAssigned || submitting}
-        className="mx-auto mt-6 block rounded-lg bg-club px-8 py-3 text-base font-bold text-white transition hover:bg-club-cotton disabled:opacity-40"
+        className="mx-auto mt-6 block rounded-lg border-2 border-club bg-black px-8 py-3 text-base font-bold text-club transition hover:bg-club hover:text-black disabled:opacity-40"
       >
         {submitting ? 'Checking the room…' : 'Boom — send the trio'}
       </button>

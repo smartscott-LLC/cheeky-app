@@ -188,12 +188,12 @@ export default function MatchmakerDraft({ playsLeft, onBoardStarted }: Props) {
                   {person.display_name || 'Member'}
                 </h3>
                 {person.one_liner && (
-                  <p className="mt-0.5 truncate text-[10px] font-body text-club">
+                  <p className="mt-0.5 truncate text-xs font-body text-club">
                     {person.one_liner}
                   </p>
                 )}
                 <p
-                  className={`mt-1 rounded-md px-1.5 py-0.5 text-center text-[10px] font-bold uppercase tracking-wide transition-colors duration-200 ${
+                  className={`mt-1 rounded-md px-1.5 py-0.5 text-center text-xs font-bold uppercase tracking-wide transition-colors duration-200 ${
                     chosen ? 'bg-gold text-black' : 'bg-zinc-800 text-gold'
                   }`}
                 >

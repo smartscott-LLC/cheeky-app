@@ -95,7 +95,7 @@ export default function CustomerPortalForm({
           ) : tier === 'standard' ? (
             <Link
               href="/#membership"
-              className="rounded-lg bg-club px-6 py-2.5 text-sm font-extrabold uppercase tracking-[0.1em] text-white transition hover:bg-club-cotton"
+              className="rounded-lg border-2 border-club bg-black px-6 py-2.5 text-sm font-extrabold uppercase tracking-[0.1em] text-club transition hover:bg-club hover:text-black"
             >
               See the memberships
             </Link>

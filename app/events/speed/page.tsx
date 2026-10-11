@@ -36,7 +36,7 @@ export default async function SpeedDatingPage() {
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
               href="/#membership"
-              className="rounded-lg bg-club px-8 py-3 font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
+              className="rounded-lg border-2 border-club bg-black px-8 py-3 font-extrabold uppercase tracking-[0.12em] text-club transition hover:bg-club hover:text-black"
             >
               See the memberships
             </Link>
@@ -178,7 +178,7 @@ export default async function SpeedDatingPage() {
               </p>
               <Link
                 href={`/events/speed?action=start`}
-                className="mt-4 inline-block rounded-lg bg-club px-6 py-2.5 font-bold text-white transition hover:bg-club-cotton"
+                className="mt-4 inline-block rounded-lg border-2 border-club bg-black px-6 py-2.5 font-bold text-club transition hover:bg-club hover:text-black"
               >
                 Start a Speed Dating session
               </Link>

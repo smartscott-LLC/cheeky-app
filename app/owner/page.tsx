@@ -604,7 +604,7 @@ export default function OwnerPage() {
             Unlock
           </button>
 
-          <div className="my-6 flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-cyan">
+          <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-cyan">
             <div className="h-px flex-1 bg-zinc-800" />
             not the owner?
             <div className="h-px flex-1 bg-zinc-800" />
@@ -640,7 +640,7 @@ export default function OwnerPage() {
             <button
               type="submit"
               disabled={busy}
-              className="w-full rounded-lg bg-club px-6 py-3 font-bold text-white transition hover:bg-club-cotton disabled:opacity-40"
+              className="w-full rounded-lg border-2 border-club bg-black px-6 py-3 font-bold text-club transition hover:bg-club hover:text-black disabled:opacity-40"
             >
               Leave a message for the owner
             </button>
@@ -680,7 +680,7 @@ export default function OwnerPage() {
             <button
               onClick={toggleEngine}
               className={`rounded-lg px-4 py-2 text-sm font-bold transition ${
-                engine ? 'bg-emerald-600 text-white' : 'bg-club text-white'
+                engine ? 'bg-emerald-600 text-club' : 'border-2 border-club bg-black text-club'
               }`}
             >
               {engine ? '● Engine ON' : '● Engine OFF'}
@@ -715,7 +715,7 @@ export default function OwnerPage() {
               <p className="text-2xl font-extrabold font-body text-club">
                 {m.icon} {m.value.toLocaleString()}
               </p>
-              <p className="mt-1 text-[11px] uppercase tracking-wider font-body text-club">
+              <p className="mt-1 text-xs uppercase tracking-wider font-body text-club">
                 {m.label}
               </p>
             </div>
@@ -787,7 +787,7 @@ export default function OwnerPage() {
                     <button
                       onClick={() => resolveFlag(f.id, 'give-code')}
                       disabled={busy}
-                      className="rounded-lg bg-club px-4 py-1.5 text-sm font-bold text-white hover:bg-club-cotton disabled:opacity-40"
+                      className="rounded-lg border-2 border-club bg-black px-4 py-1.5 text-sm font-bold text-club hover:bg-club hover:text-black disabled:opacity-40"
                     >
                       🎭 Give the cast a code
                     </button>
@@ -851,7 +851,7 @@ export default function OwnerPage() {
                       : ''}
                     {r.review_summary ? ` — ${r.review_summary}` : ''}
                   </p>
-                  <p className="mt-0.5 font-mono text-[10px] font-body text-club">
+                  <p className="mt-0.5 font-mono text-xs font-body text-club">
                     member {r.reported_id.slice(0, 8)}…
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -908,7 +908,7 @@ export default function OwnerPage() {
             <button
               type="submit"
               disabled={busy}
-              className="rounded-lg bg-club px-6 py-2.5 font-bold text-white transition hover:bg-club-cotton disabled:opacity-40"
+              className="rounded-lg border-2 border-club bg-black px-6 py-2.5 font-bold text-club transition hover:bg-club hover:text-black disabled:opacity-40"
             >
               Ban email
             </button>
@@ -1011,7 +1011,7 @@ export default function OwnerPage() {
             <button
               type="submit"
               disabled={busy}
-              className="col-span-2 rounded-lg bg-club px-6 py-2.5 font-bold text-white transition hover:bg-club-cotton disabled:opacity-40 sm:col-span-4"
+              className="col-span-2 rounded-lg border-2 border-club bg-black px-6 py-2.5 font-bold text-club transition hover:bg-club hover:text-black disabled:opacity-40 sm:col-span-4"
             >
               Generate
             </button>
@@ -1117,7 +1117,7 @@ export default function OwnerPage() {
                   <button
                     key={m}
                     onClick={() => setCastModel(m)}
-                    className="rounded border border-zinc-700 px-2 py-0.5 text-[11px] text-cyan hover:border-gold hover:text-gold"
+                    className="rounded border border-zinc-700 px-2 py-0.5 text-xs text-cyan hover:border-gold hover:text-gold"
                   >
                     {m}
                   </button>
@@ -1142,7 +1142,7 @@ export default function OwnerPage() {
                   <button
                     key={m}
                     onClick={() => setWatchdogModel(m)}
-                    className="rounded border border-zinc-700 px-2 py-0.5 text-[11px] text-cyan hover:border-gold hover:text-gold"
+                    className="rounded border border-zinc-700 px-2 py-0.5 text-xs text-cyan hover:border-gold hover:text-gold"
                   >
                     {m}
                   </button>
@@ -1153,7 +1153,7 @@ export default function OwnerPage() {
           <button
             onClick={saveModels}
             disabled={busy}
-            className="mt-4 rounded-lg bg-club px-6 py-2.5 font-bold text-white transition hover:bg-club-cotton disabled:opacity-40"
+            className="mt-4 rounded-lg border-2 border-club bg-black px-6 py-2.5 font-bold text-club transition hover:bg-club hover:text-black disabled:opacity-40"
           >
             Save models
           </button>
@@ -1236,7 +1236,7 @@ export default function OwnerPage() {
                           void setFloor(f.slug, true, reason ?? '', hours);
                         }}
                         disabled={busy}
-                        className="rounded bg-club px-3 py-1 text-xs font-bold text-white hover:bg-club-cotton disabled:opacity-40"
+                        className="rounded border-2 border-club bg-black px-3 py-1 text-xs font-bold text-club hover:bg-club hover:text-black disabled:opacity-40"
                       >
                         Close
                       </button>
@@ -1622,7 +1622,7 @@ export default function OwnerPage() {
                     />
                     <button
                       onClick={() => removeMintRow(row.id)}
-                      className="text-cyan hover:font-body text-club"
+                      className="text-cyan text-club"
                     >
                       ✕
                     </button>
@@ -1642,7 +1642,7 @@ export default function OwnerPage() {
                 </datalist>
                 <button
                   onClick={addMintRow}
-                  className="text-xs font-bold font-body text-club hover:font-body text-club-cotton"
+                  className="text-xs font-bold font-body text-club text-club-cotton"
                 >
                   + Add a benefit
                 </button>

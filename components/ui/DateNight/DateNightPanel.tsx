@@ -161,7 +161,7 @@ export default function DateNightPanel({
         <div className="mt-4 flex justify-center gap-2">
           <button
             onClick={onClose}
-            className="rounded-lg bg-club px-5 py-2 text-sm font-bold text-white transition hover:bg-club-cotton"
+            className="rounded-lg border-2 border-club bg-black px-5 py-2 text-sm font-bold text-club transition hover:bg-club hover:text-black"
           >
             Back to the chat
           </button>

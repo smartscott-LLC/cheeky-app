@@ -84,7 +84,7 @@ export default async function BlindDatePage() {
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
               href="/#membership"
-              className="rounded-lg bg-club px-8 py-3 font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
+              className="rounded-lg border-2 border-club bg-black px-8 py-3 font-extrabold uppercase tracking-[0.12em] text-club transition hover:bg-club hover:text-black"
             >
               See the memberships
             </Link>

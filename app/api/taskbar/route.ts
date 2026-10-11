@@ -53,16 +53,26 @@ export async function GET() {
     });
   }
 
-  const [{ data: state }, { count: activeDateNights }, { data: tokenRows }] =
-    await Promise.all([
-      supabase.rpc('taskbar_state'),
-      supabase
-        .from('date_nights')
-        .select('*', { count: 'exact', head: true })
-        .or(`user_a.eq.${user.id},user_b.eq.${user.id}`)
-        .eq('status', 'active'),
-      supabase.from('token_ledger').select('delta').eq('user_id', user.id)
-    ]);
+  const [
+    { data: state, error: stateError },
+    { count: activeDateNights },
+    { data: tokenRows }
+  ] = await Promise.all([
+    supabase.rpc('taskbar_state'),
+    supabase
+      .from('date_nights')
+      .select('*', { count: 'exact', head: true })
+      .or(`user_a.eq.${user.id},user_b.eq.${user.id}`)
+      .eq('status', 'active'),
+    supabase.from('token_ledger').select('delta').eq('user_id', user.id)
+  ]);
+
+  // Never mask an RPC failure into a fake Silver (owner-review: the tier
+  // overload bug hid behind exactly this fallback for weeks).
+  if (stateError) {
+    console.error('[taskbar] taskbar_state RPC failed:', stateError.message);
+    return NextResponse.json({ error: 'state unavailable' }, { status: 500 });
+  }
 
   const tokenBalance = (tokenRows ?? []).reduce(
     (sum, r) => sum + (r.delta ?? 0),

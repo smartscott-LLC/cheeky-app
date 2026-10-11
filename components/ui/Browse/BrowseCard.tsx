@@ -52,7 +52,7 @@ export default function BrowseCard({
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <button
             onClick={() => openConversation(matched.id)}
-            className="rounded-lg bg-club px-6 py-3 font-bold text-white transition hover:bg-club-cotton"
+            className="rounded-lg border-2 border-club bg-black px-6 py-3 font-bold text-club transition hover:bg-club hover:text-black"
           >
             Start chatting
           </button>
@@ -217,7 +217,7 @@ export default function BrowseCard({
             }
           }}
           disabled={busy}
-          className="flex-1 rounded-lg bg-club px-4 py-3 font-bold text-white transition hover:bg-club-cotton"
+          className="flex-1 rounded-lg border-2 border-club bg-black px-4 py-3 font-bold text-club transition hover:bg-club hover:text-black"
         >
           {busy ? 'Checking…' : 'Like'}
         </button>

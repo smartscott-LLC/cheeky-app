@@ -224,7 +224,7 @@ export default function RooftopPool({
         {!refunded && matchId && (
           <Link
             href={`/messages/${matchId}`}
-            className="mt-5 inline-block rounded-lg bg-club px-6 py-2.5 font-bold text-white transition hover:bg-club-cotton"
+            className="mt-5 inline-block rounded-lg border-2 border-club bg-black px-6 py-2.5 font-bold text-club transition hover:bg-club hover:text-black"
           >
             Open your chat →
           </Link>
@@ -303,7 +303,7 @@ export default function RooftopPool({
                         void handleBlock(m.userId);
                       }}
                       disabled={blockingUserId === m.userId}
-                      className="text-[12px] font-body text-zinc-500 hover:text-red-400 transition"
+                      className="text-xs font-body text-zinc-500 hover:text-red-400 transition"
                     >
                       🚫
                     </button>
@@ -313,7 +313,7 @@ export default function RooftopPool({
                           e.stopPropagation();
                           void handleUnblock(m.userId);
                         }}
-                        className="text-[12px] font-body text-zinc-500 hover:text-club transition"
+                        className="text-xs font-body text-zinc-500 hover:text-club transition"
                       >
                         ✓
                       </button>

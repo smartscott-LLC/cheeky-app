@@ -81,7 +81,7 @@ export default function LawEnforcementPage() {
             href="https://forms.smartscott.online/forms/cheeky"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-body text-club underline hover:font-body text-club-cotton"
+            className="font-body text-club underline text-club-cotton"
           >
             Submit through our secure contact form
           </a>

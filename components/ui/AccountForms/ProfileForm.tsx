@@ -266,7 +266,7 @@ export default function ProfileForm({
               className="h-full w-full object-cover"
             />
             {photo.is_primary && (
-              <span className="absolute left-1 top-1 rounded-full bg-club px-2 py-0.5 text-[10px] font-bold uppercase text-white">
+              <span className="absolute left-1 top-1 rounded-full border-2 border-club bg-black px-2 py-0.5 text-xs font-bold uppercase text-club">
                 Main
               </span>
             )}
@@ -281,7 +281,7 @@ export default function ProfileForm({
               )}
               <button
                 onClick={() => handleDelete(photo)}
-                className="rounded-md bg-club px-2 py-1 text-xs font-bold text-white"
+                className="rounded-md border-2 border-club bg-black px-2 py-1 text-xs font-bold text-club"
               >
                 Delete
               </button>
@@ -336,7 +336,7 @@ export default function ProfileForm({
                   <span className="font-header text-gold text-sm">
                     {ch.name}
                   </span>
-                  <span className="ml-2 text-[11px] font-body text-club/70">
+                  <span className="ml-2 text-xs font-body text-club/70">
                     ({ch.floor}) — {ch.desc}
                   </span>
                 </button>
@@ -413,7 +413,7 @@ export default function ProfileForm({
                 <div className="mt-2 flex gap-2">
                   <button
                     onClick={acceptDraft}
-                    className="rounded-lg bg-club px-3 py-1.5 text-xs font-bold text-white transition hover:bg-club-cotton"
+                    className="rounded-lg border-2 border-club bg-black px-3 py-1.5 text-xs font-bold text-club transition hover:bg-club hover:text-black"
                   >
                     Use this
                   </button>
@@ -720,7 +720,7 @@ export default function ProfileForm({
       <button
         onClick={handleSave}
         disabled={saving}
-        className="mt-4 rounded-lg bg-club px-6 py-2.5 font-bold text-white transition hover:bg-club-cotton"
+        className="mt-4 rounded-lg border-2 border-club bg-black px-6 py-2.5 font-bold text-club transition hover:bg-club hover:text-black"
       >
         {saving ? 'Saving…' : 'Save profile'}
       </button>

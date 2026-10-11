@@ -168,7 +168,7 @@ export default function BlindDateSuitor({
         {won && matchId && (
           <Link
             href={`/messages/${matchId}`}
-            className="mt-5 inline-block rounded-lg bg-club px-6 py-2.5 font-bold text-white transition hover:bg-club-cotton"
+            className="mt-5 inline-block rounded-lg border-2 border-club bg-black px-6 py-2.5 font-bold text-club transition hover:bg-club hover:text-black"
           >
             Open your chat →
           </Link>

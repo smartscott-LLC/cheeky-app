@@ -326,7 +326,7 @@ export default function MessageThread({
                   setBlocked(true);
                 }
               }}
-              className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-cyan hover:border-club/60 hover:font-body text-club"
+              className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-cyan hover:border-club/60 text-club"
             >
               Block
             </button>
@@ -398,7 +398,7 @@ export default function MessageThread({
               await useIcebreaker();
               setPromptIdx((i) => (i + 1) % ICEBREAKERS.length);
             }}
-            className="ml-auto rounded-full border border-zinc-700 px-3 py-1 text-xs text-cyan hover:border-club hover:font-body text-club"
+            className="ml-auto rounded-full border border-zinc-700 px-3 py-1 text-xs text-cyan hover:border-club text-club"
           >
             Another
           </button>
@@ -415,7 +415,7 @@ export default function MessageThread({
             <button
               onClick={() => handleResolve(true)}
               disabled={busy}
-              className="rounded-lg bg-club px-5 py-2 text-sm font-bold text-white transition hover:bg-club-cotton"
+              className="rounded-lg border-2 border-club bg-black px-5 py-2 text-sm font-bold text-club transition hover:bg-club hover:text-black"
             >
               Keep dancing — it&apos;s a match
             </button>
@@ -460,7 +460,7 @@ export default function MessageThread({
                   setReported(true);
                   setReportOpen(false);
                 }}
-                className="rounded-full border border-zinc-700 px-3 py-1 text-xs text-cyan hover:border-club hover:font-body text-club"
+                className="rounded-full border border-zinc-700 px-3 py-1 text-xs text-cyan hover:border-club text-club"
               >
                 {reason}
               </button>
@@ -498,12 +498,12 @@ export default function MessageThread({
             >
               <div
                 className={`max-w-[75%] rounded-2xl px-4 py-2 text-base ${
-                  mine ? 'bg-club text-white' : 'bg-zinc-800 text-cyan'
+                  mine ? 'border-2 border-club bg-black text-club' : 'bg-zinc-800 text-cyan'
                 }`}
               >
                 <p>{m.body}</p>
                 <p
-                  className={`mt-1 text-[12px] ${
+                  className={`mt-1 text-xs ${
                     mine ? 'text-white/60' : 'text-cyan'
                   }`}
                 >
@@ -540,7 +540,7 @@ export default function MessageThread({
         ) : declined ? (
           <Link
             href="/events"
-            className="inline-block rounded-lg bg-club px-5 py-2 text-base font-bold text-white transition hover:bg-club-cotton"
+            className="inline-block rounded-lg border-2 border-club bg-black px-5 py-2 text-base font-bold text-club transition hover:bg-club hover:text-black"
           >
             Back to the Dance Floor
           </Link>
@@ -557,7 +557,7 @@ export default function MessageThread({
             />
             <button
               onClick={handleSend}
-              className="rounded-lg bg-club px-5 py-2 font-bold text-white transition hover:bg-club-cotton"
+              className="rounded-lg border-2 border-club bg-black px-5 py-2 font-bold text-club transition hover:bg-club hover:text-black"
             >
               Send
             </button>

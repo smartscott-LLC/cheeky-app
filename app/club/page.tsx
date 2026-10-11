@@ -37,7 +37,7 @@ export default async function ClubPage() {
           </p>
           <Link
             href="/verify"
-            className="mt-8 inline-block rounded-lg bg-club px-10 py-4 text-lg font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
+            className="mt-8 inline-block rounded-lg border-2 border-club bg-black px-10 py-4 text-lg font-extrabold uppercase tracking-[0.12em] text-club transition hover:bg-club hover:text-black"
           >
             Check in at the door
           </Link>

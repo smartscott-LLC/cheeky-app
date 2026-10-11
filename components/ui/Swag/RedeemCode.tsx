@@ -72,7 +72,7 @@ export default function RedeemCode() {
         <button
           onClick={submit}
           disabled={busy || !code.trim()}
-          className="rounded-lg bg-club px-6 py-3 font-bold text-white transition hover:bg-club-cotton disabled:opacity-40"
+          className="rounded-lg border-2 border-club bg-black px-6 py-3 font-bold text-club transition hover:bg-club hover:text-black disabled:opacity-40"
         >
           {busy ? 'Redeeming…' : 'Redeem'}
         </button>

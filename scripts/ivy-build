@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# ivy-build — build + deploy on Ivy FROM IVY'S OWN SOURCE COPY (~/src), per
+# the owner-review law: k8s pulls from the local repo there, not this laptop.
+# Workflow: change on laptop → observe on localhost → scripts/ivy-mirror <app>
+# → scripts/ivy-build <app>. The laptop never ships binaries — only source.
+#
+# Usage: scripts/ivy-build club|lounge|maker|forms
+set -euo pipefail
+cd "$(dirname "$0")/.."
+source .ivy.env
+SSH="ssh -i $HOME/.ssh/id_ed25519 -o IdentitiesOnly=yes -o ConnectTimeout=8 $IVY_USER@$IVY_IP"
+
+case "${1:-}" in
+  club)   DIR=cheeky-app          TAG=smartscott/club:latest      NS=club    DEP=club    ARGS_FROM=.env.new ;;
+  lounge) DIR=chub                TAG=clubcheeky/lounge:latest    NS=lounge  DEP=lounge  ARGS_FROM=.env.local ;;
+  maker)  DIR=mini_model_maker    TAG=clubcheeky/maker:latest     NS=maker   DEP=maker   ARGS_FROM=.env.local ;;
+  forms)  DIR=smartforms_server/form-backend TAG=clubcheeky/smartforms:latest NS=forms DEP=forms-app ARGS_FROM= ;;
+  *) echo "usage: ivy-build club|lounge|maker|forms"; exit 1 ;;
+esac
+
+$SSH "set -e
+  cd ~/src/$DIR
+  ENVF='$ARGS_FROM'
+  ARGS=''
+  if [ -n \"\$ENVF\" ] && [ -f \"\$ENVF\" ]; then
+    ARGS=\$(awk -F= '/^NEXT_PUBLIC_/{printf \"--build-arg %s=%s \", \$1, \$2}' \"\$ENVF\")
+  fi
+  echo 'building $TAG on Ivy from ~/src/$DIR'
+  sudo docker build \$ARGS -t $TAG . >/tmp/build-$1.log 2>&1 || { tail -20 /tmp/build-$1.log; exit 1; }
+  echo 'ferrying into k3s containerd'
+  sudo docker save $TAG | sudo k3s ctr images import - >/dev/null
+  sudo k3s kubectl -n $NS rollout restart deploy/$DEP >/dev/null
+  sudo k3s kubectl -n $NS rollout status deploy/$DEP --timeout=180s
+  echo '$1 deployed from Ivy-local build'"

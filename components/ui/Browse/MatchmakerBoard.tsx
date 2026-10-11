@@ -316,7 +316,7 @@ export default function MatchmakerBoard({
                       {up.display_name?.charAt(0)?.toUpperCase() ?? '?'}
                     </div>
                   )}
-                  <span className="absolute inset-x-0 bottom-0 bg-black/70 px-0.5 py-0.5 text-center text-[8px] font-bold text-white leading-tight">
+                  <span className="absolute inset-x-0 bottom-0 bg-black/70 px-0.5 py-0.5 text-center text-xs font-bold text-white leading-tight">
                     {up.display_name}
                   </span>
                 </>
@@ -376,7 +376,7 @@ export default function MatchmakerBoard({
                 <button
                   onClick={sendUnlock}
                   disabled={!message.trim() || sendingUnlock}
-                  className="mt-3 w-full rounded-lg bg-club px-6 py-3 text-base font-bold text-white transition hover:bg-club-cotton disabled:opacity-40"
+                  className="mt-3 w-full rounded-lg border-2 border-club bg-black px-6 py-3 text-base font-bold text-club transition hover:bg-club hover:text-black disabled:opacity-40"
                 >
                   {sendingUnlock ? 'Sending…' : 'Send the first impression'}
                 </button>

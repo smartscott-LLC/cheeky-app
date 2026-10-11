@@ -349,7 +349,7 @@ export default function SpeedDatingFloor({
         {result.conversationId && (
           <Link
             href={`/messages/${result.conversationId}`}
-            className="mt-6 inline-block rounded-lg bg-club px-6 py-3 font-bold text-white transition hover:bg-club-cotton"
+            className="mt-6 inline-block rounded-lg border-2 border-club bg-black px-6 py-3 font-bold text-club transition hover:bg-club hover:text-black"
           >
             Open your private chat
           </Link>
@@ -399,7 +399,7 @@ export default function SpeedDatingFloor({
             <button
               onClick={handleJoin}
               disabled={busy}
-              className="rounded-lg bg-club px-6 py-2.5 font-bold text-white transition hover:bg-club-cotton"
+              className="rounded-lg border-2 border-club bg-black px-6 py-2.5 font-bold text-club transition hover:bg-club hover:text-black"
             >
               {busy ? 'Checking…' : `Join for ${event.tokenCost} tokens`}
             </button>
@@ -474,7 +474,7 @@ export default function SpeedDatingFloor({
                 <div
                   className={`max-w-[75%] rounded-2xl px-3 py-1.5 text-base ${
                     m.sender_id === myUserId
-                      ? 'bg-club text-white'
+                      ? 'border-2 border-club bg-black text-club'
                       : 'bg-zinc-800 text-cyan'
                   }`}
                 >
@@ -494,7 +494,7 @@ export default function SpeedDatingFloor({
             />
             <button
               onClick={handleSend}
-              className="rounded-lg bg-club px-4 py-2 text-sm font-bold text-white transition hover:bg-club-cotton"
+              className="rounded-lg border-2 border-club bg-black px-4 py-2 text-sm font-bold text-club transition hover:bg-club hover:text-black"
             >
               Send
             </button>
@@ -523,7 +523,7 @@ export default function SpeedDatingFloor({
                     <button
                       onClick={() => handleUnblock(p.userId)}
                       disabled={blockingUserId === p.userId}
-                      className="text-[12px] font-body text-zinc-500 hover:text-club transition"
+                      className="text-xs font-body text-zinc-500 hover:text-club transition"
                     >
                       ✓ Unblocked
                     </button>
@@ -531,7 +531,7 @@ export default function SpeedDatingFloor({
                     <button
                       onClick={() => handleBlock(p.userId)}
                       disabled={blockingUserId === p.userId}
-                      className="text-[12px] font-body text-zinc-500 hover:text-red-400 transition"
+                      className="text-xs font-body text-zinc-500 hover:text-red-400 transition"
                     >
                       🚫 Block
                     </button>
@@ -545,7 +545,7 @@ export default function SpeedDatingFloor({
                     }}
                     className={`rounded-md px-3 py-1 text-xs font-bold ${
                       topPick === p.userId
-                        ? 'bg-club text-white'
+                        ? 'border-2 border-club bg-black text-club'
                         : 'border border-zinc-700 text-cyan'
                     }`}
                   >

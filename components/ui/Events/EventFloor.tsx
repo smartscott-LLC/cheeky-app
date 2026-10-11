@@ -55,21 +55,21 @@ const ACCENTS: Record<
 > = {
   dance_floor: {
     kicker: 'font-body text-club',
-    cta: 'bg-club hover:bg-club-cotton',
+    cta: 'border-2 border-club bg-black text-club hover:bg-club hover:text-black',
     lockedBorder: 'border-club/60',
     lockedText: 'font-body text-club/70',
     verified: 'font-body text-club'
   },
   themed_night: {
     kicker: 'text-gold',
-    cta: 'bg-gold hover:bg-gold-royal',
+    cta: 'bg-gold text-black hover:bg-gold-royal',
     lockedBorder: 'border-gold/60',
     lockedText: 'text-gold/70',
     verified: 'text-gold'
   },
   rooftop: {
     kicker: 'text-diamond',
-    cta: 'bg-diamond hover:bg-diamond-raspberry',
+    cta: 'bg-diamond text-black hover:bg-diamond-raspberry hover:text-white',
     lockedBorder: 'border-diamond/60',
     lockedText: 'text-diamond/70',
     verified: 'text-diamond'
@@ -373,7 +373,7 @@ export default function EventFloor({
             <button
               onClick={handleJoin}
               disabled={busy}
-              className={`rounded-lg px-6 py-2.5 font-bold text-white transition ${accent.cta}`}
+              className={`rounded-lg px-6 py-2.5 font-bold transition ${accent.cta}`}
             >
               {busy ? 'Checking…' : `Join for ${event.tokenCost} tokens`}
             </button>
@@ -387,9 +387,7 @@ export default function EventFloor({
             </button>
           )}
           {dancing && (
-            <span
-              className={`rounded-lg px-5 py-2.5 font-bold text-white ${accent.cta}`}
-            >
+            <span className={`rounded-lg px-5 py-2.5 font-bold ${accent.cta}`}>
               💃 One song. Make it count.
             </span>
           )}
@@ -446,13 +444,13 @@ export default function EventFloor({
                   )}
                   {locked && (
                     <span
-                      className={`absolute m-1 rounded-full px-2 py-0.5 text-[12px] font-bold uppercase text-white ${accent.cta}`}
+                      className={`absolute m-1 rounded-full px-2 py-0.5 text-xs font-bold uppercase ${accent.cta}`}
                     >
                       Dancing
                     </span>
                   )}
                   {spotlight && !locked && (
-                    <span className="absolute m-1 rounded-full bg-gold px-2 py-0.5 text-[12px] font-bold uppercase text-black">
+                    <span className="absolute m-1 rounded-full bg-gold px-2 py-0.5 text-xs font-bold uppercase text-black">
                       🌟 Center Stage
                     </span>
                   )}
@@ -464,7 +462,7 @@ export default function EventFloor({
                   <div className="mt-2 flex items-center justify-between">
                     {p.profile?.verified_at && (
                       <span
-                        className={`text-[12px] font-bold uppercase tracking-wide ${accent.verified}`}
+                        className={`text-xs font-bold uppercase tracking-wide ${accent.verified}`}
                       >
                         ✓
                       </span>
@@ -473,7 +471,7 @@ export default function EventFloor({
                       <button
                         onClick={() => handlePick(p.userId)}
                         disabled={busy}
-                        className={`ml-auto rounded-md px-3 py-1 text-xs font-bold text-white transition ${accent.cta}`}
+                        className={`ml-auto rounded-md px-3 py-1 text-xs font-bold transition ${accent.cta}`}
                       >
                         Pick
                       </button>
@@ -496,7 +494,7 @@ export default function EventFloor({
                       <button
                         onClick={() => handleUnblock(p.userId)}
                         disabled={blockingUserId === p.userId}
-                        className="text-[12px] font-body text-zinc-500 hover:text-club transition"
+                        className="text-xs font-body text-zinc-500 hover:text-club transition"
                         title="Unblock"
                       >
                         ✓ Unblocked
@@ -506,14 +504,14 @@ export default function EventFloor({
                         <button
                           onClick={() => handleBlock(p.userId)}
                           disabled={blockingUserId === p.userId}
-                          className="text-[12px] font-body text-zinc-500 hover:text-red-400 transition"
+                          className="text-xs font-body text-zinc-500 hover:text-red-400 transition"
                           title="Block"
                         >
                           {blockingUserId === p.userId ? '…' : '🚫 Block'}
                         </button>
                         <button
                           onClick={() => handleReport(p.userId)}
-                          className="text-[12px] font-body text-zinc-500 hover:text-gold transition"
+                          className="text-xs font-body text-zinc-500 hover:text-gold transition"
                           title="Report"
                         >
                           ⚑ Report

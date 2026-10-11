@@ -42,7 +42,9 @@ export default function ForgotPassword({
       >
         <div className="grid gap-2">
           <div className="grid gap-1">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email" className="font-header text-cyan text-base">
+              Email
+            </label>
             <input
               id="email"
               placeholder="name@example.com"
@@ -51,7 +53,7 @@ export default function ForgotPassword({
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              className="w-full p-3 rounded-md bg-zinc-800"
+              className="w-full p-3 rounded-md bg-zinc-800 text-club placeholder:text-club/50 border border-club/20"
             />
           </div>
           <Button

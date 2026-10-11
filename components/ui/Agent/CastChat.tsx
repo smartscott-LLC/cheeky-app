@@ -143,7 +143,7 @@ export default function CastChat({ character }: { character: CastCharacter }) {
               <div
                 className={`max-w-[85%] rounded-2xl px-3 py-2 text-base ${
                   m.role === 'user'
-                    ? 'bg-club text-white'
+                    ? 'border-2 border-club bg-black text-club'
                     : 'bg-zinc-800 text-cyan'
                 }`}
               >
@@ -176,7 +176,7 @@ export default function CastChat({ character }: { character: CastCharacter }) {
           <button
             onClick={send}
             disabled={busy || !input.trim()}
-            className="rounded-lg bg-club px-4 py-2 text-sm font-bold text-white transition hover:bg-club-cotton disabled:opacity-40"
+            className="rounded-lg border-2 border-club bg-black px-4 py-2 text-sm font-bold text-club transition hover:bg-club hover:text-black disabled:opacity-40"
           >
             Send
           </button>

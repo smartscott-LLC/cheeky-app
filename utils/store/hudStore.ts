@@ -9,7 +9,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type ActiveModule = 'main' | 'chub' | 'creator' | 'game';
 export type Tier = 'guest' | 'silver' | 'gold' | 'platinum' | 'diamond';
-export type TabId = 'daily' | 'wallet' | 'help';
+export type TabId = 'daily' | 'wallet' | 'info' | 'help';
 export type ViewMode = 'button' | 'taskbar' | 'hud';
 
 export const TIER_LABELS: Record<Tier, string> = {
@@ -120,7 +120,6 @@ export interface Alert {
 export interface HudState {
   // Core
   activeTab: TabId;
-  expanded: boolean;
   viewMode: ViewMode;
 
   // Session
@@ -150,8 +149,7 @@ export interface HudState {
 
   // Actions
   setActiveTab: (tab: TabId) => void;
-  toggleExpand: () => void;
-  setExpanded: (expanded: boolean) => void;
+  collapseHud: () => void;
   setViewMode: (mode: ViewMode) => void;
   cycleViewMode: () => void;
   updateDailyLimits: (limits: Partial<DailyLimits>) => void;
@@ -171,7 +169,6 @@ export interface HudState {
 
 const initialState = {
   activeTab: 'daily' as TabId,
-  expanded: false,
   viewMode: 'button' as ViewMode,
   userId: null as string | null,
   displayName: null as string | null,
@@ -210,9 +207,7 @@ export const useHudStore = create<HudState>()(
 
       setActiveTab: (tab) => set({ activeTab: tab }),
 
-      toggleExpand: () => set((state) => ({ expanded: !state.expanded })),
-
-      setExpanded: (expanded) => set({ expanded }),
+      collapseHud: () => set({ viewMode: 'button' }),
 
       setViewMode: (mode) => set({ viewMode: mode }),
 
@@ -385,7 +380,6 @@ export const useHudStore = create<HudState>()(
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         activeTab: state.activeTab,
-        expanded: state.expanded,
         viewMode: state.viewMode,
         dailyLimits: state.dailyLimits,
         wallet: state.wallet,

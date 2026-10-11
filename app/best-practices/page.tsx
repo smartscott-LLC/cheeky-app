@@ -113,7 +113,7 @@ export default function BestPracticesPage() {
               href="https://forms.smartscott.online/forms/cheeky"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-body font-body text-club underline hover:font-body font-body text-club-cotton"
+              className="font-body font-body text-club underline text-club-cotton"
             >
               submit a report through our contact form
             </a>
@@ -124,7 +124,7 @@ export default function BestPracticesPage() {
         <div className="mt-8 text-center">
           <Link
             href="/signin/signup"
-            className="inline-block rounded-lg bg-club px-8 py-3 font-bold text-white transition hover:bg-club-cotton"
+            className="inline-block rounded-lg border-2 border-club bg-black px-8 py-3 font-bold text-club transition hover:bg-club hover:text-black"
           >
             Enter the club
           </Link>

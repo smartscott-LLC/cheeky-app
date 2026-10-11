@@ -159,7 +159,7 @@ export default function StreamLoungeMonitor({
               <p className="font-body text-club text-2xl font-extrabold">
                 {t.icon} {t.value.toLocaleString()}
               </p>
-              <p className="font-body text-club mt-1 text-[10px] uppercase tracking-wider">
+              <p className="font-body text-club mt-1 text-xs uppercase tracking-wider">
                 {t.label}
               </p>
             </div>
@@ -177,7 +177,7 @@ export default function StreamLoungeMonitor({
               <p className="font-body text-club text-sm font-bold">
                 {r.emoji} {r.label}
               </p>
-              <p className="font-body text-club text-[10px]">{r.count} · 24h</p>
+              <p className="font-body text-club text-xs">{r.count} · 24h</p>
             </div>
             <div className="mt-2 max-h-44 space-y-1 overflow-y-auto text-xs">
               {r.latest.length === 0 && (
@@ -194,7 +194,7 @@ export default function StreamLoungeMonitor({
                       : 'border-zinc-800 bg-zinc-900/60'
                   }`}
                 >
-                  <p className="font-body text-club text-[10px] font-bold">
+                  <p className="font-body text-club text-xs font-bold">
                     {m.horn && '🎺 '}
                     {m.userName}
                   </p>
@@ -205,7 +205,7 @@ export default function StreamLoungeMonitor({
                     onClick={() =>
                       setBanDraft({ userId: m.userId, name: m.userName })
                     }
-                    className="font-body text-club mt-0.5 text-[9px] uppercase tracking-wider transition hover:font-body text-club-cotton"
+                    className="font-body text-club mt-0.5 text-xs uppercase tracking-wider transition text-club-cotton"
                   >
                     Ban from chat →
                   </button>
@@ -281,7 +281,7 @@ export default function StreamLoungeMonitor({
               <button
                 onClick={submitBan}
                 disabled={!banReason.trim() || busy}
-                className="flex-1 rounded-lg bg-club px-3 py-2 text-sm font-bold text-white transition hover:opacity-80 disabled:opacity-40"
+                className="flex-1 rounded-lg border-2 border-club bg-black px-3 py-2 text-sm font-bold text-club transition hover:opacity-80 disabled:opacity-40"
               >
                 {busy
                   ? 'Banning…'

@@ -15,9 +15,60 @@
   --color-cyan: #66ffff;
   --color-club: #ff97ff;
 
+  /* Pink family — hexes from founder comments in FloatingHearts/landing;
+     these tokens used to be referenced but never defined (dead classes). */
+  --color-club-pink: #ff4da6;
+  --color-club-cotton: #ff56d5;
+  --color-club-indigo: #2a1e6b;
+  --color-bubblegum_fizz-400: #ff33b1;
+  --color-bubblegum_fizz-500: #ff009d;
+
+  /* Gold ramp + diamond floor — DERIVED hexes (founder bless-check invited;
+     they were referenced by classes but never defined anywhere). */
+  --color-gold-royal: #d4af37;
+  --color-gold-700: #b8930f;
+  --color-gold-graphite: #4d4327;
+  --color-diamond: #e6f4ff;
+  --color-diamond-raspberry: #b8296b;
+
   --font-fascinate: 'Fascinate', display, system-ui;
   --font-damion: 'Damion', cursive;
   --font-rancho: 'Rancho', cursive;
+
+  /* ── Owner-review font doctrine 2026-10-11 ───────────────────────
+     Damion (headers/cyan) reads ≥16px, Rancho (body/pink) reads ≥14px,
+     everywhere. Script fonts have tiny x-heights, so the stock Tailwind
+     scale is remapped with built-in floors — the floor is the token
+     itself, so no component can fall under it:
+       text-xs  = 14px  (was 12) — Rancho minimum
+       text-sm  = 16px  (was 14) — Damion minimum
+       text-base= 18px  (was 16) — body default, one notch up
+       text-lg+ = bumped ~one step so groupings keep the Fascinate
+                  "+4 over neighbour" head rule alive automatically.   */
+  --text-xs: 0.875rem;
+  --text-xs--line-height: 1.25rem;
+  --text-sm: 1rem;
+  --text-sm--line-height: 1.5rem;
+  --text-base: 1.125rem;
+  --text-base--line-height: 1.75rem;
+  --text-lg: 1.25rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.375rem;
+  --text-xl--line-height: 2rem;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2rem;
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: 2.25rem;
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: 2.5rem;
+  --text-5xl: 3rem;
+  --text-5xl--line-height: 1;
+  --text-6xl: 3.75rem;
+  --text-6xl--line-height: 1;
+  --text-7xl: 4.5rem;
+  --text-7xl--line-height: 1;
+  --text-8xl: 6rem;
+  --text-8xl--line-height: 1;
 }
 
 /* next/font/local sets --font-hero / --font-header / --font-body on <html>
@@ -33,16 +84,9 @@
   font-family: var(--font-body);
 }
 
-/* ── Font-size floors (matches chub app conventions) ───────────── */
-/* Smallest body text is 14px (Rancho 14). Override Tailwind defaults. */
-.text-xs {
-  font-size: 0.875rem; /* 14px */
-  line-height: 1.25rem;
-}
-.text-sm {
-  font-size: 1rem; /* 16px */
-  line-height: 1.5rem;
-}
+/* ── Font-size floors live in @theme tokens now (see owner-review
+   doctrine above) — the old .text-xs/.text-sm class overrides were
+   superseded; deleting them is the doctrine, not a regression. ────── */
 
 /* ── Reset ────────────────────────────────────────────────────── */
 *,

@@ -149,7 +149,7 @@ export default async function EventsPage() {
             </div>
             <Link
               href="/messages"
-              className="rounded-lg bg-club px-6 py-2.5 text-base font-extrabold text-white transition hover:bg-club-cotton"
+              className="rounded-lg border-2 border-club bg-black px-6 py-2.5 text-base font-extrabold text-club transition hover:bg-club hover:text-black"
             >
               Start one from a chat →
             </Link>

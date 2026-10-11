@@ -48,7 +48,7 @@ export default function GuestPassForm() {
         <button
           onClick={submit}
           disabled={busy}
-          className="rounded-lg bg-club px-5 py-2 text-sm font-bold text-white transition hover:bg-club-cotton"
+          className="rounded-lg border-2 border-club bg-black px-5 py-2 text-sm font-bold text-club transition hover:bg-club hover:text-black"
         >
           {busy ? 'Sending…' : 'Send pass'}
         </button>

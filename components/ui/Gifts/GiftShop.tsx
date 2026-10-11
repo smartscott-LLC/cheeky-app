@@ -197,7 +197,7 @@ export default function GiftShop({
                       run(`accept-${g.id}`, () => respondGift(g.id, true))
                     }
                     disabled={busy === `accept-${g.id}`}
-                    className="rounded-lg bg-club px-4 py-2 text-sm font-bold text-white transition hover:bg-club-cotton"
+                    className="rounded-lg border-2 border-club bg-black px-4 py-2 text-sm font-bold text-club transition hover:bg-club hover:text-black"
                   >
                     Accept — come see the floor
                   </button>
@@ -259,7 +259,7 @@ export default function GiftShop({
                             run(`buy-${g.slug}`, () => buyGift(g.slug))
                           }
                           disabled={busy === `buy-${g.slug}`}
-                          className="mt-3 w-full rounded-lg bg-club px-4 py-2 text-sm font-bold text-white transition hover:bg-club-cotton disabled:opacity-40"
+                          className="mt-3 w-full rounded-lg border-2 border-club bg-black px-4 py-2 text-sm font-bold text-club transition hover:bg-club hover:text-black disabled:opacity-40"
                         >
                           {busy === `buy-${g.slug}`
                             ? 'Buying…'

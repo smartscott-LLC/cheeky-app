@@ -151,7 +151,7 @@ export default function StoryPlayer({
                   </div>
                   <p className="font-body text-club mt-3 font-bold">{p.name}</p>
                   <p className="font-body text-club text-sm">{p.variant}</p>
-                  <p className="font-body text-club mt-1 text-[13px]">
+                  <p className="font-body text-club mt-1 text-xs">
                     {p.description}
                   </p>
                 </button>
@@ -184,7 +184,7 @@ export default function StoryPlayer({
                   </div>
                   <p className="font-body text-club mt-3 font-bold">{p.name}</p>
                   <p className="font-body text-club text-sm">{p.variant}</p>
-                  <p className="font-body text-club mt-1 text-[13px]">
+                  <p className="font-body text-club mt-1 text-xs">
                     {p.description}
                   </p>
                 </button>
@@ -196,7 +196,7 @@ export default function StoryPlayer({
             <div className="mt-10">
               <Link
                 href="/club"
-                className="inline-block rounded-lg bg-club px-10 py-4 font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
+                className="inline-block rounded-lg border-2 border-club bg-black px-10 py-4 font-extrabold uppercase tracking-[0.12em] text-club transition hover:bg-club hover:text-black"
               >
                 Enter the Club →
               </Link>
@@ -257,7 +257,7 @@ export default function StoryPlayer({
             </button>
             <Link
               href="/club"
-              className="rounded-lg bg-club px-8 py-3 font-extrabold uppercase tracking-[0.12em] text-white transition hover:bg-club-cotton"
+              className="rounded-lg border-2 border-club bg-black px-8 py-3 font-extrabold uppercase tracking-[0.12em] text-club transition hover:bg-club hover:text-black"
             >
               Enter the Club →
             </Link>
@@ -345,7 +345,7 @@ export default function StoryPlayer({
             {currentBeat < 5 && (
               <button
                 onClick={handleNextBeat}
-                className="mt-4 rounded-lg bg-club px-6 py-2 font-bold text-white transition hover:bg-club-cotton"
+                className="mt-4 rounded-lg border-2 border-club bg-black px-6 py-2 font-bold text-club transition hover:bg-club hover:text-black"
               >
                 Continue →
               </button>
@@ -353,7 +353,7 @@ export default function StoryPlayer({
             {currentBeat >= 5 && (
               <button
                 onClick={handleNextBeat}
-                className="mt-4 rounded-lg bg-club px-6 py-2 font-bold text-white transition hover:bg-club-cotton"
+                className="mt-4 rounded-lg border-2 border-club bg-black px-6 py-2 font-bold text-club transition hover:bg-club hover:text-black"
               >
                 See Your Results →
               </button>

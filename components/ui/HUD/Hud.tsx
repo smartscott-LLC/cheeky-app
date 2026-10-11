@@ -4,6 +4,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import BioCard, { type BioCardPerson } from '@/components/ui/Cards/BioCard';
 import Link from 'next/link';
 import {
   useHudStore,
@@ -18,6 +19,7 @@ import TikiTaskbar from '@/components/ui/Taskbar/TikiTaskbar';
 const TABS: { id: TabId; icon: string; label: string }[] = [
   { id: 'daily', icon: '💓', label: 'Daily' },
   { id: 'wallet', icon: '🪙', label: 'Wallet' },
+  { id: 'info', icon: '🪪', label: 'Info' },
   { id: 'help', icon: '🎭', label: 'Help' }
 ];
 
@@ -46,10 +48,36 @@ export default function Hud() {
     return () => clearInterval(interval);
   }, []);
 
+  // Lobby clock + date (owner-review: the strip above is prime real estate,
+  // counts already live in the Dailies tab — no more doubling up).
+  const [clock, setClock] = useState({ time: '', date: '' });
+  useEffect(() => {
+    const fmt = () => {
+      const n = new Date();
+      setClock({
+        time: n.toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: '2-digit'
+        }),
+        date: n.toLocaleDateString('en-US', {
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric'
+        })
+      });
+    };
+    fmt();
+    const t = setInterval(fmt, 15000);
+    return () => clearInterval(t);
+  }, []);
+
   const {
     activeTab,
-    toggleExpand,
+    collapseHud,
     setActiveTab,
+    userId,
+    displayName,
+    verified,
     tier,
     dailyLimits,
     wallet,
@@ -156,12 +184,12 @@ export default function Hud() {
         </span>
         {/* Badges */}
         {cheekyChatUnread > 0 && (
-          <span className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-club text-xs font-bold text-white flex items-center justify-center animate-pulse">
+          <span className="absolute -top-1 -right-1 h-6 w-6 rounded-full border-2 border-club bg-black text-xs font-bold text-club flex items-center justify-center animate-pulse">
             {cheekyChatUnread}
           </span>
         )}
         {unreadCount > 0 && (
-          <span className="absolute -bottom-1 -left-1 h-5 w-5 rounded-full bg-gold text-zinc-900 text-[10px] font-bold flex items-center justify-center">
+          <span className="absolute -bottom-1 -left-1 h-5 w-5 rounded-full bg-gold text-zinc-900 text-xs font-bold flex items-center justify-center">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -216,7 +244,7 @@ export default function Hud() {
                   </span>
                 )}
                 <button
-                  onClick={toggleExpand}
+                  onClick={collapseHud}
                   className="p-1.5 text-zinc-500 hover:text-white transition"
                   aria-label="Close HUD"
                 >
@@ -237,17 +265,8 @@ export default function Hud() {
 
             {/* Activity strip */}
             <div className="flex items-center gap-3 text-sm">
-              <span
-                className={`font-body ${messagesLeft === Infinity ? 'text-gold' : messagesLeft < 5 ? 'text-red-400' : 'text-zinc-400'}`}
-              >
-                💬{' '}
-                {messagesLeft === Infinity ? '∞' : `${messagesLeft} msgs left`}
-              </span>
-              <span className="text-zinc-700">|</span>
-              <span
-                className={`font-body ${swipesLeft < 3 ? 'text-red-400' : 'text-zinc-400'}`}
-              >
-                👆 {swipesLeft} swipes left
+              <span className="font-header text-cyan">
+                🕗 {clock.time} · {clock.date}
               </span>
               {recentActivity.length > 0 && (
                 <>
@@ -270,16 +289,22 @@ export default function Hud() {
                 <Link
                   key={mode.slug}
                   href={`/browse#${mode.slug}`}
-                  onClick={toggleExpand}
+                  onClick={collapseHud}
                   className="flex-1 flex flex-col items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900/60 py-2.5 text-center transition hover:border-gold/40 hover:bg-gold/5 group"
                 >
-                  <Image
-                    src={mode.icon}
-                    alt={mode.label}
-                    width={28}
-                    height={28}
-                    className="opacity-75 group-hover:opacity-100 transition"
-                  />
+                  {mode.icon.startsWith('http') ? (
+                    <Image
+                      src={mode.icon}
+                      alt={mode.label}
+                      width={28}
+                      height={28}
+                      className="opacity-75 group-hover:opacity-100 transition"
+                    />
+                  ) : (
+                    <span className="text-2xl opacity-75 group-hover:opacity-100 transition">
+                      {mode.icon}
+                    </span>
+                  )}
                   <span className="font-body text-sm text-zinc-400 group-hover:text-gold transition">
                     {mode.label}
                   </span>
@@ -287,7 +312,7 @@ export default function Hud() {
               ))}
               <Link
                 href="/events"
-                onClick={toggleExpand}
+                onClick={collapseHud}
                 className="flex-1 flex flex-col items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900/60 py-2.5 text-center transition hover:border-gold/40 hover:bg-gold/5 group"
               >
                 <span className="text-2xl">⚡</span>
@@ -297,7 +322,7 @@ export default function Hud() {
               </Link>
               <Link
                 href="/gifts"
-                onClick={toggleExpand}
+                onClick={collapseHud}
                 className="flex-1 flex flex-col items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900/60 py-2.5 text-center transition hover:border-gold/40 hover:bg-gold/5 group"
               >
                 <Image
@@ -354,6 +379,14 @@ export default function Hud() {
             {activeTab === 'wallet' && (
               <WalletTab wallet={wallet} inventory={inventory} />
             )}
+            {activeTab === 'info' && (
+              <InfoTab
+                userId={userId}
+                displayName={displayName}
+                tier={tier}
+                verified={verified}
+              />
+            )}
             {activeTab === 'help' && <HelpTab />}
           </div>
 
@@ -361,7 +394,7 @@ export default function Hud() {
           <div className="border-t border-gold/20 bg-zinc-900/50 px-5 py-3 shrink-0 flex items-center justify-between">
             <button
               onClick={() => setShowDeleteModal(true)}
-              className="flex items-center gap-1 rounded border border-red-500/20 bg-red-500/5 px-1.5 py-0.5 text-[10px] font-bold text-red-400/60 transition hover:bg-red-500/15 hover:border-red-500/40"
+              className="flex items-center gap-1 rounded border border-red-500/20 bg-red-500/5 px-1.5 py-0.5 text-xs font-bold text-red-400/60 transition hover:bg-red-500/15 hover:border-red-500/40"
             >
               <svg
                 className="h-2 w-2 shrink-0"
@@ -509,26 +542,31 @@ function DailyTab({
       <div className="space-y-3">
         <LimitRow
           label="Messages"
+          href="/messages"
           used={dailyLimits.messagesSent}
           max={caps.messages ?? Infinity}
         />
         <LimitRow
           label="Swipes"
+          href="/browse"
           used={dailyLimits.swipesUsed}
           max={caps.swipes}
         />
         <LimitRow
           label="Matchmaker"
+          href="/browse#matchmaker"
           used={dailyLimits.matchmakerPlays}
           max={caps.matchmakerPlays}
         />
         <LimitRow
           label="L³ Trios"
+          href="/browse#l3"
           used={dailyLimits.l3TriosUsed}
           max={caps.l3Trios}
         />
         <LimitRow
           label="Icebreakers"
+          href="/messages"
           used={dailyLimits.icebreakersUsed}
           max={caps.icebreakers ?? Infinity}
         />
@@ -553,6 +591,7 @@ function DailyTab({
 }
 
 function LimitRow({
+  href,
   label,
   used,
   max
@@ -560,13 +599,17 @@ function LimitRow({
   label: string;
   used: number;
   max: number;
+  href: string;
 }) {
   const remaining = max === Infinity ? Infinity : Math.max(0, max - used);
   const pct = max === Infinity ? 0 : Math.min(100, (used / max) * 100);
   const isLow = remaining !== Infinity && remaining <= 2;
 
   return (
-    <div>
+    <Link
+      href={href}
+      className="block rounded-lg px-1 py-0.5 transition hover:bg-gold/5"
+    >
       <div className="flex items-center justify-between mb-1.5">
         <span className="font-body text-club text-base">{label}</span>
         <span
@@ -583,15 +626,16 @@ function LimitRow({
           />
         </div>
       )}
-    </div>
+    </Link>
   );
 }
 
 function EventPill({ label, remaining }: { label: string; remaining: number }) {
   const empty = remaining === 0;
   return (
-    <div
-      className={`rounded-lg border px-3 py-2 text-center ${empty ? 'border-zinc-800 bg-zinc-900/50' : 'border-gold/30 bg-gold/5'}`}
+    <Link
+      href="/events"
+      className={`block rounded-lg border px-3 py-2 text-center transition hover:brightness-125 ${empty ? 'border-zinc-800 bg-zinc-900/50' : 'border-gold/30 bg-gold/5'}`}
     >
       <p className="font-body text-club text-sm">{label}</p>
       <p
@@ -599,6 +643,99 @@ function EventPill({ label, remaining }: { label: string; remaining: number }) {
       >
         {empty ? '—' : remaining}
       </p>
+    </Link>
+  );
+}
+
+/**
+ * The Info tab (owner-review 2026-10-11) — your own Bio Card with your
+ * avatar when you have one, and the door to make one when you don't.
+ * Reads through the card-safe manifest door (cached, privacy-gated).
+ */
+function InfoTab({
+  userId,
+  displayName,
+  tier,
+  verified
+}: {
+  userId: string | null;
+  displayName: string | null;
+  tier: string;
+  verified: boolean;
+}) {
+  const [card, setCard] = useState<BioCardPerson | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    if (!userId) return;
+    let alive = true;
+    fetch(
+      `/api/avatar/${userId}?fields=profile.displayName,profile.oneLiner,profile.bio,profile.gender,profile.photos,membership.tier,membership.verified,model`
+    )
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((d: { fields: Record<string, unknown> }) => {
+        if (!alive) return;
+        const f = d.fields;
+        const photos = (f['profile.photos'] ?? []) as Array<{
+          path: string;
+          primary?: boolean;
+        }>;
+        const primary = photos.find((p) => p.primary) ?? photos[0];
+        const model = f['model'] as
+          { snapshotUrl: string | null; url: string } | undefined;
+        setCard({
+          displayName:
+            (f['profile.displayName'] as string) ?? displayName ?? 'Member',
+          oneLiner: (f['profile.oneLiner'] as string | null) ?? null,
+          bio: (f['profile.bio'] as string | null) ?? null,
+          photoUrl: primary
+            ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/profiles/${primary.path}`
+            : null,
+          gender: (f['profile.gender'] as string | null) ?? null,
+          tier: (f['membership.tier'] as string) ?? tier,
+          verified: (f['membership.verified'] as boolean) ?? verified,
+          avatar: model
+            ? { snapshotUrl: model.snapshotUrl, modelUrl: model.url }
+            : null
+        });
+      })
+      .catch(() => {
+        if (!alive) return;
+        setFailed(true);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [userId, displayName, tier, verified]);
+
+  const person: BioCardPerson = card ?? {
+    displayName: displayName ?? 'Member',
+    oneLiner: null,
+    bio: null,
+    photoUrl: null,
+    gender: null,
+    tier,
+    verified,
+    avatar: null
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-4 p-5">
+      <BioCard person={person} />
+      {!person.avatar && (
+        <Link
+          href="https://maker.smartscott.online"
+          className="w-full rounded-lg border-2 border-club bg-black py-2.5 text-center text-sm font-bold text-club transition hover:bg-club hover:text-black"
+        >
+          ✨ Create your model
+        </Link>
+      )}
+      {failed && !card && (
+        <p className="font-body text-zinc-500 text-xs text-center">
+          Card preview — sign-in details only. Your full Bio Card lives at the
+          Coat Check.
+        </p>
+      )}
     </div>
   );
 }
@@ -621,12 +758,18 @@ function WalletTab({
         </p>
       </div>
       <div className="flex gap-3 mb-5">
-        <button className="flex-1 rounded-lg border border-gold/50 bg-gold/10 py-2.5 text-sm font-bold text-gold transition hover:bg-gold/20">
+        <Link
+          href="/store"
+          className="flex-1 rounded-lg border border-gold/50 bg-gold/10 py-2.5 text-center text-sm font-bold text-gold transition hover:bg-gold/20"
+        >
           Buy Tokens
-        </button>
-        <button className="flex-1 rounded-lg border border-zinc-700 py-2.5 text-sm text-zinc-400 transition hover:border-zinc-500 hover:text-white">
+        </Link>
+        <Link
+          href="/account#ledger"
+          className="flex-1 rounded-lg border border-zinc-700 py-2.5 text-center text-sm text-zinc-400 transition hover:border-zinc-500 hover:text-white"
+        >
           History
-        </button>
+        </Link>
       </div>
       {inventory.length > 0 && (
         <div className="border-t border-zinc-800 pt-4">
@@ -693,7 +836,7 @@ function HelpTab() {
           Need help? Chaz is here to answer your questions about the club, your
           account, or anything else.
         </p>
-        <button className="w-full rounded-lg bg-club py-2.5 text-sm font-bold text-white transition hover:bg-club-cotton">
+        <button className="w-full rounded-lg border-2 border-club bg-black py-2.5 text-sm font-bold text-club transition hover:bg-club hover:text-black">
           Chat with Chaz
         </button>
       </div>

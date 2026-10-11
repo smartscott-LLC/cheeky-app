@@ -31,6 +31,7 @@ export default async function Account() {
   const [
     profile,
     tokenBalance,
+    ledger,
     photos,
     tierData,
     grants,
@@ -40,6 +41,12 @@ export default async function Account() {
   ] = await Promise.all([
     getProfile(supabase, user.id),
     getTokenBalance(supabase),
+    supabase
+      .from('token_ledger')
+      .select('delta, reason, created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(12),
     supabase
       .from('photos')
       .select('id, storage_path, is_primary, position')
@@ -178,7 +185,7 @@ export default async function Account() {
               {!profile?.verified_at && (
                 <Link
                   href="/verify"
-                  className="rounded-lg bg-club px-4 py-2 font-semibold text-white transition hover:bg-club-cotton"
+                  className="rounded-lg border-2 border-club bg-black px-4 py-2 font-semibold text-club transition hover:bg-club hover:text-black"
                 >
                   Get your card
                 </Link>
@@ -193,6 +200,42 @@ export default async function Account() {
               )}
             </div>
           </div>
+        </div>
+        {/* Token history — the destination of the HUD wallet "History" link
+            (owner-review 2026-10-11). RLS: self-read, last 12 moves. */}
+        <div
+          id="ledger"
+          className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6"
+        >
+          <h2 className="font-header text-cyan text-xl">Token history</h2>
+          {ledger && ledger.data && ledger.data.length > 0 ? (
+            <ul className="mt-3 space-y-1.5">
+              {ledger.data.map((row, i) => (
+                <li
+                  key={i}
+                  className="flex items-center justify-between text-sm font-body"
+                >
+                  <span className="text-club">
+                    {row.reason}
+                    <span className="ml-2 text-xs text-zinc-500">
+                      {new Date(row.created_at).toLocaleDateString()}
+                    </span>
+                  </span>
+                  <span
+                    className={`font-bold ${row.delta >= 0 ? 'text-gold' : 'text-club'}`}
+                  >
+                    {row.delta >= 0 ? '+' : ''}
+                    {row.delta}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="font-body text-zinc-500 mt-2 text-sm">
+              No token moves yet — earn some at the Dance Floor or the daily
+              tasks.
+            </p>
+          )}
         </div>
         <CustomerPortalForm
           subscription={subscription}

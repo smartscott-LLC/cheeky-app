@@ -66,7 +66,7 @@ export default async function LandingPage() {
   const profile = user ? await getProfile(supabase, user.id) : null;
 
   return (
-    <div className="bg-black text-white">
+    <div id="top" className="bg-black text-white">
       {/* Floating Join for Free CTA */}
       <JoinCTA verified={Boolean(profile?.verified_at)} />
       {/* Hero */}
@@ -111,14 +111,20 @@ export default async function LandingPage() {
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
-              href="/verify"
+              href="/signin/signup"
               className="rounded-lg bg-gold px-12 py-4 text-lg font-body uppercase tracking-[0.12em] text-black transition hover:bg-club-cotton"
             >
               Join now
             </Link>
+            <Link
+              href="/verify"
+              className="rounded-lg border-2 border-gold px-10 py-4 text-lg font-body uppercase tracking-[0.12em] text-gold transition hover:bg-gold/10"
+            >
+              Quick start — meet Brutus
+            </Link>
             <a
               href="#membership"
-              className="rounded-lg border-2 border-gold px-10 py-4 text-lg font-body uppercase tracking-[0.12em]  text-club transition hover:bg-gold-700"
+              className="rounded-lg border-2 border-gold px-10 py-4 text-lg font-body uppercase tracking-[0.12em] text-club transition hover:bg-gold/10"
             >
               See the floors
             </a>
@@ -258,6 +264,16 @@ export default async function LandingPage() {
           verified={Boolean(profile?.verified_at)}
         />
       </section>
+
+      {/* Back to the top of the street */}
+      <div className="border-t border-zinc-900 py-10 text-center">
+        <a
+          href="#top"
+          className="font-header text-cyan text-base uppercase tracking-[0.2em] hover:text-gold"
+        >
+          ↑ Back to the top
+        </a>
+      </div>
     </div>
   );
 }

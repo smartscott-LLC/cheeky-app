@@ -248,7 +248,7 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
               <p className="font-body text-club text-2xl font-extrabold">
                 {t.icon} {t.value.toLocaleString()}
               </p>
-              <p className="font-body text-club mt-1 text-[10px] uppercase tracking-wider">
+              <p className="font-body text-club mt-1 text-xs uppercase tracking-wider">
                 {t.label}
               </p>
             </div>
@@ -287,14 +287,14 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
                       {ROOM_LABEL[m.room] ?? m.room}
                     </span>{' '}
                     <span
-                      className={`text-[10px] uppercase tracking-wider ${
+                      className={`text-xs uppercase tracking-wider ${
                         FLOOR_TONE[m.floor_tag] ?? 'text-zinc-400'
                       }`}
                     >
                       · {m.floor_tag}
                     </span>
                   </p>
-                  <p className="font-body text-club text-[10px]">
+                  <p className="font-body text-club text-xs">
                     {ago(m.created_at)}
                   </p>
                 </div>
@@ -306,7 +306,7 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
                     onClick={() =>
                       setBanDraft({ userId: m.sender_id, name: m.sender_name })
                     }
-                    className="font-body text-club text-[10px] uppercase tracking-wider transition hover:font-body text-club-cotton"
+                    className="font-body text-club text-xs uppercase tracking-wider transition text-club-cotton"
                   >
                     Ban from chat →
                   </button>
@@ -343,7 +343,7 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
                       {i.invitee_name ?? 'Member'}
                     </span>
                   </p>
-                  <p className="font-body text-club mt-0.5 text-[10px]">
+                  <p className="font-body text-club mt-0.5 text-xs">
                     {ago(i.created_at)}
                   </p>
                 </div>
@@ -373,13 +373,13 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
                   <p className="font-body text-club mt-0.5 text-xs">
                     {b.reason}
                   </p>
-                  <p className="font-body text-club mt-0.5 text-[10px]">
+                  <p className="font-body text-club mt-0.5 text-xs">
                     until {new Date(b.banned_until).toLocaleString()}
                   </p>
                   <button
                     onClick={() => pardon(b.id, b.user_name)}
                     disabled={busy}
-                    className="mt-1.5 font-body text-club text-[10px] uppercase tracking-wider transition hover:font-body text-club-cotton disabled:opacity-40"
+                    className="mt-1.5 font-body text-club text-xs uppercase tracking-wider transition text-club-cotton disabled:opacity-40"
                   >
                     Pardon →
                   </button>
@@ -459,7 +459,7 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
                     </button>
                   ))}
                 </div>
-                <p className="font-body text-club mt-1 text-[10px]">
+                <p className="font-body text-club mt-1 text-xs">
                   Founder default: 1d, then 3d for repeat offenders.
                 </p>
               </div>
@@ -484,7 +484,7 @@ export default function LoungeMonitor({ ownerKey }: { ownerKey: string }) {
               <button
                 onClick={submitBan}
                 disabled={!banReason.trim() || busy}
-                className="flex-1 rounded-lg bg-club px-3 py-2 text-sm font-bold text-white transition hover:opacity-80 disabled:opacity-40"
+                className="flex-1 rounded-lg border-2 border-club bg-black px-3 py-2 text-sm font-bold text-club transition hover:opacity-80 disabled:opacity-40"
               >
                 {busy
                   ? 'Banning…'

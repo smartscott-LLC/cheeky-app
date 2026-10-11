@@ -42,7 +42,7 @@ export default function VerificationPanel({
         </p>
         <Link
           href="/browse"
-          className="mt-6 inline-block rounded-lg bg-club px-8 py-3 text-lg font-bold text-white transition hover:bg-club-cotton"
+          className="mt-6 inline-block rounded-lg border-2 border-club bg-black px-8 py-3 text-lg font-bold text-club transition hover:bg-club hover:text-black"
         >
           Step onto the floor
         </Link>
@@ -68,7 +68,7 @@ export default function VerificationPanel({
             href="https://forms.smartscott.online/forms/cheeky"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-body text-club underline hover:font-body text-club-cotton"
+            className="font-body text-club underline text-club-cotton"
           >
             Reach the help desk through our contact form
           </a>{' '}
@@ -138,7 +138,7 @@ export default function VerificationPanel({
         </label>
         <button
           type="submit"
-          className="w-full rounded-lg bg-club px-6 py-3 text-lg font-bold text-white transition hover:bg-club-cotton"
+          className="w-full rounded-lg border-2 border-club bg-black px-6 py-3 text-lg font-bold text-club transition hover:bg-club hover:text-black"
         >
           Start the check
         </button>

@@ -227,7 +227,7 @@ export default async function CoatCheckPage() {
                   <p className="font-body font-body text-club mt-2 font-bold">
                     {g.name}
                   </p>
-                  <p className="font-body font-body text-club text-[12px] uppercase tracking-[0.25em]">
+                  <p className="font-body font-body text-club text-xs uppercase tracking-[0.25em]">
                     {g.rarity}
                   </p>
                   {owned ? (
@@ -272,7 +272,7 @@ export default async function CoatCheckPage() {
                   <p className="font-body font-body text-club mt-2 font-bold">
                     {b.name}
                   </p>
-                  <p className="font-body font-body text-club mt-1 text-[13px]">
+                  <p className="font-body font-body text-club mt-1 text-xs">
                     {owned
                       ? badgeDate(b.id)
                         ? `Earned ${new Date(badgeDate(b.id) as string).toLocaleDateString()}`
@@ -309,7 +309,7 @@ export default async function CoatCheckPage() {
             </div>
             <Link
               href="/gifts"
-              className="mt-4 inline-block text-base font-semibold font-body font-body text-club hover:font-body font-body text-club-cotton"
+              className="mt-4 inline-block text-base font-semibold font-body font-body text-club text-club-cotton"
             >
               → Visit the Gift Store
             </Link>
@@ -353,7 +353,7 @@ export default async function CoatCheckPage() {
             </div>
             <Link
               href="/events/speed"
-              className="mt-4 inline-block text-base font-semibold font-body font-body text-club hover:font-body font-body text-club-cotton"
+              className="mt-4 inline-block text-base font-semibold font-body font-body text-club text-club-cotton"
             >
               → Speed Dating
             </Link>
@@ -392,7 +392,7 @@ export default async function CoatCheckPage() {
                   <p className="font-body font-body text-club mt-2 text-base font-bold">
                     {c.name}
                   </p>
-                  <p className="font-body font-body text-club text-[13px]">
+                  <p className="font-body font-body text-club text-xs">
                     {c.role}
                   </p>
                   <p className="font-body font-body text-club mt-1 text-sm">

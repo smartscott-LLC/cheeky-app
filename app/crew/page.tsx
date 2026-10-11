@@ -88,7 +88,7 @@ export default async function CrewPage() {
 
                 <Link
                   href={`/chat/${c.slug}`}
-                  className="mt-auto inline-flex w-fit items-center gap-1 rounded-lg bg-club px-4 py-2 text-xs font-bold text-white transition hover:bg-club-cotton"
+                  className="mt-auto inline-flex w-fit items-center gap-1 rounded-lg border-2 border-club bg-black px-4 py-2 text-xs font-bold text-club transition hover:bg-club hover:text-black"
                 >
                   Say hi →
                 </Link>

@@ -118,7 +118,7 @@ export default function EventCard({
                 joined
                   ? 'bg-emerald-600 text-white'
                   : nextEvent.status === 'open'
-                    ? 'bg-club text-white hover:bg-club-cotton'
+                    ? 'border-2 border-club bg-black text-club hover:bg-club hover:text-black'
                     : 'bg-zinc-700 text-zinc-400 cursor-not-allowed'
               } disabled:cursor-not-allowed`}
             >

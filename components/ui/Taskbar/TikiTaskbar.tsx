@@ -257,21 +257,21 @@ export default function TikiTaskbar() {
                     : 'topleft';
                   savePrefs({ ...prefs, anchor: nextAnchor });
                 }}
-                className="rounded px-1 py-0.5 text-[10px] transition hover:text-cyan"
+                className="rounded px-1 py-0.5 text-xs transition hover:text-cyan"
                 title="Toggle top/bottom"
               >
                 ⇅
               </button>
               <button
                 onClick={() => savePrefs({ ...prefs, collapsed: true })}
-                className="rounded px-1 py-0.5 text-[10px] transition hover:text-cyan"
+                className="rounded px-1 py-0.5 text-xs transition hover:text-cyan"
                 title="Collapse the bar"
               >
                 ▾
               </button>
               <button
                 onClick={() => savePrefs({ ...prefs, hidden: true })}
-                className="rounded px-1 py-0.5 text-[10px] transition hover:font-body text-club"
+                className="rounded px-1 py-0.5 text-xs transition text-club"
                 title="Hide the Tiki Taskbar"
               >
                 ✕
@@ -291,7 +291,7 @@ export default function TikiTaskbar() {
                 <span className="font-header text-cyan text-sm leading-none">
                   {t.unlimited ? '∞' : formatCount(t.count)}
                 </span>
-                <span className="font-body text-club text-[9px] font-semibold leading-tight tracking-wide">
+                <span className="font-body text-club text-xs font-semibold leading-tight tracking-wide">
                   {t.label}
                 </span>
               </Link>

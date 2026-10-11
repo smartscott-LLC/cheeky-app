@@ -55,7 +55,9 @@ export default function CheckInForm({ error }: { error?: string | null }) {
         />
 
         <div className="grid gap-2">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email" className="font-header text-cyan text-base">
+            Email
+          </label>
           <input
             id="email"
             placeholder="name@example.com"
@@ -64,20 +66,27 @@ export default function CheckInForm({ error }: { error?: string | null }) {
             required
             autoCapitalize="none"
             autoComplete="email"
-            className="w-full rounded-md bg-zinc-800 p-3"
+            className="w-full rounded-md bg-zinc-800 text-club placeholder:text-club/50 border border-club/20 p-3"
           />
 
-          <label htmlFor="full_name">Your name</label>
+          <label
+            htmlFor="full_name"
+            className="font-header text-cyan text-base"
+          >
+            Your name
+          </label>
           <input
             id="full_name"
             placeholder="How the club will know you"
             type="text"
             name="full_name"
             autoComplete="name"
-            className="w-full rounded-md bg-zinc-800 p-3"
+            className="w-full rounded-md bg-zinc-800 text-club placeholder:text-club/50 border border-club/20 p-3"
           />
 
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password" className="font-header text-cyan text-base">
+            Password
+          </label>
           <input
             id="password"
             placeholder="Password"
@@ -85,16 +94,18 @@ export default function CheckInForm({ error }: { error?: string | null }) {
             name="password"
             required
             autoComplete="new-password"
-            className="w-full rounded-md bg-zinc-800 p-3"
+            className="w-full rounded-md bg-zinc-800 text-club placeholder:text-club/50 border border-club/20 p-3"
           />
 
-          <label htmlFor="gender">What are you?</label>
+          <label htmlFor="gender" className="font-header text-cyan text-base">
+            What are you?
+          </label>
           <select
             id="gender"
             name="gender"
             required
             defaultValue=""
-            className="w-full rounded-md bg-zinc-800 p-3"
+            className="w-full rounded-md bg-zinc-800 text-club placeholder:text-club/50 border border-club/20 p-3"
           >
             <option value="" disabled>
               Choose one
@@ -106,26 +117,34 @@ export default function CheckInForm({ error }: { error?: string | null }) {
             The club pairs real gentlemen and real ladies — no surprises.
           </p>
 
-          <label htmlFor="interestedIn">Dating preference</label>
+          <label
+            htmlFor="interestedIn"
+            className="font-header text-cyan text-base"
+          >
+            Dating preference
+          </label>
           <select
             id="interestedIn"
             name="interestedIn"
             defaultValue="everyone"
-            className="w-full rounded-md bg-zinc-800 p-3"
+            className="w-full rounded-md bg-zinc-800 text-club placeholder:text-club/50 border border-club/20 p-3"
           >
             <option value="everyone">Both</option>
             <option value="women">Ladies</option>
             <option value="men">Gentlemen</option>
           </select>
 
-          <label htmlFor="messageRetentionDays">
+          <label
+            htmlFor="messageRetentionDays"
+            className="font-header text-cyan text-base"
+          >
             How long should we keep your conversations?
           </label>
           <select
             id="messageRetentionDays"
             name="messageRetentionDays"
             defaultValue="90"
-            className="w-full rounded-md bg-zinc-800 p-3"
+            className="w-full rounded-md bg-zinc-800 text-club placeholder:text-club/50 border border-club/20 p-3"
           >
             <option value="7">7 days</option>
             <option value="14">14 days</option>
@@ -191,7 +210,7 @@ export default function CheckInForm({ error }: { error?: string | null }) {
 
         <button
           type="submit"
-          className="w-full rounded-lg bg-club px-6 py-3 text-lg font-bold text-white transition hover:bg-club-cotton"
+          className="w-full rounded-lg border-2 border-club bg-black px-6 py-3 text-lg font-bold text-club transition hover:bg-club hover:text-black"
         >
           Check in with Brutus
         </button>
