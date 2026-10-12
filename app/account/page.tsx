@@ -1,4 +1,3 @@
-import CustomerPortalForm from '@/components/ui/AccountForms/CustomerPortalForm';
 import { connection } from 'next/server';
 import EmailForm from '@/components/ui/AccountForms/EmailForm';
 import GuestPassForm from '@/components/ui/AccountForms/GuestPassForm';
@@ -9,20 +8,12 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { getReturnFloor } from '@/utils/return-floor';
 import { dateNow } from '@/utils/date-now';
-import {
-  getSubscription,
-  getUser,
-  getProfile,
-  getTokenBalance
-} from '@/utils/supabase/queries';
+import { getUser, getProfile, getTokenBalance } from '@/utils/supabase/queries';
 
 export default async function Account() {
   await connection();
   const supabase = await createClient();
-  const [user, subscription] = await Promise.all([
-    getUser(supabase),
-    getSubscription(supabase)
-  ]);
+  const user = await getUser(supabase);
 
   if (!user) {
     return redirect('/signin');
@@ -237,11 +228,6 @@ export default async function Account() {
             </p>
           )}
         </div>
-        <CustomerPortalForm
-          subscription={subscription}
-          tier={tier}
-          tierLabel={tierLabel}
-        />
         <div className="mb-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="font-header text-cyan text-xl">Your floor</h2>
           <p className="font-body font-body text-club mt-1">

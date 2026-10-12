@@ -1,14 +1,11 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import Button from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-
-// Stripe's checkout loads only when a pack/card is picked.
-const Checkout = dynamic(() => import('@/components/checkout'), {
-  ssr: false
-});
+import {
+  SQUARE_MEMBERSHIPS_URL,
+  SQUARE_TOKENS_URL
+} from '@/utils/square-links';
 
 interface StorePrice {
   id: string;
@@ -47,7 +44,6 @@ export default function StoreClient({
   tokenBalance
 }: Props) {
   const router = useRouter();
-  const [selectedPrice, setSelectedPrice] = useState<StorePrice | null>(null);
 
   const memberships = products.filter((p) => !TOKEN_RE.test(p.name));
   const tokenPacks = products
@@ -58,12 +54,14 @@ export default function StoreClient({
         .map((pr) => ({ productName: p.name, ...pr }))
     );
 
-  const pick = (price: StorePrice) => {
+  // Square's online store is the register — the club opens the right
+  // aisle; the webhook does the granting when the order lands.
+  const toStore = (url: string) => {
     if (!verified) {
       // The card IS verification — get through the door first.
       return router.push('/verify');
     }
-    setSelectedPrice(price);
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -121,7 +119,9 @@ export default function StoreClient({
                 <Button
                   variant="slim"
                   onClick={() =>
-                    isCurrent ? router.push('/account') : pick(price)
+                    isCurrent
+                      ? router.push('/account')
+                      : toStore(SQUARE_MEMBERSHIPS_URL)
                   }
                   className="mt-5 block w-full"
                 >
@@ -161,7 +161,7 @@ export default function StoreClient({
                 </p>
                 <Button
                   variant="slim"
-                  onClick={() => pick(pack)}
+                  onClick={() => toStore(SQUARE_TOKENS_URL)}
                   className="mt-5 block w-full"
                 >
                   Buy tokens
@@ -170,29 +170,6 @@ export default function StoreClient({
             ))}
           </div>
         </section>
-      )}
-
-      {selectedPrice && (
-        <div className="mx-auto max-w-2xl">
-          <div className="mb-4 flex items-center justify-between">
-            <p className="text-sm font-bold uppercase tracking-[0.3em] font-body text-club">
-              Checkout
-            </p>
-            <button
-              onClick={() => setSelectedPrice(null)}
-              className="text-sm text-cyan hover:text-white"
-            >
-              Cancel
-            </button>
-          </div>
-          <Checkout
-            priceId={selectedPrice.id}
-            onComplete={() => {
-              setSelectedPrice(null);
-              router.refresh();
-            }}
-          />
-        </div>
       )}
     </div>
   );

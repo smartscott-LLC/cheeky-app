@@ -1,19 +1,15 @@
 'use client';
 
 import Button from '@/components/ui/Button';
-import LogoCloud from '@/components/ui/LogoCloud';
 import type { Tables } from '@/types_db';
 import { User } from '@supabase/supabase-js';
 import cn from 'classnames';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import dynamic from 'next/dynamic';
+import { SQUARE_MEMBERSHIPS_URL } from '@/utils/square-links';
 
 // Stripe's embedded checkout loads only when a member actually picks a
 // price — 265 KiB of third-party JS stays off the landing page otherwise.
-const Checkout = dynamic(() => import('@/components/checkout'), {
-  ssr: false
-});
 
 type Subscription = Tables<'subscriptions'>;
 type Product = Tables<'products'>;
@@ -53,9 +49,8 @@ export default function Pricing({
   const router = useRouter();
   const [billingInterval, setBillingInterval] =
     useState<BillingInterval>('month');
-  const [selectedPrice, setSelectedPrice] = useState<Price | null>(null);
 
-  const handleSelect = (price: Price) => {
+  const handleSelect = () => {
     if (!user) {
       return router.push('/signin/signup');
     }
@@ -63,7 +58,8 @@ export default function Pricing({
       // The card IS verification — get through the door first.
       return router.push('/verify');
     }
-    setSelectedPrice(price);
+    // Square's online store is the register (owner-review 2026-10-11).
+    window.open(SQUARE_MEMBERSHIPS_URL, '_blank', 'noopener,noreferrer');
   };
 
   if (!products.length) {
@@ -72,19 +68,18 @@ export default function Pricing({
         <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
           <div className="sm:flex sm:flex-col sm:align-center"></div>
           <p className="font-body text-club text-4xl font-extrabold sm:text-center sm:text-6xl">
-            No subscription pricing plans found. Create them in your{' '}
+            The floors are on the house tonight — memberships open at the club's{' '}
             <a
               className="font-body text-club underline"
-              href="https://dashboard.stripe.com/products"
+              href={SQUARE_MEMBERSHIPS_URL}
               rel="noopener noreferrer"
               target="_blank"
             >
-              Stripe Dashboard
+              Square store
             </a>
             .
           </p>
         </div>
-        <LogoCloud />
       </section>
     );
   } else {
@@ -195,7 +190,7 @@ export default function Pricing({
                         onClick={() =>
                           subscription
                             ? router.push('/account')
-                            : handleSelect(price)
+                            : handleSelect()
                         }
                         className="block w-full py-2 mt-8 text-lg border-gold font-semibold font-body text-center text-gold rounded-md hover:bg-zinc-900"
                       >
@@ -266,30 +261,6 @@ export default function Pricing({
               Tokens power events and gifts only — never messaging.
             </p>
           </div>
-
-          {selectedPrice && (
-            <div className="mx-auto mt-12 max-w-2xl">
-              <div className="mb-4 flex items-center justify-between">
-                <p className="text-sm font-bold uppercase tracking-[0.3em] font-body text-club">
-                  Checkout
-                </p>
-                <button
-                  onClick={() => setSelectedPrice(null)}
-                  className="text-lg text-cyan hover:text-white"
-                >
-                  Cancel
-                </button>
-              </div>
-              <Checkout
-                priceId={selectedPrice.id}
-                onComplete={() => {
-                  setSelectedPrice(null);
-                  router.refresh();
-                }}
-              />
-            </div>
-          )}
-          <LogoCloud />
         </div>
       </section>
     );

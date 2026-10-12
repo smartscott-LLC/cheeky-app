@@ -99,7 +99,7 @@ void test(
       }
       for (let i = 0; i < userIds.length; i += 100) {
         const ids = userIds.slice(i, i + 100);
-        await admin.from('users').delete().in('id', ids); // Stripe-sync row — NO ACTION FK blocks deleteUser
+        await admin.from('users').delete().in('id', ids); // products-era customer row (Stripe legacy table) — NO ACTION FK blocks deleteUser
         await admin.from('token_ledger').delete().in('user_id', ids);
         await admin.from('event_entries').delete().in('user_id', ids);
         await admin.from('certificates').delete().in('user_id', ids);
