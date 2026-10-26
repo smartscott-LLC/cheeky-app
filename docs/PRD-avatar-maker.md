@@ -1,5 +1,14 @@
 # PRD — Avatar Maker Integration (mini_model_maker → Club Cheeky)
 
+> **STATUS 2026-10-26 (founder + agent joint decision): PHASE TWO — post-launch.**
+> The Halloween launch ships WITHOUT the maker/RPG layer (see CHANGELOG
+> "AVATAR LANE SEALED FOR LAUNCH"). Phased plan: Lane 1 2D stylized
+> character → Lane 2 outfit packs (token economy) → Lane 3 this maker + RPG
+> floor, funded by launch revenue. Everything this PRD builds against —
+> manifest, doors, card slot — stays warm in production; nothing retired.
+
+
+
 **Status:** DRAFT for founder approval · 2026-10-01
 **Engine:** `/home/server/C5/mini_model_maker` (standalone Next.js, club palette + fonts native)
 

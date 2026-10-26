@@ -211,6 +211,20 @@ scripts/audit-definers.mjs` after every upgrade — it diffs the live
 7. Founder TODO: enable **leaked-password protection** toggle (Supabase dashboard → Auth) — one click, last advisor warning.
 8. punk_girl re-rig (T-pose) — founder's Blender task.
 
+## THE AVATAR DECISION (2026-10-26 — locked, joint founder+agent)
+
+Launch = pure club: cards, floors, events, tokens, chat. The 3D maker + RPG
+expansion is PHASE TWO, funded by launch revenue, rolled lane by lane with
+each level proven/adopted before the next: Lane 1 = 2D stylized character
+from profile photo (fills the existing card slot + manifest.model — sockets
+already warm); Lane 2 = 2D outfit packs through the token economy; Lane 3 =
+the full maker (parked dark on Ivy, hostname unrouted, pod + image ready)
++ RPG floor. Rationale: real-people walkthrough census said avatar/RPG layer
+= "a lot to take in"; quality bar needs gear not affordable yet; four days
+to Halloween. NOTHING deleted — this is a seal, not an amputation. User-
+facing: only the HUD Info "create your model" link → passive "coming soon".
+Halloween night hook: costumes are REAL (members dress their profile photos).
+
 ## The "own copy" law (founder, 2026-10-07)
 
 Ivy holds a complete, self-contained source copy of the estate at `~/src/`
