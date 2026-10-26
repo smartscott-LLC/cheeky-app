@@ -211,6 +211,23 @@ scripts/audit-definers.mjs` after every upgrade — it diffs the live
 7. Founder TODO: enable **leaked-password protection** toggle (Supabase dashboard → Auth) — one click, last advisor warning.
 8. punk_girl re-rig (T-pose) — founder's Blender task.
 
+## LAUNCH STATE 2026-10-26 (Halloween = Monday)
+
+- **Backups live on Ivy:** `~/bin/cheeky-backup.sh` nightly 04:15 (cron) —
+  pg_dump 17 (client via PGDG repo; server is 17.11) → `~/backups/` 14-day
+  window; first dump 3.96 MB / 132 data-tables, `pg_restore --list` verified.
+  Secrets in `~/.config-cheeky-backup.env` (600). **R2 offsite leg currently
+  SKIPPED (soft-fail): `*.r2.cloudflarestorage.com` TLS is SNI-refused from
+  Ivy's ISP line (generic CF/S3-free HTTPS fine) — resolve post-launch or
+  wire B2 (founder-queued) as offsite instead.**
+- Maker hostname: pod stays up on Ivy as private workshop; `maker.smartscott.online`
+  is still routed in the tunnel but UNLINKED from the club — zero app surfaces
+  point there (bundle-verified). Founder may delete the public hostname
+  whenever; nothing depends on it.
+- Owner-review list: 33 closed / 6 open — open = 3 founder Blender items
+  (phase two), games-show-cards + lounge friends list (agent next batches),
+  matches-online (needs founder presence-source call).
+
 ## THE AVATAR DECISION (2026-10-26 — locked, joint founder+agent)
 
 Launch = pure club: cards, floors, events, tokens, chat. The 3D maker + RPG
