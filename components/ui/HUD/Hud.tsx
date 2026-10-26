@@ -723,12 +723,9 @@ function InfoTab({
     <div className="flex flex-col items-center gap-4 p-5">
       <BioCard person={person} />
       {!person.avatar && (
-        <Link
-          href="https://maker.smartscott.online"
-          className="w-full rounded-lg border-2 border-club bg-black py-2.5 text-center text-sm font-bold text-club transition hover:bg-club hover:text-black"
-        >
-          ✨ Create your model
-        </Link>
+        <p className="text-center text-sm font-body text-zinc-500">
+          ✨ Your character — coming soon
+        </p>
       )}
       {failed && !card && (
         <p className="font-body text-zinc-500 text-xs text-center">

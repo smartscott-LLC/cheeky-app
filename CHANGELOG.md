@@ -7,6 +7,10 @@ points — every push to `main` is production.
 
 ## [Unreleased]
 
+### Changed
+
+- **AVATAR LANE SEALED FOR LAUNCH (founder decision, 2026-10-26 — agreed jointly).** The 3D maker + RPG expansion moves to a post-launch, funded, phased roadmap: launch = club/cards/events/tokens/chat; Lane 1 = 2D stylized character (photo→render, card slot); Lane 2 = outfit packs via the token economy; Lane 3 = 3D maker + RPG floor. Rationale: real-world walkthroughs said the avatar/RPG layer made the app "a lot to take in"; four days to Halloween; the maker's quality bar needs real photos + equipment not yet affordable. **Nothing deleted** — the maker pod stays on Ivy (dark, unlinked), manifest avatar/model sections, save doors and the BioCard corner slot all stay wired so phase two drops into warm sockets. User-facing change: HUD Info tab's "Create your model" link became a passive "✨ Your character — coming soon"; audit confirmed zero other avatar promises in app copy.
+
 ### Added
 
 - **Owner-review batch 1 (2026-10-11) — 35 of 39 items closed.** The big one, root-caused: an **untracked `taskbar_state(p_user)` overload** on the hosted DB made every zero-arg RPC ambiguous (PGRST203), the /api/taskbar route's `?? 'silver'` fallback masked the failure, and **every member's HUD read "Silver" regardless of tier** (Diamond included). Migration `20261011000001` drops the drift, the route now 500s on RPC failure instead of lying, and the live fix landed server-side (no browser change needed). Also: `remotePatterns` added to `next.config.ts` (bucket-URL HUD icons were silently optimizer-blocked) + an emoji fed to `<Image src>` now renders as emoji; the HUD X actually closes (the dead `expanded` state it toggled is purged — nothing ever read it); dailies rows + event pills now link to their rooms; Wallet "History" has a real destination — `/account` gained a **Token history** section backed by new migration `20261011000002` (members could never read their own `token_ledger`); an **Info tab** renders your own full Bio Card via the manifest read door with a create-your-model link; duplicated msgs/swipes counts replaced by a live clock+date in the HUD strip.
