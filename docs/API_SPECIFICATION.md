@@ -1,6 +1,6 @@
 # Club Cheeky — API Specification Sheet
 
-> Full API reference for Club Cheeky: Next.js API routes, Supabase RPCs, Stripe webhooks, Stream Chat integration, and third-party service contracts.
+> Full API reference for Club Cheeky: Next.js API routes, Supabase RPCs, Square + Didit webhook doors, Stream Chat integration, and third-party service contracts. (Rev 2026-10-27: Stripe retired, Didit is the door, platform is Ivy.)
 
 ---
 
@@ -8,16 +8,16 @@
 
 ### 1.1 Auth Stack
 
-Club Cheeky uses a **two-gate system**: Supabase Auth handles account creation and session management, but **Stripe Identity is the actual door** — no one enters the club without a government ID check.
+Club Cheeky uses a **two-gate system**: Supabase Auth handles account creation and session management, but **Didit is the actual door** — no one enters the club without a government ID check.
 
-| Layer                 | Technology                                  | Mechanism                                                                          | What It Grants                                                                    |
-| --------------------- | ------------------------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| Account Creation      | **Supabase Auth**                           | Magic link (email OTP) + password signup/signin                                    | Creates a user row — **Guest** on the street                                      |
-| Session               | **Supabase SSR**                            | Cookie-based session via `@supabase/ssr` (refresh on every request via middleware) | Keeps you signed in                                                               |
-| Identity Verification | **Stripe Identity**                         | Government ID check via Stripe's hosted page                                       | **The actual door** — marks `profile.verified_at`, grants Silver card + 20 tokens |
-| Server Auth           | `supabase.auth.getUser()`                   | Reads session cookie, refreshes if expired                                         | Confirms the request is from a known user                                         |
-| Admin Auth            | `supabaseAdmin` (service role)              | `SUPABASE_SERVICE_ROLE_KEY` — server-only, bypasses RLS                            | Database admin operations                                                         |
-| Owner Auth            | `owner_accounts` table + legacy `ADMIN_KEY` | Server action checks `authorized()` helper                                         | Founder back door                                                                 |
+| Layer                 | Technology                                  | Mechanism                                                                          | What It Grants                                                                                          |
+| --------------------- | ------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Account Creation      | **Supabase Auth**                           | Magic link (email OTP) + password signup/signin                                    | Creates a user row — **Guest** on the street                                                            |
+| Session               | **Supabase SSR**                            | Cookie-based session via `@supabase/ssr` (refresh on every request via middleware) | Keeps you signed in                                                                                     |
+| Identity Verification | **Didit**                                   | Government ID check via Didit's hosted flow (`utils/didit.ts` session create)      | **The actual door** — authoritative webhook marks `profile.verified_at`, grants Silver card + 20 tokens |
+| Server Auth           | `supabase.auth.getUser()`                   | Reads session cookie, refreshes if expired                                         | Confirms the request is from a known user                                                               |
+| Admin Auth            | `supabaseAdmin` (service role)              | `SUPABASE_SERVICE_ROLE_KEY` — server-only, bypasses RLS                            | Database admin operations                                                                               |
+| Owner Auth            | `owner_accounts` table + legacy `ADMIN_KEY` | Server action checks `authorized()` helper                                         | Founder back door                                                                                       |
 
 ### 1.2 Auth Flow (Two Gates)
 
@@ -28,15 +28,20 @@ GATE 1 — Supabase Auth (account creation):
   → No events, no tokens, no chat, no club access
   → Only route available: /verify
 
-GATE 2 — Stripe Identity (the actual door):
-  User → /verify → Stripe Identity VerificationSession created
-  → User completes government ID check on Stripe's hosted page
-  → Stripe webhook: identity.verification_session.verified
-  → applyVerificationResult():
+GATE 2 — Didit (the actual door):
+  User → /verify → server-side Didit session create (workflow e53ce2d4… "Fast ID check",
+    vendor_data = club user_id, callback /verify?checked=1)
+  → User completes the government ID check on Didit's hosted flow
+  → Callback redirect is SIGNAGE ONLY; the authoritative verdict is the webhook:
+  → POST /api/webhooks/didit (canonicalised HMAC-SHA256 X-Signature-V2, 300s freshness,
+    event_id idempotency, case-sensitive status dispatch)
+  → applyDiditVerification():
       1. Sets profile.verified_at ← THIS is the door opening
-      2. Grants +20 tokens
-      3. Awards "verified" badge
-      4. Sends welcome email
+      2. Grants +20 tokens (idempotent)
+      3. Awards "verified" badge + moment + welcome email
+      4. profile_private: provider 'didit', birthday lifted from the signed payload
+      5. Manifest mirror (membership section)
+  → Declined: 3-strikes human escalation (never silently retried — checks cost money)
   → User is now a Silver member — club access granted
   → Redirected to /story (onboarding) then /club
 ```
@@ -80,29 +85,21 @@ GATE 2 — Stripe Identity (the actual door):
 
 ## 2. Next.js API Routes
 
-### 2.1 `POST /api/webhooks`
+### 2.1 Webhook doors — `POST /api/webhooks/square` · `POST /api/webhooks/didit`
 
-**Purpose**: Stripe webhook receiver — syncs products, prices, subscriptions, identity verification, and token purchases.
+**Square (the register)**: verifies `X-Hub-Signature` (URL+timestamp HMAC, constant-time,
+300s freshness) → dedupes via `webhook_events` → fetches the order with `SQUARE_ACCESS_TOKEN`
+→ buyer email → club account → grants per the `ITEM_LIBRARY.csv` contract (mirrored in
+`utils/square-webhook.ts`): time-boxed entitlements (memberships 30d, trials 7d pro-rated),
+token bundles, `store_purchases` ledger row for EVERY order (UNIQUE(order_id,sku) is the
+idempotency lock). Unknown buyers and gift sets are recorded + logged loudly, never dropped.
 
-**Auth**: Stripe signature verification (`stripe-signature` header + `STRIPE_WEBHOOK_SECRET`)
+**Didit (the door)**: canonicalise (shortenFloats→sortKeys) → HMAC-SHA256 X-Signature-V2 →
+freshness → constant-time compare → `event_id` idempotency → case-sensitive status dispatch
+into the `applyDiditVerification` chain (see Gate 2). The hosted callback URL is signage only.
 
-**Idempotency**: Postgres RPC `mark_webhook_processed` — atomic event dedup by `event.id`
-
-**Handled Events**:
-
-| Event                                                   | Action                                                                   |
-| ------------------------------------------------------- | ------------------------------------------------------------------------ |
-| `product.created` / `product.updated`                   | Upsert into `products` table                                             |
-| `product.deleted`                                       | Delete from `products` table                                             |
-| `price.created` / `price.updated`                       | Upsert into `prices` table                                               |
-| `price.deleted`                                         | Delete from `prices` table                                               |
-| `checkout.session.completed` (subscription)             | Sync subscription via `manageSubscriptionStatusChange`                   |
-| `checkout.session.completed` (payment)                  | Credit token ledger via `creditTokenPurchase`                            |
-| `customer.subscription.created/updated/deleted`         | Sync subscription status                                                 |
-| `identity.verification_session.verified`                | Mark profile verified, grant +20 tokens, award badge, send welcome email |
-| `identity.verification_session.requires_input/canceled` | Increment `verification_attempts`, escalate at 3 failures                |
-
-**Response**: `200 { received: true }` — all events acknowledged (unhandled events logged, not errored)
+**Legacy note**: `stripe-signature` / `manageSubscriptionStatusChange` / `creditTokenPurchase`
+/ the products-sync webhook are RETIRED (2026-10) and were deleted from the codebase.
 
 ### 2.2 `POST /api/agent`
 
@@ -317,6 +314,23 @@ GATE 2 — Stripe Identity (the actual door):
 
 ---
 
+### 2.10 `POST /api/avatar/save` — the maker save door
+
+Session-gated single write door for avatar JSON (v0 contract folded into manifest v1);
+validates against `utils/top-schema.ts`, writes the user manifest + updates `_master.json`.
+Maker-only write path; the club's coat check reads through `topGet`.
+
+### 2.11 `GET /api/avatar/{userId}` — the card read door
+
+Sub-address projections (`?fields=profile.displayName,membership.tier,…`) from the manifest,
+privacy gates enforced AT THE APEX (age/height/location behind show-flags), card-safe
+allowlist, edge-cached 60s + SWR, LIVE tier overlay (mirror is the view, `current_tier()`
+is the vote).
+
+### 2.12 `POST /api/bio-draft` — AI bio suggestions
+
+Direct REST to the Agnes hub (`MODEL_API_KEY`/`MODEL_BASE_URL`), session-gated, rate-limited.
+
 ## 3. Supabase Integration
 
 ### 3.1 Connection
@@ -338,56 +352,56 @@ GATE 2 — Stripe Identity (the actual door):
 
 ### 3.3 Key Tables
 
-| Table                   | Purpose                                      | RLS                                      |
-| ----------------------- | -------------------------------------------- | ---------------------------------------- |
-| `profiles`              | User display name, verification, preferences | User reads own, service role for updates |
-| `profile_private`       | Verification refs, attempts, birthday        | Service role only                        |
-| `customers`             | Supabase UUID ↔ Stripe customer ID mapping   | Service role only                        |
-| `products`              | Stripe product sync                          | Public read                              |
-| `prices`                | Stripe price sync                            | Public read                              |
-| `subscriptions`         | Active subscription state                    | User reads own                           |
-| `token_ledger`          | Token balance (delta per row)                | User reads own, service role inserts     |
-| `events`                | Scheduled event rooms                        | Public read                              |
-| `event_entries`         | Event participation                          | User reads own                           |
-| `matches`               | Mutual matches                               | User reads own                           |
-| `conversations`         | Active conversations                         | User reads own                           |
-| `club_chat_messages`    | Lounge chat mirror (24h window)              | Service role (Stream is source of truth) |
-| `club_chat_bans`        | Chat bans                                    | Service role only                        |
-| `club_announcements`    | Horn announcements                           | Public read                              |
-| `characters`            | AI crew character config                     | Public read                              |
-| `model_config`          | AI model selection                           | Service role only                        |
-| `swag_codes`            | Giveaway codes                               | Service role only                        |
-| `banned_accounts`       | Account bans (email-level)                   | Service role only                        |
-| `user_story_progress`   | Story mode progress                          | User reads/writes own                    |
-| `story_beat_completion` | Beat-by-beat record                          | User reads own, service role inserts     |
-| `announcements`         | Ticker announcements                         | Public read                              |
-| `gift_catalog`          | Available gifts                              | Public read                              |
-| `gem_catalog`           | Available gems                               | Public read                              |
-| `badge_catalog`         | Available badges                             | Public read                              |
+| Table                   | Purpose                                                                     | RLS                                      |
+| ----------------------- | --------------------------------------------------------------------------- | ---------------------------------------- |
+| `profiles`              | User display name, verification, preferences                                | User reads own, service role for updates |
+| `profile_private`       | Verification refs, attempts, birthday                                       | Service role only                        |
+| `customers`             | Supabase UUID ↔ payment-customer mapping (Stripe-era table)                 | Service role only                        |
+| `products`              | Catalog mirror for display (Square `ITEM_LIBRARY.csv` is the live contract) | Public read                              |
+| `prices`                | Price mirror for display (same note)                                        | Public read                              |
+| `subscriptions`         | Active subscription state                                                   | User reads own                           |
+| `token_ledger`          | Token balance (delta per row)                                               | User reads own, service role inserts     |
+| `events`                | Scheduled event rooms                                                       | Public read                              |
+| `event_entries`         | Event participation                                                         | User reads own                           |
+| `matches`               | Mutual matches                                                              | User reads own                           |
+| `conversations`         | Active conversations                                                        | User reads own                           |
+| `club_chat_messages`    | Lounge chat mirror (24h window)                                             | Service role (Stream is source of truth) |
+| `club_chat_bans`        | Chat bans                                                                   | Service role only                        |
+| `club_announcements`    | Horn announcements                                                          | Public read                              |
+| `characters`            | AI crew character config                                                    | Public read                              |
+| `model_config`          | AI model selection                                                          | Service role only                        |
+| `swag_codes`            | Giveaway codes                                                              | Service role only                        |
+| `banned_accounts`       | Account bans (email-level)                                                  | Service role only                        |
+| `user_story_progress`   | Story mode progress                                                         | User reads/writes own                    |
+| `story_beat_completion` | Beat-by-beat record                                                         | User reads own, service role inserts     |
+| `announcements`         | Ticker announcements                                                        | Public read                              |
+| `gift_catalog`          | Available gifts                                                             | Public read                              |
+| `gem_catalog`           | Available gems                                                              | Public read                              |
+| `badge_catalog`         | Available badges                                                            | Public read                              |
 
 ### 3.4 Key RPCs (Postgres Functions)
 
-| RPC                        | Purpose                                 | Auth          |
-| -------------------------- | --------------------------------------- | ------------- |
-| `current_tier`             | Returns user's effective floor tier     | Authenticated |
-| `taskbar_state`            | Returns daily usage counts              | Authenticated |
-| `club_chat_send`           | Post a message to a room                | Authenticated |
-| `club_chat_horn`           | Send a horn announcement (costs tokens) | Authenticated |
-| `club_chat_invite`         | Create a take-private invite            | Authenticated |
-| `club_chat_respond_invite` | Accept/decline an invite                | Authenticated |
-| `club_chat_whisper_get`    | Open/reuse a whisper channel            | Authenticated |
-| `club_chat_whisper_send`   | Send a whisper message                  | Authenticated |
-| `club_chat_heartbeat`      | Presence heartbeat                      | Authenticated |
-| `club_chat_ban`            | Ban a user from chat (owner only)       | Service role  |
-| `bump_rate_limit`          | Fixed-window rate limit counter         | Authenticated |
-| `mark_webhook_processed`   | Idempotency guard for Stripe webhooks   | Service role  |
-| `ensure_floor_events`      | Create upcoming events                  | Authenticated |
-| `finalize_events`          | Minute cron — finalize event rounds     | Service role  |
-| `award_badge`              | Grant a badge to a user                 | Service role  |
-| `record_common_moment`     | Record a milestone moment               | Service role  |
-| `generate_swag_code`       | Create a giveaway code                  | Service role  |
-| `flag_swag_request`        | Flag an owner-only item request         | Service role  |
-| `flag_honeypot_catch`      | Log a bot detection                     | Service role  |
+| RPC                        | Purpose                                                 | Auth          |
+| -------------------------- | ------------------------------------------------------- | ------------- |
+| `current_tier`             | Returns user's effective floor tier                     | Authenticated |
+| `taskbar_state`            | Returns daily usage counts                              | Authenticated |
+| `club_chat_send`           | Post a message to a room                                | Authenticated |
+| `club_chat_horn`           | Send a horn announcement (costs tokens)                 | Authenticated |
+| `club_chat_invite`         | Create a take-private invite                            | Authenticated |
+| `club_chat_respond_invite` | Accept/decline an invite                                | Authenticated |
+| `club_chat_whisper_get`    | Open/reuse a whisper channel                            | Authenticated |
+| `club_chat_whisper_send`   | Send a whisper message                                  | Authenticated |
+| `club_chat_heartbeat`      | Presence heartbeat                                      | Authenticated |
+| `club_chat_ban`            | Ban a user from chat (owner only)                       | Service role  |
+| `bump_rate_limit`          | Fixed-window rate limit counter                         | Authenticated |
+| `mark_webhook_processed`   | Idempotency guard for ALL webhooks (now Square + Didit) | Service role  |
+| `ensure_floor_events`      | Create upcoming events                                  | Authenticated |
+| `finalize_events`          | Minute cron — finalize event rounds                     | Service role  |
+| `award_badge`              | Grant a badge to a user                                 | Service role  |
+| `record_common_moment`     | Record a milestone moment                               | Service role  |
+| `generate_swag_code`       | Create a giveaway code                                  | Service role  |
+| `flag_swag_request`        | Flag an owner-only item request                         | Service role  |
+| `flag_honeypot_catch`      | Log a bot detection                                     | Service role  |
 
 ### 3.5 RLS Standards
 
@@ -399,69 +413,28 @@ GATE 2 — Stripe Identity (the actual door):
 
 ---
 
-## 4. Stripe Integration
+## 4. Square & Didit Integration
 
-### 4.1 Connection
+### 4.1 Square (the register)
 
-| Variable                             | Purpose                        |
-| ------------------------------------ | ------------------------------ |
-| `STRIPE_SECRET_KEY`                  | Server-side Stripe SDK key     |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Client-side Stripe key         |
-| `STRIPE_WEBHOOK_SECRET`              | Webhook signature verification |
+| Piece         | Contract                                                                                                                                                   |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Storefront    | `smartscott.square.site` — `/memberships`, `/token-packages` (+ avatar-upgrades, gift-sets for phase two). Club CTAs open these (`utils/square-links.ts`). |
+| Item contract | `ITEM_LIBRARY.csv` (11 SKUs) mirrored in `utils/square-webhook.ts`; SKU is the join key, price truth lives Square-side                                     |
+| Webhook       | `POST /api/webhooks/square` — see 2.1; destination registered in Square console; `SQUARE_WEBHOOK_URL` must match what is signed                            |
+| Money rules   | NO recurring billing — memberships are time-boxed entitlement grants; renewal reminders are queued phase-two work                                          |
 
-### 4.2 Products & Prices
+### 4.2 Didit (the door)
 
-- **Source of truth**: Stripe Dashboard
-- **Sync**: Webhook events `product.created/updated/deleted` + `price.created/updated/deleted`
-- **Local bootstrap**: `pnpm stripe:fixtures` loads from `fixtures/` directory
-- **Schema**: `products` (id, name, description, image, metadata) + `prices` (id, product_id, unit_amount, currency, interval, interval_count, trial_period_days)
+Session create via REST (`DIDIT_API_KEY`, `DIDIT_WORKFLOW_ID` env-overridable);
+`vendor_data` carries the club user id as the join key; verdict arrives ONLY through
+`POST /api/webhooks/didit`. Per-run cost — never test-spam; one live check, founder-capped.
 
-### 4.3 Subscription Flow
+### 4.3 Stripe (retired 2026-10)
 
-```
-User clicks "Join" → Server creates Stripe Checkout Session
-  → User completes on Stripe hosted page
-  → Webhook: checkout.session.completed
-  → manageSubscriptionStatusChange() syncs to subscriptions table
-  → Membership token grant applied (Gold: 100, Platinum: 200, Diamond: 500)
-```
-
-### 4.4 Identity Verification Flow
-
-```
-User clicks "Verify" → Server creates Stripe Identity VerificationSession
-  → User completes ID check on Stripe hosted page
-  → Webhook: identity.verification_session.verified
-  → applyVerificationResult():
-      1. Mark profile.verified_at
-      2. Grant +20 tokens (idempotent)
-      3. Award "verified" badge
-      4. Record verification moment
-      5. Send welcome email (best-effort)
-      6. Store DOB from verification report
-```
-
-### 4.5 Token Purchase Flow
-
-```
-User buys token pack → Stripe Checkout (mode: payment)
-  → Webhook: checkout.session.completed
-  → creditTokenPurchase() inserts token_ledger rows
-```
-
-### 4.6 Membership Token Grants
-
-| Product             | Tokens/Cycle | Reason                |
-| ------------------- | ------------ | --------------------- |
-| Gold Membership     | 100          | `membership_gold`     |
-| Platinum Membership | 200          | `membership_platinum` |
-| Diamond Membership  | 500          | `membership_diamond`  |
-
-### 4.7 Webhook Idempotency
-
-- **Primary guard**: `mark_webhook_processed` RPC — atomic insert into `webhook_events` table
-- **Secondary guard**: Per-reason checks (e.g., `token_ledger` already has `verification_bonus` entry)
-- **Fail closed**: If idempotency store is unreachable, webhook returns 500 (never double-grant)
+The entire Stripe layer (checkout, webhook, Identity, portal, SDK deps, env vars) was
+deleted estate-wide — see CHANGELOG. Historical `products`/`prices`/`subscriptions`
+tables remain readable for display; no Stripe runtime paths exist.
 
 ---
 
@@ -647,25 +620,12 @@ Characters are stored in the `characters` table with:
 
 ---
 
-## 11. Sentry Integration
+## 11. Monitoring & dead integrations
 
-| Variable                 | Purpose                          |
-| ------------------------ | -------------------------------- |
-| `NEXT_PUBLIC_SENTRY_DSN` | Client-side DSN                  |
-| `SENTRY_AUTH_TOKEN`      | Server-side auth for source maps |
-| `SENTRY_ORG`             | Organization slug                |
-| `SENTRY_PROJECT`         | Project slug                     |
-| `SENTRY_OTLP_TRACES_URL` | OpenTelemetry traces endpoint    |
-
----
-
-## 12. MongoDB Integration
-
-**Purpose**: User-owned content storage — photos, collectibles, and similar user data.
-
-**Status**: Configured and available. MongoDB handles storage that doesn't fit the relational Supabase schema (user photos, collectible metadata, etc.).
-
-**Connection**: Via environment variables (not exposed in client bundle).
+**Monitoring is Ivy-side**: netdata (DaemonSet, LAN :19999 — the OBS wall), Portainer,
+`/owner` in-app booth. **Sentry and MongoDB are NOT wired** — no SDK, no code path;
+the `mongodb` npm dep still sits in chub's package.json (store rule: delete when chub's
+next code pass runs — noted in LAUNCH-STATUS).
 
 ---
 
@@ -712,44 +672,10 @@ Characters are stored in the `characters` table with:
 
 ## 14. Environment Variables Reference
 
-### 14.1 Required
-
-| Variable                             | Source   | Used By            |
-| ------------------------------------ | -------- | ------------------ |
-| `NEXT_PUBLIC_SUPABASE_URL`           | Supabase | All clients        |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY`      | Supabase | Client-side        |
-| `SUPABASE_SERVICE_ROLE_KEY`          | Supabase | Server admin       |
-| `STRIPE_SECRET_KEY`                  | Stripe   | Server             |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe   | Client             |
-| `STRIPE_WEBHOOK_SECRET`              | Stripe   | Webhook handler    |
-| `STREAM_API_KEY`                     | Stream   | Server             |
-| `STREAM_API_SECRET`                  | Stream   | Server             |
-| `NEXT_PUBLIC_STREAM_API_KEY`         | Stream   | Client             |
-| `DEEPSEEK_API_KEY`                   | AgnesAI  | AI agent           |
-| `DEEPSEEK_URL`                       | Config   | AI agent base URL  |
-| `DEEPSEEK_MODEL`                     | Config   | AI model name      |
-| `RESEND_API_KEY`                     | Resend   | Email              |
-| `REGISTERED_DOMAIN`                  | Config   | Email from address |
-| `NEXT_PUBLIC_SITE_URL`               | Config   | Redirect URLs      |
-
-### 14.2 Optional
-
-| Variable                 | Purpose                          |
-| ------------------------ | -------------------------------- |
-| `NEXT_PUBLIC_SENTRY_DSN` | Error tracking                   |
-| `SENTRY_AUTH_TOKEN`      | Source map upload                |
-| `SENTRY_ORG`             | Sentry org                       |
-| `SENTRY_PROJECT`         | Sentry project                   |
-| `OPENROUTER_API_KEY`     | AI fallback provider             |
-| `ADMIN_KEY`              | Legacy owner auth                |
-| `AI_MODEL`               | Vercel AI Gateway model override |
-
-### 14.3 Security Rules
-
-- **Never commit secrets** — all vars set in Vercel dashboard or `.env.new` (gitignored)
-- **Only `NEXT_PUBLIC_*`** keys may appear in tracked files or CI
-- **`.env.new`** is the master vault — `scripts/sync-env.mjs` copies to `.env.local`
-- **Two apps, two env files** — cheeky-app + In-gameChatUI each have their own `.env.local`
+Single source of truth: **[`docs/ENVIRONMENT.md`](ENVIRONMENT.md)** — every variable,
+its purpose, public/secret status, and where values live (`.env.new` vault → Ivy
+`~/club.env` → k8s Secrets, `NEXT_PUBLIC_*` baked at image build). This section is a
+pointer by doctrine: one system, one way — no duplicate lists to drift.
 
 ---
 
