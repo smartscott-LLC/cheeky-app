@@ -30,25 +30,26 @@ manifest doors + card slots stay warm.
 1. **Docs sweep** — this file + README + AGENTS ✓; remaining: final pass of
    `docs/*` (API_SPECIFICATION, ENVIRONMENT, Routing_and_configuration) for
    post-Stripe/post-Vercel truth.
-2. **Test-suite upgrade** — retire stale suites (Stripe-catalog assumptions
+   1b. **Dead-code sweep** ✓ done 2026-10-27 (beacons, stripe scripts, ghost map lines, mongodb dep).
+   — retire stale suites (Stripe-catalog assumptions
    in unit.test; suites pointing at dead doors), add flow tests: sign-in
    gate matrix (public curl assertions), Square grant chain fixtures,
    Didit webhook vectors, HUD read-door shape, forms engine health,
    build-flow smoke (image → pod → 200). Founder defines the pass-mark;
    no test ships that asserts nothing.
-3. **Full-flag lint, zero-sweep rule** — club: clean today (0/0 with all
+2. **Full-flag lint, zero-sweep rule** — club: clean today (0/0 with all
    four flags). chub: ~N react warnings under `--type-aware --nextjs-plugin
 --react-plugin --import-plugin` (refs-during-render, setState-in-effect)
    — FIX, don't ignore. maker: biome errors (ui-kit debt) — fix via
    `biome check --write` review pass. Any surviving warning must have a
    named reason in this file — founder spot-checks.
-4. **Prettier estate-wide** — club + chub + maker after lint zero (forms
+3. **Prettier estate-wide** — club + chub + maker after lint zero (forms
    engine files are founder-locked byte-identical: exempt with reason).
-5. **Fire drills** — real $4.98 Square order + membership grant; one live
+4. **Fire drills** — real $4.98 Square order + membership grant; one live
    Didit check; email matrix inbox-vs-spam; :00 Dance Floor tick with the
    test pair; rollback drill (bad image → previous digest); token-engine
    burst on the cluster.
-6. **Founder confirmation pass** — desktop-app walk (his eyes) → then the
+5. **Founder confirmation pass** — desktop-app walk (his eyes) → then the
    "next phase" he'll elaborate on.
 
 ## 🧭 PARKED / PHASE TWO ROADMAP (post-launch, funded by proof)
