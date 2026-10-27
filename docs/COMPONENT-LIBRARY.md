@@ -23,15 +23,15 @@ the database directly.
 
 ### Primitives (presentational)
 
-| Component         | What it is                                                             |
-| ----------------- | ---------------------------------------------------------------------- |
-| `ui/Button/`      | The button (variants incl. `slim`; loading state)                      |
-| `ui/Card/`        | Card surface                                                           |
-| `ui/Input/`       | Text inputs                                                            |
-| `ui/Toasts/`      | Radix-powered toaster (`Toaster` mounted in the root layout)           |
-| `ui/LoadingDots/` | Stream/loading indicator                                               |
-| `ui/LogoCloud/`   | The "Powered by" trust row (Next.js, Stripe, Supabase)                 |
-| `ui/Footer/`      | Site footer — club links, legal pages, contact desks, 🦁 The Lions Den |
+| Component         | What it is                                                   |
+| ----------------- | ------------------------------------------------------------ |
+| `ui/Button/`      | The button (variants incl. `slim`; loading state)            |
+| `ui/Card/`        | Card surface                                                 |
+| `ui/Input/`       | Text inputs                                                  |
+| `ui/Toasts/`      | Radix-powered toaster (`Toaster` mounted in the root layout) |
+| `ui/LoadingDots/` | Stream/loading indicator                                     |
+
+| `ui/Footer/` | Site footer — club links, legal pages, contact desks, 🦁 The Lions Den |
 
 ### Shell & navigation
 
@@ -64,13 +64,13 @@ the database directly.
 
 ### Cast & commerce
 
-| Component     | What it is                                                                 |
-| ------------- | -------------------------------------------------------------------------- |
-| `ui/Agent/`   | `CastChat` (full-page character chat), `Concierge` (Chaz's floating panel) |
-| `ui/Store/`   | The Exchange — membership cards + token packs (embedded Stripe checkout)   |
-| `ui/Gifts/`   | `GiftShop` — buy/send gifts with tokens, featured + gesture tiers          |
-| `ui/Swag/`    | The Swag Shop — redeem `SWAG-…` codes                                      |
-| `ui/Pricing/` | The membership pricing surface (messaging-never-for-sale card)             |
+| Component     | What it is                                                                                               |
+| ------------- | -------------------------------------------------------------------------------------------------------- |
+| `ui/Agent/`   | `CastChat` (full-page character chat), `Concierge` (Chaz's floating panel)                               |
+| `ui/Store/`   | The Exchange — membership cards + token packs; CTAs open the Square storefront (`utils/square-links.ts`) |
+| `ui/Gifts/`   | `GiftShop` — buy/send gifts with tokens, featured + gesture tiers                                        |
+| `ui/Swag/`    | The Swag Shop — redeem `SWAG-…` codes                                                                    |
+| `ui/Pricing/` | The membership pricing surface (messaging-never-for-sale card)                                           |
 
 ## Adding a component
 

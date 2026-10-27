@@ -59,7 +59,7 @@ arrives.)
 
 ## Needs from founder to build without guessing
 
-1. ~~`DIDIT_WEBHOOK_SECRET`~~ ✓ in `.env.new` + Vercel
+1. ~~`DIDIT_WEBHOOK_SECRET`~~ ✓ in `.env.new` (+ Ivy secret since 2026-10-07 cutover)
 2. Didit flow's **success redirect URL** — set it to
    `https://smartscott.square.site/collections/memberships` (verify → store,
    no app round-trip needed) or tell me the intended landing. **Still needed:**
@@ -72,7 +72,7 @@ arrives.)
 
 ## STATUS 2026-10-05: Didit wired end-to-end (`a572178`)
 Gate function ✓ · `/verify` → Didit session create ✓ · `/api/webhooks/didit`
-signature+idempotency+grant chain ✓ · secrets in Vercel ✓ · workflow-id
+signature+idempotency+grant chain ✓ · secrets in Ivy env ✓ · workflow-id
 landmine caught (real id `75dba526`, not the prompt's placeholder).
 Remaining: CF webhook WAF exception (founder), then ONE live verification to
 confirm the loop (founder triggers — per-verification cost, not a test-spam).

@@ -60,7 +60,7 @@ A dating app built like a nightclub. Three pillars:
   - The storefront is opened from the club (pricing cards + Exchange); the club never embeds a card form.
   - Didit is the door's KYC: session create server-side, authoritative webhook `/api/webhooks/didit` (canonicalised HMAC-V2, idempotent) runs the verification grant chain. Never test-spam — verifications cost money.
 - **Tokens:** integer microcurrency, atomic server-side ledger, RLS-protected; refunds for no-match events; never computed from client state.
-- **Testing:** `node:test` suite in `tests/` (zero deps). `pnpm test` runs the safe tests in CI; live suites (`webhook`, `token-engine`, `ai-probe`, `events`, `l3`, `matchmaker`, `taskbar`) run behind `RUN_LIVE_TESTS=1` and hit production with throwaway members that clean up after themselves (`scripts/purge-mmtest.mjs` is the interrupted-run safety net). The token-engine burst (`STRESS_N=1000`) is the pre-launch check for anything touching events/tokens. See `tests/README.md`.
+- **Testing:** `node:test` suite in `tests/` (zero deps). `pnpm test` runs the safe tests in CI; live suites (`token-engine`, `ai-probe`, `events`, `l3`, `matchmaker`, `taskbar`, `club-chat`) run behind `RUN_LIVE_TESTS=1` and hit production with throwaway members that clean up after themselves (`scripts/purge-mmtest.mjs` is the interrupted-run safety net). The token-engine burst (`STRESS_N=1000`) is the pre-launch check for anything touching events/tokens. See `tests/README.md`.
 - **Money display:** format with `Intl.NumberFormat` (already the pattern in `Pricing.tsx`); store amounts as integers (cents).
 
 ## Repo map
@@ -78,7 +78,8 @@ scripts/        dev utilities (migrate-hosted, backfill-*, check-*, smoke-*, pur
 styles/         global css (main.css) + floor palettes (styles/palettes/*.scss)
 docs/           PRD-foundation.md + PRDs + GAME-ENGINES.md (the two game engines
                 + Playability Check) + Governance/ policies + COMPONENT-LIBRARY.md +
-                ENVIRONMENT.md + floor-map.md + event-diagrams/ + first-floor-flow.mmd
+                ENVIRONMENT.md + ARCHITECTURE.md + IVY-BUILD-FLOW.md + LAUNCH-STATUS.md
+                + floor-map.md + event-diagrams/ + first-floor-flow.mmd
                 + future feature PRDs (historical audits/setup reports live in
                 docs/archives/)
 fixtures/       Stripe fixture JSON for bootstrapping products/prices
@@ -86,7 +87,6 @@ tests/          node:test suite — safe (pnpm test) + live (RUN_LIVE_TESTS=1)
 public/         served assets: brand/, personas/, audio/, icons/, .well-known/
 types_db.ts     generated Supabase types — commit after regenerating
 CHANGELOG.md    milestone changelog — keep [Unreleased] current
-CONTRIBUTING.md the discipline doc: standing rule, migrations, testing, secrets
 ```
 
 ## Validation checklist (before any PR)

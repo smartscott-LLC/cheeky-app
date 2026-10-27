@@ -12,18 +12,18 @@ manifest doors + card slots stay warm.
 
 ## ✅ VERIFIED / DONE
 
-| Area | State |
-| --- | --- |
-| Platform | Full estate on **Ivy k3s** (club · lounge · maker [dark] · forms+pgvector · netdata · portainer). Cloudflare tunnel `ivy_k8s`, HTTP→`localhost:80`, Traefik v3.7 routing from `platform/` manifests. Zero Vercel in the serving path; Vercel paused as rollback ghost. |
-| Build/deploy flow | Laptop edits → `localhost:3000` verify → `ivy-mirror` → **`ivy-build` compiles on Ivy from Ivy's own ~/src** (source + git + secrets mirrored; laptop ships no binaries). Proven on club, lounge, forms, maker. |
-| Money rail | Square webhook (signature/dedupe/order→grant→ledger→manifest) + `ITEM_LIBRARY.csv` contract, storefront links live (`smartscott.square.site/memberships`, `/token-packages`). Stripe layer FULLY excised (code, deps, env, secrets — verified zero). ⚠️ one real order not yet run (phase 2 fire-drill). |
-| The door | Didit KYC wired (session create + verified webhook grant chain + callback signage). ⚠️ one live verification pending (founder-capped). |
-| Forms | Engine byte-identical on Ivy, data migrated, both hostnames public, honey pot on. **Founder-verified E2E 2026-10-27: submit → confirmation + notify emails both arrived.** |
-| Auth/cookies | `NEXT_PUBLIC_COOKIE_DOMAIN=.smartscott.online` baked club+maker; Supabase auth config untethered (site URL + allowlist on real domains; no *.vercel.app). Login→maker bridge: founder walkthrough pending. |
-| Data protection | Nightly `pg_dump` 17.11 on Ivy (cron 04:15), 14-day window, restore-list verified (132 data tables). RLS on every table; owner-review fixes (ledger self-read policy, taskbar overload drift dropped). |
-| HUD/lobby | X closes, icons render (remotePatterns), Info tab (own Bio Card), dailies link to rooms, wallet→Exchange/ledger, live clock+date, tier reads truth (Silver-mask bug root-caused + migrated). |
-| Client doctrine | Font floors in `@theme` (Rancho≥14/Damion≥16), outline-pink button prescription estate-wide (41 files), phantom color tokens defined, fine-print strip on every floor (Terms/Privacy/Refunds/House Rules/Contact). |
-| Docs | README · AGENTS · ARCHITECTURE · IVY-BUILD-FLOW · PRDs (avatar = phase 2) current as of 2026-10-27. |
+| Area              | State                                                                                                                                                                                                                                                                                                    |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Platform          | Full estate on **Ivy k3s** (club · lounge · maker [dark] · forms+pgvector · netdata · portainer). Cloudflare tunnel `ivy_k8s`, HTTP→`localhost:80`, Traefik v3.7 routing from `platform/` manifests. Zero Vercel in the serving path; Vercel paused as rollback ghost.                                   |
+| Build/deploy flow | Laptop edits → `localhost:3000` verify → `ivy-mirror` → **`ivy-build` compiles on Ivy from Ivy's own ~/src** (source + git + secrets mirrored; laptop ships no binaries). Proven on club, lounge, forms, maker.                                                                                          |
+| Money rail        | Square webhook (signature/dedupe/order→grant→ledger→manifest) + `ITEM_LIBRARY.csv` contract, storefront links live (`smartscott.square.site/memberships`, `/token-packages`). Stripe layer FULLY excised (code, deps, env, secrets — verified zero). ⚠️ one real order not yet run (phase 2 fire-drill). |
+| The door          | Didit KYC wired (session create + verified webhook grant chain + callback signage). ⚠️ one live verification pending (founder-capped).                                                                                                                                                                   |
+| Forms             | Engine byte-identical on Ivy, data migrated, both hostnames public, honey pot on. **Founder-verified E2E 2026-10-27: submit → confirmation + notify emails both arrived.**                                                                                                                               |
+| Auth/cookies      | `NEXT_PUBLIC_COOKIE_DOMAIN=.smartscott.online` baked club+maker; Supabase auth config untethered (site URL + allowlist on real domains; no *.vercel.app). Login→maker bridge: founder walkthrough pending.                                                                                               |
+| Data protection   | Nightly `pg_dump` 17.11 on Ivy (cron 04:15), 14-day window, restore-list verified (132 data tables). RLS on every table; owner-review fixes (ledger self-read policy, taskbar overload drift dropped).                                                                                                   |
+| HUD/lobby         | X closes, icons render (remotePatterns), Info tab (own Bio Card), dailies link to rooms, wallet→Exchange/ledger, live clock+date, tier reads truth (Silver-mask bug root-caused + migrated).                                                                                                             |
+| Client doctrine   | Font floors in `@theme` (Rancho≥14/Damion≥16), outline-pink button prescription estate-wide (41 files), phantom color tokens defined, fine-print strip on every floor (Terms/Privacy/Refunds/House Rules/Contact).                                                                                       |
+| Docs              | README · AGENTS · ARCHITECTURE · IVY-BUILD-FLOW · PRDs (avatar = phase 2) current as of 2026-10-27.                                                                                                                                                                                                      |
 
 ## 🚧 PHASE 2 — LAUNCH-READINESS PROGRAM (in order)
 
@@ -38,7 +38,7 @@ manifest doors + card slots stay warm.
    no test ships that asserts nothing.
 3. **Full-flag lint, zero-sweep rule** — club: clean today (0/0 with all
    four flags). chub: ~N react warnings under `--type-aware --nextjs-plugin
-   --react-plugin --import-plugin` (refs-during-render, setState-in-effect)
+--react-plugin --import-plugin` (refs-during-render, setState-in-effect)
    — FIX, don't ignore. maker: biome errors (ui-kit debt) — fix via
    `biome check --write` review pass. Any surviving warning must have a
    named reason in this file — founder spot-checks.
