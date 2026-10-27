@@ -154,7 +154,7 @@ export default async function Account() {
             Account
           </h1>
           <p className="font-body font-body text-club max-w-2xl m-auto mt-5 text-xl sm:text-center sm:text-2xl">
-            We partnered with Stripe for a simplified billing.
+            Cards, floors, and token packs check out through our Square store — one-time, time-boxed, no auto-renewals, ever.
           </p>
         </div>
       </div>

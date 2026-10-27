@@ -32,16 +32,16 @@ const SECTIONS = [
     num: '4',
     title: 'Purchases & memberships',
     items: [
-      'Token pack purchases and membership payments follow Stripe\u2019s refund process — the payment processor owns the money side, and disputes are final through them.',
+      'Token packs and memberships sell through our Square store; refunds follow Square\u2019s process — the payment processor owns the money side, and disputes are final through them.',
       'Memberships can be canceled anytime, in one click, from your Account page. No phone calls, no retention scripts.',
-      'We step into a money dispute only when it escalates beyond the processor (fraud rings, account-level issues) — otherwise Stripe handles it end to end.'
+      'We step into a money dispute only when it escalates beyond the processor (fraud rings, account-level issues) — otherwise Square handles it end to end.'
     ]
   },
   {
     num: '5',
     title: 'Where to go with a problem',
     items: [
-      'Billing or charge questions → the helpdesk, or directly with Stripe through your receipt.',
+      'Billing or charge questions → the helpdesk, or directly with Square through your receipt.',
       'Anything else → the club desk. A human reads it.',
       'Refund requests are handled in the order they arrive; automatic refunds (no-match, canceled events) never need a request at all.'
     ]

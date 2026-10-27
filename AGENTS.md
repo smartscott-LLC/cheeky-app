@@ -82,7 +82,6 @@ docs/           PRD-foundation.md + PRDs + GAME-ENGINES.md (the two game engines
                 + floor-map.md + event-diagrams/ + first-floor-flow.mmd
                 + future feature PRDs (historical audits/setup reports live in
                 docs/archives/)
-fixtures/       Stripe fixture JSON for bootstrapping products/prices
 tests/          node:test suite — safe (pnpm test) + live (RUN_LIVE_TESTS=1)
 public/         served assets: brand/, personas/, audio/, icons/, .well-known/
 types_db.ts     generated Supabase types — commit after regenerating

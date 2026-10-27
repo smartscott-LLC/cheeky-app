@@ -8,8 +8,6 @@ import { Toaster } from '@/components/ui/Toasts/toaster';
 import ClubAudio from '@/components/ui/Audio/ClubAudio';
 import ServiceWorkerRegister from '@/components/ui/PWA/ServiceWorkerRegister';
 import InstallPrompt from '@/components/ui/PWA/InstallPrompt';
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Analytics } from '@vercel/analytics/next';
 import { getURL } from '@/utils/helpers';
 import { ASSETS } from '@/utils/assets';
 import '../styles/globals.css';
@@ -82,8 +80,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         <Suspense>
           <ClubAudio />
         </Suspense>
-        <SpeedInsights />
-        <Analytics />
       </body>
     </html>
   );

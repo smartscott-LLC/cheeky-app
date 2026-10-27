@@ -6,7 +6,7 @@ const SECTIONS = [
     items: [
       'Account basics: email, password (via Supabase Auth), birthday — used only to confirm 18+, never shown publicly.',
       'Profile: photos, name, bio, preferences. Visible to other members by design — it\u2019s a club, not a vault.',
-      'Verification result: result + timestamp + provider reference only. The ID documents, selfies, and ID numbers are processed by our verification provider (Stripe Identity) and are never stored by us.',
+      'Verification result: result + timestamp + provider reference only. The ID documents, selfies, and ID numbers are processed by our verification provider (Didit) and are never stored by us.',
       'Messages: stored to deliver and to keep the floor safe.',
       'Token ledger: every earn, spend, and refund. This is financial data.',
       'Usage basics: how you use the app, to keep it working and secure.'

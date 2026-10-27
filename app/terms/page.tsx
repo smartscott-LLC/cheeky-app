@@ -15,7 +15,7 @@ const SECTIONS = [
     title: 'Membership',
     items: [
       'Silver card is free: verified members get the card, the VIP badge, 20 tokens, and event access.',
-      'Gold, Platinum, and Diamond are paid floors billed monthly through Stripe. Subscriptions auto-renew until canceled.',
+      'Gold, Platinum, and Diamond are paid floors sold as time-boxed passes (30 days) through our Square store. They are NOT subscriptions and never auto-renew or auto-charge — you get a reminder before your floor lapses, and you choose to return.',
       'You can cancel anytime, in one click, from your Account page. No phone calls, no retention scripts, no surprise charges.'
     ]
   },
@@ -33,7 +33,7 @@ const SECTIONS = [
     title: 'Tokens',
     items: [
       'Tokens are in-app currency for events and gifts. They are not redeemable for cash, not transferable between users, and not an investment.',
-      'Earn: verification, referrals, giveaways. Buy: token packs via Stripe.'
+      'Earn: verification, referrals, giveaways. Buy: token packs via our Square store.'
     ]
   },
   {
@@ -50,8 +50,8 @@ const SECTIONS = [
     items: [
       'No match on the Dance Floor = automatic, private token refund. Silent loss, public win.',
       'Event canceled for low fill = automatic refund.',
-      'Token pack purchases follow Stripe\u2019s refund process.',
-      'Monetary disputes are handled by Stripe — we intervene only when a situation escalates beyond them.'
+      'Token pack purchases follow Square\u2019s refund process.',
+      'Monetary disputes are handled by Square — we intervene only when a situation escalates beyond them.'
     ]
   },
   {

@@ -255,7 +255,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing (drives Stripe checkout) */}
+      {/* Pricing (opens the Square storefront) */}
       <section className="border-t border-zinc-900">
         <Pricing
           user={user}
