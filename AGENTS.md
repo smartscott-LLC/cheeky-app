@@ -37,7 +37,7 @@ A dating app built like a nightclub. Three pillars:
 - **Governance is code.** The policies in `docs/Governance/` (terms, privacy, safety, retention, refunds) are binding on the build — schema and flows are designed to satisfy them, and policy changes update code + docs together.
 - **Surgical changes.** In existing code, do exactly what the task asks — no opportunistic refactors, no renamed files/variables unless the task calls for it.
 - **Ask when it's ambiguous.** When a product decision is unclear, ask rather than inventing an answer that contradicts the PRD.
-- **Build on main during construction.** We're in build-out: `main` is always current and every push auto-deploys to Vercel (`smartscott.online`). The safety valve is git history + milestone tags, not a stale main — when a floor/area is fluid and testable, tag it (e.g. `v0.1-floor-1-locked`) as a save spot, then cut per-area branches (`feat/floor-1`) for the next area and merge back when fluid. No PR ceremony until there are real users on the app.
+- **Build on `master` (the repo's actual default — `main` is a zombie branch; the GitHub deploy branch is master).** `master` is always current; production runs on Ivy via `scripts/ivy-mirror` + `scripts/ivy-build` (Ivy builds from its own ~/src copy — the laptop ships source, never binaries). The safety valve is git history + milestone tags, not a stale main — when a floor/area is fluid and testable, tag it (e.g. `v0.1-floor-1-locked`) as a save spot, then cut per-area branches (`feat/floor-1`) for the next area and merge back when fluid. No PR ceremony until there are real users on the app.
 - **Commit messages describe _what and why_.** Never push a broken build — `pnpm lint` + `pnpm build` pass before pushing, because a bad push goes live on production.
 - **Validate before saying done.** `pnpm lint`, `pnpm build`, and a manual pass of the affected flow (auth / checkout / event).
 - **No "pre-existing" escapes — it's all ours.** If we run into an error, a warning, dead weight, or a mess — whether we caused it or inherited it — we take care of it immediately. No TODOs, no placeholders, no "get to it later", no dummy logic, ever. The store rule: one worker stocks it wrong, the next worker doesn't shrug — they clean it up.
@@ -45,20 +45,20 @@ A dating app built like a nightclub. Three pillars:
 
 ## Engineering conventions
 
-- **Stack:** Next.js 16 (App Router), Supabase (auth + Postgres + RLS), Stripe (billing + Identity + checkout), Tailwind 4 (`@import "tailwindcss"` + `@theme`), TypeScript, Oxlint.
+- **Stack:** Next.js 16 (App Router), Supabase (auth + Postgres + RLS), **Square (storefront + webhook grants) + Didit (KYC)** — Stripe retired 2026-10, Tailwind 4 (`@import "tailwindcss"` + `@theme`), TypeScript, Oxlint. pnpm ONLY — no npm lockfiles, no eslint anywhere.
 - **Components:** server components by default; `'use client'` only where interactivity requires it. UI primitives live in `components/ui/`. Keep `components/ui/` presentational — business logic goes in `utils/`.
 - **Two game engines, one club:** clock-driven scheduled rooms run on the Events Engine (`events`/`event_entries`/the minute cron — `docs/PRD-event-logic.md`); instant solo games (Swipes, L³, Matchmaker) run on the Spark Game Spine (matches/rewards/gifts/messages/rate-limits — each game adds its own value-resolution RPCs). Before building a new game, run it through the Playability Check in `docs/GAME-ENGINES.md` — and when a game hits an architecture fork, ask the founder first.
 - **Styling:** Tailwind utility classes; CSS modules for component-specific styles (`components/ui/Navbar/Navbar.module.css` pattern) using `@reference "tailwindcss"` for `@apply`. Color palette defined in `styles/globals.css` via `@theme` (gold `#FFD800`, cyan `#66FFFF`, pink/club `#FF97FF`). Three fonts: Fascinate (heroes/gold), Damion (headers/cyan), Rancho (body/pink). Never hardcode hex in components — use `text-gold`, `text-cyan`, `text-club`.
 - **Oxlint:** linter is `oxlint` (not eslint). Run `pnpm lint` (zero warnings allowed) or `pnpm lint:fix` for auto-fix. Config at `oxlint.config.ts`.
-- **Lounge (chub):** separate Next.js 16 app at `/home/server/cheeky/chub/` served as a Vercel microfrontend under `/lounge/:path*`. Same Supabase project, separate deploy. Middleware shares session cookies via `path: /` override. Changes to `microfrontends.json` require extreme care — deploy chub first, then cheeky-app.
-- **Supabase:**
+- **Lounge (chub):** separate Next.js 15 app at `/home/server/Downloads/cheeks/chub/`, served by cluster Traefik at `www.smartscott.online/lounge` (pod `lounge`). Same Supabase project. The maker (`mini_model_maker`) and the smartforms engine have their own namespaces/pods on Ivy too.
+- **Supabase:** (project `ioqeddpgdilyyajsygmz`; auth config + redirect allowlist point at the Ivy domains — the Vercel tether is cut)
   - Row Level Security is mandatory on every table. Never disable RLS "just for now."
   - Service role key is server-only. Client code uses the anon key.
   - Schema changes go through `supabase/migrations/`; regenerate types with `pnpm supabase:generate-types` (writes `types_db.ts`) and commit the diff.
-- **Stripe:**
-  - Stripe is the source of truth for products/prices; the webhook syncs them into `products`/`prices` tables.
-  - Checkout runs server-side (`utils/stripe/server.ts`); subscriptions gate floors via `subscriptions` + entitlements.
-  - Stripe Identity is the candidate for verification (keeps the stack unified) — confirm before Phase 1.
+- **Square + Didit (replaced Stripe wholesale, 2026-10):**
+  - Square's online store (`smartscott.square.site`) is the register; the purchase contract is `ITEM_LIBRARY.csv`, mirrored in `utils/square-webhook.ts`. The webhook (`/api/webhooks/square`) verifies → dedupes → records `store_purchases` → grants (time-boxed entitlements + tokens; NO recurring billing).
+  - The storefront is opened from the club (pricing cards + Exchange); the club never embeds a card form.
+  - Didit is the door's KYC: session create server-side, authoritative webhook `/api/webhooks/didit` (canonicalised HMAC-V2, idempotent) runs the verification grant chain. Never test-spam — verifications cost money.
 - **Tokens:** integer microcurrency, atomic server-side ledger, RLS-protected; refunds for no-match events; never computed from client state.
 - **Testing:** `node:test` suite in `tests/` (zero deps). `pnpm test` runs the safe tests in CI; live suites (`webhook`, `token-engine`, `ai-probe`, `events`, `l3`, `matchmaker`, `taskbar`) run behind `RUN_LIVE_TESTS=1` and hit production with throwaway members that clean up after themselves (`scripts/purge-mmtest.mjs` is the interrupted-run safety net). The token-engine burst (`STRESS_N=1000`) is the pre-launch check for anything touching events/tokens. See `tests/README.md`.
 - **Money display:** format with `Intl.NumberFormat` (already the pattern in `Pricing.tsx`); store amounts as integers (cents).
@@ -70,10 +70,11 @@ app/            Next.js routes: / (landing), /signin, /account, /club, /floors, 
                 /crew, /gifts, /coat-check, /swag, /browse, /messages, /verify, /owner, /api
 components/     ui primitives (ui/) + feature components (Agent, Club, Events,
                 Gifts, Messages, Audio, Swag, Navbar, Footer, Browse, ClubChat) — see docs/COMPONENT-LIBRARY.md
-utils/          supabase clients + queries, stripe client/server, auth helpers, floors map,
+utils/          supabase clients + queries, square/didit webhooks + links, auth helpers, floors map,
                 characters, events config, swag, rate limits, token-amount
-supabase/       migrations (87) — apply to hosted with scripts/migrate-hosted.mjs
-scripts/        dev utilities (migrate-hosted, backfill-*, check-*, smoke-*, purge-mmtest)
+supabase/       migrations (35 — the folder is curated; history lives in git) — apply to hosted with scripts/migrate-hosted.mjs
+scripts/        dev utilities (migrate-hosted, backfill-*, check-*, smoke-*, purge-mmtest,
+                ivy / ivy-mirror / ivy-build — the Ivy build flow)
 styles/         global css (main.css) + floor palettes (styles/palettes/*.scss)
 docs/           PRD-foundation.md + PRDs + GAME-ENGINES.md (the two game engines
                 + Playability Check) + Governance/ policies + COMPONENT-LIBRARY.md +

@@ -3,8 +3,12 @@
 > A dating app built like a nightclub. Everyone gets in free with a verified
 > ID — **everyone's a VIP with an ID here.**
 
-Live at **[smartscott.online](https://smartscott.online)** — every push to
-`main` auto-deploys to Vercel.
+Live at **[www.smartscott.online](https://www.smartscott.online)** — served
+from **Ivy**, the estate's own k3s cluster behind a Cloudflare tunnel. The
+build flow: change here → verify at `localhost:3000` → `scripts/ivy-mirror`
+→ `scripts/ivy-build` compiles and deploys **on Ivy from Ivy's own source
+copy** (see [`docs/IVY-BUILD-FLOW.md`](docs/IVY-BUILD-FLOW.md)). Deploy
+branch: `master`.
 
 ## What it is
 
@@ -13,7 +17,7 @@ Club Cheeky is a nightclub, not a menu. Members walk a real building:
 | Room                       | Route                        | What happens there                                                                                                                                                                          |
 | -------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 🚪 The street / landing    | `/`                          | The marquee. Enter the club.                                                                                                                                                                |
-| 🪪 The door (verification) | `/verify`                    | Stripe Identity ID + selfie → Silver card, VIP badge, 20 tokens. The velvet rope is up until you check in.                                                                                  |
+| 🪪 The door (verification) | `/verify`                    | Didit ID + selfie → Silver card, VIP badge, 20 tokens. The velvet rope is up until you check in.                                                                                  |
 | 🏠 The lobby               | `/club`                      | The entrance room — VIP area, Gift Shop, Chats, Spark List, Elevators, Coat Check, Brutus at the door.                                                                                      |
 | 🛗 The floors              | `/floors` · `/floor/[slug]`  | Silver → Gold → Platinum → Diamond. Each floor is its own room with its own art, its own event, and its own member of the crew. Locked floors show the rope, not a price.                   |
 | 📅 The Event Center        | `/events` · `/events/[kind]` | The hourly playlist — Dance Floor (:00), Themed Night (:15), Speed Dating (:30), Rooftop (:45). Join any room any time; your spot is held for the next set. Rooms are lit up to your floor. |
@@ -72,14 +76,24 @@ report/block from any chat, honeypots for bots.
   server components by default; `'use client'` only where interactivity requires.
 - **Supabase** — auth, Postgres with **Row Level Security on every table**,
   migrations, generated types.
-- **Stripe** — subscriptions, checkout, and Identity (verification).
+- **Square** — the register: online storefront (`smartscott.square.site`) +
+  webhook grants per `ITEM_LIBRARY.csv` (memberships are time-boxed grants,
+  no recurring billing). **Didit** — the door's KYC. (Stripe retired 2026-10.)
 - **AGNES** (`/api/agent`) — the crew's brains; persona prompts live in
   the `characters` table. Direct REST fetch to `apihub.agnes-ai.com/v1` (no provider SDK).
-- **Lounge (chub)** — separate Next.js 16 app at `/home/server/chub/`, served as a
-  Vercel microfrontend under `/lounge/:path*`. Same Supabase project, separate deploy.
+- **Lounge (chub)** — separate Next.js 15 app at
+  `/home/server/Downloads/cheeks/chub/`, served under `www.smartscott.online/lounge`
+  by cluster Traefik (same URL shape as the old microfrontend routing).
+  Same Supabase project, own pod, own image.
 - **Oxlint** — linter, configured in `oxlint.config.ts`. Zero dependency on eslint.
-- **Vercel** — the only build gate: every push to `main` builds, deploys,
-  and fails loud.
+- **Forms engine** — smartforms (`server.js`) autodetects drop-in HTML forms
+  and maps fields to its pgvector DB; contact surfaces across the app point
+  at `forms.smartscott.online/forms/cheeky`. The engine runs byte-identical
+  on Ivy — founder-locked.
+- **Ivy + k3s + Traefik + Cloudflare Tunnel** — the platform. No certs to
+  manage (the edge owns TLS), no metering traps. Vercel is paused/rollback
+  ghost only.
+- **Nightly backups** — `pg_dump` on Ivy, 14-day window, restore-verified.
 
 ## Develop locally
 
