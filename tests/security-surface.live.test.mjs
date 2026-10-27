@@ -66,6 +66,7 @@ void test(
     // SENSITIVE RPCs stay closed.
     // 401/403 = denied by GRANT; 404 = unresolvable signature (PostgREST
     // refuses before auth). Anything else = anon reached the function: alarm.
+    /** @type {[string, Record<string, unknown>][]} */
     const probes = [
       ['bump_rate_limit', { p_key: 'probe', p_window_seconds: 60, p_max: 5 }],
       ['taskbar_state', {}],
