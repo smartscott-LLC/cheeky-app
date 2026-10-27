@@ -1,4 +1,5 @@
 import EventFloor from '@/components/ui/Events/EventFloor';
+import { requireClubOpen } from '@/utils/require-club-open';
 import { createClient } from '@/utils/supabase/server';
 import { getProfile, getUser } from '@/utils/supabase/queries';
 import { isCompatible } from '@/utils/helpers';
@@ -31,6 +32,7 @@ export default async function EventRoomPage({
 
   const supabase = await createClient();
   const user = await getUser(supabase);
+  await requireClubOpen(`/events/${kind}`, user?.id ?? null);
   if (!user) {
     return redirect('/signin');
   }

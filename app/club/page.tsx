@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { requireClubOpen } from '@/utils/require-club-open';
 import { createClient } from '@/utils/supabase/server';
 import { getProfile, getUser } from '@/utils/supabase/queries';
 import { redirect } from 'next/navigation';
@@ -10,6 +11,7 @@ import { getStoryProgress } from '@/utils/story/server';
 export default async function ClubPage() {
   const supabase = await createClient();
   const user = await getUser(supabase);
+  await requireClubOpen('/club', user?.id ?? null);
   if (!user) {
     return redirect('/signin');
   }

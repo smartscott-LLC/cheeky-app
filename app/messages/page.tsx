@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { requireClubOpen } from '@/utils/require-club-open';
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
 import { openConversation } from '@/app/messages/actions';
@@ -9,6 +10,7 @@ import MomentsStrip from '../../components/ui/Messages/MomentsStrip';
 export default async function MessagesPage() {
   const supabase = await createClient();
   const user = await getUser(supabase);
+  await requireClubOpen('/messages', user?.id ?? null);
   if (!user) {
     return redirect('/signin');
   }

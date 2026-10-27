@@ -1,4 +1,5 @@
 import { createClient } from '@/utils/supabase/server';
+import { requireClubOpen } from '@/utils/require-club-open';
 import { getUser } from '@/utils/supabase/queries';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -58,6 +59,7 @@ function tallyCounts(rounds: RoundRow[]): Record<string, number> {
 export default async function BlindDatePage() {
   const supabase = await createClient();
   const user = await getUser(supabase);
+  await requireClubOpen('/events/blind_date', user?.id ?? null);
   if (!user) {
     return redirect('/signin');
   }

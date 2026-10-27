@@ -1,4 +1,5 @@
 import BrowseCard, { BrowsePerson } from '@/components/ui/Browse/BrowseCard';
+import { requireClubOpen } from '@/utils/require-club-open';
 import SparkLab from '@/components/ui/Browse/SparkLab';
 import { createClient } from '@/utils/supabase/server';
 import { getProfile, getSubscription, getUser } from '@/utils/supabase/queries';
@@ -10,6 +11,7 @@ import { redirect } from 'next/navigation';
 export default async function BrowsePage() {
   const supabase = await createClient();
   const user = await getUser(supabase);
+  await requireClubOpen('/browse', user?.id ?? null);
   if (!user) {
     return redirect('/signin');
   }

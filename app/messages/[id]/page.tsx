@@ -1,4 +1,5 @@
 import MessageThread from '@/components/ui/Messages/MessageThread';
+import { requireClubOpen } from '@/utils/require-club-open';
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
 import { redirect } from 'next/navigation';
@@ -14,6 +15,7 @@ export default async function ThreadPage({
   const { id } = await params;
   const supabase = await createClient();
   const user = await getUser(supabase);
+  await requireClubOpen('/messages', user?.id ?? null);
   if (!user) {
     return redirect('/signin');
   }

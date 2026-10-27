@@ -6,6 +6,9 @@ import {
   ownerGenerateCodes,
   ownerGrantDirect,
   ownerResolveFlag,
+  ownerBetaState,
+  ownerSetDoors,
+  ownerSetEarlyAccess,
   ownerToggleEngine,
   ownerPostAnnouncement,
   ownerUpdateModels,
@@ -100,6 +103,17 @@ const label = (t: string, v: string) => {
 
 export default function OwnerPage() {
   const [key, setKey] = useState('');
+  const [beta, setBeta] = useState<{
+    open: boolean;
+    opensAt: string;
+    recent: {
+      id: string;
+      name: string;
+      email: string;
+      early: boolean;
+      joined: string;
+    }[];
+  } | null>(null);
   const [unlocked, setUnlocked] = useState(false);
   const [engine, setEngine] = useState(true);
   const [rules, setRules] = useState<Rule[]>([]);
@@ -438,6 +452,22 @@ export default function OwnerPage() {
     void refresh();
   };
 
+  const loadBeta = async () => {
+    const res = await ownerBetaState({ key });
+    if ('error' in res) return;
+    setBeta(res);
+  };
+
+  const flipDoors = async (open: boolean) => {
+    await ownerSetDoors({ key, open });
+    await loadBeta();
+  };
+
+  const flipEarly = async (userId: string, early: boolean) => {
+    await ownerSetEarlyAccess({ key, userId, early });
+    await loadBeta();
+  };
+
   const resolveFlag = async (
     flagId: string,
     action: 'grant' | 'give-code' | 'dismiss'
@@ -680,7 +710,9 @@ export default function OwnerPage() {
             <button
               onClick={toggleEngine}
               className={`rounded-lg px-4 py-2 text-sm font-bold transition ${
-                engine ? 'bg-emerald-600 text-club' : 'border-2 border-club bg-black text-club'
+                engine
+                  ? 'bg-emerald-600 text-club'
+                  : 'border-2 border-club bg-black text-club'
               }`}
             >
               {engine ? '● Engine ON' : '● Engine OFF'}
@@ -1157,6 +1189,77 @@ export default function OwnerPage() {
           >
             Save models
           </button>
+        </div>
+
+        {/* Soft-open control — the founder's launch switch */}
+        <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
+          <h2 className="font-header text-cyan">🚸 The soft open</h2>
+          <p className="mt-1 text-xs font-body text-club">
+            Sign-ups, the door and the lounge run ahead of the club. Flip the
+            doors for everyone, or invite testers one by one — the gate reads
+            this switch within 30 seconds.
+          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <button
+              onClick={loadBeta}
+              disabled={busy}
+              className="rounded-lg border border-zinc-600 px-3 py-1.5 text-xs font-bold text-cyan transition hover:border-gold hover:text-gold"
+            >
+              {beta ? 'Refresh' : 'Read the gate'}
+            </button>
+            {beta && (
+              <>
+                <span className="font-body text-sm text-white">
+                  Doors:{' '}
+                  <span className={beta.open ? 'text-gold' : 'text-club'}>
+                    {beta.open
+                      ? 'OPEN to everyone'
+                      : 'soft open (invites only)'}
+                  </span>
+                  {beta.opensAt && !beta.open && (
+                    <span className="ml-2 text-xs text-zinc-400">
+                      scheduled {new Date(beta.opensAt).toLocaleString()}
+                    </span>
+                  )}
+                </span>
+                <button
+                  onClick={() => flipDoors(!beta.open)}
+                  disabled={busy}
+                  className={`rounded-lg border-2 px-3 py-1.5 text-xs font-bold uppercase transition ${
+                    beta.open
+                      ? 'border-club bg-black text-club hover:bg-club hover:text-black'
+                      : 'border-gold bg-gold text-black hover:bg-transparent'
+                  }`}
+                >
+                  {beta.open ? 'Close the doors' : 'OPEN THE CLUB'}
+                </button>
+                <div className="mt-2 w-full space-y-1">
+                  {beta.recent.map((m) => (
+                    <div
+                      key={m.id}
+                      className="flex items-center justify-between gap-2 rounded-lg border border-zinc-800 bg-black/40 px-3 py-1.5"
+                    >
+                      <span className="truncate font-body text-sm text-club">
+                        {m.name}{' '}
+                        <span className="text-xs text-zinc-500">{m.email}</span>
+                      </span>
+                      <button
+                        onClick={() => flipEarly(m.id, !m.early)}
+                        disabled={busy}
+                        className={`shrink-0 rounded border px-2 py-0.5 text-xs font-bold uppercase transition ${
+                          m.early
+                            ? 'border-gold text-gold'
+                            : 'border-zinc-600 text-zinc-400 hover:border-gold hover:text-gold'
+                        }`}
+                      >
+                        {m.early ? '🎟 invited' : 'invite'}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Floor status — close a section */}

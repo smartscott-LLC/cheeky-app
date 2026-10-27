@@ -1037,3 +1037,82 @@ export async function ownerPostAnnouncement(input: {
   });
   return error ? { error: error.message } : {};
 }
+
+/**
+ * Soft-open controls (founder greenlight 2026-10-27): read the gate, flip
+ * the doors, invite testers early. launch_config is service-role-only by
+ * migration; profiles.early_access is owner-writable here and nowhere else.
+ */
+export async function ownerBetaState(input: { key?: string }): Promise<
+  | {
+      open: boolean;
+      opensAt: string;
+      recent: {
+        id: string;
+        name: string;
+        email: string;
+        early: boolean;
+        joined: string;
+      }[];
+    }
+  | { error: string }
+> {
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
+  const [cfg, members] = await Promise.all([
+    supabaseAdmin
+      .from('launch_config')
+      .select('open, opens_at')
+      .eq('id', true)
+      .maybeSingle(),
+    supabaseAdmin
+      .from('profiles')
+      .select('id, display_name, early_access, created_at')
+      .order('created_at', { ascending: false })
+      .limit(25)
+  ]);
+  const { data: emails } = await supabaseAdmin.auth.admin.listUsers({
+    page: 1,
+    perPage: 200
+  });
+  const emailById = new Map(
+    (emails?.users ?? []).map((u) => [u.id, u.email ?? ''])
+  );
+  return {
+    open: Boolean(cfg.data?.open),
+    opensAt: (cfg.data?.opens_at as string) ?? '',
+    recent: (members.data ?? []).map((m) => ({
+      id: m.id,
+      name: m.display_name || '(no name)',
+      email: emailById.get(m.id) ?? '—',
+      early: Boolean(m.early_access),
+      joined: m.created_at ?? ''
+    }))
+  };
+}
+
+export async function ownerSetDoors(input: {
+  key?: string;
+  open: boolean;
+}): Promise<{ open?: boolean; error?: string }> {
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
+  const { error } = await supabaseAdmin
+    .from('launch_config')
+    .update({ open: input.open })
+    .eq('id', true);
+  if (error) return { error: error.message };
+  return { open: input.open };
+}
+
+export async function ownerSetEarlyAccess(input: {
+  key?: string;
+  userId: string;
+  early: boolean;
+}): Promise<{ ok?: boolean; error?: string }> {
+  if (!(await authorized(input.key))) return { error: 'forbidden' };
+  const { error } = await supabaseAdmin
+    .from('profiles')
+    .update({ early_access: input.early })
+    .eq('id', input.userId);
+  if (error) return { error: error.message };
+  return { ok: true };
+}

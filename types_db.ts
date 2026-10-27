@@ -1402,6 +1402,27 @@ export type Database = {
           },
         ]
       }
+      launch_config: {
+        Row: {
+          banner_text: string | null
+          id: boolean
+          open: boolean
+          opens_at: string
+        }
+        Insert: {
+          banner_text?: string | null
+          id?: boolean
+          open?: boolean
+          opens_at?: string
+        }
+        Update: {
+          banner_text?: string | null
+          id?: boolean
+          open?: boolean
+          opens_at?: string
+        }
+        Relationships: []
+      }
       likes: {
         Row: {
           created_at: string
@@ -1919,6 +1940,7 @@ export type Database = {
           created_at: string
           display_name: string
           drinking: string | null
+          early_access: boolean
           gender: string | null
           has_kids: boolean | null
           hobbies: string[] | null
@@ -1942,6 +1964,7 @@ export type Database = {
           created_at?: string
           display_name?: string
           drinking?: string | null
+          early_access?: boolean
           gender?: string | null
           has_kids?: boolean | null
           hobbies?: string[] | null
@@ -1965,6 +1988,7 @@ export type Database = {
           created_at?: string
           display_name?: string
           drinking?: string | null
+          early_access?: boolean
           gender?: string | null
           has_kids?: boolean | null
           hobbies?: string[] | null
@@ -3133,41 +3157,20 @@ export type Database = {
         Args: { p_game: string; p_index: number; p_pick: number }
         Returns: undefined
       }
-      taskbar_state:
-        | {
-            Args: never
-            Returns: {
-              blind_date_joins_today: number
-              checked_in_today: boolean
-              gift_ready: boolean
-              gift_ready_in_minutes: number
-              matchmaker_plays_left: number
-              messages_sent_today: number
-              new_people_today: number
-              swipes_today: number
-              tier: string
-            }[]
-          }
-        | {
-            Args: { p_user?: string }
-            Returns: {
-              blind_date_joins_today: number
-              blind_free_remaining: number
-              checked_in_today: boolean
-              dance_free_remaining: number
-              gift_ready: boolean
-              gift_ready_in_minutes: number
-              icebreakers_used_today: number
-              l3_trios_used_today: number
-              matchmaker_plays_left: number
-              messages_sent_today: number
-              new_people_today: number
-              rooftop_free_remaining: number
-              speed_free_remaining: number
-              swipes_today: number
-              tier: string
-            }[]
-          }
+      taskbar_state: {
+        Args: never
+        Returns: {
+          blind_date_joins_today: number
+          checked_in_today: boolean
+          gift_ready: boolean
+          gift_ready_in_minutes: number
+          matchmaker_plays_left: number
+          messages_sent_today: number
+          new_people_today: number
+          swipes_today: number
+          tier: string
+        }[]
+      }
       tick_rooftop_events: { Args: never; Returns: undefined }
       tier_rank: { Args: { p_tier: string }; Returns: number }
       use_icebreaker: { Args: never; Returns: undefined }

@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import Pricing from '@/components/ui/Pricing/Pricing';
 import FloatingHearts from '@/components/ui/FloatingHearts/FloatingHearts';
+import { launchState } from '@/utils/require-club-open';
+import { betaBannerText } from '@/utils/launch-gate';
 import JoinCTA from '@/components/ui/JoinCTA/JoinCTA';
 import { createClient } from '@/utils/supabase/server';
 import {
@@ -65,8 +67,17 @@ export default async function LandingPage() {
 
   const profile = user ? await getProfile(supabase, user.id) : null;
 
+  const launch = await launchState();
   return (
     <div id="top" className="bg-black text-white">
+      {/* Beta banner (founder: "announcement on the landing while we ramp") */}
+      {!launch.open && (
+        <div className="border-b border-gold/30 bg-gold/10 px-4 py-3 text-center">
+          <span className="font-body text-gold text-base sm:text-lg">
+            {betaBannerText(launch.opensAt)}
+          </span>
+        </div>
+      )}
       {/* Floating Join for Free CTA */}
       <JoinCTA verified={Boolean(profile?.verified_at)} />
       {/* Hero */}

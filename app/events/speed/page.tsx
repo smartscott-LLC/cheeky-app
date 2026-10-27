@@ -1,4 +1,5 @@
 import SpeedDatingFloor from '@/components/ui/Events/SpeedDatingFloor';
+import { requireClubOpen } from '@/utils/require-club-open';
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
 import { redirect } from 'next/navigation';
@@ -10,6 +11,7 @@ export default async function SpeedDatingPage() {
   await connection();
   const supabase = await createClient();
   const user = await getUser(supabase);
+  await requireClubOpen('/events/speed', user?.id ?? null);
   if (!user) {
     return redirect('/signin');
   }

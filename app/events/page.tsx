@@ -1,4 +1,5 @@
 import { createClient } from '@/utils/supabase/server';
+import { requireClubOpen } from '@/utils/require-club-open';
 import { getUser } from '@/utils/supabase/queries';
 import { getReturnFloor } from '@/utils/return-floor';
 import { redirect } from 'next/navigation';
@@ -12,6 +13,7 @@ export default async function EventsPage() {
   await connection();
   const supabase = await createClient();
   const user = await getUser(supabase);
+  await requireClubOpen('/events', user?.id ?? null);
   if (!user) {
     return redirect('/signin');
   }

@@ -11,7 +11,8 @@ import {
 } from '../utils/membership-tokens.ts';
 
 void test('parseTokenAmount extracts the token count from product names', () => {
-  // The real product names in the Stripe catalog.
+  // The real product names in the Square contract (ITEM_LIBRARY.csv) —
+  // mirrored into the legacy products table for display.
   assert.equal(parseTokenAmount('Cheeky Token Bag - 100 Tokens'), 100);
   assert.equal(parseTokenAmount('Token Bundle 1000 Tokens'), 1000);
   // Singular + case-insensitive forms.
@@ -24,7 +25,7 @@ void test('parseTokenAmount extracts the token count from product names', () => 
 });
 
 void test('membership token grants: every paid tier, every cycle', () => {
-  // The real membership product names in the Stripe catalog.
+  // The real membership product names on the Square side.
   assert.equal(membershipTokenGrant('Gold Membership').amount, 100);
   assert.equal(membershipTokenGrant('Platinum Membership').amount, 200);
   assert.equal(membershipTokenGrant('Diamond Membership').amount, 500);

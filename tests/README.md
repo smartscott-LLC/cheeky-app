@@ -51,3 +51,5 @@ RUN_LIVE_TESTS=1 STRESS_N=1000 node --test tests/token-engine.live.test.mjs
   removes every trace.
 - The AI probe spends a few cents of AGNES usage per run — keep
   `PROBE_CONCURRENCY` small unless you're deliberately load-testing.
+| `tests/launch-gate.test.mjs`     | Soft-open gate contract: what's roped, what stays open (incl. crew-as-poster), invites, fail-open default, banner copy, migration wiring | — | — |
+| `tests/security-surface.live.test.mjs` | The public perimeter as tripwires: anon sees no photos/messages/matches/ledger/purchases, sensitive RPCs 401, unsigned webhook POSTs refused, no maker link in public HTML, beta banner consistency | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `TEST_URL` (default prod) |

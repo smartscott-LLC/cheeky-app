@@ -1,4 +1,5 @@
 import { createClient } from '@/utils/supabase/server';
+import { requireClubOpen } from '@/utils/require-club-open';
 import { getUser } from '@/utils/supabase/queries';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -7,6 +8,7 @@ import RooftopPool from '@/components/ui/Events/RooftopPool';
 export default async function RooftopPage() {
   const supabase = await createClient();
   const user = await getUser(supabase);
+  await requireClubOpen('/events/rooftop', user?.id ?? null);
   if (!user) {
     return redirect('/signin');
   }

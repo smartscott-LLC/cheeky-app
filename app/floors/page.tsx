@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { requireClubOpen } from '@/utils/require-club-open';
 import { createClient } from '@/utils/supabase/server';
 import { getUser } from '@/utils/supabase/queries';
 import { redirect } from 'next/navigation';
@@ -7,6 +8,7 @@ import { FLOORS } from '@/utils/floors';
 export default async function FloorsPage() {
   const supabase = await createClient();
   const user = await getUser(supabase);
+  await requireClubOpen('/floors', user?.id ?? null);
   if (!user) {
     return redirect('/signin');
   }

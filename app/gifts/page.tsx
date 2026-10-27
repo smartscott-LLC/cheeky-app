@@ -1,4 +1,5 @@
 import GiftShop from '@/components/ui/Gifts/GiftShop';
+import { requireClubOpen } from '@/utils/require-club-open';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/server';
 import { getUser, getProfile, getTokenBalance } from '@/utils/supabase/queries';
@@ -8,6 +9,7 @@ import { redirect } from 'next/navigation';
 export default async function GiftsPage() {
   const supabase = await createClient();
   const user = await getUser(supabase);
+  await requireClubOpen('/gifts', user?.id ?? null);
   if (!user) {
     return redirect('/signin');
   }
