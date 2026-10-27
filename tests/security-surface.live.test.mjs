@@ -13,14 +13,17 @@ for (const l of readFileSync('.env.new', 'utf8').split('\n')) {
     process.env[l.slice(0, i)] = l.slice(i + 1).replace(/^"|"$/g, '');
 }
 const BASE = process.env.TEST_URL ?? 'https://www.smartscott.online';
+// REST/RPC perimeter lives on the Supabase origin — the app's own
+// /rest catch-all proxy must NOT be the subject of these probes.
+const SB = process.env.SUPABASE_URL;
 const ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const RUN_LIVE = process.env.RUN_LIVE_TESTS === '1' && Boolean(ANON);
+const RUN_LIVE = process.env.RUN_LIVE_TESTS === '1' && Boolean(ANON && SB);
 const guard = {
   skip: !RUN_LIVE && 'set RUN_LIVE_TESTS=1 (and keys in .env.new)'
 };
 
 const anonGet = (path) =>
-  fetch(`${BASE}/rest/v1/${path}`, {
+  fetch(`${SB}/rest/v1/${path}`, {
     headers: { apikey: ANON, Authorization: `Bearer ${ANON}` }
   });
 
@@ -38,12 +41,21 @@ void test(
   }
 );
 
-void test('anon sees no messages, matches, purchases, ledger', guard, async () => {
-  for (const t of ['messages', 'matches', 'store_purchases', 'token_ledger']) {
-    const r = await anonGet(`${t}?select=id&limit=3`);
-    assert.deepEqual(await r.json(), [], `${t} leaked rows to anon`);
+void test(
+  'anon sees no messages, matches, purchases, ledger',
+  guard,
+  async () => {
+    for (const t of [
+      'messages',
+      'matches',
+      'store_purchases',
+      'token_ledger'
+    ]) {
+      const r = await anonGet(`${t}?select=id&limit=3`);
+      assert.deepEqual(await r.json(), [], `${t} leaked rows to anon`);
+    }
   }
-});
+);
 
 void test(
   'anon can ONLY execute the declared function (guard is separate schema)',
@@ -52,17 +64,27 @@ void test(
     // current_tier was observed anon-executable in the audit — it returns a
     // constant for anon (no auth.uid) and is on the allowlist. Assert only that
     // SENSITIVE RPCs stay closed.
-    for (const rpc of ['bump_rate_limit', 'taskbar_state', 'use_icebreaker']) {
-      const r = await fetch(`${BASE}/rest/v1/rpc/${rpc}`, {
+    // 401/403 = denied by GRANT; 404 = unresolvable signature (PostgREST
+    // refuses before auth). Anything else = anon reached the function: alarm.
+    const probes = [
+      ['bump_rate_limit', { p_key: 'probe', p_window_seconds: 60, p_max: 5 }],
+      ['taskbar_state', {}],
+      ['use_icebreaker', {}]
+    ];
+    for (const [rpc, body] of probes) {
+      const r = await fetch(`${SB}/rest/v1/rpc/${rpc}`, {
         method: 'POST',
         headers: {
           apikey: ANON,
           Authorization: `Bearer ${ANON}`,
           'Content-Type': 'application/json'
         },
-        body: '{}'
+        body: JSON.stringify(body)
       });
-      assert.equal(r.status, 401, `${rpc} must deny anon (saw ${r.status})`);
+      assert.ok(
+        [401, 403, 404].includes(r.status),
+        `${rpc} must deny anon (saw ${r.status})`
+      );
     }
   }
 );
