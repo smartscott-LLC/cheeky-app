@@ -268,6 +268,32 @@ export default function FloorPageLayout({
           </div>
         </div>
       </div>
+      {/* The fine print lives underfoot — every floor keeps its exits to
+          Terms/Privacy/Refunds/Contact (owner review: floors covered the
+          global footer, leaving no legal path from inside the club). */}
+      <div className="fixed inset-x-0 bottom-1 z-10 text-center">
+        <span className="font-body text-xs text-club/50">
+          <Link href="/terms" className="transition hover:text-cyan">
+            Terms
+          </Link>{' '}
+          ·{' '}
+          <Link href="/privacy" className="transition hover:text-cyan">
+            Privacy
+          </Link>{' '}
+          ·{' '}
+          <Link href="/refunds" className="transition hover:text-cyan">
+            Refunds
+          </Link>{' '}
+          ·{' '}
+          <Link href="/best-practices" className="transition hover:text-cyan">
+            House Rules
+          </Link>{' '}
+          ·{' '}
+          <Link href="/contact" className="transition hover:text-cyan">
+            Contact
+          </Link>
+        </span>
+      </div>
     </div>
   );
 }
